@@ -1,0 +1,24 @@
+{
+  "name": "chad-kraus-portfolio",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "homepage": "https://chadkraus87.github.io/React-Portfolio-v2/",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.3",
+    "gh-pages": "^6.3.0",
+    "vite": "^8.1.5"
+  }
+}

@@ -1,0 +1,93 @@
+.pcard {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.pcard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 2px 4px rgba(30, 58, 43, 0.1), 0 14px 32px rgba(30, 58, 43, 0.14);
+}
+
+.pcard-img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: top;
+  border-bottom: 3px solid var(--forest);
+}
+
+.pcard-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--pine), var(--forest));
+  font-family: var(--font-mono);
+  color: var(--mist);
+  font-size: 1.05rem;
+}
+
+.pcard-body {
+  padding: 1.15rem 1.25rem 1.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  flex: 1;
+}
+
+.pcard-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.pcard-category {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--moss);
+}
+.pcard-category::before { content: '~/'; color: var(--brass); }
+
+.pcard-status {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--brass);
+  border: 1px solid var(--brass);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  white-space: nowrap;
+}
+
+.pcard-title { font-size: 1.2rem; }
+
+.pcard-desc {
+  font-size: 0.92rem;
+  color: var(--ink);
+  flex: 1;
+}
+
+.pcard-stack {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.pcard-stack li {
+  background: var(--mist);
+  color: var(--pine);
+  font-size: 0.74rem;
+  font-weight: 500;
+  border-radius: 999px;
+  padding: 0.18rem 0.6rem;
+}
+
+.pcard-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.35rem;
+}

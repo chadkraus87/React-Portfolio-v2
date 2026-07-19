@@ -1,0 +1,104 @@
+/* ---------------------------------------------------------------------------
+   Design tokens — forest green system matched to the 2026 resume.
+   Change colors here and the whole site follows.
+--------------------------------------------------------------------------- */
+:root {
+  --pine: #1e3a2b;      /* deepest green — nav, footer, headings on light */
+  --forest: #2e5940;    /* primary brand green — buttons, links, accents */
+  --moss: #6b8f71;      /* muted green — secondary text, borders, tags */
+  --mist: #e4ebe4;      /* pale green tint — card tags, dividers */
+  --paper: #f7f6f1;     /* warm off-white page background */
+  --card: #ffffff;
+  --ink: #20261f;       /* near-black body text, green-cast */
+  --brass: #a8862f;     /* sparing warm accent — status badges, focus ring */
+
+  --font-display: 'Bitter', Georgia, serif;
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(30, 58, 43, 0.08), 0 8px 24px rgba(30, 58, 43, 0.09);
+  --maxw: 1080px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--pine);
+  line-height: 1.15;
+  font-weight: 700;
+}
+
+a { color: var(--forest); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+img { max-width: 100%; display: block; }
+
+button { font-family: inherit; cursor: pointer; }
+
+:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
+}
+
+/* Layout helpers ---------------------------------------------------------- */
+.container {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.page { padding: 3.5rem 0 4.5rem; }
+
+/* Mono eyebrow label — the site's signature device. Reads like a CLI path. */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  color: var(--moss);
+  display: block;
+  margin-bottom: 0.6rem;
+}
+.eyebrow::before { content: '~/'; color: var(--brass); }
+
+.page-title {
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  margin-bottom: 2rem;
+}
+
+/* Buttons ----------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 0.6rem 1.15rem;
+  border-radius: var(--radius);
+  border: 1.5px solid transparent;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.btn:hover { text-decoration: none; }
+
+.btn-primary { background: var(--forest); color: #fff; }
+.btn-primary:hover { background: var(--pine); }
+
+.btn-outline { border-color: var(--forest); color: var(--forest); background: transparent; }
+.btn-outline:hover { background: var(--mist); }
+
+/* Reduced motion ---------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}

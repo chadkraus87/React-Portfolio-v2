@@ -1,0 +1,121 @@
+/* Hero --------------------------------------------------------------------*/
+.hero {
+  background:
+    linear-gradient(180deg, rgba(30, 58, 43, 0.04), transparent 60%),
+    var(--paper);
+  border-bottom: 1px solid var(--mist);
+  padding: 3.5rem 0;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.hero-name {
+  font-size: clamp(2.3rem, 5.5vw, 3.4rem);
+  font-weight: 800;
+  margin-bottom: 0.4rem;
+}
+
+.hero-title {
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  color: var(--forest);
+  margin-bottom: 1.1rem;
+}
+
+.hero-tagline {
+  font-size: 1.08rem;
+  max-width: 34rem;
+  margin-bottom: 1.3rem;
+}
+
+.hero-tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 1.6rem;
+}
+.hero-tags li {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--pine);
+  background: var(--mist);
+  border-radius: 999px;
+  padding: 0.22rem 0.7rem;
+}
+
+.hero-actions { display: flex; gap: 0.7rem; flex-wrap: wrap; }
+
+.hero-photo-wrap {
+  position: relative;
+  justify-self: center;
+}
+/* Offset frame behind the photo — quiet nod to the resume's rule lines */
+.hero-photo-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 14px -14px -14px 14px;
+  border: 2px solid var(--forest);
+  border-radius: var(--radius);
+  z-index: 0;
+}
+.hero-photo {
+  position: relative;
+  z-index: 1;
+  width: min(340px, 100%);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* Bio + skills ------------------------------------------------------------*/
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.about-bio h2, .about-skills h2 { margin-bottom: 1rem; font-size: 1.6rem; }
+.about-bio p { margin-bottom: 1rem; max-width: 40rem; }
+
+.about-skills {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem 1.6rem 1.7rem;
+}
+
+.skill-group { margin-bottom: 1.1rem; }
+.skill-group:last-child { margin-bottom: 0; }
+.skill-group h3 {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--moss);
+  margin-bottom: 0.45rem;
+}
+.skill-group ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.skill-group li {
+  background: var(--mist);
+  color: var(--pine);
+  font-size: 0.78rem;
+  font-weight: 500;
+  border-radius: 999px;
+  padding: 0.16rem 0.6rem;
+}
+
+@media (max-width: 860px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 2.25rem; }
+  .hero-photo-wrap { justify-self: start; }
+  .about-grid { grid-template-columns: 1fr; gap: 2.25rem; }
+}
