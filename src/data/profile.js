@@ -4,8 +4,8 @@
 // ---------------------------------------------------------------------------
 
 export const profile = {
-  name: 'Chad Kraus',
-  fullName: 'Chadwick Kraus',
+  name: 'Chadwick (Chad) Kraus',
+  fullName: 'Chadwick (Chad) Kraus',
   title:
     'IT Support & QA Specialist | Networking • SaaS • AV Systems | Tier 2/3 Escalations | Root Cause Analysis | AI Automation',
   tagline:

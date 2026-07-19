@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="container footer-inner">
         <span className="footer-mono">
-          {profile.name.toLowerCase().replace(' ', '-')} · built with react + claude code
+          {profile.name.toLowerCase().replace(/[()]/g, '').replace(/\s+/g, '-')} · built with react + claude code
         </span>
         <div className="footer-links">
           <a href={profile.github} target="_blank" rel="noopener noreferrer">GitHub</a>
