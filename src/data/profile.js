@@ -38,7 +38,7 @@ export const profile = {
   certifications: [
     'Google IT Support Professional Certificate',
     'Full-Stack Web Development – The University of Texas at Austin',
-    'NASM Certified Personal Trainer',
+    'NASM Certified Personal Trainer + Certified Nutrition Coach',
   ],
 
   // Skills shown on the About page, grouped like the resume.
