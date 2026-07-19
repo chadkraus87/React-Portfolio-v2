@@ -53,6 +53,7 @@
 
 .hero-photo-wrap {
   position: relative;
+  width: fit-content;
   justify-self: center;
 }
 /* Offset frame behind the photo — quiet nod to the resume's rule lines */
