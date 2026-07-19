@@ -59,7 +59,7 @@
 .hero-photo-wrap::after {
   content: '';
   position: absolute;
-  inset: 11px -11px -11px 11px;
+  inset: 10px -10px -10px 10px;
   border: 2px solid var(--forest);
   border-radius: var(--radius);
   z-index: 0;
@@ -67,7 +67,9 @@
 .hero-photo {
   position: relative;
   z-index: 1;
-  width: min(260px, 100%);
+  width: min(210px, 100%);
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }

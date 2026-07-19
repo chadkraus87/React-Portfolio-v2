@@ -32,8 +32,8 @@ export default function About() {
               src={headshot}
               alt={`${profile.fullName} headshot`}
               className="hero-photo"
-              width="800"
-              height="800"
+              width="640"
+              height="640"
             />
           </div>
         </div>
