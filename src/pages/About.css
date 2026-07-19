@@ -59,7 +59,7 @@
 .hero-photo-wrap::after {
   content: '';
   position: absolute;
-  inset: 14px -14px -14px 14px;
+  inset: 11px -11px -11px 11px;
   border: 2px solid var(--forest);
   border-radius: var(--radius);
   z-index: 0;
@@ -67,7 +67,7 @@
 .hero-photo {
   position: relative;
   z-index: 1;
-  width: min(340px, 100%);
+  width: min(260px, 100%);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
@@ -118,4 +118,22 @@
   .hero-grid { grid-template-columns: 1fr; gap: 2.25rem; }
   .hero-photo-wrap { justify-self: start; }
   .about-grid { grid-template-columns: 1fr; gap: 2.25rem; }
+}
+
+/* Certifications ----------------------------------------------------------*/
+.certs { margin-top: 2.25rem; }
+.certs h2 { font-size: 1.6rem; margin-bottom: 0.9rem; }
+
+.cert-list { list-style: none; }
+.cert-list li {
+  position: relative;
+  padding: 0.4rem 0 0.4rem 1.7rem;
+  font-weight: 500;
+}
+.cert-list li::before {
+  content: '\2713';
+  position: absolute;
+  left: 0;
+  color: var(--forest);
+  font-weight: 700;
 }

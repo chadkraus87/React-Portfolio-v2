@@ -48,6 +48,16 @@ export default function About() {
             {profile.about.map((para, i) => (
               <p key={i}>{para}</p>
             ))}
+
+            <div className="certs">
+              <span className="eyebrow">certifications</span>
+              <h2>Selected Certifications</h2>
+              <ul className="cert-list">
+                {profile.certifications.map((cert) => (
+                  <li key={cert}>{cert}</li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           <aside className="about-skills">
