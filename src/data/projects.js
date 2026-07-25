@@ -16,6 +16,7 @@
 //   status      optional: 'In development' badge, or omit
 // ---------------------------------------------------------------------------
 
+import TrainCraftDashboard from '../assets/images/TrainCraftDashboard.png';
 import Spots from '../assets/images/SpotsLP.jpg';
 import PWA from '../assets/images/PWALP.png';
 import SocialNetwork from '../assets/images/SocialNetworkAPI.png';
@@ -33,12 +34,11 @@ export const projects = [
     title: 'TrainCraft',
     category: 'AI & Claude Code',
     description:
-      'AI-powered platform for personal trainers: client intake, program generation with contraindication-aware exercise filtering, and async plan generation. Built with Claude Code.',
-    stack: ['Next.js 15', 'Supabase', 'Claude API', 'Inngest'],
-    image: null,
-    projectLink: null,
-    repoLink: null,
-    status: 'In development',
+      'AI-powered client management and workout programming platform for personal trainers. A deterministic safety engine filters out contraindicated exercises and unavailable equipment before every plan is generated, then an automated QA pass re-validates it before delivery.',
+    stack: ['Next.js 15', 'Supabase', 'Claude API', 'Tailwind CSS'],
+    image: TrainCraftDashboard,
+    projectLink: 'https://traincraft-psi.vercel.app/',
+    repoLink: 'https://github.com/chadkraus87/traincraft',
   },
   {
     id: 2,
