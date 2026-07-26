@@ -16,7 +16,6 @@
 //   status      optional: 'In development' badge, or omit
 // ---------------------------------------------------------------------------
 
-import TrainCraftDashboard from '../assets/images/TrainCraftDashboard.png';
 import Spots from '../assets/images/SpotsLP.jpg';
 import PWA from '../assets/images/PWALP.png';
 import SocialNetwork from '../assets/images/SocialNetworkAPI.png';
@@ -26,19 +25,32 @@ import EmployeeTracker from '../assets/images/EmployeeTracker.png';
 import NoteTaker from '../assets/images/NoteTaker.png';
 import EcommerceBackend from '../assets/images/EcommerceBackend.png';
 import WebAPIQuiz from '../assets/images/WebAPIQuiz.png';
+import Jarvis from '../assets/images/jarvis.jpg';
 
 export const projects = [
   // ---- AI & Claude Code -------------------------------------------------
+  {
+    id: 12,
+    title: 'Jarvis',
+    category: 'AI & Claude Code',
+    description:
+      'A local-first, permission-gated personal AI assistant running entirely on home infrastructure — natural-language memory, voice interaction, full calendar and email management, and a searchable personal knowledge base via RAG. Every connector is deny-by-default and requires an explicit permission grant; anything destructive requires human confirmation before it executes. Built end-to-end with Claude Code across a full day-long session, including a real security audit that caught and fixed an OAuth CSRF gap and a container timezone bug.',
+    stack: ['FastAPI', 'Docker Compose', 'Chroma (Vector DB)', 'Claude API', 'Google OAuth2'],
+    image: Jarvis,
+    projectLink: null, // intentionally not linked — private for security reasons
+    repoLink: null, // intentionally not linked — private for security reasons
+  },
   {
     id: 1,
     title: 'TrainCraft',
     category: 'AI & Claude Code',
     description:
-      'AI-powered client management and workout programming platform for personal trainers. A deterministic safety engine filters contraindicated exercises before generation, an editable QA pass validates every plan, and trainers can fully edit any plan by hand — safety re-checked on every save.',
-    stack: ['Next.js 15', 'Supabase', 'Claude API', 'Tailwind CSS'],
-    image: TrainCraftDashboard,
-    projectLink: 'https://traincraft-psi.vercel.app/',
-    repoLink: 'https://github.com/chadkraus87/traincraft',
+      'AI-powered platform for personal trainers: client intake, program generation with contraindication-aware exercise filtering, and async plan generation. Built with Claude Code.',
+    stack: ['Next.js 15', 'Supabase', 'Claude API', 'Inngest'],
+    image: null,
+    projectLink: null,
+    repoLink: null,
+    status: 'In development',
   },
   {
     id: 2,
