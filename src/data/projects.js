@@ -26,6 +26,7 @@ import NoteTaker from '../assets/images/NoteTaker.png';
 import EcommerceBackend from '../assets/images/EcommerceBackend.png';
 import WebAPIQuiz from '../assets/images/WebAPIQuiz.png';
 import Jarvis from '../assets/images/JarvisDashboard.png';
+import TrainCraft from '../assets/images/TrainCraftDashboard.png';
 
 export const projects = [
   // ---- AI & Claude Code -------------------------------------------------
@@ -47,9 +48,9 @@ export const projects = [
     description:
       'AI-powered platform for personal trainers: client intake, program generation with contraindication-aware exercise filtering, and async plan generation. Built with Claude Code.',
     stack: ['Next.js 15', 'Supabase', 'Claude API', 'Inngest'],
-    image: null,
-    projectLink: null,
-    repoLink: null,
+    image: TrainCraft,
+    projectLink: 'https://traincraft-psi.vercel.app',
+    repoLink: 'https://github.com/chadkraus87/traincraft',
     status: 'In development',
   },
   {
@@ -62,7 +63,6 @@ export const projects = [
     image: null,
     projectLink: null,
     repoLink: null,
-    status: 'In development',
   },
 
   // ---- Full-Stack -------------------------------------------------------
