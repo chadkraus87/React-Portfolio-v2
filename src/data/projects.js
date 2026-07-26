@@ -34,7 +34,7 @@ export const projects = [
     title: 'TrainCraft',
     category: 'AI & Claude Code',
     description:
-      'AI-powered client management and workout programming platform for personal trainers. A deterministic safety engine filters out contraindicated exercises and unavailable equipment before every plan is generated, then an automated QA pass re-validates it before delivery.',
+      'AI-powered client management and workout programming platform for personal trainers. A deterministic safety engine filters contraindicated exercises before generation, an editable QA pass validates every plan, and trainers can fully edit any plan by hand — safety re-checked on every save.',
     stack: ['Next.js 15', 'Supabase', 'Claude API', 'Tailwind CSS'],
     image: TrainCraftDashboard,
     projectLink: 'https://traincraft-psi.vercel.app/',
