@@ -25,7 +25,7 @@ import EmployeeTracker from '../assets/images/EmployeeTracker.png';
 import NoteTaker from '../assets/images/NoteTaker.png';
 import EcommerceBackend from '../assets/images/EcommerceBackend.png';
 import WebAPIQuiz from '../assets/images/WebAPIQuiz.png';
-import Jarvis from '../assets/images/jarvis.png';
+import Jarvis from '../assets/images/JarvisDashboard.png';
 
 export const projects = [
   // ---- AI & Claude Code -------------------------------------------------
