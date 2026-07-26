@@ -51,7 +51,6 @@ export const projects = [
     image: TrainCraft,
     projectLink: 'https://traincraft-psi.vercel.app',
     repoLink: 'https://github.com/chadkraus87/traincraft',
-    status: 'In development',
   },
   {
     id: 2,
@@ -63,6 +62,7 @@ export const projects = [
     image: null,
     projectLink: null,
     repoLink: null,
+    status: 'In development',
   },
 
   // ---- Full-Stack -------------------------------------------------------
