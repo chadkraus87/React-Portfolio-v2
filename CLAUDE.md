@@ -83,6 +83,3 @@ them.
 ## Known housekeeping
 - `.github/workflows/publish.yml` pins Node 20, which GitHub now flags as deprecated
   (harmless warning). Bumping to Node 22 silences it — do this only if I ask.
-- There is currently a known bug to fix first: the Jarvis image import in
-  `projects.js` may still reference `jarvis.jpg` instead of the actual file
-  `JarvisDashboard.png` in `src/assets/images/`. Verify and correct on first session.
