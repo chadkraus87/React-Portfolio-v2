@@ -58,8 +58,15 @@ export const projects = [
     title: 'PetCenza',
     category: 'AI & Claude Code',
     description:
-      'A household pet health record built to answer one question the moment it opens: does anything need attention today? PetCenza tracks vaccination boosters, medication schedules and refill dates, vet appointments, and weight history across every pet in the home, then rolls all of it into a single daily view that surfaces a lapsing booster or a running-low prescription before it becomes a problem. A shared care team keeps sitters and family on the same schedule, and a dedicated emergency view puts vet contacts and each pet\'s active medications one tap away. Built with Claude Code.',
-    stack: ['Next.js', 'Supabase', 'Vercel'],
+      'A household pet health record built to answer one question the moment it opens: does anything need attention today? PetCenza tracks vaccination boosters, medication schedules and refill dates, vet appointments, and weight history across every pet in the home, then rolls all of it into a single daily view that surfaces a lapsing booster or a running-low prescription before it becomes a problem. Sharing is enforced in the database rather than the client — row-level security on all 26 tables, per-pet viewer/editor/co-owner roles, TOTP multi-factor auth, and magic-byte upload validation that quarantines files whose contents do not match their extension. It is offline-first by design: a persisted query cache serves reads with no connection, and an IndexedDB outbox replays mutations once the device reconnects. Backed by 101 unit tests, 6 Playwright E2E specs, and a SQL-level RLS isolation suite. Built with Claude Code.',
+    stack: [
+      'React 18 + TypeScript',
+      'Supabase (Postgres RLS)',
+      'TanStack Query',
+      'Deno Edge Functions',
+      'PWA / Offline-first',
+      'Vitest + Playwright',
+    ],
     image: PetCenza,
     projectLink: 'https://pawchart-zeta.vercel.app/',
     repoLink: null,
