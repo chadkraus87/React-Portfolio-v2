@@ -25,8 +25,9 @@ import EmployeeTracker from '../assets/images/EmployeeTracker.png';
 import NoteTaker from '../assets/images/NoteTaker.png';
 import EcommerceBackend from '../assets/images/EcommerceBackend.png';
 import WebAPIQuiz from '../assets/images/WebAPIQuiz.png';
-import Jarvis from '../assets/images/JarvisDashboard.png';
-import TrainCraft from '../assets/images/TrainCraftDashboard.png';
+import Jarvis from '../assets/images/JarvisDashboard.jpg';
+import TrainCraft from '../assets/images/TrainCraftDashboard.jpg';
+import PetCenza from '../assets/images/PetCenzaDashboard.jpg';
 
 export const projects = [
   // ---- AI & Claude Code -------------------------------------------------
@@ -46,7 +47,7 @@ export const projects = [
     title: 'TrainCraft',
     category: 'AI & Claude Code',
     description:
-      'AI-powered platform for personal trainers: client intake, program generation with contraindication-aware exercise filtering, and async plan generation. Built with Claude Code.',
+      'A programming assistant for personal trainers that turns a client intake — injuries, available equipment, and goals — into a complete training plan. Every plan is generated behind a contraindication-aware filter that screens out exercises against each client\'s logged injuries, then clears an automated QA check before the trainer ever sees it. Trainers work from a shared exercise library they can extend with their own movements, and generation runs asynchronously through Inngest so long AI jobs retry cleanly instead of timing out. Built end-to-end with Claude Code.',
     stack: ['Next.js 15', 'Supabase', 'Claude API', 'Inngest'],
     image: TrainCraft,
     projectLink: 'https://traincraft-psi.vercel.app',
@@ -54,15 +55,14 @@ export const projects = [
   },
   {
     id: 2,
-    title: 'Flowline',
+    title: 'PetCenza',
     category: 'AI & Claude Code',
     description:
-      'Multi-tenant B2B workflow tool with role-based access, drag-and-drop Kanban boards, and row-level security per organization. Built with Claude Code.',
-    stack: ['Next.js 14', 'Supabase RLS', 'dnd-kit'],
-    image: null,
-    projectLink: null,
+      'A household pet health record built to answer one question the moment it opens: does anything need attention today? PetCenza tracks vaccination boosters, medication schedules and refill dates, vet appointments, and weight history across every pet in the home, then rolls all of it into a single daily view that surfaces a lapsing booster or a running-low prescription before it becomes a problem. A shared care team keeps sitters and family on the same schedule, and a dedicated emergency view puts vet contacts and each pet\'s active medications one tap away. Built with Claude Code.',
+    stack: ['Next.js', 'Supabase', 'Vercel'],
+    image: PetCenza,
+    projectLink: 'https://pawchart-zeta.vercel.app/',
     repoLink: null,
-    status: 'In development',
   },
 
   // ---- Full-Stack -------------------------------------------------------
