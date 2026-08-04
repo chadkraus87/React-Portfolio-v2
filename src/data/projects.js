@@ -12,6 +12,9 @@
 //   stack       array of short tech labels shown as tags
 //   image       import at the top, or null for a styled placeholder
 //   projectLink live URL, or null (button hides itself)
+//   projectLinkLabel optional button text — defaults to 'View project'. Use
+//               'Watch demo' when the link goes to a walkthrough video rather
+//               than a running deployment.
 //   repoLink    GitHub URL, or null (button hides itself)
 //   status      optional: 'In development' badge, or omit
 // ---------------------------------------------------------------------------
@@ -115,6 +118,7 @@ export const projects = [
     stack: ['Node.js', 'MongoDB', 'Mongoose', 'REST'],
     image: SocialNetwork,
     projectLink: 'https://drive.google.com/file/d/1fEC96BaMTbx14i5lkYy8cDr9wpkvwJzT/view',
+    projectLinkLabel: 'Watch demo',
     repoLink: 'https://github.com/chadkraus87/SocialNetworkAPI',
   },
   {
@@ -126,6 +130,7 @@ export const projects = [
     stack: ['Express', 'Sequelize', 'MySQL'],
     image: EcommerceBackend,
     projectLink: 'https://drive.google.com/file/d/1xwvri6EEz_uOQUO-PmwaDuJ7FfFitsos/view',
+    projectLinkLabel: 'Watch demo',
     repoLink: 'https://github.com/chadkraus87/E-commerceBackEnd',
   },
   {
@@ -137,6 +142,7 @@ export const projects = [
     stack: ['Node.js', 'MySQL', 'Inquirer'],
     image: EmployeeTracker,
     projectLink: 'https://drive.google.com/file/d/1R3MvpUrgGGZx_RJXHq8LRBjfvBBzXhYN/view',
+    projectLinkLabel: 'Watch demo',
     repoLink: 'https://github.com/chadkraus87/EmployeeTracker',
   },
 
