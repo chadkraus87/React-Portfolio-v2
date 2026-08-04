@@ -23,11 +23,8 @@ import Spots from '../assets/images/SpotsLP.jpg';
 import PWA from '../assets/images/PWALP.png';
 import SocialNetwork from '../assets/images/SocialNetworkAPI.png';
 import MVC from '../assets/images/MVCTechBlogLP.png';
-import WorkDayScheduler from '../assets/images/WorkDaySchedulerLP.jpg';
 import EmployeeTracker from '../assets/images/EmployeeTracker.png';
-import NoteTaker from '../assets/images/NoteTaker.png';
 import EcommerceBackend from '../assets/images/EcommerceBackend.png';
-import WebAPIQuiz from '../assets/images/WebAPIQuiz.png';
 import Jarvis from '../assets/images/JarvisDashboard.jpg';
 import TrainCraft from '../assets/images/TrainCraftDashboard.jpg';
 import PetCenza from '../assets/images/PetCenzaDashboard.jpg';
@@ -144,40 +141,5 @@ export const projects = [
     projectLink: 'https://drive.google.com/file/d/1R3MvpUrgGGZx_RJXHq8LRBjfvBBzXhYN/view',
     projectLinkLabel: 'Watch demo',
     repoLink: 'https://github.com/chadkraus87/EmployeeTracker',
-  },
-
-  // ---- Foundational -----------------------------------------------------
-  {
-    id: 9,
-    title: 'Work Day Scheduler',
-    category: 'Foundational',
-    description:
-      'Real-time calendar app with saved events, live clock, and rotating inspirational quotes.',
-    stack: ['JavaScript', 'jQuery', 'Day.js'],
-    image: WorkDayScheduler,
-    projectLink: 'https://chadkraus87.github.io/Work-Day-Scheduler/',
-    repoLink: 'https://github.com/chadkraus87/Work-Day-Scheduler',
-  },
-  {
-    id: 10,
-    title: 'Note Taker',
-    category: 'Foundational',
-    description:
-      'Express-backed note app for saving and deleting daily tasks.',
-    stack: ['Express', 'Node.js'],
-    image: NoteTaker,
-    projectLink: null,
-    repoLink: 'https://github.com/chadkraus87/NoteTaker',
-  },
-  {
-    id: 11,
-    title: 'Web API Code Quiz',
-    category: 'Foundational',
-    description:
-      'Timed JavaScript quiz with countdown, scoring, and local high-score storage.',
-    stack: ['JavaScript', 'Web APIs'],
-    image: WebAPIQuiz,
-    projectLink: 'https://chadkraus87.github.io/Web-API-Code-Quiz/',
-    repoLink: 'https://github.com/chadkraus87/Web-API-Code-Quiz',
   },
 ];

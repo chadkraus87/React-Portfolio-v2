@@ -7,7 +7,7 @@ export const profile = {
   name: 'Chadwick (Chad) Kraus',
   fullName: 'Chadwick (Chad) Kraus',
   title:
-    'IT Support & QA Specialist | Networking • SaaS • AV Systems | Tier 2/3 Escalations | Root Cause Analysis | AI Automation',
+    'Network IT Specialist at Rockbot — Tier 2/3 escalations, QA operations, and AI tooling built to prevent the next ticket.',
   tagline:
     'I solve complex technical problems that span Support, Engineering, and Operations. From Tier 2/3 escalations and enterprise networking to QA, automation, and AI-powered tooling, I build systems that prevent issues—not just resolve them.',
   location: 'Austin, TX (Remote)',
