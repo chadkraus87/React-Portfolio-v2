@@ -12,7 +12,7 @@ import './Contact.css';
 // the visitor's mail app. That fallback silently dead-ends for anyone on
 // webmail or a device with no mail client configured — which is a meaningful
 // share of recruiters — so real delivery is worth the two minutes.
-const FORM_ENDPOINT = null;
+const FORM_ENDPOINT = 'https://formspree.io/f/xnpaqdnq';
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' });

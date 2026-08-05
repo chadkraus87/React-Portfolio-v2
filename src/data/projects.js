@@ -79,23 +79,24 @@ export const projects = [
     ],
     image: PetCenza,
     projectLink: 'https://pawchart-zeta.vercel.app/',
-    repoLink: null,
+    repoLink: 'https://github.com/chadkraus87/petcenza',
   },
 
-  // ---- Full-Stack -------------------------------------------------------
   {
     id: 3,
     title: 'Greenline',
-    category: 'Full-Stack',
+    category: 'AI & Claude Code',
     summary:
       'A private monthly budget built around the question that actually matters mid-month: what is genuinely left to spend? Projects a daily cash runway from scheduled bills and income, then scores the month as you spend against it.',
     details:
-      'Bills, income, expenses, budgets, goals, reserves and debt each keep their own ledger, and the calendar puts every scheduled flow on a date so a shortfall shows up weeks before it lands — receipts scan straight into an expense. Data is scoped per account by row-level security across 12 tables, and the deployment ships a real CSP with HSTS and frame-deny rather than framework defaults. Installable and offline-capable as a PWA.',
+      'Bills, income, expenses, budgets, goals, reserves and debt each keep their own ledger, and the calendar puts every scheduled flow on a date so a shortfall shows up weeks before it lands — receipts scan straight into an expense. Data is scoped per account by row-level security across 12 tables, and the deployment ships a real CSP with HSTS and frame-deny rather than framework defaults. Installable and offline-capable as a PWA. Built with Claude Code.',
     stack: ['React + TypeScript', 'Supabase (Postgres RLS)', 'Vite', 'Recharts', 'PWA / Offline', 'Vitest + Playwright'],
     image: Greenline,
-    projectLink: null,
-    repoLink: null, // repo is private — see note before linking
+    projectLink: 'https://greenline-chadwick-kraus-projects.vercel.app/',
+    repoLink: 'https://github.com/chadkraus87/greenline',
   },
+
+  // ---- Full-Stack -------------------------------------------------------
   {
     id: 4,
     title: 'PWA Text Editor',
