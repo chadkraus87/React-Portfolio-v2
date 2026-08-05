@@ -46,17 +46,19 @@
       href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <script type="module" crossorigin src="/React-Portfolio-v2/assets/index-BIWesKIs.js"></script>
+    <script type="module" crossorigin src="/React-Portfolio-v2/assets/index-FQ7zZq_F.js"></script>
     <link rel="stylesheet" crossorigin href="/React-Portfolio-v2/assets/index-Bfj7AlgN.css">
   </head>
   <body>
     <div id="root"></div>
 
-    <!-- GoatCounter analytics. Note: this counts the initial page load only.
-         Because routing is hash-based, every route shares the same path, so
-         all views land on a single entry rather than splitting by page. -->
+    <!-- GoatCounter analytics. `no_onload` disables the script's own automatic
+         pageview so it cannot double-count the landing page — src/components/
+         Analytics.jsx records every view instead, passing the hash route as an
+         explicit path so the four pages report separately. -->
     <script
       data-goatcounter="https://chadkraus.goatcounter.com/count"
+      data-goatcounter-settings='{"no_onload": true}'
       async
       src="https://gc.zgo.at/count.js"
     ></script>
