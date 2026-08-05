@@ -1,6 +1,7 @@
 import { HashRouter, Routes, Route } from 'react-router';
 import NavBar from './components/NavBar.jsx';
 import Footer from './components/Footer.jsx';
+import Analytics from './components/Analytics.jsx';
 import About from './pages/About.jsx';
 import Portfolio from './pages/Portfolio.jsx';
 import Resume from './pages/Resume.jsx';
@@ -11,6 +12,8 @@ export default function App() {
   return (
     <HashRouter>
       <div className="app-shell">
+        {/* Must live inside the router — it reads the active route */}
+        <Analytics />
         <NavBar />
         <main>
           <Routes>

@@ -51,11 +51,13 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
 
-    <!-- GoatCounter analytics. Note: this counts the initial page load only.
-         Because routing is hash-based, every route shares the same path, so
-         all views land on a single entry rather than splitting by page. -->
+    <!-- GoatCounter analytics. `no_onload` disables the script's own automatic
+         pageview so it cannot double-count the landing page — src/components/
+         Analytics.jsx records every view instead, passing the hash route as an
+         explicit path so the four pages report separately. -->
     <script
       data-goatcounter="https://chadkraus.goatcounter.com/count"
+      data-goatcounter-settings='{"no_onload": true}'
       async
       src="https://gc.zgo.at/count.js"
     ></script>
