@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router';
 import NavBar from './components/NavBar.jsx';
 import Footer from './components/Footer.jsx';
 import About from './pages/About.jsx';

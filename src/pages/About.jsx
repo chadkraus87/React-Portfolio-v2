@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { profile } from '../data/profile.js';
 import headshot from '../assets/images/headshot.jpg';
 import './About.css';
