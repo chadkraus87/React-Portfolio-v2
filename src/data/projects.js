@@ -23,7 +23,7 @@
 //   status      optional: 'In development' badge, or omit
 // ---------------------------------------------------------------------------
 
-import Spots from '../assets/images/SpotsLP.jpg';
+import Greenline from '../assets/images/GreenlineDashboard.jpg';
 import PWA from '../assets/images/PWALP.png';
 import SocialNetwork from '../assets/images/SocialNetworkAPI.png';
 import MVC from '../assets/images/MVCTechBlogLP.png';
@@ -68,7 +68,7 @@ export const projects = [
     summary:
       'A household pet health record built to answer one question the moment it opens: does anything need attention today? Tracks boosters, medication refills, vet visits, and weight history across every pet in the home.',
     details:
-      'Sharing is enforced in the database rather than the client — row-level security on all 26 tables, per-pet viewer/editor/co-owner roles, TOTP multi-factor auth, and magic-byte upload validation that quarantines mismatched uploads. Several real vulnerabilities surfaced under audit during development and were closed before launch — among them a rate limiter rekeyed onto a spoof-resistant header, and SECURITY DEFINER helper functions introduced to break recursive RLS policy evaluation. It is offline-first by design: a persisted query cache serves reads with no connection, and an IndexedDB outbox replays mutations once the device reconnects. Backed by 101 unit tests, 6 Playwright E2E specs, and a SQL-level RLS isolation suite. Built with Claude Code.',
+      'Sharing is enforced in the database rather than the client — row-level security on all 26 tables, per-pet viewer/editor/co-owner roles, TOTP multi-factor auth, and magic-byte upload validation that quarantines mismatched uploads. Security review ran as part of the build rather than a pass at the end, and it drove concrete hardening — the rate limiter moved onto a spoof-resistant header, and SECURITY DEFINER helper functions were introduced to break recursive RLS policy evaluation. It is offline-first by design: a persisted query cache serves reads with no connection, and an IndexedDB outbox replays mutations once the device reconnects. Backed by 101 unit tests, 6 Playwright E2E specs, and a SQL-level RLS isolation suite. Built with Claude Code.',
     stack: [
       'React 18 + TypeScript',
       'Supabase (Postgres RLS)',
@@ -85,14 +85,16 @@ export const projects = [
   // ---- Full-Stack -------------------------------------------------------
   {
     id: 3,
-    title: 'Spots',
+    title: 'Greenline',
     category: 'Full-Stack',
     summary:
-      'Authentication-based app for saving favorite locations with photos, address auto-population, and Google Maps hand-off.',
-    stack: ['Node.js', 'Express', 'MySQL', 'Auth'],
-    image: Spots,
-    projectLink: null, // Heroku free tier retired — redeploy or leave repo-only
-    repoLink: 'https://github.com/chadkraus87/FullStackGroup2',
+      'A private monthly budget built around the question that actually matters mid-month: what is genuinely left to spend? Projects a daily cash runway from scheduled bills and income, then scores the month as you spend against it.',
+    details:
+      'Bills, income, expenses, budgets, goals, reserves and debt each keep their own ledger, and the calendar puts every scheduled flow on a date so a shortfall shows up weeks before it lands — receipts scan straight into an expense. Data is scoped per account by row-level security across 12 tables, and the deployment ships a real CSP with HSTS and frame-deny rather than framework defaults. Installable and offline-capable as a PWA.',
+    stack: ['React + TypeScript', 'Supabase (Postgres RLS)', 'Vite', 'Recharts', 'PWA / Offline', 'Vitest + Playwright'],
+    image: Greenline,
+    projectLink: null,
+    repoLink: null, // repo is private — see note before linking
   },
   {
     id: 4,
