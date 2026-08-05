@@ -16,6 +16,11 @@
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 .filter-btn:hover { border-color: var(--forest); }
+
+/* Filters measured 31px tall — under the 44px touch minimum */
+@media (max-width: 680px) {
+  .filter-btn { min-height: 44px; padding: 0.35rem 1.1rem; }
+}
 .filter-btn.is-active {
   background: var(--forest);
   border-color: var(--forest);

@@ -8,7 +8,11 @@
 //   category    'AI & Claude Code' | 'Full-Stack' | 'Foundational'
 //               (add a new category string and it appears as a filter
 //               automatically)
-//   description 1–3 sentences
+//   summary     the hook — 1–2 sentences, ALWAYS visible on the card. Keep it
+//               short; this is what sets every card's height in the grid.
+//   details     optional deeper writeup, hidden behind a "More detail" toggle.
+//               Omit it entirely for small projects. Do not repeat the summary
+//               here — details continues from where the summary stopped.
 //   stack       array of short tech labels shown as tags
 //   image       import at the top, or null for a styled placeholder
 //   projectLink live URL, or null (button hides itself)
@@ -35,8 +39,10 @@ export const projects = [
     id: 12,
     title: 'Jarvis',
     category: 'AI & Claude Code',
-    description:
-      'A local-first, permission-gated personal AI assistant running entirely on home infrastructure — natural-language memory, voice interaction, full calendar and email management, and a searchable personal knowledge base via RAG. Every connector is deny-by-default and requires an explicit permission grant; anything destructive requires human confirmation before it executes. Built end-to-end with Claude Code across a full day-long session, including a real security audit that caught and fixed an OAuth CSRF gap and a container timezone bug.',
+    summary:
+      'A local-first, permission-gated personal AI assistant running entirely on home infrastructure — natural-language memory, voice interaction, full calendar and email management, and a searchable knowledge base via RAG.',
+    details:
+      'Every connector is deny-by-default and requires an explicit permission grant; anything destructive requires human confirmation before it executes. Built end-to-end with Claude Code across a full day-long session, including a real security audit that caught and fixed an OAuth CSRF gap and a container timezone bug.',
     stack: ['FastAPI', 'Docker Compose', 'Chroma (Vector DB)', 'Claude API', 'Google OAuth2'],
     image: Jarvis,
     projectLink: null, // intentionally not linked — private for security reasons
@@ -46,8 +52,10 @@ export const projects = [
     id: 1,
     title: 'TrainCraft',
     category: 'AI & Claude Code',
-    description:
-      'A programming assistant for personal trainers that turns a client intake — injuries, available equipment, and goals — into a complete training plan. Every plan is generated behind a contraindication-aware filter that screens out exercises against each client\'s logged injuries, then clears an automated QA check before the trainer ever sees it. Trainers work from a shared exercise library they can extend with their own movements, and generation runs asynchronously through Inngest so long AI jobs retry cleanly instead of timing out. Built end-to-end with Claude Code.',
+    summary:
+      'A programming assistant for personal trainers that turns a client intake — injuries, available equipment, and goals — into a complete training plan.',
+    details:
+      'Every plan is generated behind a contraindication-aware filter that screens out exercises against each client\'s logged injuries, then clears an automated QA check before the trainer ever sees it. Trainers work from a shared exercise library they can extend with their own movements, and generation runs asynchronously through Inngest so long AI jobs retry cleanly instead of timing out. Built end-to-end with Claude Code.',
     stack: ['Next.js 15', 'Supabase', 'Claude API', 'Inngest'],
     image: TrainCraft,
     projectLink: 'https://traincraft-psi.vercel.app',
@@ -57,8 +65,10 @@ export const projects = [
     id: 2,
     title: 'PetCenza',
     category: 'AI & Claude Code',
-    description:
-      'A household pet health record built to answer one question the moment it opens: does anything need attention today? PetCenza tracks vaccination boosters, medication schedules and refill dates, vet appointments, and weight history across every pet in the home, then rolls all of it into a single daily view that surfaces a lapsing booster or a running-low prescription before it becomes a problem. Sharing is enforced in the database rather than the client — row-level security on all 26 tables, per-pet viewer/editor/co-owner roles, TOTP multi-factor auth, and magic-byte upload validation that quarantines mismatched uploads. Several real vulnerabilities surfaced under audit during development and were closed before launch — among them a rate limiter rekeyed onto a spoof-resistant header, and SECURITY DEFINER helper functions introduced to break recursive RLS policy evaluation. It is offline-first by design: a persisted query cache serves reads with no connection, and an IndexedDB outbox replays mutations once the device reconnects. Backed by 101 unit tests, 6 Playwright E2E specs, and a SQL-level RLS isolation suite. Built with Claude Code.',
+    summary:
+      'A household pet health record built to answer one question the moment it opens: does anything need attention today? Tracks boosters, medication refills, vet visits, and weight history across every pet in the home.',
+    details:
+      'Sharing is enforced in the database rather than the client — row-level security on all 26 tables, per-pet viewer/editor/co-owner roles, TOTP multi-factor auth, and magic-byte upload validation that quarantines mismatched uploads. Several real vulnerabilities surfaced under audit during development and were closed before launch — among them a rate limiter rekeyed onto a spoof-resistant header, and SECURITY DEFINER helper functions introduced to break recursive RLS policy evaluation. It is offline-first by design: a persisted query cache serves reads with no connection, and an IndexedDB outbox replays mutations once the device reconnects. Backed by 101 unit tests, 6 Playwright E2E specs, and a SQL-level RLS isolation suite. Built with Claude Code.',
     stack: [
       'React 18 + TypeScript',
       'Supabase (Postgres RLS)',
@@ -77,7 +87,7 @@ export const projects = [
     id: 3,
     title: 'Spots',
     category: 'Full-Stack',
-    description:
+    summary:
       'Authentication-based app for saving favorite locations with photos, address auto-population, and Google Maps hand-off.',
     stack: ['Node.js', 'Express', 'MySQL', 'Auth'],
     image: Spots,
@@ -88,7 +98,7 @@ export const projects = [
     id: 4,
     title: 'PWA Text Editor',
     category: 'Full-Stack',
-    description:
+    summary:
       'Progressive web app for creating and managing code snippets, fully functional offline with IndexedDB persistence.',
     stack: ['PWA', 'IndexedDB', 'Webpack', 'Service Workers'],
     image: PWA,
@@ -99,7 +109,7 @@ export const projects = [
     id: 5,
     title: 'MVC Tech Blog',
     category: 'Full-Stack',
-    description:
+    summary:
       'CMS-style blog where developers publish posts and comment, built on the MVC pattern with session-based auth.',
     stack: ['Express', 'Sequelize', 'Handlebars', 'bcrypt'],
     image: MVC,
@@ -110,7 +120,7 @@ export const projects = [
     id: 6,
     title: 'Social Network API',
     category: 'Full-Stack',
-    description:
+    summary:
       'Backend API for a social platform — thoughts, reactions, and friend lists — with MongoDB and Mongoose data modeling.',
     stack: ['Node.js', 'MongoDB', 'Mongoose', 'REST'],
     image: SocialNetwork,
@@ -122,7 +132,7 @@ export const projects = [
     id: 7,
     title: 'E-commerce Back End',
     category: 'Full-Stack',
-    description:
+    summary:
       'API endpoints for products, categories, and tags with full CRUD, built with Sequelize ORM over MySQL.',
     stack: ['Express', 'Sequelize', 'MySQL'],
     image: EcommerceBackend,
@@ -134,7 +144,7 @@ export const projects = [
     id: 8,
     title: 'Employee Tracker',
     category: 'Full-Stack',
-    description:
+    summary:
       'Command-line employee management system: departments, roles, budgets, and reporting over a MySQL database.',
     stack: ['Node.js', 'MySQL', 'Inquirer'],
     image: EmployeeTracker,

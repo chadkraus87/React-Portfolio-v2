@@ -20,10 +20,15 @@
   margin-bottom: 0.4rem;
 }
 
+/* Body font, not mono — this is a prose sentence, and monospace prose is
+   measurably harder to read (worst on mobile, where it wrapped to 4 lines). */
 .hero-title {
-  font-family: var(--font-mono);
-  font-size: 0.92rem;
+  font-family: var(--font-body);
+  font-size: 1.02rem;
+  font-weight: 500;
+  line-height: 1.5;
   color: var(--forest);
+  max-width: 34rem;
   margin-bottom: 1.1rem;
 }
 
@@ -119,8 +124,17 @@
 
 @media (max-width: 860px) {
   .hero-grid { grid-template-columns: 1fr; gap: 2.25rem; }
-  .hero-photo-wrap { justify-self: start; }
   .about-grid { grid-template-columns: 1fr; gap: 2.25rem; }
+
+  /* Photo first on narrow screens. Stacked in source order it landed below
+     the name, tagline, tags and buttons — roughly a full screen down — so a
+     phone visitor read the whole hero before seeing a face. */
+  .hero-photo-wrap {
+    order: -1;
+    justify-self: start;
+    width: min(150px, 45%);
+  }
+  .hero { padding: 2.5rem 0; }
 }
 
 /* Certifications ----------------------------------------------------------*/

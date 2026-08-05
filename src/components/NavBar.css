@@ -23,6 +23,10 @@
   gap: 0.6rem;
 }
 .nav-brand:hover { text-decoration: none; color: #fff; }
+/* Home link — 29px measured, below the touch minimum */
+@media (max-width: 680px) {
+  .nav-brand { min-height: 44px; }
+}
 
 .nav-brand-mark {
   font-family: var(--font-mono);
@@ -59,12 +63,18 @@
 }
 
 /* Mobile toggle */
+/* 44x44 minimum — this is the primary navigation control on phones and it
+   measured 32px, below both the iOS guideline and WCAG 2.5.5. */
 .nav-toggle {
   display: none;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 5px;
   background: none;
   border: none;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0.5rem;
 }
 .nav-toggle span {

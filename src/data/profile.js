@@ -22,7 +22,7 @@ export const profile = {
     'Root Cause Analysis',
     'Technical Operations',
     'AI Automation',
-    'next.js + supabase',
+    'Next.js + Supabase',
   ],
 
   // About page paragraphs — add/remove strings to change the bio.

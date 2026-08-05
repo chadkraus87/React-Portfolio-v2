@@ -53,6 +53,18 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 /* Layout helpers ---------------------------------------------------------- */
+
+/* App.jsx renders .app-shell but nothing styled it, so on short pages (Resume
+   on mobile, Contact) the footer stopped wherever content ended and left bare
+   background beneath it. Shell fills the viewport; main absorbs the slack. */
+.app-shell {
+  min-height: 100vh;
+  min-height: 100dvh; /* dvh accounts for mobile browser chrome */
+  display: flex;
+  flex-direction: column;
+}
+.app-shell > main { flex: 1; }
+
 .container {
   max-width: var(--maxw);
   margin: 0 auto;
@@ -90,6 +102,11 @@ button { font-family: inherit; cursor: pointer; }
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 .btn:hover { text-decoration: none; }
+
+/* Comfortable touch height on phones (buttons measured 40px) */
+@media (max-width: 680px) {
+  .btn { min-height: 44px; }
+}
 
 .btn-primary { background: var(--forest); color: #fff; }
 .btn-primary:hover { background: var(--pine); }

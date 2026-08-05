@@ -19,6 +19,9 @@ export default function Resume() {
           </a>
         </div>
 
+        {/* Inline PDF embedding is unreliable on phones — iOS Safari in
+            particular renders a dead grey panel. Below 700px we skip the
+            iframe entirely and offer the PDF directly instead. */}
         <iframe
           src={resumePdf}
           title={`${profile.fullName} resume`}
@@ -28,6 +31,20 @@ export default function Resume() {
         <p className="resume-fallback">
           Viewer not loading? <a href={resumePdf} target="_blank" rel="noopener noreferrer">Open the PDF in a new tab</a>.
         </p>
+
+        <div className="resume-mobile">
+          <p className="resume-mobile-note">
+            Résumés read poorly squeezed into a phone screen, so here it is as a file.
+          </p>
+          <div className="resume-mobile-actions">
+            <a href={resumePdf} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+              Open PDF
+            </a>
+            <a href={resumePdf} download="Chadwick_Kraus_Resume.pdf" className="btn btn-outline">
+              Download
+            </a>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -30,3 +30,16 @@
   font-weight: 500;
 }
 .footer-links a:hover { color: #fff; }
+
+/* Footer links measured 24px tall — right at the WCAG 2.5.8 floor. Give them
+   a real touch area on phones without changing desktop density. */
+@media (max-width: 680px) {
+  .footer-links { gap: 0.5rem; }
+  .footer-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 0.6rem;
+  }
+  .footer-links a:first-child { padding-left: 0; }
+}

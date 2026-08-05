@@ -52,10 +52,13 @@ A personal developer portfolio. Vite + React 18, deployed to GitHub Pages.
 
 ## How to make the common updates
 - **Add/edit/remove a project** → `src/data/projects.js`. Copy an existing block,
-  change the fields. Fields: `title`, `category`, `description`, `stack` (array of
-  tech tags), `image` (import at top, reference by variable, or `null` for a styled
-  placeholder), `projectLink` and `repoLink` (URL or `null` — a null link hides its
-  button), optional `status` (e.g. 'In development').
+  change the fields. Fields: `title`, `category`, `summary` (1–2 sentence hook,
+  always visible — keep it short, it sets the card height), optional `details`
+  (longer writeup hidden behind a "More detail" toggle; don't repeat the summary),
+  `stack` (array of tech tags), `image` (import at top, reference by variable, or
+  `null` for a styled placeholder), `projectLink` and `repoLink` (URL or `null` —
+  a null link hides its button), optional `projectLinkLabel` (defaults to
+  'View project'; use 'Watch demo' for video links), optional `status`.
 - **Change bio / title / tagline / skills / certifications / contact** →
   `src/data/profile.js`. Edit the text between quotes; skills and certifications are
   simple arrays.

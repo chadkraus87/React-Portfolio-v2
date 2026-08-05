@@ -4,10 +4,14 @@ import './ProjectCard.css';
 // Buttons hide themselves when a link is null, and a placeholder panel
 // renders when there's no screenshot yet. The primary button says
 // "View project" unless the project sets projectLinkLabel.
+//
+// Cards show `summary` only. Anything in `details` sits behind a native
+// <details> disclosure so one long writeup can't stretch its whole grid row.
 export default function ProjectCard({ project }) {
   const {
     title,
-    description,
+    summary,
+    details,
     stack,
     image,
     projectLink,
@@ -34,7 +38,16 @@ export default function ProjectCard({ project }) {
         </div>
 
         <h3 className="pcard-title">{title}</h3>
-        <p className="pcard-desc">{description}</p>
+        <p className="pcard-desc">{summary}</p>
+
+        {details && (
+          <details className="pcard-more">
+            <summary>
+              <span className="pcard-more-label">More detail</span>
+            </summary>
+            <p className="pcard-more-body">{details}</p>
+          </details>
+        )}
 
         {stack?.length > 0 && (
           <ul className="pcard-stack">
