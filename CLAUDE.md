@@ -15,7 +15,24 @@ A personal developer portfolio. Vite + React 18, deployed to GitHub Pages.
 - `src/assets/images/` — screenshots/headshot. `src/assets/files/` — resume PDF.
 - `src/pages/` and `src/components/` — layout/design. Only touch when I ask for a
   design or structural change, not for content updates.
-- Routing is HashRouter; base path in `vite.config.js` is `/React-Portfolio-v2/`.
+- Routing is BrowserRouter with real paths (`/portfolio`, not `/#/portfolio`).
+  `basename` reads from `import.meta.env.BASE_URL`, so the base path lives in
+  exactly one place: `vite.config.js` (`/React-Portfolio-v2/`). GitHub Pages
+  can't rewrite server-side, so `public/404.html` encodes the requested route
+  into a query string and `index.html` decodes it before React boots. If you
+  ever change the base path or move to a custom domain, both of those plus
+  `pathSegmentsToKeep` in 404.html need to agree.
+
+## Prerendering (why `npm run build` has a second step)
+`npm run build` runs `vite build` then `scripts/prerender.mjs`, which writes a
+real `dist/<route>/index.html` for each route plus `sitemap.xml` and
+`robots.txt`. Without it, `/portfolio` is served by `404.html` — fine for humans
+(the JS redirect fixes it) but a literal HTTP 404, which crawlers drop. The
+prerendered files make each route answer 200 and carry its own `<title>`,
+description and OG tags.
+
+**When you add a route**, add it to the `routes` array in `scripts/prerender.mjs`
+too, or it will 404 for crawlers and lose its per-page metadata.
 
 ## Deployment
 - Auto-publishing is ON via GitHub Actions (`.github/workflows/publish.yml`).

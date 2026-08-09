@@ -6,7 +6,7 @@
   "homepage": "https://chadkraus87.github.io/React-Portfolio-v2/",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/prerender.mjs",
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"

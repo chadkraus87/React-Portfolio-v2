@@ -73,6 +73,14 @@ button { font-family: inherit; cursor: pointer; }
 
 .page { padding: 3.5rem 0 4.5rem; }
 
+/* 404 ---------------------------------------------------------------------- */
+.notfound-copy {
+  max-width: 34rem;
+  color: var(--ink);
+  margin-bottom: 1.6rem;
+}
+.notfound-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
 /* Mono eyebrow label — the site's signature device. Reads like a CLI path. */
 .eyebrow {
   font-family: var(--font-mono);

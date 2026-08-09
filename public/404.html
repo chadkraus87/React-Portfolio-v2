@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting…</title>
+    <meta name="robots" content="noindex" />
+    <script>
+      // GitHub Pages has no server-side rewrite, so a direct hit on a client
+      // route (/React-Portfolio-v2/portfolio) 404s. Pages serves THIS file for
+      // any unmatched path, so we encode the requested route into a query
+      // string and bounce to index.html, which decodes it back before React
+      // boots. Adapted from rafgraph/spa-github-pages.
+      //
+      // pathSegmentsToKeep = 1 because this is a project site served from
+      // /React-Portfolio-v2/ — that first segment is the app root, not a route.
+      // It would be 0 for a user/organisation site served from the domain root.
+      var pathSegmentsToKeep = 1;
+      var l = window.location;
+      l.replace(
+        l.protocol +
+          '//' +
+          l.hostname +
+          (l.port ? ':' + l.port : '') +
+          l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') +
+          '/?/' +
+          l.pathname
+            .slice(1)
+            .split('/')
+            .slice(pathSegmentsToKeep)
+            .join('/')
+            .replace(/&/g, '~and~') +
+          (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+          l.hash
+      );
+    </script>
+  </head>
+  <body>
+    <p>Redirecting…</p>
+  </body>
+</html>

@@ -55,8 +55,8 @@ export const projects = [
     summary:
       'A programming assistant for personal trainers that turns a client intake — injuries, available equipment, and goals — into a complete training plan.',
     details:
-      'Every plan is generated behind a contraindication-aware filter that screens out exercises against each client\'s logged injuries, then clears an automated QA check before the trainer ever sees it. Trainers work from a shared exercise library they can extend with their own movements, and generation runs asynchronously through Inngest so long AI jobs retry cleanly instead of timing out. Built end-to-end with Claude Code.',
-    stack: ['Next.js 15', 'Supabase', 'Claude API', 'Inngest'],
+      'Every plan is generated behind a contraindication-aware filter that screens exercises against each client\'s logged injuries, then clears a deterministic QA pass before the trainer sees it — a failed check feeds back into a single automatic retry, and plans that still fail are stored as drafts with their full QA report rather than presented as finished. Trainers work from a shared exercise library they can extend with their own movements. Built end-to-end with Claude Code.',
+    stack: ['Next.js 15', 'Supabase', 'Claude API', 'TypeScript'],
     image: TrainCraft,
     projectLink: 'https://traincraft-psi.vercel.app',
     repoLink: 'https://github.com/chadkraus87/traincraft',
