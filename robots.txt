@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://chadkraus87.github.io/React-Portfolio-v2/sitemap.xml
