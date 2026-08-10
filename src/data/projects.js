@@ -66,14 +66,15 @@ export const projects = [
     title: 'PetCenza',
     category: 'AI & Claude Code',
     summary:
-      'A household pet health record built to answer one question the moment it opens: does anything need attention today? Tracks boosters, medication refills, vet visits, and weight history across every pet in the home.',
+      'A household pet health record built to answer one question the moment it opens: does anything need attention today? Tracks boosters, medication refills, vet visits, and weight history across every pet in the home, then rolls the day into a single medication round — what to give, to whom, right now.',
     details:
-      'Sharing is enforced in the database rather than the client — row-level security on all 26 tables, per-pet viewer/editor/co-owner roles, TOTP multi-factor auth, and magic-byte upload validation that quarantines mismatched uploads. Security review ran as part of the build rather than a pass at the end, and it drove concrete hardening — the rate limiter moved onto a spoof-resistant header, and SECURITY DEFINER helper functions were introduced to break recursive RLS policy evaluation. It is offline-first by design: a persisted query cache serves reads with no connection, and an IndexedDB outbox replays mutations once the device reconnects. Backed by 101 unit tests, 6 Playwright E2E specs, and a SQL-level RLS isolation suite. Built with Claude Code.',
+      'Dosing is derived from the frequency text transcribed off a prescription label, so it reads plain English, the Latin abbreviations vets still write (BID, TID, QID) and interval notation like q12h; anything it cannot place is surfaced in its own section rather than dropped, because a missed dose matters more than a tidy list. Sharing is enforced in the database rather than the client — row-level security on all 26 tables, per-pet viewer/editor/co-owner roles, TOTP multi-factor auth, and magic-byte upload validation that quarantines mismatched uploads. Vets get a separate read-only link that expires and needs no account. Security review ran as part of the build rather than a pass at the end, and it drove concrete hardening: the rate limiter moved onto a spoof-resistant header after live testing proved the obvious one rotated per request and defeated the limit entirely, and SECURITY DEFINER helper functions were introduced to break recursive RLS policy evaluation. It is offline-first by design — a persisted query cache serves reads with no connection, and an IndexedDB outbox replays mutations once the device reconnects. Backed by 101 unit tests, 6 Playwright E2E specs, and a SQL-level RLS isolation suite. Built with Claude Code.',
     stack: [
       'React 18 + TypeScript',
       'Supabase (Postgres RLS)',
       'TanStack Query',
       'Deno Edge Functions',
+      'Zod + React Hook Form',
       'PWA / Offline-first',
       'Vitest + Playwright',
     ],
