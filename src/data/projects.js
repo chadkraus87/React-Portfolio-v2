@@ -30,7 +30,7 @@ import MVC from '../assets/images/MVCTechBlogLP.png';
 import EmployeeTracker from '../assets/images/EmployeeTracker.png';
 import EcommerceBackend from '../assets/images/EcommerceBackend.png';
 import Jarvis from '../assets/images/JarvisDashboard.jpg';
-import TrainCraft from '../assets/images/TrainCraftDashboard.jpg';
+import CoachRhythm from '../assets/images/CoachRhythmDashboard.jpg';
 import PetCenza from '../assets/images/PetCenzaDashboard.jpg';
 
 export const projects = [
@@ -50,14 +50,14 @@ export const projects = [
   },
   {
     id: 1,
-    title: 'TrainCraft',
+    title: 'CoachRhythm',
     category: 'AI & Claude Code',
     summary:
       'A programming assistant for personal trainers that turns a client intake — injuries, available equipment, and goals — into a complete training plan.',
     details:
-      'Every plan is generated behind a contraindication-aware filter that screens exercises against each client\'s logged injuries, then clears a deterministic QA pass before the trainer sees it — a failed check feeds back into a single automatic retry, and plans that still fail are stored as drafts with their full QA report rather than presented as finished. Trainers work from a shared exercise library they can extend with their own movements. Built end-to-end with Claude Code.',
-    stack: ['Next.js 15', 'Supabase', 'Claude API', 'TypeScript'],
-    image: TrainCraft,
+      'Exercises are screened against each client\'s logged injuries by a deterministic filter that runs before the model is prompted, so the AI only ever programs from an already-filtered pool — safety never depends on the model following instructions. Its output then clears a second deterministic pass that re-checks movement balance, pull-to-push volume, recovery spacing, rep ranges and progression, with no LLM anywhere in the verification path; a failed check feeds one automatic retry, and plans that still fail are stored as flagged drafts rather than presented as finished. Trainers work from a 543-exercise library tagged by movement pattern, equipment and contraindication, extensible with their own movements. Multi-tenant isolation is enforced in Postgres row-level security and proven by a two-tenant test suite rather than assumed. Built end-to-end with Claude Code.',
+    stack: ['Next.js 15', 'TypeScript', 'Supabase (Postgres RLS)', 'Claude API', 'Playwright'],
+    image: CoachRhythm,
     projectLink: 'https://traincraft-psi.vercel.app',
     repoLink: 'https://github.com/chadkraus87/traincraft',
   },

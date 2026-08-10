@@ -23,7 +23,7 @@ const routes = [
     path: 'portfolio',
     title: `Projects · ${NAME}`,
     description:
-      'AI tooling and full-stack projects built with Claude Code — Jarvis, PetCenza, Greenline, and TrainCraft — plus earlier full-stack work.',
+      'AI tooling and full-stack projects built with Claude Code — Jarvis, PetCenza, Greenline, and CoachRhythm — plus earlier full-stack work.',
   },
   {
     path: 'resume',
