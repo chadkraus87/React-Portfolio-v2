@@ -58,7 +58,7 @@ export const projects = [
       'Exercises are screened against each client\'s logged injuries by a deterministic filter that runs before the model is prompted, so the AI only ever programs from an already-filtered pool — safety never depends on the model following instructions. Its output then clears a second deterministic pass that re-checks movement balance, pull-to-push volume, recovery spacing, rep ranges and progression, with no LLM anywhere in the verification path; a failed check feeds one automatic retry, and plans that still fail are stored as flagged drafts rather than presented as finished. Trainers work from a 543-exercise library tagged by movement pattern, equipment and contraindication, extensible with their own movements. Multi-tenant isolation is enforced in Postgres row-level security and proven by a two-tenant test suite rather than assumed. Built end-to-end with Claude Code.',
     stack: ['Next.js 15', 'TypeScript', 'Supabase (Postgres RLS)', 'Claude API', 'Playwright'],
     image: CoachRhythm,
-    projectLink: 'https://coachrhythm.vercel.app',
+    projectLink: 'https://coachrhythm.vercel.app/',
     repoLink: 'https://github.com/chadkraus87/traincraft',
   },
   {
