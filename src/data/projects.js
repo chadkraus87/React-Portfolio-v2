@@ -26,15 +26,36 @@
 import Greenline from '../assets/images/GreenlineDashboard.jpg';
 import PWA from '../assets/images/PWALP.png';
 import SocialNetwork from '../assets/images/SocialNetworkAPI.png';
-import MVC from '../assets/images/MVCTechBlogLP.png';
 import EmployeeTracker from '../assets/images/EmployeeTracker.png';
 import EcommerceBackend from '../assets/images/EcommerceBackend.png';
 import Jarvis from '../assets/images/JarvisDashboard.jpg';
 import CoachRhythm from '../assets/images/CoachRhythmDashboard.jpg';
 import PetCenza from '../assets/images/PetCenzaDashboard.jpg';
+import TechOps from '../assets/images/TechOpsDashboard.jpg';
 
 export const projects = [
   // ---- AI & Claude Code -------------------------------------------------
+  {
+    id: 13,
+    title: 'TechOps Command Center',
+    category: 'AI & Claude Code',
+    summary:
+      'An interactive incident-response simulator. Trigger a realistic outage across a simulated fifteen-service infrastructure, then investigate the logs, metrics and dependency map to find the root cause and restore service.',
+    details:
+      'The whole application derives from a single metric layer. A scenario declares metric impacts, and service health, alerting, topology edge colour, API percentiles, log volume and support-ticket arrival rates are all computed from the result — nothing is set twice, so no view can contradict another. Failure spreads by one rule rather than per-scenario scripting: health cascades along the dependency graph attenuating one level per hop, and soft dependencies like a cache only ever degrade their callers, which is why a Redis outage looks nothing like a Postgres outage. The engine is pure and fully deterministic — it never calls Math.random(), so a given tick always produces identical telemetry; the load-bearing test replays a scenario twice and asserts the two runs are byte-identical. That determinism also means an incident survives a page reload while storing only ~75KB, because service health and four minutes of chart history are recomputed from the model rather than persisted. Eight scenarios each teach a different diagnostic shape: DNS failure looks catastrophic while the data tier is provably healthy, an expired certificate sends errors vertical while latency actually falls, and a memory leak burns slowly with a narrow blast radius that correlates to a deployment. Wrong diagnoses return scenario-specific coaching pointing at the evidence that rules them out, and runs are scored on accuracy, speed, thoroughness and restraint — acting on healthy systems costs points, as it does in production. The simulated ping, dig, traceroute, nc and curl are answered entirely from in-memory state with no socket, fetch or shell behind them, so the public deployment cannot reach any real host. 105 unit tests, zero dependency vulnerabilities, and a hardened Content-Security-Policy. Built end-to-end with Claude Code.',
+    stack: [
+      'Next.js 16',
+      'React 19',
+      'TypeScript',
+      'Tailwind CSS v4',
+      'Zustand',
+      'Recharts',
+      'Vitest',
+    ],
+    image: TechOps,
+    projectLink: 'https://techops-command-center.vercel.app/',
+    repoLink: 'https://github.com/chadkraus87/techops-command-center',
+  },
   {
     id: 12,
     title: 'Jarvis',
@@ -108,17 +129,6 @@ export const projects = [
     image: PWA,
     projectLink: null,
     repoLink: 'https://github.com/chadkraus87/PWA-Text-Editor',
-  },
-  {
-    id: 5,
-    title: 'MVC Tech Blog',
-    category: 'Full-Stack',
-    summary:
-      'CMS-style blog where developers publish posts and comment, built on the MVC pattern with session-based auth.',
-    stack: ['Express', 'Sequelize', 'Handlebars', 'bcrypt'],
-    image: MVC,
-    projectLink: null,
-    repoLink: 'https://github.com/chadkraus87/MVCBlog',
   },
   {
     id: 6,
