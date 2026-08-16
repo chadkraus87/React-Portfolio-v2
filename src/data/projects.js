@@ -42,17 +42,8 @@ export const projects = [
     summary:
       'An interactive incident-response simulator. Trigger a realistic outage across a simulated fifteen-service infrastructure, then investigate the logs, metrics and dependency map to find the root cause and restore service.',
     details:
-      'The whole application derives from a single metric layer. A scenario declares metric impacts, and service health, alerting, topology edge colour, API percentiles, log volume and support-ticket arrival rates are all computed from the result — nothing is set twice, so no view can contradict another. Failure spreads by one rule rather than per-scenario scripting: health cascades along the dependency graph attenuating one level per hop, and soft dependencies like a cache only ever degrade their callers, which is why a Redis outage looks nothing like a Postgres outage. The engine is pure and fully deterministic — it never calls Math.random(), so a given tick always produces identical telemetry; the load-bearing test replays a scenario twice and asserts the two runs are byte-identical. That determinism also means an incident survives a page reload while storing only ~75KB, because service health and four minutes of chart history are recomputed from the model rather than persisted. Eight scenarios each teach a different diagnostic shape: DNS failure looks catastrophic while the data tier is provably healthy, an expired certificate sends errors vertical while latency actually falls, and a memory leak burns slowly with a narrow blast radius that correlates to a deployment. Wrong diagnoses return scenario-specific coaching pointing at the evidence that rules them out, and runs are scored on accuracy, speed, thoroughness and restraint — acting on healthy systems costs points, as it does in production. The simulated ping, dig, traceroute, nc and curl are answered entirely from in-memory state with no socket, fetch or shell behind them, so the public deployment cannot reach any real host. A finished run encodes into a shareable URL, so a result can be sent to someone with no account and nothing stored server-side. Verified by 131 unit tests and 19 Playwright end-to-end tests across desktop and mobile, all running in CI on every push — the mobile suite\'s horizontal-overflow assertion has already caught two layout regressions invisible on a desktop. Zero dependency vulnerabilities, every untrusted input boundary validated, and a hardened Content-Security-Policy. Built end-to-end with Claude Code.',
-    stack: [
-      'Next.js 16',
-      'React 19',
-      'TypeScript',
-      'Tailwind CSS v4',
-      'Zustand',
-      'Recharts',
-      'Vitest',
-      'Playwright',
-    ],
+      'Everything on screen comes from one underlying model, so the story always holds together — the charts, the logs, the dependency map and the customer complaints agree with each other because they are all computed from the same source rather than written separately. Failures spread the way they do in real systems: losing a cache makes things slow, losing a database makes them stop, all from a single rule rather than a script per scenario. Nothing is random either, so an incident unfolds identically every time — which is also what lets an investigation survive a page refresh while storing almost nothing. Eight scenarios each teach a different shape of problem, and a wrong answer explains which evidence rules it out instead of just marking you incorrect. An optional guided mode is there for anyone new to this. Backed by 165 automated tests that run on every push.',
+    stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS v4', 'Recharts', 'Vitest', 'Playwright'],
     image: TechOps,
     projectLink: 'https://techops-command-center.vercel.app/',
     repoLink: 'https://github.com/chadkraus87/techops-command-center',
