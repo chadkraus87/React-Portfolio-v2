@@ -18,12 +18,54 @@ const dist = join(dirname(fileURLToPath(import.meta.url)), '..', 'dist');
 const NAME = 'Chadwick (Chad) Kraus';
 const BASE = 'https://chadkraus87.github.io/React-Portfolio-v2';
 
+// Project and note pages are derived from the data files so there is one
+// source of truth. They are parsed rather than imported because those modules
+// import images, which Node cannot resolve outside Vite.
+// Comment lines are stripped first — notes.js documents its own shape with a
+// commented-out example entry, which would otherwise be parsed as a real post
+// and prerendered as a page that does not exist.
+const src = (f) =>
+  readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', 'src', 'data', f), 'utf8')
+    .split('\n')
+    .filter((line) => !/^\s*(\/\/|\*|\/\*)/.test(line))
+    .join('\n');
+
+const parseEntries = (text) =>
+  [...text.matchAll(/slug:\s*'([^']+)'[\s\S]*?title:\s*'([^']+)'/g)].map((m) => ({
+    slug: m[1],
+    title: m[2],
+  }));
+
+const firstSentence = (text, slug) => {
+  // Pull the entry's summary and trim to one sentence for the meta description.
+  const block = text.split(`slug: '${slug}'`)[1] ?? '';
+  const raw = block.match(/summary:\s*\n?\s*'((?:[^'\\]|\\.)*)'/)?.[1] ?? '';
+  const clean = raw.replace(/\\'/g, "'");
+  const cut = clean.match(/^.*?[.?!](\s|$)/)?.[0] ?? clean;
+  return cut.trim().slice(0, 300);
+};
+
+const projectsSrc = src('projects.js');
+const projectRoutes = parseEntries(projectsSrc).map(({ slug, title }) => ({
+  path: `projects/${slug}`,
+  title: `${title} · ${NAME}`,
+  description: firstSentence(projectsSrc, slug),
+}));
+
+const notesSrc = src('notes.js');
+// notes.js ships empty; entries only appear here once something is published.
+const noteRoutes = parseEntries(notesSrc).map(({ slug, title }) => ({
+  path: `notes/${slug}`,
+  title: `${title} · ${NAME}`,
+  description: firstSentence(notesSrc, slug),
+}));
+
 const routes = [
   {
     path: 'portfolio',
     title: `Projects · ${NAME}`,
     description:
-      'AI tooling and full-stack projects built with Claude Code — Jarvis, PetCenza, Greenline, and CoachRhythm — plus earlier full-stack work.',
+      'AI tooling, infrastructure consoles, and systems games built with Claude Code — Jarvis, Meridian, PetCenza, HomeLab Commander, Stack City and more.',
   },
   {
     path: 'resume',
@@ -36,14 +78,37 @@ const routes = [
     title: `Contact · ${NAME}`,
     description: 'Get in touch with Chadwick (Chad) Kraus — email, LinkedIn, GitHub.',
   },
+  ...(noteRoutes.length
+    ? [
+        {
+          path: 'notes',
+          title: `Writing · ${NAME}`,
+          description: 'Short pieces on what I learned building the projects on this site.',
+        },
+      ]
+    : []),
+  ...projectRoutes,
+  ...noteRoutes,
 ];
 
 const shell = readFileSync(join(dist, 'index.html'), 'utf8');
 
 // Replace the first occurrence of each tag's content, leaving everything else
 // (asset hashes, analytics, the 404 decoder) byte-identical to the shell.
-const swap = (html, { title, description, url }) =>
-  html
+// Titles and descriptions are injected into markup, so a bare & (Packet & Pine)
+// or a quote would produce invalid HTML or break an attribute.
+const esc = (s) =>
+  String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+
+const swap = (html, route) => {
+  const title = esc(route.title);
+  const description = esc(route.description);
+  const url = esc(route.url);
+  return html
     .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`)
     .replace(
       /(<meta\s+name="description"\s+content=")[^"]*(")/,
@@ -63,6 +128,7 @@ const swap = (html, { title, description, url }) =>
       /(<meta\s+name="twitter:description"\s+content=")[^"]*(")/,
       `$1${description}$2`
     );
+};
 
 for (const route of routes) {
   const dir = join(dist, route.path);

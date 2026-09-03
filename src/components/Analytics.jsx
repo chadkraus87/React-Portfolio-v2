@@ -15,6 +15,18 @@ const TITLES = {
   '/portfolio': 'Portfolio',
   '/resume': 'Resume',
   '/contact': 'Contact',
+  '/notes': 'Writing',
+};
+
+// /projects/petcenza -> "Project: petcenza" so per-project traffic groups
+// readably instead of appearing as a bare path.
+const titleFor = (pathname) => {
+  if (TITLES[pathname]) return TITLES[pathname];
+  const project = pathname.match(/^\/projects\/([^/]+)$/);
+  if (project) return `Project: ${project[1]}`;
+  const note = pathname.match(/^\/notes\/([^/]+)$/);
+  if (note) return `Note: ${note[1]}`;
+  return pathname;
 };
 
 export default function Analytics() {
@@ -29,7 +41,7 @@ export default function Analytics() {
       if (!gc || typeof gc.count !== 'function') return false;
       gc.count({
         path: pathname,
-        title: TITLES[pathname] || pathname,
+        title: titleFor(pathname),
       });
       return true;
     };

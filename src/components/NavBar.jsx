@@ -1,11 +1,14 @@
 import { NavLink } from 'react-router';
 import { useState } from 'react';
 import { profile } from '../data/profile.js';
+import { notes } from '../data/notes.js';
 import './NavBar.css';
 
+// Notes only appears once something is published — see src/data/notes.js
 const links = [
   { to: '/', label: 'About' },
   { to: '/portfolio', label: 'Portfolio' },
+  ...(notes.length > 0 ? [{ to: '/notes', label: 'Notes' }] : []),
   { to: '/resume', label: 'Resume' },
   { to: '/contact', label: 'Contact' },
 ];

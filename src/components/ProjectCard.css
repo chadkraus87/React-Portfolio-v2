@@ -63,59 +63,42 @@
 }
 
 .pcard-title { font-size: 1.2rem; }
+.pcard-title a { color: var(--pine); }
+.pcard-title a:hover { color: var(--forest); text-decoration: underline; }
+
+/* The scannable differentiator strip — what makes THIS project different.
+   Mono because it reads as a label, not prose. */
+.pcard-tagline {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--moss);
+  margin-top: -0.25rem;
+}
+
+.pcard-more-link {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--forest);
+  align-self: flex-start;
+}
+.pcard-more-link:hover { text-decoration: underline; }
+
+/* Touch targets: pad to 44px and pull the padding back out with a negative
+   margin, so the tappable area grows without moving anything visually. */
+@media (max-width: 680px) {
+  .pcard-title a,
+  .pcard-more-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-block: -0.55rem;
+  }
+}
 
 .pcard-desc {
   font-size: 0.92rem;
   color: var(--ink);
-}
-
-/* Disclosure for the long-form writeup. Native <details> keeps this
-   keyboard-accessible and working with JS disabled. */
-.pcard-more {
-  font-size: 0.9rem;
-}
-
-.pcard-more > summary {
-  list-style: none;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  color: var(--forest);
-  padding: 0.15rem 0;
-  border-radius: 4px;
-}
-.pcard-more > summary::-webkit-details-marker { display: none; }
-
-/* Chevron drawn in CSS so there's no icon dependency */
-.pcard-more > summary::before {
-  content: '';
-  width: 0.4rem;
-  height: 0.4rem;
-  border-right: 1.5px solid currentColor;
-  border-bottom: 1.5px solid currentColor;
-  transform: rotate(-45deg);
-  transition: transform 0.15s ease;
-}
-.pcard-more[open] > summary::before { transform: rotate(45deg); }
-
-.pcard-more > summary:hover .pcard-more-label { text-decoration: underline; }
-.pcard-more > summary:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
-
-.pcard-more[open] > summary { margin-bottom: 0.5rem; }
-
-/* Full-height touch target on phones — the toggle measured 25px */
-@media (max-width: 680px) {
-  .pcard-more > summary { min-height: 44px; }
-}
-
-.pcard-more-body {
-  font-size: 0.88rem;
-  color: var(--ink);
-  padding-left: 0.75rem;
-  border-left: 2px solid var(--mist);
 }
 
 .pcard-stack {

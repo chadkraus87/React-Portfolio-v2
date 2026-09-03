@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import './ProjectCard.css';
 
 // Renders one project from src/data/projects.js.
@@ -5,11 +6,14 @@ import './ProjectCard.css';
 // renders when there's no screenshot yet. The primary button says
 // "View project" unless the project sets projectLinkLabel.
 //
-// Cards show `summary` only. Anything in `details` sits behind a native
-// <details> disclosure so one long writeup can't stretch its whole grid row.
+// The long-form `details` lives on the project's own page (/projects/<slug>)
+// rather than in an inline toggle: it keeps the card short the same way, and
+// the write-up gets a real indexable URL that can be linked on its own.
 export default function ProjectCard({ project }) {
   const {
+    slug,
     title,
+    tagline,
     summary,
     details,
     stack,
@@ -37,16 +41,18 @@ export default function ProjectCard({ project }) {
           {status && <span className="pcard-status">{status}</span>}
         </div>
 
-        <h3 className="pcard-title">{title}</h3>
+        <h3 className="pcard-title">
+          <Link to={`/projects/${slug}`}>{title}</Link>
+        </h3>
+
+        {tagline && <p className="pcard-tagline">{tagline}</p>}
+
         <p className="pcard-desc">{summary}</p>
 
         {details && (
-          <details className="pcard-more">
-            <summary>
-              <span className="pcard-more-label">More detail</span>
-            </summary>
-            <p className="pcard-more-body">{details}</p>
-          </details>
+          <Link to={`/projects/${slug}`} className="pcard-more-link">
+            Full write-up <span aria-hidden="true">&rarr;</span>
+          </Link>
         )}
 
         {stack?.length > 0 && (
