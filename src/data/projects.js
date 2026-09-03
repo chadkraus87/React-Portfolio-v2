@@ -27,7 +27,12 @@
 //               'Watch demo' when the link goes to a walkthrough video rather
 //               than a running deployment.
 //   repoLink    GitHub URL, or null (button hides itself)
-//   status      optional: 'In development' badge, or omit
+//   status      short state badge: 'Live' (publicly reachable), 'In progress'
+//               (actively built, no public deploy) or 'Private'
+//               (deployed, but not publicly linked). Omit to hide the badge.
+//   updated      'YYYY-MM' of the last meaningful change. Rendered as
+//               "Aug 2026" next to the status so a visitor can tell at a
+//               glance whether the work is current.
 // ---------------------------------------------------------------------------
 
 import Jarvis from '../assets/images/JarvisDashboard.jpg';
@@ -39,6 +44,8 @@ import HomeLabCommander from '../assets/images/HomeLabCommander.jpg';
 import DeskDaemon from '../assets/images/DeskDaemon.jpg';
 import StackCity from '../assets/images/StackCity.jpg';
 import PacketAndPine from '../assets/images/PacketAndPine.jpg';
+// Placeholder title card — swap for a real screenshot when one exists.
+import Meridian from '../assets/images/Meridian.jpg';
 
 export const projects = [
   // ---- AI & Claude Code -------------------------------------------------
@@ -47,6 +54,8 @@ export const projects = [
     slug: 'jarvis',
     title: 'Jarvis',
     category: 'AI & Claude Code',
+    status: 'Private',
+    updated: '2026-08',
     tagline: 'Local-first · permission-gated · on-device voice',
     summary:
       'A local-first, permission-gated personal AI assistant running entirely on home infrastructure — voice interaction, natural-language memory, full calendar and email management, and a searchable knowledge base via RAG.',
@@ -62,13 +71,15 @@ export const projects = [
     slug: 'meridian',
     title: 'Meridian',
     category: 'AI & Claude Code',
+    status: 'In progress',
+    updated: '2026-09',
     tagline: 'Nineteen agents · hash-chained audit trail',
     summary:
       'A local-first AI workforce that runs on your own machine. A Chief of Staff reads the request, decides whether it needs specialists, assigns the work with acceptance criteria, and comes back with one answer and a readiness verdict.',
     details:
       'Nineteen specialists each hold their own identity, expertise and memory, and they are allowed to disagree: if Security finds a critical flaw or QA finds a failing test, the Chief of Staff reports NOT READY rather than smoothing it over. Anything that reaches outside the machine, spends money, or cannot be undone stops in an Approval Inbox with the exact payload shown before it runs. Memory carries provenance — where a fact came from, when, and how confident it is — so speculation is never stored as fact. The audit trail is append-only and hash-chained, which means a modified or deleted record breaks the chain and is detectable rather than silent. Everything except model inference stays on the machine, running in Docker across an API, a worker, an MCP server and a web console.',
     stack: ['Next.js 16', 'TypeScript', 'Docker Compose', 'MCP', 'pnpm monorepo', 'Playwright'],
-    image: null,
+    image: Meridian,
     projectLink: null, // local-first — runs on your own machine, no hosted instance
     repoLink: null, // repo is private
   },
@@ -77,6 +88,8 @@ export const projects = [
     slug: 'petcenza',
     title: 'PetCenza',
     category: 'AI & Claude Code',
+    status: 'Live',
+    updated: '2026-08',
     tagline: 'Offline-first · sharing enforced in Postgres',
     summary:
       'A household pet health record built to answer one question the moment it opens: does anything need attention today? Tracks boosters, medication refills, vet visits, and weight history across every pet in the home, then rolls the day into a single medication round — what to give, to whom, right now.',
@@ -100,6 +113,8 @@ export const projects = [
     slug: 'techops-command-center',
     title: 'TechOps Command Center',
     category: 'AI & Claude Code',
+    status: 'Live',
+    updated: '2026-08',
     tagline: 'One model drives every panel',
     summary:
       'An interactive incident-response simulator. Trigger a realistic outage across a simulated fifteen-service infrastructure, then investigate the logs, metrics and dependency map to find the root cause and restore service.',
@@ -115,6 +130,8 @@ export const projects = [
     slug: 'coachrhythm',
     title: 'CoachRhythm',
     category: 'AI & Claude Code',
+    status: 'Live',
+    updated: '2026-08',
     tagline: 'Safety filter runs before the model',
     summary:
       'A programming assistant for personal trainers that turns a client intake — injuries, available equipment, and goals — into a complete training plan.',
@@ -130,6 +147,8 @@ export const projects = [
     slug: 'greenline',
     title: 'Greenline',
     category: 'AI & Claude Code',
+    status: 'Live',
+    updated: '2026-08',
     tagline: 'Daily cash runway · offline PWA',
     summary:
       'A private monthly budget built around the question that actually matters mid-month: what is genuinely left to spend? Projects a daily cash runway from scheduled bills and income, then scores the month as you spend against it.',
@@ -147,6 +166,8 @@ export const projects = [
     slug: 'homelab-commander',
     title: 'HomeLab Commander',
     category: 'Infrastructure & Ops',
+    status: 'Live',
+    updated: '2026-08',
     tagline: 'Hosted demo · local-first ops console',
     summary:
       'A local-first operations console for a homelab — discover devices, watch services, map the network, and work an incident from first alert to root cause without leaving one screen.',
@@ -163,6 +184,8 @@ export const projects = [
     slug: 'deskdaemon',
     title: 'DeskDaemon',
     category: 'Infrastructure & Ops',
+    status: 'Live',
+    updated: '2026-09',
     tagline: 'Astro · zero client-side JavaScript',
     summary:
       'The link-in-bio and gear site for @deskdaemon — the workstation, the home lab, and the tools behind the videos. Built deliberately without a client-side framework.',
@@ -180,6 +203,8 @@ export const projects = [
     slug: 'stack-city',
     title: 'Stack City',
     category: 'Games & Simulation',
+    status: 'Live',
+    updated: '2026-08',
     tagline: 'Architecture as a city-builder · no accounts',
     summary:
       'Software architecture as a city-building game. Every building is a real infrastructure concept, every glowing packet is a user request, and each placement moves capacity, latency, availability, operating cost and user satisfaction.',
@@ -196,6 +221,8 @@ export const projects = [
     slug: 'packet-and-pine',
     title: 'Packet & Pine',
     category: 'Games & Simulation',
+    status: 'In progress',
+    updated: '2026-09',
     tagline: 'Fully 3D · networking taught through play',
     summary:
       'A fully 3D cozy networking adventure for the browser. Play a Network Keeper across twenty explorable areas, troubleshoot friendly outages, run a cabin homelab, and connect communities without flattening their security boundaries.',

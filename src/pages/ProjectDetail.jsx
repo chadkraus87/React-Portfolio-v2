@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router';
 import { projects } from '../data/projects.js';
+import { formatUpdated, statusModifier } from '../lib/projectMeta.js';
 import NotFound from './NotFound.jsx';
 import './ProjectDetail.css';
 
@@ -27,6 +28,7 @@ export default function ProjectDetail() {
     projectLinkLabel,
     repoLink,
     status,
+    updated,
     category,
   } = project;
 
@@ -41,7 +43,14 @@ export default function ProjectDetail() {
           <span className="eyebrow">{category.toLowerCase()}</span>
           <h1 className="page-title">{title}</h1>
           {tagline && <p className="pdetail-tagline">{tagline}</p>}
-          {status && <span className="pcard-status">{status}</span>}
+          <p className="pdetail-state">
+            {status && (
+              <span className={`pcard-status pcard-status--${statusModifier(status)}`}>
+                {status}
+              </span>
+            )}
+            {updated && <span className="pcard-updated">Updated {formatUpdated(updated)}</span>}
+          </p>
         </div>
 
         {image && (

@@ -74,3 +74,10 @@
     margin-block: -0.5rem 0.9rem;
   }
 }
+
+.pdetail-state {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+}

@@ -43,6 +43,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .pcard-category {
@@ -126,3 +127,28 @@
   margin-top: auto;
   padding-top: 0.5rem;
 }
+
+/* Status + last-updated ---------------------------------------------------- */
+.pcard-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-shrink: 0;
+}
+
+.pcard-updated {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--moss);
+  white-space: nowrap;
+}
+
+/* Live reads as available now; the others stay quieter so a private or
+   in-flight project doesn't shout louder than a shipped one. */
+.pcard-status--live {
+  color: var(--forest);
+  border-color: var(--forest);
+  background: var(--mist);
+}
+.pcard-status--in-progress { color: var(--brass); border-color: var(--brass); }
+.pcard-status--private { color: var(--moss); border-color: var(--moss); }

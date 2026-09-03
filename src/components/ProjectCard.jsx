@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import { formatUpdated, statusModifier } from '../lib/projectMeta.js';
 import './ProjectCard.css';
 
 // Renders one project from src/data/projects.js.
@@ -22,6 +23,7 @@ export default function ProjectCard({ project }) {
     projectLinkLabel,
     repoLink,
     status,
+    updated,
     category,
   } = project;
 
@@ -38,7 +40,14 @@ export default function ProjectCard({ project }) {
       <div className="pcard-body">
         <div className="pcard-meta">
           <span className="pcard-category">{category.toLowerCase()}</span>
-          {status && <span className="pcard-status">{status}</span>}
+          <span className="pcard-state">
+            {status && (
+              <span className={`pcard-status pcard-status--${statusModifier(status)}`}>
+                {status}
+              </span>
+            )}
+            {updated && <span className="pcard-updated">{formatUpdated(updated)}</span>}
+          </span>
         </div>
 
         <h3 className="pcard-title">
