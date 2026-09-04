@@ -5,3 +5,5 @@ dist
 
 # Local editor/agent scratch
 .claude/
+.vercel
+.env*
