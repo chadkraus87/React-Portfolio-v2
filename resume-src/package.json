@@ -1,0 +1,15 @@
+{
+  "name": "resume-src",
+  "private": true,
+  "type": "module",
+  "description": "Generates the resume PDF and DOCX from one data file.",
+  "scripts": {
+    "pdf": "node build-pdf.mjs Chadwick_Kraus_Resume_2026.pdf",
+    "docx": "node build-docx.mjs Chadwick_Kraus_Resume_2026.docx",
+    "build": "npm run pdf && npm run docx"
+  },
+  "devDependencies": {
+    "docx": "^9.0.0",
+    "playwright": "^1.62.0"
+  }
+}

@@ -7,3 +7,7 @@ dist
 .claude/
 .vercel
 .env*
+resume-src/node_modules
+resume-src/*.pdf
+resume-src/*.docx
+resume-src/resume.html
