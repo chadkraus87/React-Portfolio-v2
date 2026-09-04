@@ -3,11 +3,18 @@
   <head>
     <meta charset="UTF-8" />
 
-    <!-- Google Search Console ownership verification. Must stay in <head> on
-         the URL the property was registered for; the prerender step copies it
-         into every route's HTML automatically. Do not remove — Search Console
-         re-checks it periodically and will un-verify the property if it
-         disappears. -->
+    <!-- Google Search Console ownership verification.
+         IMPORTANT: each Search Console property gets its OWN token. A token
+         issued for one property will not verify another, even on the same
+         site — Search Console reports "meta tag is incorrect" in that case.
+         Multiple tags are allowed, so add one line per property rather than
+         replacing. The prerender step copies these into every route's HTML.
+         Do not remove a tag while its property still exists: Search Console
+         re-checks periodically and will un-verify if it disappears.
+
+         Token below was issued for the old GitHub Pages property
+         (chadkraus87.github.io/React-Portfolio-v2/). The Vercel property
+         needs its own token pasted here as a second meta line. -->
     <meta name="google-site-verification" content="sxPkNAn4lo3QOdLWZPryWY25Ve_R6wGP1x7qoS7aAAc" />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
