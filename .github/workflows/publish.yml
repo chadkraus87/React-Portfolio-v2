@@ -1,10 +1,12 @@
 name: Publish portfolio
 
-# Runs automatically whenever the main branch changes,
-# and can also be run by hand from the Actions tab.
+# DISABLED: the site is deployed by Vercel now. This no longer runs on push,
+# so GitHub Pages keeps serving the last build published from here rather than
+# publishing a root-based build that would 404 on its assets.
+# Still runnable by hand from the Actions tab if the old URL ever needs a
+# rebuild — but note the Vite base is '/' now, which GitHub Pages cannot serve
+# from a repo subpath.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:

@@ -1,15 +1,13 @@
 // Post-build step: emit a real static file for every route.
 //
-// Why: GitHub Pages has no server-side rewrite. Without this, /portfolio is
-// served by 404.html — which redirects humans correctly, but returns HTTP 404.
-// Crawlers drop 404s regardless of what the JS would have done next, so the
-// deep routes would never be indexed. Writing dist/portfolio/index.html makes
-// the same URL answer 200 with real HTML.
+// Vercel serves dist/<route>/index.html at /<route>, so each route answers 200
+// with real HTML instead of being handed to a client-side router. That is what
+// makes the pages indexable, and it lets every route carry its own <title>,
+// description and OG tags — which a single shared index.html cannot do.
 //
-// It also lets each route carry its own <title> and description, which a single
-// shared index.html cannot do on static hosting.
-//
-// public/404.html stays as the safety net for genuinely unknown paths.
+// It also writes dist/404.html, which Vercel serves (with a 404 status) for
+// any path that is not a real file. React boots there, sees an unmatched
+// route, and renders the styled NotFound page.
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -140,6 +138,19 @@ for (const route of routes) {
   );
   console.log(`prerendered /${route.path}`);
 }
+
+// 404.html — served by Vercel for unmatched paths, with a real 404 status.
+// noindex so a soft-404 never enters the index.
+writeFileSync(
+  join(dist, '404.html'),
+  swap(shell, {
+    title: `Page not found · ${NAME}`,
+    description: 'That link does not point anywhere on this site.',
+    url: `${BASE}/404`,
+  }).replace('</title>', '</title>\n    <meta name="robots" content="noindex" />'),
+  'utf8'
+);
+console.log('wrote 404.html');
 
 // sitemap.xml — now that each route is a real 200 URL, it is worth submitting.
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
