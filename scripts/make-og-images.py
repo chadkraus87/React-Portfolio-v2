@@ -1,5 +1,6 @@
 #!/usr/bin/env /usr/bin/python3
-"""Generate a per-project social preview card into public/og/<slug>.jpg.
+"""Generate the site social card (public/og-image.png) and one per project
+(public/og/<slug>.jpg).
 
 Run locally after adding or renaming a project:
 
@@ -123,10 +124,74 @@ def build(p):
     return dest
 
 
+def site_domain():
+    """Read the canonical domain from the prerender script so the cover card
+    can never drift from the deployed URL again."""
+    src = open(os.path.join(ROOT, "scripts", "prerender.mjs")).read()
+    m = re.search(r"const BASE = '(?:https?://)?([^\']+)'", src)
+    return m.group(1).rstrip("/") if m else "chad-kraus-portfolio.vercel.app"
+
+
+def build_cover(projects):
+    """The site-wide card used for / and every non-project page."""
+    img = Image.new("RGB", (W, H), PAPER)
+    d = ImageDraw.Draw(img)
+    d.rectangle([0, 0, 14 * S, H], fill=PINE)
+
+    f_name = ImageFont.truetype(SUP + "Georgia Bold.ttf", 76 * S)
+    f_role = ImageFont.truetype(SYS + "Helvetica.ttc", 29 * S, index=0)
+    f_pill = ImageFont.truetype(SYS + "Helvetica.ttc", 20 * S, index=0)
+
+    x, y = 78 * S, 92 * S
+    d.text((x, y), "~/", font=f_tag, fill=BRASS)
+    d.text((x + 30 * S, y), site_domain(), font=f_tag, fill=MOSS)
+    y += 58 * S
+
+    for line in ("Chadwick (Chad)", "Kraus"):
+        d.text((x, y), line, font=f_name, fill=PINE)
+        y += 84 * S
+    y += 24 * S
+
+    d.rectangle([x, y, x + 92 * S, y + 4 * S], fill=BRASS)
+    y += 40 * S
+
+    for line in ("Network IT Specialist at Rockbot \u2014",
+                 "Tier 2/3 escalations, QA operations,",
+                 "and AI tooling built with Claude Code."):
+        d.text((x, y), line, font=f_role, fill=INK)
+        y += 40 * S
+
+    # Featured projects, taken from the top of projects.js so they stay current.
+    y = H - 96 * S
+    tx = x
+    for label in [p["title"] for p in projects[:3]]:
+        tw = d.textlength(label, font=f_pill)
+        d.rounded_rectangle([tx, y, tx + tw + 36 * S, y + 44 * S], radius=8 * S, fill=MIST)
+        d.text((tx + 18 * S, y + 11 * S), label, font=f_pill, fill=FOREST)
+        tx += tw + 36 * S + 12 * S
+
+    photo = Image.open(os.path.join(IMGS, "headshot.jpg")).convert("RGB")
+    D = 330 * S
+    photo = ImageOps.fit(photo, (D, D), method=Image.LANCZOS, centering=(0.5, 0.4))
+    mask = Image.new("L", (D * 4, D * 4), 0)
+    ImageDraw.Draw(mask).ellipse([0, 0, D * 4, D * 4], fill=255)
+    mask = mask.resize((D, D), Image.LANCZOS)
+    px, py = W - D - 96 * S, (H - D) // 2
+    ring = 8 * S
+    d.ellipse([px - ring, py - ring, px + D + ring, py + D + ring], fill=FOREST)
+    img.paste(photo, (px, py), mask)
+
+    dest = os.path.join(ROOT, "public", "og-image.png")
+    img.save(dest, optimize=True)
+    return dest
+
+
 if __name__ == "__main__":
     projects = parse()
     if not projects:
         sys.exit("no projects parsed — check src/data/projects.js")
+    print(f"  {'og-image.png':<28} site cover ({site_domain()})")
+    build_cover(projects)
     for p in projects:
         print(f"  {os.path.basename(build(p)):<28} {p['title']}")
-    print(f"generated {len(projects)} og images")
+    print(f"generated {len(projects) + 1} og images")

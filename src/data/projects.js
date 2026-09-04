@@ -5,9 +5,9 @@
 // Fields:
 //   id          unique number (any order, just don't repeat)
 //   slug        URL segment for the project's own page (/projects/<slug>).
-//               Must be unique and URL-safe. ALSO add it to the `projects`
-//               array in scripts/prerender.mjs or the page will 404 for
-//               crawlers and lose its per-page metadata.
+//               Must be unique and URL-safe. The prerender step reads this
+//               file, so the page, its metadata and its sitemap entry are
+//               generated automatically — nothing else to register.
 //   title       project name
 //   category    'AI & Claude Code' | 'Infrastructure & Ops' | 'Games & Simulation'
 //               (add a new category string and it appears as a filter
@@ -17,9 +17,10 @@
 //               not what it is. Keep it short or it wraps.
 //   summary     the hook — 1–2 sentences, ALWAYS visible on the card. Keep it
 //               short; this is what sets every card's height in the grid.
-//   details     optional deeper writeup, hidden behind a "More detail" toggle.
-//               Omit it entirely for small projects. Do not repeat the summary
-//               here — details continues from where the summary stopped.
+//   details     optional deeper writeup, shown on the project's own page and
+//               linked from the card as "Full write-up". Omit it for small
+//               projects. Do not repeat the summary — details continues from
+//               where the summary stopped.
 //   stack       array of short tech labels shown as tags
 //   image       import at the top, or null for a styled placeholder
 //   projectLink live URL, or null (button hides itself)

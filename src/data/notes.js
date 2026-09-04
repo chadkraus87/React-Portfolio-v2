@@ -19,8 +19,8 @@
 //     ],
 //   }
 //
-// Then add the slug to the `notes` array in scripts/prerender.mjs so the post
-// gets a real 200 URL and its own title/description for search and sharing.
+// That is all. The prerender step reads this file, so the post's page, its
+// title/description, and its sitemap entry are generated automatically.
 // ---------------------------------------------------------------------------
 
 export const notes = [
