@@ -221,7 +221,7 @@ export const projects = [
     slug: 'packet-and-pine',
     title: 'Packet & Pine',
     category: 'Games & Simulation',
-    status: 'In progress',
+    status: 'Live',
     updated: '2026-09',
     tagline: 'Fully 3D · networking taught through play',
     summary:
@@ -230,7 +230,8 @@ export const projects = [
       'Thirty multi-step story missions, four wireless-planning missions and forty-six evidence-based chapter decisions sit on top of a real systems model — a cable, power, thermal and incident homelab, plus a visual topology and capacity lab. Educators get visual challenge authoring, signed challenge packs, deterministic classroom replay and aggregate-only exports, so a class can be graded without collecting anything personal. Progress is local-first and anonymous play is the default; optional cloud snapshots are encrypted in the browser before they leave it, and passkeys are an opt-in authorization layer rather than a login wall. Renders with streamed distance-based LOD, GPU-instanced foliage, dynamic lighting and spatial audio, with keyboard, mouse, gamepad and touch controls.',
     stack: ['Three.js', 'TypeScript', 'Vite', 'WebAuthn / Passkeys', 'Vercel Blob', 'Vitest'],
     image: PacketAndPine,
-    projectLink: null, // no public deployment yet
+    projectLink: 'https://packet-and-pine.vercel.app',
+    projectLinkLabel: 'Play live',
     repoLink: null, // repo is private
   },
 ];

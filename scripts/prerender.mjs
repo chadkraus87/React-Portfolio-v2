@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url';
 
 const dist = join(dirname(fileURLToPath(import.meta.url)), '..', 'dist');
 const NAME = 'Chadwick (Chad) Kraus';
-const BASE = 'https://chadkraus87.github.io/React-Portfolio-v2';
+const BASE = 'https://chad-kraus-portfolio.vercel.app';
 
 // Project and note pages are derived from the data files so there is one
 // source of truth. They are parsed rather than imported because those modules

@@ -1,8 +1,8 @@
 # CLAUDE.md — React Portfolio v2
 
 ## What this project is
-A personal developer portfolio. Vite + React 18, deployed to GitHub Pages.
-- Live: https://chadkraus87.github.io/React-Portfolio-v2/
+A personal developer portfolio. Vite + React 19, deployed on Vercel.
+- Live: https://chad-kraus-portfolio.vercel.app
 - Repo: github.com/chadkraus87/React-Portfolio-v2
 - Owner: Chadwick (Chad) Kraus
 
@@ -17,29 +17,35 @@ A personal developer portfolio. Vite + React 18, deployed to GitHub Pages.
   design or structural change, not for content updates.
 - Routing is BrowserRouter with real paths (`/portfolio`, not `/#/portfolio`).
   `basename` reads from `import.meta.env.BASE_URL`, so the base path lives in
-  exactly one place: `vite.config.js` (`/React-Portfolio-v2/`). GitHub Pages
-  can't rewrite server-side, so `public/404.html` encodes the requested route
-  into a query string and `index.html` decodes it before React boots. If you
-  ever change the base path or move to a custom domain, both of those plus
-  `pathSegmentsToKeep` in 404.html need to agree.
+  exactly one place: `vite.config.js` (now `/`, since Vercel serves from the
+  domain root). The old GitHub Pages 404-redirect hack is gone — Vercel serves
+  the prerendered files directly and uses `dist/404.html` for unknown paths.
 
 ## Prerendering (why `npm run build` has a second step)
 `npm run build` runs `vite build` then `scripts/prerender.mjs`, which writes a
 real `dist/<route>/index.html` for each route plus `sitemap.xml` and
-`robots.txt`. Without it, `/portfolio` is served by `404.html` — fine for humans
-(the JS redirect fixes it) but a literal HTTP 404, which crawlers drop. The
+`robots.txt`. Without it every route would fall through to `404.html`. The
 prerendered files make each route answer 200 and carry its own `<title>`,
-description and OG tags.
+description and OG tags — which one shared `index.html` cannot do.
 
-**When you add a route**, add it to the `routes` array in `scripts/prerender.mjs`
-too, or it will 404 for crawlers and lose its per-page metadata.
+Project and note pages are derived automatically from `src/data/projects.js`
+and `src/data/notes.js` (parsed, not imported, because those files import
+images). **Adding a project or note needs no prerender change** — just give it
+a unique `slug`. Only a brand-new top-level route needs adding to the `routes`
+array by hand.
 
 ## Deployment
-- Auto-publishing is ON via GitHub Actions (`.github/workflows/publish.yml`).
-  Any push to `main` triggers a build + publish to GitHub Pages. Do NOT run
-  `npm run deploy` manually.
-- After a push, the live site updates in ~1–2 minutes. GitHub caches for a few
-  minutes; verify in an incognito window.
+- **Vercel, git-connected.** Any push to `main` auto-deploys to production
+  (usually under 30 seconds). Nothing to run by hand.
+- Project: `chad-kraus-portfolio` under the `chadwick-kraus-projects` team.
+  `.vercel/` and `.env*` are gitignored — never commit them.
+- `.github/workflows/publish.yml` is frozen to `workflow_dispatch` only. It is
+  kept for reference; do not re-enable it, since the Vite base is `/` and
+  GitHub Pages served from a repo subpath would 404 on every asset.
+- The old GitHub Pages URL still serves its last build. Retire or redirect it
+  once nothing points there.
+- Absolute URLs (og:url, og:image, sitemap, robots) live in `index.html` and
+  `scripts/prerender.mjs` — both must be updated together if the domain changes.
 
 ## Non-negotiable working rules
 1. **Always `git pull origin main` before making any changes.** I sometimes edit
@@ -65,17 +71,17 @@ too, or it will 404 for crawlers and lose its per-page metadata.
 5. Summarize the changes and the exact commit message you'll use.
 6. **Stop and wait for my approval.**
 7. On approval: `git add -A`, `git commit`, `git push origin main`.
-8. Tell me to check the Actions tab for the green check, then verify in incognito.
+8. Vercel auto-deploys the push; confirm the new production deployment is Ready,
+   then verify in an incognito window.
 
 ## How to make the common updates
 - **Add/edit/remove a project** → `src/data/projects.js`. Copy an existing block,
-  change the fields. Fields: `title`, `category`, `summary` (1–2 sentence hook,
-  always visible — keep it short, it sets the card height), optional `details`
-  (longer writeup hidden behind a "More detail" toggle; don't repeat the summary),
-  `stack` (array of tech tags), `image` (import at top, reference by variable, or
-  `null` for a styled placeholder), `projectLink` and `repoLink` (URL or `null` —
-  a null link hides its button), optional `projectLinkLabel` (defaults to
-  'View project'; use 'Watch demo' for video links), optional `status`.
+  change the fields. Full field list is documented at the top of that file:
+  `id`, `slug` (its `/projects/<slug>` page), `title`, `category`, `tagline`
+  (short differentiator strip), `summary` (always visible on the card),
+  optional `details` (the write-up on its own page), `stack`, `image`,
+  `projectLink` / `projectLinkLabel` / `repoLink`, `status`
+  ('Live' | 'In progress' | 'Private') and `updated` ('YYYY-MM').
 - **Change bio / title / tagline / skills / certifications / contact** →
   `src/data/profile.js`. Edit the text between quotes; skills and certifications are
   simple arrays.
@@ -101,5 +107,9 @@ is private for security). Never add links to a project unless I explicitly provi
 them.
 
 ## Known housekeeping
-- `.github/workflows/publish.yml` pins Node 20, which GitHub now flags as deprecated
-  (harmless warning). Bumping to Node 22 silences it — do this only if I ask.
+- The old GitHub Pages URL (`chadkraus87.github.io/React-Portfolio-v2/`) still
+  serves its last build. Decide whether to retire it or leave it as a stale
+  mirror; it cannot redirect server-side.
+- A Google Search Console property exists for the old GitHub Pages URL. The new
+  Vercel domain needs its own property — the verification meta tag in
+  `index.html` carries over, so verifying it should succeed immediately.
