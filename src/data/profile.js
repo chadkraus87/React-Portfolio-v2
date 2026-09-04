@@ -9,7 +9,7 @@ export const profile = {
   title:
     'Network IT Specialist at Rockbot — Tier 2/3 escalations, QA operations, and AI tooling built to prevent the next ticket.',
   tagline:
-    'I solve complex technical problems that span Support, Engineering, and Operations. From Tier 2/3 escalations and enterprise networking to QA, automation, and AI-powered tooling, I build systems that prevent issues—not just resolve them.',
+    'I build and ship systems, and I came to it through operations — which is why the ones I build are shaped by what actually breaks. Ten of them are on this site: AI tooling, infrastructure consoles, and games that teach the systems they simulate.',
   location: 'Austin, TX (Remote)',
   email: 'chadkraus87@gmail.com',
   phone: '(512) 650-7633',
@@ -27,11 +27,11 @@ export const profile = {
 
   // About page paragraphs — add/remove strings to change the bio.
   about: [
-    "I'm a Network IT Specialist at Rockbot, working at the intersection of Technical Support, Networking, QA Operations, and Engineering.",
-    'I own Tier 2/3 escalations across SaaS platforms, networking, AV systems, APIs, and identity services, partnering closely with Engineering and Product to drive issues from initial investigation through root cause analysis and long-term resolution. I also co-lead our weekly Bug Triage process, helping prioritize defects, validate fixes, and improve product quality across customer-facing teams.',
-    "My focus is simple: solve today's problem while preventing tomorrow's. Whether identifying risks during enterprise deployments, improving operational workflows, or building proactive monitoring processes, I look for opportunities to eliminate recurring issues before they impact customers.",
-    "Beyond support, I'm actively building AI-assisted workflows and full-stack applications with Claude Code, Next.js, and Supabase. I enjoy using AI to automate technical operations, streamline support processes, and accelerate software development while maintaining a practical engineering mindset.",
-    "Outside of work, you'll usually find me hiking with my three rescue dogs, coaching fitness clients, or building the next side project that teaches me something new.",
+    'I build and ship systems. Over the past few months that has meant ten of them — a permission-gated AI assistant running entirely on my own hardware, a pet health record whose sharing rules are enforced in Postgres rather than in the interface, a budgeting app that projects a daily cash runway, an operations console for a homelab, and two games that teach networking and systems architecture by making you actually operate them.',
+    'I came to building through operations, and that is the part that shapes how I build. Years of Tier 2/3 escalations teach you exactly how software fails in the field: the permission that was too broad, the check that lived in the client instead of the database, the retry that made an outage worse. So my projects tend to enforce access in Postgres row-level security rather than the UI, keep audit trails that detect tampering, run destructive actions behind explicit confirmation, and carry real test suites — because I have been the person paged when none of that was true.',
+    "By day I'm a Network IT Specialist at Rockbot, owning Tier 2/3 escalations across SaaS platforms, networking, AV systems, APIs and identity services, and partnering with Engineering and Product to drive issues from first investigation through root cause to a fix that holds. I co-lead our weekly bug triage, prioritizing defects, validating fixes and improving product quality across customer-facing teams.",
+    'The two halves reinforce each other. Support work tells me which failure modes are worth engineering against; building the software tells me what Engineering is actually weighing when I escalate. Claude Code is how I close the distance between the two quickly — but the judgment about what to build, what to verify, and what to refuse to ship is the part I bring.',
+    "Outside of work you'll usually find me hiking with my three rescue dogs, coaching fitness clients, or building the next side project that teaches me something new.",
   ],
 
   // Selected certifications — shown on the About page.
