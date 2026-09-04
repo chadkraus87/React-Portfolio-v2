@@ -3,6 +3,13 @@
   <head>
     <meta charset="UTF-8" />
 
+    <!-- Google Search Console ownership verification. Must stay in <head> on
+         the URL the property was registered for; the prerender step copies it
+         into every route's HTML automatically. Do not remove — Search Console
+         re-checks it periodically and will un-verify the property if it
+         disappears. -->
+    <meta name="google-site-verification" content="sxPkNAn4lo3QOdLWZPryWY25Ve_R6wGP1x7qoS7aAAc" />
+
     <!-- Decodes the route that public/404.html encoded into the query string,
          restoring the real URL before React Router reads it. Must stay a plain
          inline script in <head>: module scripts are deferred, which would run
