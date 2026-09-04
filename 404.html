@@ -2,39 +2,31 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Redirecting…</title>
-    <meta name="robots" content="noindex" />
+    <title>Moved — Chadwick (Chad) Kraus</title>
+    <link rel="canonical" href="https://chad-kraus-portfolio.vercel.app/" />
+    <meta name="robots" content="noindex, follow" />
+    <meta http-equiv="refresh" content="0; url=https://chad-kraus-portfolio.vercel.app/" />
     <script>
-      // GitHub Pages has no server-side rewrite, so a direct hit on a client
-      // route (/React-Portfolio-v2/portfolio) 404s. Pages serves THIS file for
-      // any unmatched path, so we encode the requested route into a query
-      // string and bounce to index.html, which decodes it back before React
-      // boots. Adapted from rafgraph/spa-github-pages.
-      //
-      // pathSegmentsToKeep = 1 because this is a project site served from
-      // /React-Portfolio-v2/ — that first segment is the app root, not a route.
-      // It would be 0 for a user/organisation site served from the domain root.
-      var pathSegmentsToKeep = 1;
-      var l = window.location;
-      l.replace(
-        l.protocol +
-          '//' +
-          l.hostname +
-          (l.port ? ':' + l.port : '') +
-          l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') +
-          '/?/' +
-          l.pathname
-            .slice(1)
-            .split('/')
-            .slice(pathSegmentsToKeep)
-            .join('/')
-            .replace(/&/g, '~and~') +
-          (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-          l.hash
-      );
+      // Preserve the path so an old deep link lands on the same page.
+      (function () {
+        var base = '/React-Portfolio-v2';
+        var p = location.pathname.indexOf(base) === 0
+          ? location.pathname.slice(base.length)
+          : location.pathname;
+        location.replace('https://chad-kraus-portfolio.vercel.app' + (p === '/' ? '' : p) + location.search + location.hash);
+      })();
     </script>
+    <style>
+      body{font-family:system-ui,sans-serif;background:#f7f6f1;color:#20261f;
+           display:flex;min-height:100vh;align-items:center;justify-content:center;
+           margin:0;text-align:center;padding:1.5rem}
+      a{color:#2e5940}
+    </style>
   </head>
   <body>
-    <p>Redirecting…</p>
+    <div>
+      <p>This site has moved.</p>
+      <p><a href="https://chad-kraus-portfolio.vercel.app/">https://chad-kraus-portfolio.vercel.app</a></p>
+    </div>
   </body>
 </html>
