@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router';
 import NavBar from './components/NavBar.jsx';
 import Footer from './components/Footer.jsx';
 import Analytics from './components/Analytics.jsx';
+import DocumentTitle from './components/DocumentTitle.jsx';
 import About from './pages/About.jsx';
 import Portfolio from './pages/Portfolio.jsx';
 import ProjectDetail from './pages/ProjectDetail.jsx';
@@ -20,8 +21,9 @@ export default function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <div className="app-shell">
-        {/* Must live inside the router — it reads the active route */}
+        {/* Must live inside the router — they read the active route */}
         <Analytics />
+        <DocumentTitle />
         {/* First focusable element on every page, so a keyboard user can jump
             the six nav links instead of tabbing them on each navigation.
             Off-screen until focused — see .skip-link in index.css. */}
