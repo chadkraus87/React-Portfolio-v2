@@ -23,8 +23,9 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const srcDir = join(root, 'src', 'assets', 'images');
 const outDir = join(srcDir, 'cards');
 
-// 352 is the widest a card gets (768px viewport, two columns); 704 covers 2x.
-const WIDTHS = [352, 704];
+// 352 and 704 cover the portfolio card slot (368px max) at 1x and 2x.
+// 1216 covers the homepage evidence images, which render up to 607px wide.
+const WIDTHS = [352, 704, 1216];
 // Screenshots are detail-heavy; below ~55 the UI text in them starts to mush.
 const QUALITY = 60;
 

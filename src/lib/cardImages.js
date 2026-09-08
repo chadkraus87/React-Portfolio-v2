@@ -24,7 +24,7 @@ const variants = import.meta.glob('../assets/images/cards/*.avif', {
 const nameOf = (path) => path.split('/').pop().replace(/\.[^.]+$/, '');
 
 // Must match the WIDTHS in scripts/gen-card-images.mjs.
-const WIDTHS = [352, 704];
+const WIDTHS = [352, 704, 1216];
 
 const variantsByName = new Map(
   Object.entries(variants).map(([path, url]) => [nameOf(path), url])
@@ -47,29 +47,34 @@ export const cardSrcSet = (imageUrl) => srcSetByUrl.get(imageUrl);
 /**
  * Derived from the real grid, not an eyeballed breakpoint.
  *
- * .container is `min(100vw, 1080px)` minus 2.5rem of padding; .project-grid is
+ * .container is `min(100vw, 1200px)` minus 3rem of padding; .project-grid is
  * `repeat(auto-fill, minmax(min(300px, 100%), 1fr))` with a 1.5rem gap. Column
- * count therefore flips where the columns physically fit:
+ * count flips where the columns physically fit:
  *
- *   1 col   below 664px   card = 100vw - 2.5rem
- *   2 cols  664..987px    card = (100vw - 4rem) / 2      <- peaks at 461px
- *   3 cols  988..1079px   card = (100vw - 5.5rem) / 3
- *   3 cols  1080px+       card = 331px (container is capped)
+ *   1 col   below 672px    card = 100vw - 3rem
+ *   2 cols  672..995px     card = (100vw - 4.5rem) / 2
+ *   3 cols  996..1199px    card = (100vw - 6rem) / 3
+ *   3 cols  1200px+        card = 368px (container is capped)
  *
- * The previous value claimed a flat 352px above 680px, which told the browser
- * to fetch the 352w asset into a box up to 461px wide.
- *
- * The upper bounds below sit ~20px above those layout thresholds on purpose.
- * Media conditions resolve against the viewport *including* the classic
- * scrollbar, while the grid lays out against the content width that excludes
- * it, so the column flip lands up to a scrollbar-width later than the raw
- * number suggests. Inside those narrow bands the hint overstates the slot and
- * the browser fetches one step larger: a few KB more, still sharp, which is the
- * side to be wrong on.
+ * The upper bounds sit ~20px above those layout thresholds on purpose: media
+ * conditions resolve against the viewport *including* the classic scrollbar,
+ * while the grid lays out against the content width that excludes it. Inside
+ * those narrow bands the hint overstates the slot and the browser fetches one
+ * step larger -- a few KB more, still sharp, which is the side to be wrong on.
  */
 export const CARD_SIZES = [
-  '(max-width: 663px) calc(100vw - 2.5rem)',
-  '(max-width: 1007px) calc((100vw - 4rem) / 2)',
-  '(max-width: 1097px) calc((100vw - 5.5rem) / 3)',
-  '331px',
+  '(max-width: 691px) calc(100vw - 3rem)',
+  '(max-width: 1015px) calc((100vw - 4.5rem) / 2)',
+  '(max-width: 1219px) calc((100vw - 6rem) / 3)',
+  '368px',
+].join(', ');
+
+/**
+ * The homepage evidence figures are far larger than a card: 55fr of the 1152px
+ * content box, i.e. 607px, collapsing to full width below 1024px. The 1216w
+ * variant exists so these stay sharp on a 2x display.
+ */
+export const EVIDENCE_SIZES = [
+  '(max-width: 1023px) calc(100vw - 3rem)',
+  '607px',
 ].join(', ');
