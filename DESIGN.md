@@ -182,10 +182,13 @@ ground and interrupted by exactly one non-green accent.
 - **Moss** (`#6b8f71`): The muted green that carries all secondary text — mono
   eyebrows, category labels, project taglines, dates, field labels, form notes,
   back links, and the lowercase section headings on project pages. It is the
-  system's entire "quiet text" register; there is no gray. **[BASELINE]**
+  system's entire "quiet text" register; there is no gray. It also draws the
+  resting boundary on form fields and unselected filter chips, where it replaced
+  mist (1.12:1) to clear the 3:1 non-text minimum. **[BASELINE]**
 - **Mist** (`#e4ebe4`): The pale green tint. Backgrounds for tag and skill pills,
-  the resting border on filter chips and form fields, hairline dividers between
-  note entries, and the quoted left border on project write-ups. **[BASELINE]**
+  hairline dividers between note entries, and the quoted left border on project
+  write-ups. It no longer draws control boundaries — too faint against the page
+  to identify a control. **[BASELINE]**
 
 ### Tertiary
 - **Brass** (`#a8862f`): The only warm, non-green value in the system and the only
@@ -404,7 +407,7 @@ hardcoded in `NavBar.css` and `Contact.css`.
 - **Mobile:** `min-height: 44px` below 680px; measured at 40px otherwise.
 
 ### Chips
-- **Filter chips:** Pill, transparent fill, forest text, `1.5px` mist border.
+- **Filter chips:** Pill, transparent fill, forest text, `1.5px` moss border.
   Hover shifts the border to forest; active fills forest with white text. This is
   the only three-state control on the site.
 - **Tag pills:** Pill, mist fill, pine text, weight 500, no border. Used for
@@ -436,7 +439,7 @@ hardcoded in `NavBar.css` and `Contact.css`.
 
 ### Inputs / Fields
 - **Style:** Full width, paper fill (recessed into the page rather than raised),
-  `1.5px` mist border, `8px` radius, `0.6rem 0.75rem` padding, body font at
+  `1.5px` moss border, `8px` radius, `0.6rem 0.75rem` padding, body font at
   `0.95rem`.
 - **Label:** Mono `0.78rem` moss, above the field.
 - **Focus:** Border shifts to forest, native outline removed — *and* a `2px` brass
@@ -509,7 +512,9 @@ contact label. It is the cheapest and most recognizable element in the system.
 - **Don't** carry the four ad-hoc breakpoints (860 / 780 / 700 / 680) into a
   redesign. Define a real scale. **[LEGACY]**
 - **Don't** assume dark mode exists. There is no `prefers-color-scheme` handling
-  anywhere in the codebase. **[LEGACY]**
+  anywhere in the codebase; the document declares itself light-only with
+  `<meta name="color-scheme" content="light">` so UA-painted controls stay light.
+  **[LEGACY]**
 
 ## Unresolved
 

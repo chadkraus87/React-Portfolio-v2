@@ -101,7 +101,7 @@
       "refersTo": "filter-chip",
       "description": "Portfolio category filter. The only three-state control on the site: rest, hover, active.",
       "html": "<div style=\"display:flex;gap:0.5rem;flex-wrap:wrap\"><button class=\"ds-filter\">All</button><button class=\"ds-filter is-active\">AI &amp; Claude Code</button><button class=\"ds-filter\">Infrastructure &amp; Ops</button></div>",
-      "css": ".ds-filter { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 0.86rem; font-weight: 500; color: #2e5940; background: transparent; border: 1.5px solid #e4ebe4; border-radius: 999px; padding: 0.35rem 0.95rem; cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; } .ds-filter:hover { border-color: #2e5940; } .ds-filter.is-active { background: #2e5940; border-color: #2e5940; color: #fff; } .ds-filter:focus-visible { outline: 2px solid #a8862f; outline-offset: 2px; }"
+      "css": ".ds-filter { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 0.86rem; font-weight: 500; color: #2e5940; background: transparent; border: 1.5px solid #6b8f71; border-radius: 999px; padding: 0.35rem 0.95rem; cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; } .ds-filter:hover { border-color: #2e5940; } .ds-filter.is-active { background: #2e5940; border-color: #2e5940; color: #fff; } .ds-filter:focus-visible { outline: 2px solid #a8862f; outline-offset: 2px; }"
     },
     {
       "name": "Status Pill",
@@ -141,7 +141,7 @@
       "refersTo": "input",
       "description": "Contact form field. Paper fill so it recedes into the page rather than sitting on it. Focus shifts the border to forest AND adds a brass ring — the border shift alone was judged too easy to miss.",
       "html": "<div class=\"ds-field\"><label for=\"ds-name\">name</label><input id=\"ds-name\" type=\"text\" placeholder=\"Jane Rivera\" /></div>",
-      "css": ".ds-field { margin-bottom: 1.1rem; max-width: 320px; } .ds-field label { display: block; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 0.78rem; color: #6b8f71; margin-bottom: 0.35rem; } .ds-field input { width: 100%; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 0.95rem; color: #20261f; background: #f7f6f1; border: 1.5px solid #e4ebe4; border-radius: 8px; padding: 0.6rem 0.75rem; transition: border-color 0.15s ease; } .ds-field input:focus { outline: none; border-color: #2e5940; } .ds-field input:focus-visible { outline: 2px solid #a8862f; outline-offset: 1px; }"
+      "css": ".ds-field { margin-bottom: 1.1rem; max-width: 320px; } .ds-field label { display: block; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 0.78rem; color: #6b8f71; margin-bottom: 0.35rem; } .ds-field input { width: 100%; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 0.95rem; color: #20261f; background: #f7f6f1; border: 1.5px solid #6b8f71; border-radius: 8px; padding: 0.6rem 0.75rem; transition: border-color 0.15s ease; } .ds-field input:focus { outline: none; border-color: #2e5940; } .ds-field input:focus-visible { outline: 2px solid #a8862f; outline-offset: 1px; }"
     },
     {
       "name": "Navigation Bar",
