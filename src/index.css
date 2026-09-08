@@ -105,7 +105,10 @@ button { font-family: inherit; cursor: pointer; }
   padding: 0.6rem 1.15rem;
   border-radius: var(--radius);
 }
-.skip-link:focus-visible {
+/* :focus, not :focus-visible — :focus-visible is a subset, so any legitimate
+   focus path reveals the link rather than leaving it focused but invisible.
+   The brass ring itself still comes from the global :focus-visible rule. */
+.skip-link:focus {
   top: 0.75rem;
   text-decoration: none;
 }

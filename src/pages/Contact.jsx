@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { profile } from '../data/profile.js';
 import './Contact.css';
 
@@ -19,6 +19,21 @@ export default function Contact() {
   const [state, setState] = useState({ status: 'idle', error: '' });
 
   const [errors, setErrors] = useState({});
+
+  // Which field to focus after a failed submit. Held in a ref and consumed by
+  // the effect below rather than focused inline: focusing inside the handler
+  // runs before React commits, so the field would take focus while it still
+  // lacks aria-invalid, aria-describedby, and its error node — a screen reader
+  // would announce the field with no indication anything was wrong.
+  const pendingFocus = useRef(null);
+
+  useEffect(() => {
+    if (!pendingFocus.current) return;
+    document.getElementById(pendingFocus.current)?.focus();
+    // Cleared immediately so that clearing an error while typing, which also
+    // fires this effect, cannot pull focus back to the field.
+    pendingFocus.current = null;
+  }, [errors]);
 
   const update = (e) => {
     setForm({ ...form, [e.target.id]: e.target.value });
@@ -58,7 +73,7 @@ export default function Contact() {
     // visitor to hunt for it.
     const firstInvalid = ['email', 'message'].find((id) => found[id]);
     if (firstInvalid) {
-      document.getElementById(firstInvalid)?.focus();
+      pendingFocus.current = firstInvalid;
       return;
     }
 
