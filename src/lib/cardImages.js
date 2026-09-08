@@ -9,7 +9,9 @@
 // Keyed on the emitted URL rather than the filename, because Vite hashes asset
 // names at build time; the URL is the exact string ProjectCard receives.
 
-const originals = import.meta.glob('../assets/images/*.{jpg,jpeg}', {
+// png as well as jpg: a screenshot supplied as a lossless PNG stays the
+// canonical source, and still needs its AVIF card variants looked up.
+const originals = import.meta.glob('../assets/images/*.{jpg,jpeg,png}', {
   eager: true,
   query: '?url',
   import: 'default',

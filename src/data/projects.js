@@ -45,8 +45,8 @@ import HomeLabCommander from '../assets/images/HomeLabCommander.jpg';
 import DeskDaemon from '../assets/images/DeskDaemon.jpg';
 import StackCity from '../assets/images/StackCity.jpg';
 import PacketAndPine from '../assets/images/PacketAndPine.jpg';
-// Placeholder title card — swap for a real screenshot when one exists.
-import Meridian from '../assets/images/Meridian.jpg';
+// Real capture of Meridian's agent roster. PNG, kept lossless as supplied.
+import Meridian from '../assets/images/MeridianTeam.png';
 
 export const projects = [
   // ---- AI & Claude Code -------------------------------------------------

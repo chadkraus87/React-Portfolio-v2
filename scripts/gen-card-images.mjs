@@ -34,7 +34,9 @@ const SKIP = new Set(['headshot.jpg']);
 
 mkdirSync(outDir, { recursive: true });
 
-const sources = readdirSync(srcDir).filter((f) => /\.jpe?g$/i.test(f) && !SKIP.has(f));
+// PNG as well as JPEG: a screenshot handed over as a lossless PNG stays the
+// canonical source rather than being re-encoded to match the older files.
+const sources = readdirSync(srcDir).filter((f) => /\.(jpe?g|png)$/i.test(f) && !SKIP.has(f));
 let written = 0;
 let skipped = 0;
 
