@@ -1,546 +1,374 @@
 ---
 name: Chad Kraus Portfolio
-description: A forest-green, mono-labelled portfolio where operations discipline meets a calm natural palette.
+description: An evidence-first hiring portfolio where operational failure patterns and the mechanisms built against them share one page.
 colors:
-  pine: "#1e3a2b"
-  forest: "#2e5940"
-  moss: "#6b8f71"
-  mist: "#e4ebe4"
-  paper: "#f7f6f1"
-  card: "#ffffff"
-  ink: "#20261f"
-  brass: "#a8862f"
+  paper: "#F7F7F5"
+  surface: "#FFFFFF"
+  inset: "#EFEFEC"
+  ink: "#14171A"
+  graphite: "#5A6169"
+  rule: "#D6D9DD"
+  boundary: "#7F868F"
+  signal: "#B23A16"
+  verified: "#1F4B99"
 typography:
   display:
-    fontFamily: "Bitter, Georgia, serif"
-    fontSize: "clamp(2.3rem, 5.5vw, 3.4rem)"
-    fontWeight: 800
-    lineHeight: 1.15
-  headline:
-    fontFamily: "Bitter, Georgia, serif"
-    fontSize: "clamp(1.9rem, 4vw, 2.6rem)"
+    fontFamily: "Archivo, system-ui, sans-serif"
+    fontSize: "2rem"
     fontWeight: 700
-    lineHeight: 1.15
+    lineHeight: 1.1
+    letterSpacing: "-0.015em"
   title:
-    fontFamily: "Bitter, Georgia, serif"
-    fontSize: "1.6rem"
+    fontFamily: "Archivo, system-ui, sans-serif"
+    fontSize: "1.5rem"
     fontWeight: 700
-    lineHeight: 1.15
-  subtitle:
-    fontFamily: "Bitter, Georgia, serif"
-    fontSize: "1.2rem"
-    fontWeight: 700
-    lineHeight: 1.15
+    lineHeight: 1.2
+  emphasis:
+    fontFamily: "Archivo, system-ui, sans-serif"
+    fontSize: "1.1875rem"
+    fontWeight: 600
+    lineHeight: 1.4
   body:
-    fontFamily: "IBM Plex Sans, system-ui, sans-serif"
-    fontSize: "1rem"
+    fontFamily: "Literata, Georgia, serif"
+    fontSize: "1.0625rem"
     fontWeight: 400
-    lineHeight: 1.65
+    lineHeight: 1.7
+  small:
+    fontFamily: "Literata, Georgia, serif"
+    fontSize: "0.9375rem"
+    fontWeight: 400
+    lineHeight: 1.6
   label:
-    fontFamily: "IBM Plex Mono, ui-monospace, monospace"
-    fontSize: "0.78rem"
+    fontFamily: "Martian Mono, ui-monospace, monospace"
+    fontSize: "0.8125rem"
     fontWeight: 500
-    lineHeight: 1.5
-    letterSpacing: "0.02em"
+    lineHeight: 1.4
+    letterSpacing: "0.04em"
 rounded:
-  sm: "6px"
-  md: "8px"
-  lg: "10px"
-  pill: "999px"
+  none: "0"
 spacing:
-  xs: "0.35rem"
-  sm: "0.6rem"
-  md: "1.25rem"
-  lg: "2rem"
-  xl: "3rem"
+  xs: "4px"
+  sm: "8px"
+  md: "16px"
+  lg: "24px"
+  xl: "48px"
+  xxl: "96px"
 components:
   button-primary:
-    backgroundColor: "{colors.forest}"
+    backgroundColor: "{colors.ink}"
     textColor: "#ffffff"
-    rounded: "{rounded.lg}"
-    padding: "0.6rem 1.15rem"
+    rounded: "{rounded.none}"
+    padding: "12px 16px"
   button-primary-hover:
-    backgroundColor: "{colors.pine}"
+    backgroundColor: "{colors.signal}"
     textColor: "#ffffff"
   button-outline:
     backgroundColor: "transparent"
-    textColor: "{colors.forest}"
-    rounded: "{rounded.lg}"
-    padding: "0.6rem 1.15rem"
-  button-outline-hover:
-    backgroundColor: "{colors.mist}"
-    textColor: "{colors.forest}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.none}"
+    padding: "12px 16px"
   filter-chip:
     backgroundColor: "transparent"
-    textColor: "{colors.forest}"
-    rounded: "{rounded.pill}"
-    padding: "0.35rem 0.95rem"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.none}"
+    padding: "8px 12px"
   filter-chip-active:
-    backgroundColor: "{colors.forest}"
+    backgroundColor: "{colors.ink}"
     textColor: "#ffffff"
-    rounded: "{rounded.pill}"
-    padding: "0.35rem 0.95rem"
-  tag-pill:
-    backgroundColor: "{colors.mist}"
-    textColor: "{colors.pine}"
-    rounded: "{rounded.pill}"
-    padding: "0.18rem 0.6rem"
-  status-pill:
-    backgroundColor: "transparent"
-    textColor: "{colors.brass}"
-    rounded: "{rounded.pill}"
-    padding: "0.1rem 0.55rem"
+    rounded: "{rounded.none}"
+    padding: "8px 12px"
   card:
-    backgroundColor: "{colors.card}"
-    rounded: "{rounded.lg}"
-    padding: "1.15rem 1.25rem 1.35rem"
+    backgroundColor: "{colors.surface}"
+    rounded: "{rounded.none}"
+    padding: "16px 16px 24px"
   input:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.md}"
-    padding: "0.6rem 0.75rem"
+    rounded: "{rounded.none}"
+    padding: "12px"
   nav-link:
     backgroundColor: "transparent"
-    textColor: "rgba(255, 255, 255, 0.82)"
-    rounded: "{rounded.md}"
-    padding: "0.45rem 0.85rem"
+    textColor: "{colors.graphite}"
+    rounded: "{rounded.none}"
+    padding: "8px 12px"
   nav-link-active:
-    backgroundColor: "{colors.forest}"
+    backgroundColor: "{colors.signal}"
     textColor: "#ffffff"
-    rounded: "{rounded.md}"
-    padding: "0.45rem 0.85rem"
+    rounded: "{rounded.none}"
+    padding: "8px 12px"
+  table-header-band:
+    backgroundColor: "{colors.inset}"
+    textColor: "{colors.graphite}"
+    rounded: "{rounded.none}"
+    padding: "12px 0"
 ---
 
 # Design System: Chad Kraus Portfolio
 
-> **Status: incumbent baseline, captured before any redesign.** This file records
-> what the site *is* today, extracted from `src/index.css` and the ten component
-> and page stylesheets. It is a description, not a contract. The forest-green
-> identity, the Bitter/IBM Plex pairing, and the visual style documented here are
-> **explicitly not binding** — PRODUCT.md's Brand Commitments section names the
-> three constraints that are (resume/site parity, no fabricated claims, the
-> private-project link policy), and the visual identity is deliberately absent
-> from that list. A future redesign is free to replace everything below.
->
-> Three buckets are marked throughout so a redesign knows what it is touching:
-> **[BASELINE]** describes current implementation, **[PRINCIPLE]** marks a
-> decision worth carrying into any future world, and **[LEGACY]** marks something
-> weak, inconsistent, or accidental that a redesign should feel free to discard.
-> PRODUCT.md remains authoritative for positioning and product truth.
+> This records the system currently implemented. It supersedes the forest-green
+> Bitter/IBM Plex system that preceded it; that baseline is preserved in git
+> history and is not carried forward here. PRODUCT.md remains authoritative for
+> positioning and product truth.
 
 ## Overview
 
-**Creative North Star: "The Terminal in the Woods"**
+The site is a hiring surface, and its whole argument is structural: a visitor
+who reads nothing still sees two columns, one naming a failure pattern from
+years of Tier 2/3 escalations, the other naming the mechanism built so that
+pattern cannot recur. Operations and engineering are not two sections; they are
+two columns of the same table.
 
-The implemented system runs on a single deliberate tension. Structural furniture
-speaks in IBM Plex Mono with literal shell syntax — every section label is
-prefixed with a brass `~/`, project categories render lowercased like directory
-names, and the placeholder for a missing screenshot is the project title wrapped
-in curly braces. Set against that is a palette of pine, forest, and moss on warm
-off-white paper. Ops discipline in a calm, natural register: the vocabulary of a
-terminal, the temperature of a field guide.
+Everything else is subordinate to that. There is no ornament, no elevation, and
+no decorative colour. Structure is carried entirely by rules, spacing and one
+signal colour used at roughly 5% of any viewport. A serif reads the prose, a
+grotesk carries the structure, and a monospace is confined to identifiers so
+that labels never compete with content.
 
-Density is moderate and reading-first. Long-form surfaces are constrained to
-44–46rem while the card grid runs to the full 1080px container, so prose and
-evidence get different measures. Serif headings (Bitter, up to 800 weight) sit
-over sans body text at a generous 1.65 line-height, and mono is confined to
-labels, metadata, and micro-copy — never to prose. `About.css` carries an
-explicit correction on this point: the hero title was moved off mono and onto the
-body font because monospace prose measured harder to read and wrapped to four
-lines on mobile.
-
-Ornament is scarce and mostly structural. There is one shadow token, one radius
-token, and a small set of colored edges doing the work that shadow does in most
-systems. The system is quiet by construction, and its most distinctive gesture
-costs two characters.
+The register is a well-run engineering organisation's internal document: sober,
+current, and specific. Nothing on the page is decorative; if an element is
+present it is carrying a fact.
 
 **Key Characteristics:**
-- Mono labels with a literal `~/` prefix as the signature device
-- Serif display over sans body; mono strictly for labels and metadata
-- Warm off-white ground, never pure white at page level
-- Flat surfaces with structural green edges instead of stacked elevation
-- Pill geometry for anything enumerable; soft 10px rectangles for anything containing content
-- Touch targets deliberately raised to 44px on phones without shifting the desktop layout
+- Paired failure/mechanism reasoning as the page's skeleton, not a section
+- Serif prose, grotesk structure, mono identifiers — three faces, three jobs
+- Zero shadows and zero radii; depth comes from rules and opaque surfaces
+- One signal colour, held under ~5% of a viewport
+- Breakpoints derived from where the grid actually breaks, not invented
+- Touch targets keyed to pointer capability, not viewport width
 
 ## Colors
 
-A single-hue green family spanning near-black to pale tint, warmed by an off-white
-ground and interrupted by exactly one non-green accent.
+A neutral document palette with two functional accents. There are no decorative
+colours: every value below has a job.
 
 ### Primary
-- **Deep Pine** (`#1e3a2b`): The structural darkest green. Owns the sticky nav bar
-  and the footer, and is the default color for every heading level on light
-  surfaces. Also the text color inside pale-tint pills, where it supplies contrast
-  without introducing a second hue. **[BASELINE]**
-- **Forest** (`#2e5940`): The working brand green and the only interactive color.
-  Primary button fills, all link text, active nav and filter states, the 3px
-  underline beneath project imagery, the 4px left rule on contact and mobile-resume
-  cards, focus borders on inputs, and the offset frame behind the headshot.
-  **[BASELINE]**
+- **Ink** (`#14171A`): All primary text, the 2px section rules, primary button
+  fills, and the active filter chip. 17.99:1 on surface, 16.77:1 on paper.
+- **Signal** (`#B23A16`): The only warm value. Sequence numerals, the `2,000+`
+  figure, the active nav plane, `Live` status, and the focus ring. 5.98:1 on
+  surface, 5.58:1 on paper. Held to roughly 5% of any viewport; measured at
+  0.37% of fills on the homepage.
 
 ### Secondary
-- **Moss** (`#6b8f71`): The muted green that carries all secondary text — mono
-  eyebrows, category labels, project taglines, dates, field labels, form notes,
-  back links, and the lowercase section headings on project pages. It is the
-  system's entire "quiet text" register; there is no gray. It also draws the
-  resting boundary on form fields and unselected filter chips, where it replaced
-  mist (1.12:1) to clear the 3:1 non-text minimum. **[BASELINE]**
-- **Mist** (`#e4ebe4`): The pale green tint. Backgrounds for tag and skill pills,
-  hairline dividers between note entries, and the quoted left border on project
-  write-ups. It no longer draws control boundaries — too faint against the page
-  to identify a control. **[BASELINE]**
-
-### Tertiary
-- **Brass** (`#a8862f`): The only warm, non-green value in the system and the only
-  color used at genuinely small scale. It renders the `~/` prefix on every mono
-  eyebrow, the global focus ring, and the "In progress" status pill. Its rarity is
-  what makes the `~/` read as an accent rather than as decoration. **[BASELINE]**
+- **Graphite** (`#5A6169`): Secondary text — mono labels, failure-pattern prose,
+  captions, dates, inactive nav. 6.27:1 / 5.85:1. There is no lighter text
+  colour; nothing on the site sits between graphite and ink.
+- **Verified** (`#1F4B99`): Links, the 2px underline beneath linked titles, and
+  "full write-up" affordances. 8.32:1 / 7.75:1.
 
 ### Neutral
-- **Warm Paper** (`#f7f6f1`): The page ground. Warm off-white rather than white,
-  which is what keeps the greens from reading as clinical. Also the fill of form
-  inputs, so fields recede into the page rather than sitting on it. **[BASELINE]**
-- **Card White** (`#ffffff`): Reserved exclusively for raised content surfaces —
-  project cards, the skills panel, the contact form, contact cards, the resume
-  frame. Pure white appears only where something is meant to sit above the page.
-  **[BASELINE]**
-- **Ink** (`#20261f`): Body text. A near-black with a green cast rather than a
-  true neutral, so text belongs to the same family as everything else. **[BASELINE]**
+- **Paper** (`#F7F7F5`): The page ground. Cool, not cream.
+- **Surface** (`#FFFFFF`): Raised content — nav bar, cards, the contact form.
+- **Inset** (`#EFEFEC`): The one recessed value. The paired-table header band and
+  screenshot placeholder plates.
 
 ### Named Rules
-**The One Warm Value Rule.** Brass is the only non-green in the system, and it is
-never used for a surface, a fill, or a block of text — only for the `~/` prefix,
-the focus ring, and a single status state. Introducing a second warm accent
-collapses the effect. **[PRINCIPLE]** — the discipline transfers to any palette;
-the specific hex does not.
+**The Two-Token Boundary Rule.** `Rule` (`#D6D9DD`) and `Boundary` (`#7F868F`)
+look similar and are not interchangeable. **Rule is decorative only** — hairline
+dividers, row separators, figure frames — and carries no contrast claim: it
+measures 1.42:1 on surface and 1.32:1 on paper. **Boundary is the identifying
+edge of an interactive control** — inputs, filter chips, buttons — and clears
+WCAG 1.4.11 at 3.68:1 / 3.43:1. A control bounded only by `Rule` is a defect.
 
-**The Never-White-Ground Rule.** The page is warm off-white; pure white means
-"this surface is raised." A redesign that grounds the page in `#ffffff` loses the
-only cue that separates card from page, because the shadow alone is too soft to
-carry it. **[PRINCIPLE]**
+**The One Warm Value Rule.** Signal is the only non-neutral in the system and is
+never used for a surface, a body of text, or more than about 5% of a viewport.
+Its rarity is what makes a numeral or a `Live` badge register at all.
 
-**The Green-Cast Neutral Rule.** There are no true grays anywhere in the system.
-Secondary text is moss, dividers are mist, body text is green-cast ink. **[BASELINE]**
+**The No-Lighter-Grey Rule.** Graphite is the floor for text. Anything that
+would need a paler grey to read correctly is instead made smaller, moved, or
+deleted.
 
 ## Typography
 
-**Display Font:** Bitter (with Georgia, serif) — weights 600/700/800
-**Body Font:** IBM Plex Sans (with system-ui, sans-serif) — weights 400/500/600
-**Label/Mono Font:** IBM Plex Mono (with ui-monospace, monospace) — weights 400/500
+**Structure / UI:** Archivo (with system-ui, sans-serif) — 400/500/600/700
+**Long-form prose:** Literata (with Georgia, serif) — 400/500 plus italic
+**Identifiers:** Martian Mono (with ui-monospace, monospace) — 400/500
 
-All three load from Google Fonts with `display=swap` and `preconnect` hints; only
-the weights listed above are requested.
-
-**Character:** A slab-ish serif with real weight range against IBM Plex's
-engineering-neutral sans and mono. The pairing reads as documentation rather than
-marketing — the serif supplies warmth and authority at large sizes, the sans
-disappears into reading, and the mono announces every piece of structure.
+**Character:** An engineered grotesk carries every structural role, a genuine
+reading serif carries every sentence a visitor is expected to read, and a
+monospace is reserved for things that identify rather than describe. The split
+is strict: prose is never set in mono, and labels are never set in the serif.
 
 ### Hierarchy
-- **Display** (Bitter 800, `clamp(2.3rem, 5.5vw, 3.4rem)`, 1.15): The name in the
-  About hero. The only place weight 800 appears. **[BASELINE]**
-- **Headline** (Bitter 700, `clamp(1.9rem, 4vw, 2.6rem)`, 1.15): `.page-title` —
-  every page's H1. The only other fluid size in the system. **[BASELINE]**
-- **Title** (Bitter 700, 1.6rem, 1.15): Section headings on About — the bio
-  heading, the skills panel heading, the certifications heading. **[BASELINE]**
-- **Subtitle** (Bitter 700, 1.2–1.25rem, 1.15): Project card titles and note list
-  entry titles. **[BASELINE]**
-- **Body** (IBM Plex Sans 400, 1rem, 1.65): Default reading text. Prose columns
-  are capped: bio paragraphs at 40rem, hero copy at 34rem, note bodies at 44rem
-  with line-height raised to 1.8, project detail pages at 46rem with the summary
-  at 1.05rem/1.7. Longer reading gets more leading. **[PRINCIPLE]** — measure and
-  leading scaling with reading length is a real decision, independent of the fonts.
-  (The 44rem and 46rem caps only began taking effect on 2026-09-07; see the
-  verification note under Layout.)
-- **Label** (IBM Plex Mono 500, 0.68–0.82rem, +0.02–0.05em): Everything
-  structural. Eyebrows, project categories, taglines, status pills, dates, form
-  labels, nav brand mark, footer meta, back links, and the lowercased section
-  headings on project pages. **[BASELINE]**
+
+Seven sizes in two registers. This is **not** a modular scale — the ratios are
+1.13 within the text register and 1.33 then 1.50 within the display register.
+The gap between 19 and 24 is the deliberate seam: below it everything is
+reading, above it everything is structure. **Nothing below 13px exists.**
+
+- **Display** (Archivo 700, 32px, 1.1, −0.015em): The name on the homepage,
+  page titles, evidence entry titles.
+- **Title** (Archivo 700, 24px, 1.2): Card titles, note list entries, and the
+  homepage name at mobile sizes.
+- **Emphasis** (Archivo 600, 19px, 1.4): The mechanism statements in the paired
+  table, and project-page summaries.
+- **Body** (Literata 400, 17px, 1.7): All reading text — bios, note bodies,
+  failure-pattern statements, the thesis line in italic.
+- **Small** (Literata 400, 15px, 1.6): Field values, captions, rail values,
+  status and date.
+- **Label** (Martian Mono 500, 13px, +0.04em, uppercase): Column headers, field
+  headers, project attributions, section markers, nav links, dates.
 
 ### Named Rules
-**The Mono-Is-Never-Prose Rule.** IBM Plex Mono is reserved for labels, metadata,
-and micro-copy. It never sets a sentence a visitor is expected to read. This is a
-correction the codebase already made once, in `About.css`, after mono prose
-measured harder to read and wrapped badly on mobile. **[PRINCIPLE]**
+**The Mono-Is-Never-Prose Rule.** Martian Mono sets identifiers only — section
+numbers, field headers, attributions, dates, slugs. It never sets a sentence.
+This is a rule the codebase learned the hard way under the previous system,
+where mono prose measured harder to read and wrapped badly on mobile.
 
-**The `~/` Prefix Rule.** Mono eyebrows carry a brass `~/` injected via
-`::before`, never typed into the content. It appears on `.eyebrow`,
-`.pcard-category`, and `.contact-label`. This is the single most identifying mark
-on the site and it costs two characters. **[BASELINE]** — the specific glyph is
-tied to the terminal metaphor and a redesign may drop it, but **[PRINCIPLE]**: one
-cheap, repeated, unmistakable mark is worth more than a page of ornament.
-
-**The Lowercase Structure Rule.** Mono structural headings are lowercased —
-project categories via `.toLowerCase()` in the component, project-page section
-headings via `text-transform: lowercase`. Structure whispers; content speaks.
-**[BASELINE]**
+**The 13px Floor.** No text anywhere is smaller than 13px. Status and date sit
+at 15px, not in a badge — currency is part of the evidence and should be
+readable, not decorative.
 
 ## Layout
 
-A single centered container (`max-width: 1080px`, `padding: 0 1.25rem`) governs
-every page. Vertical rhythm comes from one `.page` class: `3.5rem` top, `4.5rem`
-bottom. The app shell is a flex column at `100dvh` with `main` absorbing slack, so
-the footer sits at the bottom on short pages — a fix the CSS documents, having
-previously left bare background beneath the footer on Resume and Contact.
+A single 1200px container with 24px side padding governs every page. Spacing
+comes from a 4px base: 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 96.
 
-Two-column asymmetric grids appear three times, always content-major and always
-`3rem` gap: the About hero at `1.35fr 1fr`, the bio/skills split at `1.5fr 1fr`,
-and the contact form/cards split at `1.4fr 1fr`. The project grid is the only
-auto-responsive one: `repeat(auto-fill, minmax(300px, 1fr))` at `1.5rem` gap.
+The homepage is three stacked systems inside that container: a compact identity
+block, the paired reasoning table (a 64px numeral column, then 5fr failure and
+7fr mechanism), and a four-cell evidence rail. Selected evidence below alternates
+55/45 figure-and-fields rows.
 
-Reading surfaces override the container with their own narrower caps — 44rem for
-notes, 46rem for project detail, 40rem for bio paragraphs, 34rem for hero and
-intro copy. **[PRINCIPLE]** — different content types earning different measures
-inside one container is worth keeping.
-
-> **Verified 2026-09-07, after a fix.** The 44rem and 46rem caps were authored
-> but not in effect: `.notes`, `.note`, and `.pdetail` sit on the same element as
-> `.container`, share its specificity (0,1,0), and lost the tie because
-> `main.jsx` imported `App.jsx` — and through it every page stylesheet — before
-> `index.css`. All three surfaces rendered at the full 1080px container in
-> production (~100–125 characters per line). Reordering those two imports in
-> `main.jsx` restored them. Measured in the production build at 1280px: Notes
-> index 704px / 63 cpl, note body 704px / 76 cpl, project detail 736px / 75 cpl.
-> The 40rem and 34rem caps were never affected — those elements do not carry
-> `.container`.
-
-Spacing is expressed in `rem` decimals rather than drawn from a named scale.
-Recurring values cluster around 0.35 / 0.6 / 1.15 / 1.25 / 1.6 / 2 / 3rem, but
-they are hand-tuned per component rather than stepped. **[LEGACY]** — there is no
-spacing token in `:root`, so rhythm is convention rather than system. A redesign
-should introduce a real scale.
+Reading measures are set per surface and are load-bearing: notes and the notes
+index at 44rem, project detail at 46rem, homepage bio paragraphs at 68ch, the
+identity role line at 66ch, the thesis at 62ch, intros at 60ch.
 
 ### Responsive behavior
 
-Three hand-placed breakpoints, no shared token: **860px** (About collapses both
-grids to one column and pulls the headshot to `order: -1`, because stacked in
-source order a phone visitor read the entire hero before seeing a face), **780px**
-(contact grid collapses), and **700px** (Resume swaps its inline PDF frame for a
-direct download hand-off, and hides the header's Download button so the action
-isn't offered three times). **680px** is the phone breakpoint and carries almost
-all touch work: the nav collapses to a hamburger with an absolutely positioned
-drawer under the 64px bar, and roughly a dozen rules raise inline links, filter
-chips, buttons, and footer links to a 44px minimum.
+Breakpoints are derived from where the grid actually breaks rather than chosen:
 
-**[PRINCIPLE]** The touch-target technique is genuinely good and worth carrying
-anywhere: pad the target to 44px, then pull the padding back out with a negative
-`margin-block`, so the tappable area grows without moving anything visually. Used
-on card titles, "Full write-up" links, note titles, and the project back-link.
+- **≤640px** — one column. The paired table stops being a table: each pair
+  becomes a single block with the numeral, the failure sentence, then the
+  mechanism indented behind a `↳` and a 2px rule, with the relationship stated
+  once above the table rather than repeated in every unit.
+- **641–1023px** — the six-column band. The rail halves to 2×2, evidence rows
+  stack figure-over-text, the background grid becomes one column.
+- **≥1024px** — full twelve-column behaviour.
+- **≤700px** — one surface-specific exception: the resume swaps its inline PDF
+  frame for a direct download hand-off, because inline PDF embedding is
+  unreliable on phones.
 
-**[LEGACY]** Four breakpoints (860 / 780 / 700 / 680) with no shared variable and
-no relationship between them. They were added per-problem. A redesign should
-define a breakpoint scale rather than inherit these.
+The project grid uses `repeat(auto-fill, minmax(min(300px, 100%), 1fr))`; the
+`min()` is what stops a 300px floor overflowing a 320px viewport.
 
 ### Named Rules
-**The One Container Rule.** Everything lives inside `.container`. Nothing
-full-bleeds; there is not a single edge-to-edge element on the site. **[BASELINE]**
+**The Capability Rule.** Touch target sizing is keyed to `(pointer: coarse)`,
+not viewport width. A tablet in portrait is wider than any phone breakpoint and
+still finger-driven, so width alone was raising targets on the wrong devices.
 
 ## Elevation & Depth
 
-**Flat with structural edges.** Surfaces do not stack. There is exactly one shadow
-token, and it is soft, green-tinted, and ambient rather than structural:
-`0 1px 2px rgba(30,58,43,0.08), 0 8px 24px rgba(30,58,43,0.09)`. It appears
-identically on project cards, the skills panel, the contact form, contact cards,
-the resume frame, the mobile resume hand-off, the headshot, and project detail
-images — one value, eight uses, no scale.
+**There are no shadows.** The rule is absolute and enforced globally:
+`border-radius: 0` and `box-shadow: none` are set on every element, including
+pseudo-elements. Depth is produced three ways only — the ground/surface/inset
+tonal step, 1px `Rule` hairlines, and 2px `Ink` rules that open a section.
 
-The real depth work is done by colored edges. Project images and project detail
-images carry a 3px forest bottom border. Contact cards and the mobile resume panel
-carry a 4px forest left rule. Project write-ups sit behind a 2px mist left border
-like a pull quote. The headshot has a 2px forest frame offset ten pixels down and
-right, described in the CSS as a nod to the resume's rule lines. The mobile nav
-drawer closes with a 3px forest bottom border. Green lines, not shadows, tell you
-where one thing ends and another begins.
-
-**[PRINCIPLE]** Structural color edges instead of stacked elevation is a coherent,
-transferable position — it reads as printed material rather than as stacked glass,
-and it costs nothing in rendering.
-
-**[LEGACY]** The edge weights are inconsistent (2px / 3px / 4px) with no rule
-governing which applies where, and one shadow token stretched across eight
-different surface roles means a card and a full-page document frame claim identical
-elevation. A redesign should either define a real elevation scale or commit
-fully to the flat-edge model and drop the shadow.
-
-### Shadow Vocabulary
-- **Ambient surface** (`0 1px 2px rgba(30,58,43,0.08), 0 8px 24px rgba(30,58,43,0.09)`):
-  The only resting shadow. Separates a white surface from warm paper.
-- **Card hover** (`0 2px 4px rgba(30,58,43,0.1), 0 14px 32px rgba(30,58,43,0.14)`):
-  The single deepened variant, applied only to project cards on hover alongside a
-  `-3px` lift.
+This replaces a previous system in which one shadow token served eight distinct
+surface roles while three radii and inconsistent 2/3/4px edges competed with it.
 
 ## Shapes
 
-Two geometries, cleanly divided by purpose.
-
-**Pills** (`999px`) for anything enumerable and countable: stack tags, skill tags,
-hero status tags, project status badges, and filter chips. **Soft rectangles**
-(`10px`, the single `--radius` token) for anything that contains content: cards,
-panels, forms, images, the resume frame, buttons. Two smaller radii exist as
-one-offs — `8px` on nav links and form inputs, `6px` on the `CK` nav brand mark.
-
-Borders are thin and deliberate: `1.5px` on buttons and form fields (so a filled
-and an outline button occupy identical space), `1px` on hairline dividers, and the
-2–4px structural greens described above.
-
-**[PRINCIPLE]** The pill/rectangle split by function — countable things are pills,
-containers are rectangles — is a clear rule that survives any palette change.
-
-**[LEGACY]** Three radius values with only one tokenized. `8px` and `6px` are
-hardcoded in `NavBar.css` and `Contact.css`.
+One geometry: the rectangle. No radii anywhere, no pills, no rounded frames.
+Borders are 1px `Rule` for decoration, 1px `Boundary` for controls, and 2px
+`Ink` for section openings and the invalid-field state. Screenshots sit flush
+inside a 1px frame with no inset and no shadow.
 
 ## Components
 
 ### Buttons
-- **Shape:** Soft rectangle (10px, `--radius`), `1.5px` transparent border so
-  filled and outline variants occupy identical space.
-- **Primary:** Forest fill, white text, `0.6rem 1.15rem` padding, weight 600 at
-  `0.92rem`. Inline-flex with a `0.5rem` gap so an arrow or icon can sit beside
-  the label.
-- **Outline:** Transparent fill, forest text and border.
-- **Hover:** Primary darkens forest → pine; outline fills with mist. Both at
-  `0.15s ease`. Underline is explicitly suppressed on `.btn` even though buttons
-  are usually anchors.
-- **Disabled:** `opacity: 0.5`, `not-allowed` cursor. Defined in `Contact.css`
-  rather than with the button. **[LEGACY]** — a global state living in a page
-  stylesheet.
-- **Mobile:** `min-height: 44px` below 680px; measured at 40px otherwise.
+- **Shape:** Square, 12px/16px padding, 1px `Boundary` border so filled and
+  outline variants occupy identical space.
+- **Primary:** Ink fill, white text; hovers to Signal.
+- **Outline:** Transparent, ink text; hovers to a surface fill.
+- **Disabled:** 50% opacity. Used only while a form submit is in flight.
+- **Touch:** 44px minimum under `(pointer: coarse)`.
 
-### Chips
-- **Filter chips:** Pill, transparent fill, forest text, `1.5px` moss border.
-  Hover shifts the border to forest; active fills forest with white text. This is
-  the only three-state control on the site.
-- **Tag pills:** Pill, mist fill, pine text, weight 500, no border. Used for
-  project stacks (`0.74rem`), skill groups (`0.78rem`), and hero tags (mono,
-  `0.75rem`). Non-interactive.
-- **Status pills:** Pill, transparent fill, `1px` border, mono `0.68rem`, color
-  matched to state — Live is forest on mist (the only filled status), In progress
-  is brass, Private is moss. The comment in `ProjectCard.css` states the intent:
-  Live reads as available now, and the others stay quieter so a private or
-  in-flight project doesn't shout louder than a shipped one. **[PRINCIPLE]** —
-  encoding availability in the loudness of the badge is a real idea worth keeping.
+### Paired reasoning table (signature component)
+The homepage's defining element. A 2px ink rule opens it; an inset header band
+carries two mono column labels; three rows follow, each crossing both columns so
+a pair reads horizontally. Signal numerals sit in a 64px column, failure prose is
+graphite serif, the mechanism is 19px semibold ink, and the project attribution
+sits beneath in mono. On phones each row becomes one indented block.
 
-### Cards / Containers
-- **Corner:** 10px, `overflow: hidden` so the image bleeds to the card edge.
-- **Background:** Card white on warm paper.
-- **Shadow:** The single ambient token; deepens on hover with a `-3px` translate.
-- **Border:** None on the card itself. The 3px forest underline lives on the
-  image.
-- **Padding:** `1.15rem 1.25rem 1.35rem`, with a `0.6rem` flex gap between blocks.
-- **Signature behavior:** `.pcard-actions` takes `margin-top: auto`, pinning
-  buttons to the card bottom so every card in a stretched grid row aligns its
-  actions regardless of text length. **[PRINCIPLE]** — a small, correct detail
-  that any card system should keep.
-- **Image:** `16/9`, `object-fit: cover`, `object-position: top` so screenshots
-  show their headers rather than their centers. **[PRINCIPLE]**
-- **Placeholder:** When a project has no screenshot, a `135deg` pine→forest
-  gradient panel renders the title in mono inside curly braces, `aria-hidden`.
-  **[BASELINE]**
+### Evidence rail
+Four cells divided by hairlines, the first emphasised with a 32px Signal figure
+and a serif caption; the rest are mono label over serif value. It exists to give
+operations concrete weight without giving it screenshot real estate.
 
-### Inputs / Fields
-- **Style:** Full width, paper fill (recessed into the page rather than raised),
-  `1.5px` moss border, `8px` radius, `0.6rem 0.75rem` padding, body font at
-  `0.95rem`.
-- **Label:** Mono `0.78rem` moss, above the field.
-- **Focus:** Border shifts to forest, native outline removed — *and* a `2px` brass
-  `:focus-visible` ring is added back at `1px` offset. The CSS documents why: a
-  border-color shift alone is easy to miss and would otherwise be the only cue.
-  **[PRINCIPLE]** — never trade a focus ring for a border shift.
-- **Error / Disabled:** No field-level error styling exists. Form errors surface as
-  a single note below the form. **[LEGACY]** — no per-field validation state.
+### Evidence entry
+55/45 figure-and-fields row, alternating sides. The figure is a flush 1px frame
+with `aspect-ratio: 16/10` reserving space. Fields are a `<dl>` with mono `dt`
+headers over a hairline and serif `dd` values. Status and date sit at 15px.
+
+### Cards
+Square, 1px `Rule` border, no shadow; the border shifts to `Boundary` on hover.
+A `16/9` image with a 1px bottom rule, a meta row separated by a hairline, and
+actions pinned to the card bottom with `margin-top: auto` so grid rows align.
+
+### Inputs
+Paper fill so fields recede into the page, 1px `Boundary` edge, 12px padding.
+Focus shifts the border to ink **and** adds a 2px Signal `:focus-visible` ring —
+a border shift alone is too easy to miss. Invalid fields take a 2px Signal
+border plus a serif message; the message carries the meaning, never colour alone.
 
 ### Navigation
-- **Bar:** Pine, sticky at `top: 0`, `z-index: 50`, `min-height: 64px`.
-- **Brand:** Bitter 700 white at `1.1rem`, preceded by a `CK` monogram — mono
-  `0.78rem` pine on mist, `6px` radius, `+0.05em` tracking. A small terminal-prompt
-  object against the dark bar. **[BASELINE]**
-- **Links:** White at 82% opacity, weight 500, `0.94rem`, `8px` radius. Hover
-  brings full white on an 8%-white wash; active fills forest. Active state is
-  driven by `NavLink` with `end` on the home route.
-- **Mobile (≤680px):** Hamburger toggle at a true 44×44 with `aria-expanded` and a
-  state-aware `aria-label`; links become an absolutely positioned pine drawer
-  beneath the 64px bar, closed by a 3px forest bottom border. Every link closes the
-  drawer on click. **[LEGACY]** — the drawer is CSS `display: none/flex` with no
-  focus trap and no Escape handling.
+Surface bar, 60px, sticky, 1px bottom rule. Uppercase mono links; the active one
+takes a solid Signal plane. Below 640px it collapses to a 44×44 toggle with
+`aria-expanded`, `aria-controls`, Escape-to-close, outside-press-to-close and
+focus return to the toggle.
 
-### Footer
-Pine ground, `margin-top: auto`. Mono meta at 55% white on the left, links at 85%
-white on the right, collapsing to a wrapped row with 44px touch targets on phones.
-Deliberately quiet — it repeats contact affordances rather than introducing
-anything.
-
-### Signature component: the mono eyebrow
-`.eyebrow` — mono `0.8rem` moss with a brass `~/` from `::before`, `0.6rem` below.
-It opens most pages and appears in variant form as the project category and the
-contact label. It is the cheapest and most recognizable element in the system.
-**[BASELINE]**
+### Skip link
+The first focusable element on every page. `position: fixed` so it stays
+reachable at any scroll position, revealed on `:focus` (not only
+`:focus-visible`) so any legitimate focus path shows it.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** keep mono for labels, metadata, and micro-copy only. `About.css` already
-  documents the regression that happens when mono sets prose. **[PRINCIPLE]**
-- **Do** raise touch targets with padding plus a compensating negative
-  `margin-block`, so tappable area grows without moving the visual layout.
-  **[PRINCIPLE]**
-- **Do** give focus a real ring. Brass `2px` at `2px` offset globally, `1px` offset
-  on form fields. A border-color change is not a focus state. **[PRINCIPLE]**
-- **Do** let reading measure and leading scale with content length — 34rem intros,
-  40rem bio, 44rem notes at 1.8, 46rem project pages at 1.7. **[PRINCIPLE]**
-- **Do** pin card actions to the card bottom with `margin-top: auto` so grid rows
-  align. **[PRINCIPLE]**
-- **Do** encode project availability in badge loudness: the shipped thing reads
-  loudest. **[PRINCIPLE]**
-- **Do** honor `prefers-reduced-motion` — `index.css` kills all transitions,
-  animations, and smooth scrolling under it. **[PRINCIPLE]**
-- **Do** keep pills for countable things and soft rectangles for containers.
-  **[PRINCIPLE]**
+- **Do** use `Boundary`, never `Rule`, for anything a visitor can interact with.
+- **Do** keep Martian Mono for identifiers only.
+- **Do** key touch targets to `(pointer: coarse)`.
+- **Do** set status and date at 15px in their own position, never as a badge.
+- **Do** reserve image space with `aspect-ratio` so CLS stays at zero.
+- **Do** let reading measure follow content type — 44rem notes, 46rem project
+  pages, 68ch bio.
+- **Do** honour `prefers-reduced-motion`; the only motion is 120ms state changes.
 
 ### Don't:
-- **Don't** treat the forest-green palette, Bitter/IBM Plex, or the `~/` device as
-  permanent. None of them appear in PRODUCT.md's Brand Commitments. They are the
-  incumbent implementation and nothing more.
-- **Don't** add a second warm accent alongside brass. Its rarity is the whole
-  effect. **[PRINCIPLE]**
-- **Don't** ground the page in pure white. White means "raised surface" in this
-  system, and the shadow is too soft to carry the distinction alone. **[PRINCIPLE]**
-- **Don't** add a third font. Three families across three roles is already the
-  ceiling. **[PRINCIPLE]**
-- **Don't** extend the current spacing, radius, or breakpoint values as if they
-  were a system. They are hand-tuned per component and only partially tokenized.
-  **[LEGACY]**
-- **Don't** carry the four ad-hoc breakpoints (860 / 780 / 700 / 680) into a
-  redesign. Define a real scale. **[LEGACY]**
-- **Don't** assume dark mode exists. There is no `prefers-color-scheme` handling
-  anywhere in the codebase; the document declares itself light-only with
-  `<meta name="color-scheme" content="light">` so UA-painted controls stay light.
-  **[LEGACY]**
+- **Don't** introduce a radius or a shadow. The global reset removes both, and
+  re-enabling either for one component breaks the only depth model the site has.
+- **Don't** add a second accent colour. Signal's rarity is the effect.
+- **Don't** use a grey lighter than Graphite for text.
+- **Don't** set prose in Archivo or Martian Mono.
+- **Don't** push the CONDITION → ACTION grammar onto Notes. Notes are long-form
+  reading and stay that way.
+- **Don't** add a size outside the seven-step ramp.
+- **Don't** assume dark mode exists. There is none; the document declares itself
+  light-only with `<meta name="color-scheme" content="light">`.
+
+## Images
+
+Project screenshots ship as AVIF at three widths — 352w, 704w and 1216w —
+generated by `scripts/gen-card-images.mjs` and committed, since the generator
+shells out to macOS `sips` and Vercel builds on Linux. The original JPEG remains
+the `<img>` fallback, so a browser without AVIF renders exactly what it did
+before.
+
+Two `sizes` values exist because two slots exist: `CARD_SIZES` for the portfolio
+grid, which caps at 368px, and `EVIDENCE_SIZES` for the homepage evidence
+figures, which reach 607px and therefore need the 1216w step on a 2x display.
+Both are derived from the real grid, with upper bounds set roughly 20px above
+each layout threshold to absorb the scrollbar discrepancy between media
+conditions and layout width.
 
 ## Unresolved
 
-Recorded here as open items. Neither is addressed by this pass.
+Recorded here as open items, unaddressed by this system.
 
 - **Meridian has no real screenshot.** `src/assets/images/Meridian.jpg` is a
-  placeholder title card, imported in `projects.js` with a comment saying to swap
-  it for a real screenshot when one exists. It is the only project image in the
-  grid that is not evidence of running software, which matters more here than it
-  would elsewhere: the card grid's implicit promise is that every tile is a
-  screenshot of a real thing. Unresolved — do not fix as part of a design pass.
+  placeholder title card. It is the only project image that is not evidence of
+  running software.
 - **The old GitHub Pages URL still serves a stale mirror.**
   `chadkraus87.github.io/React-Portfolio-v2/` serves its last build and cannot
-  redirect server-side. `index.html` carries a second Search Console verification
-  token for that property, annotated as safe to delete only once the property is
-  gone. Unresolved — a hosting and SEO decision, not a design one.
-
-## Known gaps in this document
-
-Recorded so a later pass does not mistake absence for completeness.
-
-- Values were extracted from source CSS only. No browser was run and no computed
-  styles were sampled, so anything the cascade resolves differently at runtime is
-  not captured here.
-- No contrast ratios were measured. Moss (`#6b8f71`) on warm paper is the pairing
-  most likely to fall short at small mono sizes (0.68–0.74rem), and it carries most
-  of the site's secondary text. Worth auditing before it is carried forward.
-- No dark-mode, print, or forced-colors behavior is documented, because none is
-  implemented.
+  redirect server-side. `index.html` carries a second Search Console
+  verification token for that property.

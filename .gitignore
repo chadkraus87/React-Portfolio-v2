@@ -14,3 +14,9 @@ resume-src/resume.html
 
 # Impeccable live-mode session journal (durable local state, not source)
 .impeccable/live/sessions/
+
+# Impeccable design exploration: generated comps and the isolated prototype.
+# Large, mostly-rejected, and containing generated placeholder content. The
+# durable record is DESIGN.md, .impeccable/design.json and git history.
+.impeccable/mocks/
+.impeccable/prototype/
