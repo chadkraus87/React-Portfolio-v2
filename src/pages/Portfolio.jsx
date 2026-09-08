@@ -18,7 +18,7 @@ export default function Portfolio() {
   return (
     <section className="page">
       <div className="container">
-        <span className="eyebrow">projects</span>
+        <span className="label">projects</span>
         <h1 className="page-title">Portfolio</h1>
 
         <div className="filter-row" role="group" aria-label="Filter projects by category">

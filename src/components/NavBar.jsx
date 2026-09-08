@@ -48,7 +48,6 @@ export default function NavBar() {
     <header className="nav-wrap" ref={headerRef}>
       <div className="container nav-inner">
         <NavLink to="/" className="nav-brand" onClick={() => setOpen(false)}>
-          <span className="nav-brand-mark">CK</span>
           {profile.name}
         </NavLink>
 

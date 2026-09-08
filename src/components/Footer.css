@@ -1,5 +1,6 @@
 .footer {
-  background: var(--pine);
+  background: var(--surface);
+  border-top: 1px solid var(--rule);
   margin-top: auto;
 }
 
@@ -8,38 +9,29 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  padding-top: 1.4rem;
-  padding-bottom: 1.4rem;
+  gap: var(--s-3);
+  padding-top: var(--s-6);
+  padding-bottom: var(--s-6);
 }
 
 .footer-mono {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.55);
+  font-family: var(--font-id);
+  font-size: var(--t-13);
+  letter-spacing: 0.04em;
+  color: var(--graphite);
 }
 
-.footer-links {
-  display: flex;
-  gap: 1.25rem;
-}
+.footer-links { display: flex; gap: var(--s-6); }
 
 .footer-links a {
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 0.9rem;
+  color: var(--graphite);
+  font-size: var(--t-15);
   font-weight: 500;
+  text-decoration: none;
 }
-.footer-links a:hover { color: #fff; }
+.footer-links a:hover { color: var(--ink); text-decoration: underline; }
 
-/* Footer links measured 24px tall — right at the WCAG 2.5.8 floor. Give them
-   a real touch area on phones without changing desktop density. */
-@media (max-width: 680px) {
-  .footer-links { gap: 0.5rem; }
-  .footer-links a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    padding: 0 0.6rem;
-  }
-  .footer-links a:first-child { padding-left: 0; }
+@media (pointer: coarse) {
+  .footer-links { gap: var(--s-4); }
+  .footer-links a { display: inline-flex; align-items: center; min-height: 44px; }
 }

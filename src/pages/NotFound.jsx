@@ -8,7 +8,7 @@ export default function NotFound() {
   return (
     <section className="page">
       <div className="container">
-        <span className="eyebrow">404</span>
+        <span className="label">404</span>
         <h1 className="page-title">Page not found</h1>
         <p className="notfound-copy">
           That link doesn&rsquo;t point anywhere on this site — it may be out of date,

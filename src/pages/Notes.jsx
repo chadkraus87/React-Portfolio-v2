@@ -16,7 +16,7 @@ export function NotesIndex() {
   return (
     <section className="page">
       <div className="container notes">
-        <span className="eyebrow">notes</span>
+        <span className="label">notes</span>
         <h1 className="page-title">Writing</h1>
         <p className="notes-intro">
           Short pieces on what I learned building the projects on this site.

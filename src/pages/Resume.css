@@ -1,29 +1,29 @@
+/* Resume stays easy to scan as professional evidence. */
 .resume-head {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--s-4);
   flex-wrap: wrap;
 }
-.resume-head .page-title { margin-bottom: 1.25rem; }
+.resume-head .page-title { margin-bottom: var(--s-6); }
 
 .resume-frame {
   width: 100%;
   height: 82vh;
   min-height: 560px;
-  border: 1px solid var(--mist);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  background: #fff;
+  border: 1px solid var(--rule);
+  background: var(--surface);
 }
 
 .resume-fallback {
-  margin-top: 0.9rem;
-  font-size: 0.9rem;
-  color: var(--moss);
+  margin-top: var(--s-3);
+  font-family: var(--font-prose);
+  font-size: var(--t-15);
+  color: var(--graphite);
 }
 
-/* Mobile: swap the unreliable inline viewer for a direct hand-off ---------- */
+/* Mobile: swap the unreliable inline viewer for a direct hand-off. */
 .resume-mobile { display: none; }
 
 @media (max-width: 700px) {
@@ -32,22 +32,18 @@
 
   .resume-mobile {
     display: block;
-    background: var(--card);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    border-left: 4px solid var(--forest);
-    padding: 1.4rem 1.3rem 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 2px solid var(--ink);
+    padding: var(--s-6) var(--s-4);
   }
   .resume-mobile-note {
-    font-size: 0.95rem;
+    font-family: var(--font-prose);
+    font-size: var(--t-17);
     color: var(--ink);
-    margin-bottom: 1.1rem;
+    margin-bottom: var(--s-4);
   }
-  .resume-mobile-actions {
-    display: flex;
-    gap: 0.6rem;
-    flex-wrap: wrap;
-  }
+  .resume-mobile-actions { display: flex; gap: var(--s-2); flex-wrap: wrap; }
   /* The header's Download button would be a third copy of the same action */
   .resume-head .btn { display: none; }
 }

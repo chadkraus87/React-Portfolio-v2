@@ -40,7 +40,7 @@ export default function ProjectDetail() {
         </Link>
 
         <div className="pdetail-head">
-          <span className="eyebrow">{category.toLowerCase()}</span>
+          <span className="label">{category.toLowerCase()}</span>
           <h1 className="page-title">{title}</h1>
           {tagline && <p className="pdetail-tagline">{tagline}</p>}
           <p className="pdetail-state">

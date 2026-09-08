@@ -1,80 +1,97 @@
 /* ---------------------------------------------------------------------------
-   Design tokens — forest green system matched to the 2026 resume.
-   Change colors here and the whole site follows.
+   Design tokens — the "quick reference" system.
+
+   Replaces the old forest-green / Bitter / IBM Plex world documented in
+   DESIGN.md. That system is retired, not layered over: moss and brass are gone,
+   as are the four ad-hoc breakpoints, the three radii and the single overloaded
+   shadow token. Change values here and the whole site follows.
 --------------------------------------------------------------------------- */
 :root {
-  --pine: #1e3a2b;      /* deepest green — nav, footer, headings on light */
-  --forest: #2e5940;    /* primary brand green — buttons, links, accents */
-  --moss: #6b8f71;      /* muted green — secondary text, borders, tags */
-  --mist: #e4ebe4;      /* pale green tint — card tags, dividers */
-  --paper: #f7f6f1;     /* warm off-white page background */
-  --card: #ffffff;
-  --ink: #20261f;       /* near-black body text, green-cast */
-  --brass: #a8862f;     /* sparing warm accent — status badges, focus ring */
+  /* Palette. Contrast measured, not assumed (white / paper):
+     ink 17.99 / 16.77 · graphite 6.27 / 5.85 · signal 5.98 / 5.58
+     verified 8.32 / 7.75 · boundary 3.68 / 3.43 (non-text 1.4.11)         */
+  --paper:    #F7F7F5;  /* page ground                                     */
+  --surface:  #FFFFFF;  /* raised content surfaces                         */
+  --inset:    #EFEFEC;  /* recessed band: table header, placeholder plate  */
+  --ink:      #14171A;  /* primary text                                    */
+  --graphite: #5A6169;  /* secondary text                                  */
+  --rule:     #D6D9DD;  /* DECORATIVE hairlines only — carries no contrast
+                           claim and must never be a control's only edge   */
+  --boundary: #7F868F;  /* the identifying edge of an interactive control  */
+  --signal:   #B23A16;  /* numerals, active nav, Live. Kept under ~5%      */
+  --verified: #1F4B99;  /* links and verification markers                  */
 
-  --font-display: 'Bitter', Georgia, serif;
-  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  /* Type — an intentionally limited optical ramp, NOT a modular scale.
+     Text register 13/15/17/19 (~x1.13); display 24/32/48 (x1.33 then x1.5).
+     The 19 -> 24 gap is the seam between reading and structure.
+     Nothing below 13px exists anywhere on the site.                        */
+  --t-13: 0.8125rem;
+  --t-15: 0.9375rem;
+  --t-17: 1.0625rem;
+  --t-19: 1.1875rem;
+  --d-24: 1.5rem;
+  --d-32: 2rem;
+  --d-48: 3rem;
 
-  --radius: 10px;
-  --shadow: 0 1px 2px rgba(30, 58, 43, 0.08), 0 8px 24px rgba(30, 58, 43, 0.09);
-  --maxw: 1080px;
+  --font-ui:    'Archivo', system-ui, sans-serif;      /* structure, UI     */
+  --font-prose: 'Literata', Georgia, serif;            /* long-form only    */
+  --font-id:    'Martian Mono', ui-monospace, monospace;/* identifiers only */
+
+  /* 4px spacing base */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px;  --s-4: 16px;
+  --s-6: 24px; --s-8: 32px; --s-12: 48px; --s-16: 64px; --s-24: 96px;
+
+  --container: 1200px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Zero radius, zero shadow. One policy, no exceptions — this is what retires
+   the old 10/8/6/999px radii and the single shadow doing eight jobs. */
+*, *::before, *::after { border-radius: 0; box-shadow: none; }
+
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: var(--font-body);
+  font-family: var(--font-ui);
   background: var(--paper);
   color: var(--ink);
-  line-height: 1.65;
+  font-size: var(--t-17);
+  line-height: 1.55;
+  font-variant-numeric: tabular-nums;
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4 {
-  font-family: var(--font-display);
-  color: var(--pine);
-  line-height: 1.15;
-  font-weight: 700;
-}
+h1, h2, h3, h4 { font-family: var(--font-ui); color: var(--ink); line-height: 1.15; font-weight: 700; }
 
-a { color: var(--forest); text-decoration: none; }
+a { color: var(--verified); }
 a:hover { text-decoration: underline; }
 
 img { max-width: 100%; height: auto; display: block; }
 
 button { font-family: inherit; cursor: pointer; }
 
-:focus-visible {
-  outline: 2px solid var(--brass);
-  outline-offset: 2px;
-}
+:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
 
 /* Layout helpers ---------------------------------------------------------- */
 
-/* App.jsx renders .app-shell but nothing styled it, so on short pages (Resume
-   on mobile, Contact) the footer stopped wherever content ended and left bare
-   background beneath it. Shell fills the viewport; main absorbs the slack. */
 .app-shell {
   min-height: 100vh;
-  min-height: 100dvh; /* dvh accounts for mobile browser chrome */
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
 .app-shell > main { flex: 1; }
 
 .container {
-  max-width: var(--maxw);
+  max-width: var(--container);
   margin: 0 auto;
-  padding: 0 1.25rem;
+  padding: 0 var(--s-6);
 }
 
-.page { padding: 3.5rem 0 4.5rem; }
+.page { padding: var(--s-12) 0 var(--s-24); }
 
-/* Available to screen readers, invisible on screen. Used for live-region
-   announcements that have no visual counterpart. Renders nothing. */
+/* Available to screen readers, invisible on screen. */
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -87,83 +104,102 @@ button { font-family: inherit; cursor: pointer; }
   border: 0;
 }
 
-/* Skip link: off-screen until focused, then pinned over the nav bar. Uses the
-   existing button colors so it reads as part of the system when it appears.
+/* Skip link: off-screen until focused, then pinned over the nav bar.
    Fixed rather than absolute — absolute placed it at negative *document*
-   coordinates, so once the page was scrolled it sat above the scrollable area
-   and could not be brought into view at all. Fixed keeps it viewport-relative,
-   so it appears wherever the reader currently is. */
+   coordinates, so once the page was scrolled it could not be brought into
+   view at all. Revealed on :focus (a superset of :focus-visible) so any
+   legitimate focus path shows it. */
 .skip-link {
   position: fixed;
-  left: 0.75rem;
+  left: var(--s-3);
   top: -100%;
   z-index: 100;
-  background: var(--forest);
+  background: var(--ink);
   color: #fff;
   font-weight: 600;
-  font-size: 0.92rem;
-  padding: 0.6rem 1.15rem;
-  border-radius: var(--radius);
-}
-/* :focus, not :focus-visible — :focus-visible is a subset, so any legitimate
-   focus path reveals the link rather than leaving it focused but invisible.
-   The brass ring itself still comes from the global :focus-visible rule. */
-.skip-link:focus {
-  top: 0.75rem;
+  font-size: var(--t-15);
+  padding: var(--s-3) var(--s-4);
   text-decoration: none;
 }
+.skip-link:focus { top: var(--s-3); text-decoration: none; }
 /* main takes focus programmatically via the skip link; it should never draw a
    ring of its own as a result. */
 main:focus { outline: none; }
 
-/* 404 ---------------------------------------------------------------------- */
-.notfound-copy {
-  max-width: 34rem;
-  color: var(--ink);
-  margin-bottom: 1.6rem;
+/* Section rule — the site's one structural divider. */
+.section-rule {
+  border-top: 2px solid var(--ink);
+  margin-top: var(--s-16);
+  padding-top: var(--s-3);
+  font-size: inherit;
+  font-weight: 400;
 }
-.notfound-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.section-rule__label {
+  font-family: var(--font-id);
+  font-size: var(--t-13);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
 
-/* Mono eyebrow label — the site's signature device. Reads like a CLI path. */
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  letter-spacing: 0.02em;
-  color: var(--moss);
+/* Mono identifier label — used for eyebrows, field headers, attributions. */
+.label {
   display: block;
-  margin-bottom: 0.6rem;
+  font-family: var(--font-id);
+  font-size: var(--t-13);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--graphite);
 }
-.eyebrow::before { content: '~/'; color: var(--brass); }
 
 .page-title {
-  font-size: clamp(1.9rem, 4vw, 2.6rem);
-  margin-bottom: 2rem;
+  font-size: var(--d-32);
+  letter-spacing: -0.015em;
+  margin-bottom: var(--s-6);
 }
+
+/* Long-form prose ---------------------------------------------------------- */
+.prose { font-family: var(--font-prose); font-size: var(--t-17); line-height: 1.7; }
+.prose p + p { margin-top: var(--s-4); }
+
+/* 404 ---------------------------------------------------------------------- */
+.notfound-copy {
+  font-family: var(--font-prose);
+  max-width: 60ch;
+  color: var(--ink);
+  margin-bottom: var(--s-6);
+}
+.notfound-actions { display: flex; gap: var(--s-3); flex-wrap: wrap; }
 
 /* Buttons ----------------------------------------------------------------- */
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--s-2);
+  font-family: var(--font-ui);
   font-weight: 600;
-  font-size: 0.92rem;
-  padding: 0.6rem 1.15rem;
-  border-radius: var(--radius);
-  border: 1.5px solid transparent;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  font-size: var(--t-15);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--boundary);   /* clears 3:1 — never --rule here */
+  text-decoration: none;
+  transition: background 0.12s linear, color 0.12s linear, border-color 0.12s linear;
 }
 .btn:hover { text-decoration: none; }
 
-/* Comfortable touch height on phones (buttons measured 40px) */
-@media (max-width: 680px) {
+.btn-primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+.btn-primary:hover { background: var(--signal); border-color: var(--signal); }
+
+.btn-outline { background: transparent; color: var(--ink); }
+.btn-outline:hover { background: var(--surface); border-color: var(--ink); }
+
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Touch targets by capability, not viewport width. */
+@media (pointer: coarse) {
   .btn { min-height: 44px; }
 }
-
-.btn-primary { background: var(--forest); color: #fff; }
-.btn-primary:hover { background: var(--pine); }
-
-.btn-outline { border-color: var(--forest); color: var(--forest); background: transparent; }
-.btn-outline:hover { background: var(--mist); }
 
 /* Reduced motion ---------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {

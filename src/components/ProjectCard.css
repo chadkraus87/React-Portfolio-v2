@@ -1,163 +1,151 @@
+/* Portfolio card — the same evidence language as the homepage, at index
+   density. Rule-bordered, flat, square. No shadows, no radii. */
 .pcard {
-  background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--rule);
   display: flex;
   flex-direction: column;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.12s linear;
 }
-.pcard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 2px 4px rgba(30, 58, 43, 0.1), 0 14px 32px rgba(30, 58, 43, 0.14);
-}
+.pcard:hover { border-color: var(--boundary); }
 
 /* <picture> only carries the AVIF <source>; it must not become the flex item
-   in the image's place. display: contents removes it from the box tree, so the
-   card's layout is byte-identical to the bare <img> it replaced. */
+   in the image's place. */
 .pcard picture { display: contents; }
 
 .pcard-img {
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 16 / 9;   /* reserves space — keeps CLS at zero */
   object-fit: cover;
   object-position: top;
-  border-bottom: 3px solid var(--forest);
+  border-bottom: 1px solid var(--rule);
 }
 
 .pcard-placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--pine), var(--forest));
-  font-family: var(--font-mono);
-  color: var(--mist);
-  font-size: 1.05rem;
+  background: var(--inset);
+  font-family: var(--font-id);
+  font-size: var(--t-13);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--graphite);
 }
 
 .pcard-body {
-  padding: 1.15rem 1.25rem 1.35rem;
+  padding: var(--s-4) var(--s-4) var(--s-6);
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: var(--s-2);
   flex: 1;
 }
 
 .pcard-meta {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: var(--s-2);
   flex-wrap: wrap;
+  padding-bottom: var(--s-2);
+  border-bottom: 1px solid var(--rule);
 }
 
 .pcard-category {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--moss);
-}
-.pcard-category::before { content: '~/'; color: var(--brass); }
-
-.pcard-status {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  color: var(--brass);
-  border: 1px solid var(--brass);
-  border-radius: 999px;
-  padding: 0.1rem 0.55rem;
-  white-space: nowrap;
+  font-family: var(--font-id);
+  font-size: var(--t-13);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--graphite);
 }
 
-.pcard-title { font-size: 1.2rem; }
-.pcard-title a { color: var(--pine); }
-.pcard-title a:hover { color: var(--forest); text-decoration: underline; }
+.pcard-title { font-size: var(--d-24); line-height: 1.2; }
+.pcard-title a { color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--verified); }
+.pcard-title a:hover { color: var(--verified); text-decoration: none; }
 
-/* The scannable differentiator strip — what makes THIS project different.
-   Mono because it reads as a label, not prose. */
+/* The scannable differentiator strip — mono because it reads as a label. */
 .pcard-tagline {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-family: var(--font-id);
+  font-size: var(--t-13);
   line-height: 1.5;
-  color: var(--moss);
-  margin-top: -0.25rem;
-}
-
-.pcard-more-link {
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  color: var(--forest);
-  align-self: flex-start;
-}
-.pcard-more-link:hover { text-decoration: underline; }
-
-/* Touch targets: pad to 44px and pull the padding back out with a negative
-   margin, so the tappable area grows without moving anything visually.
-   Gated on the pointer, not just the viewport: a tablet in portrait is wider
-   than 680px but is still finger-driven, and these links measured 23px and
-   20px there — under the 24px WCAG 2.5.8 floor. The width query stays for
-   coarse-pointer devices that report `pointer: fine` or none at all. */
-@media (max-width: 680px), (pointer: coarse) {
-  .pcard-title a,
-  .pcard-more-link {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    margin-block: -0.55rem;
-  }
+  color: var(--graphite);
 }
 
 .pcard-desc {
-  font-size: 0.92rem;
+  font-family: var(--font-prose);
+  font-size: var(--t-15);
+  line-height: 1.6;
   color: var(--ink);
+}
+
+.pcard-more-link {
+  font-family: var(--font-id);
+  font-size: var(--t-13);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--verified);
+  align-self: flex-start;
 }
 
 .pcard-stack {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: var(--s-1) var(--s-2);
 }
 .pcard-stack li {
-  background: var(--mist);
-  color: var(--pine);
-  font-size: 0.74rem;
-  font-weight: 500;
-  border-radius: 999px;
-  padding: 0.18rem 0.6rem;
+  font-family: var(--font-id);
+  font-size: var(--t-13);
+  color: var(--graphite);
+  border: 1px solid var(--rule);
+  padding: 2px var(--s-2);
 }
 
 /* auto top margin pins the buttons to the bottom of the card, so cards in a
-   stretched grid row align their actions regardless of how much text sits
-   above them. Works whether or not the card has a details block. */
+   stretched grid row align their actions regardless of text length. */
 .pcard-actions {
   display: flex;
-  gap: 0.6rem;
+  gap: var(--s-2);
   flex-wrap: wrap;
   margin-top: auto;
-  padding-top: 0.5rem;
+  padding-top: var(--s-3);
 }
 
-/* Status + last-updated ---------------------------------------------------- */
+/* Status + last-updated --------------------------------------------------- */
 .pcard-state {
   display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
+  align-items: baseline;
+  gap: var(--s-2);
   flex-shrink: 0;
 }
 
 .pcard-updated {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  color: var(--moss);
+  font-family: var(--font-id);
+  font-size: var(--t-15);
+  color: var(--graphite);
   white-space: nowrap;
 }
 
 /* Live reads as available now; the others stay quieter so a private or
    in-flight project doesn't shout louder than a shipped one. */
-.pcard-status--live {
-  color: var(--forest);
-  border-color: var(--forest);
-  background: var(--mist);
+.pcard-status {
+  font-family: var(--font-id);
+  font-size: var(--t-15);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
-.pcard-status--in-progress { color: var(--brass); border-color: var(--brass); }
-.pcard-status--private { color: var(--moss); border-color: var(--moss); }
+.pcard-status--live { color: var(--signal); }
+.pcard-status--in-progress { color: var(--graphite); }
+.pcard-status--private { color: var(--graphite); }
+
+/* Touch targets by capability, not viewport width. */
+@media (max-width: 640px), (pointer: coarse) {
+  .pcard-title a,
+  .pcard-more-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}

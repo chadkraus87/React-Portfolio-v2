@@ -1,38 +1,39 @@
 .filter-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
+  gap: var(--s-2);
+  margin-bottom: var(--s-8);
 }
 
 .filter-btn {
-  font-size: 0.86rem;
+  font-family: var(--font-id);
+  font-size: var(--t-13);
   font-weight: 500;
-  color: var(--forest);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
   background: transparent;
-  /* moss clears the 3:1 non-text minimum; mist (1.12:1) did not, leaving the
-     unselected chips with no visible edge. Hover/active still shift to forest. */
-  border: 1.5px solid var(--moss);
-  border-radius: 999px;
-  padding: 0.35rem 0.95rem;
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  /* Boundary, never Rule: this is a control's identifying edge and must clear
+     the 3:1 non-text minimum. */
+  border: 1px solid var(--boundary);
+  padding: var(--s-2) var(--s-3);
+  transition: background 0.12s linear, border-color 0.12s linear, color 0.12s linear;
 }
-.filter-btn:hover { border-color: var(--forest); }
-
-/* Filters measured 31px tall — under the 44px touch minimum */
-@media (max-width: 680px) {
-  .filter-btn { min-height: 44px; padding: 0.35rem 1.1rem; }
-}
+.filter-btn:hover { border-color: var(--ink); }
 .filter-btn.is-active {
-  background: var(--forest);
-  border-color: var(--forest);
+  background: var(--ink);
+  border-color: var(--ink);
   color: #fff;
+}
+
+@media (pointer: coarse) {
+  .filter-btn { min-height: 44px; }
 }
 
 .project-grid {
   display: grid;
-  /* min() so the 300px floor cannot exceed the column itself. Below ~340px
-     (300px + the container's 2.5rem of padding) the bare 300px overflowed. */
+  /* min() so the 300px floor cannot exceed the column itself; below ~348px
+     (300px + the container's 3rem of padding) a bare 300px would overflow. */
   grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
-  gap: 1.5rem;
+  gap: var(--s-6);
 }

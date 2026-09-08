@@ -1,103 +1,113 @@
+/* Contact stays straightforward and accessible. All validation behaviour is
+   unchanged; only the surface language moves to the new system. */
 .contact-grid {
   display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 3rem;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: var(--s-12);
   align-items: start;
 }
 
 .contact-form {
-  background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 1.6rem 1.7rem 1.8rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  padding: var(--s-6);
 }
 
-.field { margin-bottom: 1.1rem; }
+.field { margin-bottom: var(--s-4); }
 .field label {
   display: block;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: var(--moss);
-  margin-bottom: 0.35rem;
+  font-family: var(--font-id);
+  font-size: var(--t-13);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--graphite);
+  margin-bottom: var(--s-2);
 }
 .field input,
 .field textarea {
   width: 100%;
-  font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-family: var(--font-ui);
+  font-size: var(--t-15);
   color: var(--ink);
   background: var(--paper);
-  /* moss, not mist: mist sat at 1.12:1 against the page, so the boundary that
-     identifies the field was effectively invisible. WCAG 1.4.11 wants 3:1. */
-  border: 1.5px solid var(--moss);
-  border-radius: 8px;
-  padding: 0.6rem 0.75rem;
-  transition: border-color 0.15s ease;
+  /* Boundary, never Rule: a field's edge is what identifies the control, and
+     it has to clear the 3:1 non-text minimum. */
+  border: 1px solid var(--boundary);
+  padding: var(--s-3);
+  transition: border-color 0.12s linear;
 }
 .field input:focus,
 .field textarea:focus {
   outline: none;
-  border-color: var(--forest);
+  border-color: var(--ink);
 }
 /* Keyboard users get a real ring — a border-colour shift alone is easy to
    miss and is the only focus cue on these fields otherwise. */
 .field input:focus-visible,
 .field textarea:focus-visible {
-  outline: 2px solid var(--brass);
+  outline: 2px solid var(--signal);
   outline-offset: 1px;
 }
 
-/* Invalid fields: ink text and a pine border, both existing tokens. Deliberately
-   not a new red — the palette has no error color yet, and inventing one here
-   would land outside the token pass. The message text carries the meaning, so
-   nothing depends on the color alone. */
+@media (pointer: coarse) {
+  .field input, .field textarea { min-height: 44px; }
+}
+
+/* Invalid fields: ink text and a signal border. The message text carries the
+   meaning, so nothing depends on colour alone. */
 .field-error {
-  margin-top: 0.35rem;
-  font-size: 0.82rem;
+  margin-top: var(--s-2);
+  font-family: var(--font-prose);
+  font-size: var(--t-15);
   color: var(--ink);
 }
 .field input[aria-invalid='true'],
 .field textarea[aria-invalid='true'] {
-  border-color: var(--pine);
+  border-color: var(--signal);
+  border-width: 2px;
 }
 
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
 .form-note {
-  margin-top: 0.7rem;
-  font-size: 0.82rem;
-  color: var(--moss);
+  margin-top: var(--s-3);
+  font-family: var(--font-prose);
+  font-size: var(--t-15);
+  color: var(--graphite);
 }
 
 .contact-cards {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: var(--s-3);
 }
 
 .contact-card {
   display: block;
-  background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  border-left: 4px solid var(--forest);
-  padding: 0.9rem 1.1rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--ink);
+  padding: var(--s-3) var(--s-4);
   color: var(--ink);
-  font-weight: 500;
-  font-size: 0.94rem;
-  transition: transform 0.15s ease;
+  font-size: var(--t-15);
+  text-decoration: none;
+  transition: border-left-color 0.12s linear;
 }
-.contact-card:hover { transform: translateX(3px); text-decoration: none; }
+.contact-card:hover { border-left-color: var(--signal); text-decoration: none; }
 
 .contact-label {
   display: block;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--moss);
-  margin-bottom: 0.15rem;
+  font-family: var(--font-id);
+  font-size: var(--t-13);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--graphite);
+  margin-bottom: var(--s-1);
 }
-.contact-label::before { content: '~/'; color: var(--brass); }
 
-@media (max-width: 780px) {
-  .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+@media (max-width: 1023px) {
+  .contact-grid { grid-template-columns: 1fr; gap: var(--s-8); }
+}
+
+@media (pointer: coarse) {
+  .contact-card { min-height: 44px; }
 }

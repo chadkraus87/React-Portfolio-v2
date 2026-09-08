@@ -102,7 +102,7 @@ export default function Contact() {
   return (
     <section className="page">
       <div className="container">
-        <span className="eyebrow">contact</span>
+        <span className="label">contact</span>
         <h1 className="page-title">Get in touch</h1>
 
         <div className="contact-grid">

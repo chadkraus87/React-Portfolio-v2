@@ -11,7 +11,7 @@ export default function Resume() {
       <div className="container">
         <div className="resume-head">
           <div>
-            <span className="eyebrow">resume</span>
+            <span className="label">resume</span>
             <h1 className="page-title">Resume</h1>
           </div>
           <a href={resumePdf} download="Chadwick_Kraus_Resume.pdf" className="btn btn-primary">
