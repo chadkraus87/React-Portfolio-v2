@@ -121,11 +121,7 @@ them.
   `google-site-verification` token from `index.html`, and optionally disabling
   Pages entirely. None of that happens before de-indexing is confirmed; the
   redirect stays indefinitely for now.
-- **Meridian has no real screenshot.** `src/assets/images/Meridian.jpg` is an
-  honest non-UI title plate, but it is drawn in the retired forest-green
-  identity and is the only project image that is not evidence of running
-  software. Replace it only with a real capture — never a synthetic or
-  AI-generated UI.
-- **The 10 OG social cards are off-system.** `scripts/make-og-images.py` still
-  renders `public/og/*.jpg` in the retired moss/brass palette with rounded pill
-  status badges, which the current design system forbids.
+- Nothing else outstanding. Meridian now ships a real screenshot of its agent
+  roster (`src/assets/images/MeridianTeam.png`) and the social cards were
+  rebuilt in the current design system — both were open items and both are
+  closed.
