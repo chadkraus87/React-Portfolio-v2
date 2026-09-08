@@ -113,6 +113,11 @@ function Evidence({ slug, index }) {
           {status && (
             <span className={`state state--${statusModifier(status)}`}>{status}</span>
           )}
+          {/* The gap between these two is decorative CSS; assistive tech reads
+              the text nodes, which would run together as "LiveAug 2026". This
+              separator is out of the flex flow (position: absolute), so it adds
+              no gap of its own. */}
+          {status && updated && <span className="visually-hidden">{', '}</span>}
           {updated && <span className="state__date">{formatUpdated(updated)}</span>}
         </p>
 

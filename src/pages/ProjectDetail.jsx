@@ -49,6 +49,9 @@ export default function ProjectDetail() {
                 {status}
               </span>
             )}
+            {/* Reads as "LiveUpdated Aug 2026" without this — the flex gap is
+                visual only. Absolutely positioned, so it adds no gap. */}
+            {status && updated && <span className="visually-hidden">{', '}</span>}
             {updated && <span className="pcard-updated">Updated {formatUpdated(updated)}</span>}
           </p>
         </div>
