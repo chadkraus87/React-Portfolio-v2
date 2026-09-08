@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-07T00:00:00Z",
+  "title": "Design System: Chad Kraus Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "pine": {
+        "role": "primary",
+        "displayName": "Deep Pine",
+        "canonical": "#1e3a2b",
+        "tonalRamp": ["#0a140e", "#122318", "#1e3a2b", "#2b533d", "#3d7255", "#6b9c81", "#a6c7b3", "#dceae2"]
+      },
+      "forest": {
+        "role": "primary",
+        "displayName": "Forest",
+        "canonical": "#2e5940",
+        "tonalRamp": ["#0d1a13", "#17301f", "#22422f", "#2e5940", "#3f7756", "#63a37e", "#9ecbb2", "#d9ece1"]
+      },
+      "moss": {
+        "role": "secondary",
+        "displayName": "Moss",
+        "canonical": "#6b8f71",
+        "tonalRamp": ["#141c15", "#25311f", "#3a4d3c", "#516b54", "#6b8f71", "#90ae95", "#b8ccbb", "#e2ece3"]
+      },
+      "mist": {
+        "role": "secondary",
+        "displayName": "Mist",
+        "canonical": "#e4ebe4",
+        "tonalRamp": ["#1b201b", "#2f382f", "#4a564a", "#6b7a6b", "#93a093", "#bcc7bc", "#e4ebe4", "#f5f8f5"]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Warm Paper",
+        "canonical": "#f7f6f1",
+        "tonalRamp": ["#1d1c17", "#33312a", "#4f4c42", "#6f6b5e", "#948f80", "#bcb8ab", "#dedbd2", "#f7f6f1"]
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Card White",
+        "canonical": "#ffffff",
+        "tonalRamp": ["#1a1a1a", "#333333", "#4d4d4d", "#737373", "#999999", "#c4c4c4", "#e8e8e8", "#ffffff"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#20261f",
+        "tonalRamp": ["#0b0d0b", "#141814", "#20261f", "#333c32", "#4c5a4a", "#75856f", "#a8b5a3", "#dee5db"]
+      },
+      "brass": {
+        "role": "tertiary",
+        "displayName": "Brass",
+        "canonical": "#a8862f",
+        "tonalRamp": ["#211a09", "#3b2f11", "#59481b", "#7a6224", "#a8862f", "#c9a44f", "#e0cd8f", "#f4ecd2"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The name in the About hero. The only use of Bitter 800 on the site." },
+      "headline": { "displayName": "Headline", "purpose": "Every page's H1 via .page-title. Fluid clamp." },
+      "title": { "displayName": "Title", "purpose": "Section headings on About: bio, skills panel, certifications." },
+      "subtitle": { "displayName": "Subtitle", "purpose": "Project card titles and note list entry titles." },
+      "body": { "displayName": "Body", "purpose": "All reading text. Measure and leading scale with content length: 34rem intros, 40rem bio, 44rem notes at 1.8, 46rem project pages at 1.7." },
+      "label": { "displayName": "Label", "purpose": "All structural micro-copy: eyebrows, categories, taglines, status pills, dates, form labels, footer meta. Never prose." }
+    },
+    "shadows": [
+      { "name": "ambient-surface", "value": "0 1px 2px rgba(30, 58, 43, 0.08), 0 8px 24px rgba(30, 58, 43, 0.09)", "purpose": "The only resting shadow. Separates a white surface from warm paper. Reused unchanged across cards, panels, forms, images and the resume frame." },
+      { "name": "card-hover", "value": "0 2px 4px rgba(30, 58, 43, 0.1), 0 14px 32px rgba(30, 58, 43, 0.14)", "purpose": "The single deepened variant, on project card hover alongside a -3px lift." }
+    ],
+    "motion": [
+      { "name": "state-transition", "value": "0.15s ease", "purpose": "The site's only duration. Applies to background, color, border-color and transform on buttons, nav links, filter chips, cards and contact cards." },
+      { "name": "card-lift", "value": "translateY(-3px)", "purpose": "Project card hover." },
+      { "name": "card-nudge", "value": "translateX(3px)", "purpose": "Contact card hover." },
+      { "name": "reduced-motion", "value": "transition: none !important; animation: none !important", "purpose": "Under prefers-reduced-motion all transitions, animations and smooth scrolling are disabled globally." }
+    ],
+    "breakpoints": [
+      { "name": "about-stack", "value": "860px" },
+      { "name": "contact-stack", "value": "780px" },
+      { "name": "resume-handoff", "value": "700px" },
+      { "name": "phone", "value": "680px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The main action. Forest fill, used for View project, Download resume and form submit.",
+      "html": "<a class=\"ds-btn ds-btn-primary\">View project</a>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-weight: 600; font-size: 0.92rem; padding: 0.6rem 1.15rem; border-radius: 10px; border: 1.5px solid transparent; text-decoration: none; cursor: pointer; transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease; } .ds-btn-primary { background: #2e5940; color: #fff; } .ds-btn-primary:hover { background: #1e3a2b; } .ds-btn-primary:focus-visible { outline: 2px solid #a8862f; outline-offset: 2px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "The secondary action, always beside a primary. Same box metrics so the pair aligns.",
+      "html": "<a class=\"ds-btn ds-btn-outline\">GitHub repo</a>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-weight: 600; font-size: 0.92rem; padding: 0.6rem 1.15rem; border-radius: 10px; border: 1.5px solid #2e5940; color: #2e5940; background: transparent; text-decoration: none; cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease; } .ds-btn-outline:hover { background: #e4ebe4; } .ds-btn-outline:focus-visible { outline: 2px solid #a8862f; outline-offset: 2px; }"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "filter-chip",
+      "description": "Portfolio category filter. The only three-state control on the site: rest, hover, active.",
+      "html": "<div style=\"display:flex;gap:0.5rem;flex-wrap:wrap\"><button class=\"ds-filter\">All</button><button class=\"ds-filter is-active\">AI &amp; Claude Code</button><button class=\"ds-filter\">Infrastructure &amp; Ops</button></div>",
+      "css": ".ds-filter { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 0.86rem; font-weight: 500; color: #2e5940; background: transparent; border: 1.5px solid #e4ebe4; border-radius: 999px; padding: 0.35rem 0.95rem; cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; } .ds-filter:hover { border-color: #2e5940; } .ds-filter.is-active { background: #2e5940; border-color: #2e5940; color: #fff; } .ds-filter:focus-visible { outline: 2px solid #a8862f; outline-offset: 2px; }"
+    },
+    {
+      "name": "Status Pill",
+      "kind": "chip",
+      "refersTo": "status-pill",
+      "description": "Project availability. Live is the only filled state — the shipped thing reads loudest, so a private or in-flight project cannot shout over it.",
+      "html": "<div style=\"display:flex;gap:0.45rem;align-items:center;flex-wrap:wrap\"><span class=\"ds-status ds-status--live\">Live</span><span class=\"ds-status ds-status--progress\">In progress</span><span class=\"ds-status ds-status--private\">Private</span><span class=\"ds-updated\">Aug 2026</span></div>",
+      "css": ".ds-status { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 0.68rem; border: 1px solid #a8862f; color: #a8862f; border-radius: 999px; padding: 0.1rem 0.55rem; white-space: nowrap; } .ds-status--live { color: #2e5940; border-color: #2e5940; background: #e4ebe4; } .ds-status--progress { color: #a8862f; border-color: #a8862f; } .ds-status--private { color: #6b8f71; border-color: #6b8f71; } .ds-updated { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 0.68rem; color: #6b8f71; white-space: nowrap; }"
+    },
+    {
+      "name": "Tag Pill",
+      "kind": "chip",
+      "refersTo": "tag-pill",
+      "description": "Non-interactive stack and skill labels. Mist fill, pine text, no border.",
+      "html": "<ul class=\"ds-tags\"><li>Next.js</li><li>Supabase</li><li>Postgres RLS</li></ul>",
+      "css": ".ds-tags { list-style: none; display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; padding: 0; } .ds-tags li { background: #e4ebe4; color: #1e3a2b; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 0.74rem; font-weight: 500; border-radius: 999px; padding: 0.18rem 0.6rem; }"
+    },
+    {
+      "name": "Mono Eyebrow",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "The signature device. Mono moss label with a brass ~/ injected by ::before, never typed into content. Opens most pages; variants label project categories and contact rows.",
+      "html": "<span class=\"ds-eyebrow\">portfolio</span>",
+      "css": ".ds-eyebrow { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 0.8rem; letter-spacing: 0.02em; color: #6b8f71; display: block; margin-bottom: 0.6rem; } .ds-eyebrow::before { content: '~/'; color: #a8862f; }"
+    },
+    {
+      "name": "Project Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The portfolio grid unit. Flat white on warm paper with one ambient shadow; the 3px forest underline on the image does the structural work. Actions pin to the bottom so grid rows align.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card-img\"></div><div class=\"ds-card-body\"><div class=\"ds-card-meta\"><span class=\"ds-card-cat\">ai &amp; claude code</span><span class=\"ds-status ds-status--live\">Live</span></div><h3 class=\"ds-card-title\"><a href=\"#\">PetCenza</a></h3><p class=\"ds-card-tagline\">Sharing rules in Postgres, not the UI</p><p class=\"ds-card-desc\">A pet health record whose access control lives in row-level security rather than in the interface.</p><div class=\"ds-card-actions\"><a class=\"ds-btn ds-btn-primary\">View project</a></div></div></article>",
+      "css": ".ds-card { background: #fff; border-radius: 10px; box-shadow: 0 1px 2px rgba(30,58,43,0.08), 0 8px 24px rgba(30,58,43,0.09); overflow: hidden; display: flex; flex-direction: column; max-width: 340px; transition: transform 0.15s ease, box-shadow 0.15s ease; } .ds-card:hover { transform: translateY(-3px); box-shadow: 0 2px 4px rgba(30,58,43,0.1), 0 14px 32px rgba(30,58,43,0.14); } .ds-card-img { width: 100%; aspect-ratio: 16/9; background: linear-gradient(135deg, #1e3a2b, #2e5940); border-bottom: 3px solid #2e5940; } .ds-card-body { padding: 1.15rem 1.25rem 1.35rem; display: flex; flex-direction: column; gap: 0.6rem; flex: 1; } .ds-card-meta { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; } .ds-card-cat { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 0.72rem; color: #6b8f71; } .ds-card-cat::before { content: '~/'; color: #a8862f; } .ds-card-title { font-family: 'Bitter', Georgia, serif; font-size: 1.2rem; font-weight: 700; line-height: 1.15; margin: 0; } .ds-card-title a { color: #1e3a2b; text-decoration: none; } .ds-card-title a:hover { color: #2e5940; text-decoration: underline; } .ds-card-tagline { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 0.72rem; line-height: 1.5; color: #6b8f71; margin: -0.25rem 0 0; } .ds-card-desc { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 0.92rem; line-height: 1.65; color: #20261f; margin: 0; } .ds-card-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: auto; padding-top: 0.5rem; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Contact form field. Paper fill so it recedes into the page rather than sitting on it. Focus shifts the border to forest AND adds a brass ring — the border shift alone was judged too easy to miss.",
+      "html": "<div class=\"ds-field\"><label for=\"ds-name\">name</label><input id=\"ds-name\" type=\"text\" placeholder=\"Jane Rivera\" /></div>",
+      "css": ".ds-field { margin-bottom: 1.1rem; max-width: 320px; } .ds-field label { display: block; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 0.78rem; color: #6b8f71; margin-bottom: 0.35rem; } .ds-field input { width: 100%; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 0.95rem; color: #20261f; background: #f7f6f1; border: 1.5px solid #e4ebe4; border-radius: 8px; padding: 0.6rem 0.75rem; transition: border-color 0.15s ease; } .ds-field input:focus { outline: none; border-color: #2e5940; } .ds-field input:focus-visible { outline: 2px solid #a8862f; outline-offset: 1px; }"
+    },
+    {
+      "name": "Navigation Bar",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Sticky pine bar, 64px. The CK monogram is a mono chip on mist — a small terminal-prompt object against the dark ground. Active link fills forest.",
+      "html": "<header class=\"ds-nav\"><a class=\"ds-nav-brand\"><span class=\"ds-nav-mark\">CK</span>Chadwick (Chad) Kraus</a><nav class=\"ds-nav-links\"><a class=\"ds-nav-link is-active\">About</a><a class=\"ds-nav-link\">Portfolio</a><a class=\"ds-nav-link\">Notes</a><a class=\"ds-nav-link\">Resume</a></nav></header>",
+      "css": ".ds-nav { background: #1e3a2b; display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 64px; padding: 0 1.25rem; } .ds-nav-brand { font-family: 'Bitter', Georgia, serif; font-weight: 700; font-size: 1.1rem; color: #fff; display: inline-flex; align-items: center; gap: 0.6rem; text-decoration: none; } .ds-nav-mark { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 0.78rem; font-weight: 500; color: #1e3a2b; background: #e4ebe4; border-radius: 6px; padding: 0.2rem 0.42rem; letter-spacing: 0.05em; } .ds-nav-links { display: flex; gap: 0.35rem; } .ds-nav-link { font-family: 'IBM Plex Sans', system-ui, sans-serif; color: rgba(255,255,255,0.82); font-weight: 500; font-size: 0.94rem; padding: 0.45rem 0.85rem; border-radius: 8px; text-decoration: none; cursor: pointer; transition: background 0.15s ease, color 0.15s ease; } .ds-nav-link:hover { color: #fff; background: rgba(255,255,255,0.08); } .ds-nav-link.is-active { color: #fff; background: #2e5940; } .ds-nav-link:focus-visible { outline: 2px solid #a8862f; outline-offset: 2px; }"
+    },
+    {
+      "name": "Contact Card",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Contact affordance with a 4px forest left rule — the clearest example of the system's structural-edge model. Nudges right on hover rather than lifting.",
+      "html": "<a class=\"ds-contact\"><span class=\"ds-contact-label\">email</span>chadkraus87@gmail.com</a>",
+      "css": ".ds-contact { display: block; background: #fff; border-radius: 10px; box-shadow: 0 1px 2px rgba(30,58,43,0.08), 0 8px 24px rgba(30,58,43,0.09); border-left: 4px solid #2e5940; padding: 0.9rem 1.1rem; color: #20261f; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-weight: 500; font-size: 0.94rem; text-decoration: none; max-width: 320px; transition: transform 0.15s ease; } .ds-contact:hover { transform: translateX(3px); } .ds-contact-label { display: block; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 0.72rem; font-weight: 400; color: #6b8f71; margin-bottom: 0.15rem; } .ds-contact-label::before { content: '~/'; color: #a8862f; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Terminal in the Woods",
+    "overview": "The implemented system runs on a single deliberate tension. Structural furniture speaks in IBM Plex Mono with literal shell syntax — every section label is prefixed with a brass ~/, project categories render lowercased like directory names, and the placeholder for a missing screenshot is the project title wrapped in curly braces. Set against that is a palette of pine, forest, and moss on warm off-white paper. Ops discipline in a calm, natural register: the vocabulary of a terminal, the temperature of a field guide.\n\nDensity is moderate and reading-first. Long-form surfaces are constrained to 44-46rem while the card grid runs to the full 1080px container, so prose and evidence get different measures. Serif headings (Bitter, up to 800 weight) sit over sans body text at a generous 1.65 line-height, and mono is confined to labels, metadata, and micro-copy — never to prose. About.css carries an explicit correction on this point: the hero title was moved off mono and onto the body font because monospace prose measured harder to read and wrapped to four lines on mobile.\n\nOrnament is scarce and mostly structural. There is one shadow token, one radius token, and a small set of colored edges doing the work that shadow does in most systems. The system is quiet by construction, and its most distinctive gesture costs two characters.",
+    "keyCharacteristics": [
+      "Mono labels with a literal ~/ prefix as the signature device",
+      "Serif display over sans body; mono strictly for labels and metadata",
+      "Warm off-white ground, never pure white at page level",
+      "Flat surfaces with structural green edges instead of stacked elevation",
+      "Pill geometry for anything enumerable; soft 10px rectangles for anything containing content",
+      "Touch targets deliberately raised to 44px on phones without shifting the desktop layout"
+    ],
+    "rules": [
+      { "name": "The One Warm Value Rule", "body": "Brass is the only non-green in the system, and it is never used for a surface, a fill, or a block of text — only for the ~/ prefix, the focus ring, and a single status state. Introducing a second warm accent collapses the effect.", "section": "colors" },
+      { "name": "The Never-White-Ground Rule", "body": "The page is warm off-white; pure white means 'this surface is raised.' A redesign that grounds the page in #ffffff loses the only cue that separates card from page, because the shadow alone is too soft to carry it.", "section": "colors" },
+      { "name": "The Green-Cast Neutral Rule", "body": "There are no true grays anywhere in the system. Secondary text is moss, dividers are mist, body text is green-cast ink.", "section": "colors" },
+      { "name": "The Mono-Is-Never-Prose Rule", "body": "IBM Plex Mono is reserved for labels, metadata, and micro-copy. It never sets a sentence a visitor is expected to read. This is a correction the codebase already made once, in About.css, after mono prose measured harder to read and wrapped badly on mobile.", "section": "typography" },
+      { "name": "The ~/ Prefix Rule", "body": "Mono eyebrows carry a brass ~/ injected via ::before, never typed into the content. It appears on .eyebrow, .pcard-category, and .contact-label. This is the single most identifying mark on the site and it costs two characters.", "section": "typography" },
+      { "name": "The Lowercase Structure Rule", "body": "Mono structural headings are lowercased — project categories via toLowerCase() in the component, project-page section headings via text-transform. Structure whispers; content speaks.", "section": "typography" },
+      { "name": "The One Container Rule", "body": "Everything lives inside .container. Nothing full-bleeds; there is not a single edge-to-edge element on the site.", "section": "layout" }
+    ],
+    "dos": [
+      "Do keep mono for labels, metadata, and micro-copy only. About.css already documents the regression that happens when mono sets prose.",
+      "Do raise touch targets with padding plus a compensating negative margin-block, so tappable area grows without moving the visual layout.",
+      "Do give focus a real ring. Brass 2px at 2px offset globally, 1px offset on form fields. A border-color change is not a focus state.",
+      "Do let reading measure and leading scale with content length — 34rem intros, 40rem bio, 44rem notes at 1.8, 46rem project pages at 1.7.",
+      "Do pin card actions to the card bottom with margin-top: auto so grid rows align.",
+      "Do encode project availability in badge loudness: the shipped thing reads loudest.",
+      "Do honor prefers-reduced-motion — index.css kills all transitions, animations, and smooth scrolling under it.",
+      "Do keep pills for countable things and soft rectangles for containers."
+    ],
+    "donts": [
+      "Don't treat the forest-green palette, Bitter/IBM Plex, or the ~/ device as permanent. None of them appear in PRODUCT.md's Brand Commitments. They are the incumbent implementation and nothing more.",
+      "Don't add a second warm accent alongside brass. Its rarity is the whole effect.",
+      "Don't ground the page in pure white. White means 'raised surface' in this system, and the shadow is too soft to carry the distinction alone.",
+      "Don't add a third font. Three families across three roles is already the ceiling.",
+      "Don't extend the current spacing, radius, or breakpoint values as if they were a system. They are hand-tuned per component and only partially tokenized.",
+      "Don't carry the four ad-hoc breakpoints (860 / 780 / 700 / 680) into a redesign. Define a real scale.",
+      "Don't assume dark mode exists. There is no prefers-color-scheme handling anywhere in the codebase."
+    ]
+  }
+}

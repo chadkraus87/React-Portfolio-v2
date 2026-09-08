@@ -11,3 +11,6 @@ resume-src/node_modules
 resume-src/*.pdf
 resume-src/*.docx
 resume-src/resume.html
+
+# Impeccable live-mode session journal (durable local state, not source)
+.impeccable/live/sessions/
