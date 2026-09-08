@@ -73,6 +73,46 @@ button { font-family: inherit; cursor: pointer; }
 
 .page { padding: 3.5rem 0 4.5rem; }
 
+/* Available to screen readers, invisible on screen. Used for live-region
+   announcements that have no visual counterpart. Renders nothing. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip link: off-screen until focused, then pinned over the nav bar. Uses the
+   existing button colors so it reads as part of the system when it appears.
+   Fixed rather than absolute — absolute placed it at negative *document*
+   coordinates, so once the page was scrolled it sat above the scrollable area
+   and could not be brought into view at all. Fixed keeps it viewport-relative,
+   so it appears wherever the reader currently is. */
+.skip-link {
+  position: fixed;
+  left: 0.75rem;
+  top: -100%;
+  z-index: 100;
+  background: var(--forest);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 0.6rem 1.15rem;
+  border-radius: var(--radius);
+}
+.skip-link:focus-visible {
+  top: 0.75rem;
+  text-decoration: none;
+}
+/* main takes focus programmatically via the skip link; it should never draw a
+   ring of its own as a result. */
+main:focus { outline: none; }
+
 /* 404 ---------------------------------------------------------------------- */
 .notfound-copy {
   max-width: 34rem;

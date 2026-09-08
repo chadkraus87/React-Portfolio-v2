@@ -27,7 +27,9 @@
   font-size: 0.95rem;
   color: var(--ink);
   background: var(--paper);
-  border: 1.5px solid var(--mist);
+  /* moss, not mist: mist sat at 1.12:1 against the page, so the boundary that
+     identifies the field was effectively invisible. WCAG 1.4.11 wants 3:1. */
+  border: 1.5px solid var(--moss);
   border-radius: 8px;
   padding: 0.6rem 0.75rem;
   transition: border-color 0.15s ease;
@@ -43,6 +45,20 @@
 .field textarea:focus-visible {
   outline: 2px solid var(--brass);
   outline-offset: 1px;
+}
+
+/* Invalid fields: ink text and a pine border, both existing tokens. Deliberately
+   not a new red — the palette has no error color yet, and inventing one here
+   would land outside the token pass. The message text carries the meaning, so
+   nothing depends on the color alone. */
+.field-error {
+  margin-top: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--ink);
+}
+.field input[aria-invalid='true'],
+.field textarea[aria-invalid='true'] {
+  border-color: var(--pine);
 }
 
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }

@@ -22,8 +22,12 @@ export default function App() {
       <div className="app-shell">
         {/* Must live inside the router — it reads the active route */}
         <Analytics />
+        {/* First focusable element on every page, so a keyboard user can jump
+            the six nav links instead of tabbing them on each navigation.
+            Off-screen until focused — see .skip-link in index.css. */}
+        <a className="skip-link" href="#main">Skip to content</a>
         <NavBar />
-        <main>
+        <main id="main" tabIndex={-1}>
           <Routes>
             <Route path="/" element={<About />} />
             <Route path="/portfolio" element={<Portfolio />} />

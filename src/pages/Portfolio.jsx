@@ -26,12 +26,23 @@ export default function Portfolio() {
             <button
               key={cat}
               className={`filter-btn ${active === cat ? 'is-active' : ''}`}
+              // The active filter is otherwise conveyed only by the forest fill,
+              // which a screen reader cannot see.
+              aria-pressed={active === cat}
               onClick={() => setActive(cat)}
             >
               {cat}
             </button>
           ))}
         </div>
+
+        {/* Filtering swaps the grid silently — this announces the new result
+            count. Polite so it waits for a pause rather than interrupting. */}
+        <p className="visually-hidden" role="status" aria-live="polite">
+          {`${visible.length} ${visible.length === 1 ? 'project' : 'projects'} shown${
+            active === 'All' ? '' : ` in ${active}`
+          }`}
+        </p>
 
         <div className="project-grid">
           {visible.map((project) => (

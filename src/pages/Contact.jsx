@@ -18,7 +18,28 @@ export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [state, setState] = useState({ status: 'idle', error: '' });
 
-  const update = (e) => setForm({ ...form, [e.target.id]: e.target.value });
+  const [errors, setErrors] = useState({});
+
+  const update = (e) => {
+    setForm({ ...form, [e.target.id]: e.target.value });
+    // Clear a field's error as soon as it's being corrected, so the message
+    // doesn't sit there contradicting what the visitor just typed.
+    if (errors[e.target.id]) setErrors({ ...errors, [e.target.id]: undefined });
+  };
+
+  // Email is only necessary on the endpoint path: a posted message with no
+  // reply address is a dead end. The mailto fallback carries the sender's own
+  // address, so it doesn't need one. Name stays optional either way.
+  const validate = () => {
+    const found = {};
+    if (FORM_ENDPOINT) {
+      if (!form.email.trim()) found.email = 'Add your email so I can reply.';
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
+        found.email = 'That address is missing an @ or a domain.';
+    }
+    if (!form.message.trim()) found.message = 'Add a message before sending.';
+    return found;
+  };
 
   const mailtoFallback = () => {
     const subject = encodeURIComponent(`Portfolio contact from ${form.name || 'your website'}`);
@@ -30,7 +51,16 @@ export default function Contact() {
 
   const submit = async (e) => {
     e.preventDefault();
-    if (!form.message.trim()) return;
+
+    const found = validate();
+    setErrors(found);
+    // Send focus to the first problem in DOM order rather than leaving the
+    // visitor to hunt for it.
+    const firstInvalid = ['email', 'message'].find((id) => found[id]);
+    if (firstInvalid) {
+      document.getElementById(firstInvalid)?.focus();
+      return;
+    }
 
     if (!FORM_ENDPOINT) {
       mailtoFallback();
@@ -68,18 +98,43 @@ export default function Contact() {
             </div>
             <div className="field">
               <label htmlFor="email">Your email</label>
-              <input id="email" type="email" value={form.email} onChange={update} autoComplete="email" />
+              <input
+                id="email"
+                type="email"
+                value={form.email}
+                onChange={update}
+                autoComplete="email"
+                required={Boolean(FORM_ENDPOINT)}
+                aria-invalid={errors.email ? true : undefined}
+                aria-describedby={errors.email ? 'email-error' : undefined}
+              />
+              {errors.email && (
+                <p className="field-error" id="email-error">
+                  {errors.email}
+                </p>
+              )}
             </div>
             <div className="field">
               <label htmlFor="message">Message</label>
-              <textarea id="message" rows="5" value={form.message} onChange={update} required />
+              <textarea
+                id="message"
+                rows="5"
+                value={form.message}
+                onChange={update}
+                required
+                aria-invalid={errors.message ? true : undefined}
+                aria-describedby={errors.message ? 'message-error' : undefined}
+              />
+              {errors.message && (
+                <p className="field-error" id="message-error">
+                  {errors.message}
+                </p>
+              )}
             </div>
 
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={!form.message.trim() || sending}
-            >
+            {/* Enabled unless a send is in flight. A disabled button explains
+                nothing and can't be focused — validation on submit does. */}
+            <button type="submit" className="btn btn-primary" disabled={sending}>
               {sending ? 'Sending…' : FORM_ENDPOINT ? 'Send message' : 'Compose email'}
             </button>
 

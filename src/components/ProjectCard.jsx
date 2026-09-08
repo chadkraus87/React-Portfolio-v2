@@ -50,9 +50,11 @@ export default function ProjectCard({ project }) {
           </span>
         </div>
 
-        <h3 className="pcard-title">
+        {/* h2, not h3: these are the only headings under the Portfolio page's
+            h1, so h3 skipped a level. ProjectCard renders on Portfolio only. */}
+        <h2 className="pcard-title">
           <Link to={`/projects/${slug}`}>{title}</Link>
-        </h3>
+        </h2>
 
         {tagline && <p className="pcard-tagline">{tagline}</p>}
 

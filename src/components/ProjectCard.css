@@ -86,8 +86,12 @@
 .pcard-more-link:hover { text-decoration: underline; }
 
 /* Touch targets: pad to 44px and pull the padding back out with a negative
-   margin, so the tappable area grows without moving anything visually. */
-@media (max-width: 680px) {
+   margin, so the tappable area grows without moving anything visually.
+   Gated on the pointer, not just the viewport: a tablet in portrait is wider
+   than 680px but is still finger-driven, and these links measured 23px and
+   20px there — under the 24px WCAG 2.5.8 floor. The width query stays for
+   coarse-pointer devices that report `pointer: fine` or none at all. */
+@media (max-width: 680px), (pointer: coarse) {
   .pcard-title a,
   .pcard-more-link {
     display: inline-flex;

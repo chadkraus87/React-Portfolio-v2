@@ -10,7 +10,9 @@
   font-weight: 500;
   color: var(--forest);
   background: transparent;
-  border: 1.5px solid var(--mist);
+  /* moss clears the 3:1 non-text minimum; mist (1.12:1) did not, leaving the
+     unselected chips with no visible edge. Hover/active still shift to forest. */
+  border: 1.5px solid var(--moss);
   border-radius: 999px;
   padding: 0.35rem 0.95rem;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
@@ -29,6 +31,8 @@
 
 .project-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /* min() so the 300px floor cannot exceed the column itself. Below ~340px
+     (300px + the container's 2.5rem of padding) the bare 300px overflowed. */
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
   gap: 1.5rem;
 }
