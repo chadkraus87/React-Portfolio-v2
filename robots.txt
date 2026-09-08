@@ -1,2 +1,8 @@
+# Crawling is deliberately ALLOWED here even though nothing on this host is
+# meant to be indexed. This is a redirect stub for the retired GitHub Pages
+# URL; index.html and 404.html carry `noindex, follow` and a rel=canonical
+# pointing at https://chad-kraus-portfolio.vercel.app/. A crawler has to be
+# able to FETCH those pages to read those directives — Disallow would block
+# the fetch and leave the old URL indexed with no way to drop it.
 User-agent: *
-Disallow: /
+Allow: /
