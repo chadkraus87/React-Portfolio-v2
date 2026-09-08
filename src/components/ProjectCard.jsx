@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import { formatUpdated, statusModifier } from '../lib/projectMeta.js';
+import { cardSrcSet, CARD_SIZES } from '../lib/cardImages.js';
 import './ProjectCard.css';
 
 // Renders one project from src/data/projects.js.
@@ -30,7 +31,14 @@ export default function ProjectCard({ project }) {
   return (
     <article className="pcard">
       {image ? (
-        <img src={image} alt={`${title} screenshot`} className="pcard-img" loading="lazy" />
+        // AVIF variants sized for the card slot; the original stays as the
+        // fallback src, so a browser without AVIF renders exactly what it did
+        // before. Geometry is unchanged — the aspect-ratio and object-fit that
+        // prevent CLS still live on the <img>.
+        <picture>
+          <source type="image/avif" srcSet={cardSrcSet(image)} sizes={CARD_SIZES} />
+          <img src={image} alt={`${title} screenshot`} className="pcard-img" loading="lazy" />
+        </picture>
       ) : (
         <div className="pcard-img pcard-placeholder" aria-hidden="true">
           <span>{'{ '}{title}{' }'}</span>

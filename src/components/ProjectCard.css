@@ -12,6 +12,11 @@
   box-shadow: 0 2px 4px rgba(30, 58, 43, 0.1), 0 14px 32px rgba(30, 58, 43, 0.14);
 }
 
+/* <picture> only carries the AVIF <source>; it must not become the flex item
+   in the image's place. display: contents removes it from the box tree, so the
+   card's layout is byte-identical to the bare <img> it replaced. */
+.pcard picture { display: contents; }
+
 .pcard-img {
   width: 100%;
   aspect-ratio: 16 / 9;

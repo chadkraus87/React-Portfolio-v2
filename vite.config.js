@@ -8,4 +8,12 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   base: '/',
+  build: {
+    // The smallest card variants fall under Vite's 4KB inline threshold, which
+    // would base64 them into the JS bundle — eagerly loaded, uncacheable, and
+    // pointless for images the cards lazy-load. Keep those as real files; every
+    // other asset keeps the default behaviour.
+    assetsInlineLimit: (filePath) =>
+      filePath.includes('/images/cards/') ? false : undefined,
+  },
 });
