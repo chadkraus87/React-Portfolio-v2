@@ -368,7 +368,16 @@ Recorded here as open items, unaddressed by this system.
 - **Meridian has no real screenshot.** `src/assets/images/Meridian.jpg` is a
   placeholder title card. It is the only project image that is not evidence of
   running software.
-- **The old GitHub Pages URL still serves a stale mirror.**
-  `chadkraus87.github.io/React-Portfolio-v2/` serves its last build and cannot
-  redirect server-side. `index.html` carries a second Search Console
-  verification token for that property.
+- **The old GitHub Pages URL is a redirect stub, not a mirror.**
+  `chadkraus87.github.io/React-Portfolio-v2/` serves three files and no
+  portfolio content: a "moved" page carrying `noindex, follow` and a
+  `rel=canonical` to the Vercel site, a matching `404.html` that forwards the
+  deep path, and a `robots.txt` that allows crawling so those directives are
+  actually readable. It is kept so old inbound links resolve. `index.html`
+  still carries a second Search Console verification token for that property;
+  both it and the stub are retired only after Google drops the old URL.
+- **The 10 OG social cards are still in the retired identity.**
+  `scripts/make-og-images.py` renders `public/og/*.jpg` in moss/brass/pine with
+  a serif display face and rounded pill status badges — the badge treatment
+  this system explicitly forbids. Every shared project link previews in the old
+  world.

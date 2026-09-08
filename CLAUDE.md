@@ -42,8 +42,14 @@ array by hand.
 - `.github/workflows/publish.yml` is frozen to `workflow_dispatch` only. It is
   kept for reference; do not re-enable it, since the Vite base is `/` and
   GitHub Pages served from a repo subpath would 404 on every asset.
-- The old GitHub Pages URL still serves its last build. Retire or redirect it
-  once nothing points there.
+- **GitHub Pages is a redirect stub, not a second deployment.** The `gh-pages`
+  branch holds three files — `index.html`, `404.html`, `robots.txt` — and serves
+  no portfolio content. Both pages carry `noindex, follow`, a `rel=canonical`
+  to the Vercel site, a 0s meta refresh and a script that forwards the deep
+  path, query and hash. It is kept deliberately so old inbound links land on
+  the live site instead of a 404. Do not publish a build to it; there is no
+  longer a `deploy` script or `gh-pages` dependency, and adding one back would
+  overwrite the stub with a root-based build that 404s on every asset.
 - Absolute URLs (og:url, og:image, sitemap, robots) live in `index.html` and
   `scripts/prerender.mjs` — both must be updated together if the domain changes.
 
@@ -107,9 +113,19 @@ is private for security). Never add links to a project unless I explicitly provi
 them.
 
 ## Known housekeeping
-- The old GitHub Pages URL (`chadkraus87.github.io/React-Portfolio-v2/`) still
-  serves its last build. Decide whether to retire it or leave it as a stale
-  mirror; it cannot redirect server-side.
-- A Google Search Console property exists for the old GitHub Pages URL. The new
-  Vercel domain needs its own property — the verification meta tag in
-  `index.html` carries over, so verifying it should succeed immediately.
+- **Deferred until Google drops the old Pages URL.** `chadkraus87.github.io/
+  React-Portfolio-v2/` now serves a redirect stub whose `robots.txt` allows
+  crawling, so Google can finally read the `noindex` and the canonical. Once
+  Search Console shows that URL dropped or consolidated, revisit — in this
+  order — retiring the old Search Console property, deleting the second
+  `google-site-verification` token from `index.html`, and optionally disabling
+  Pages entirely. None of that happens before de-indexing is confirmed; the
+  redirect stays indefinitely for now.
+- **Meridian has no real screenshot.** `src/assets/images/Meridian.jpg` is an
+  honest non-UI title plate, but it is drawn in the retired forest-green
+  identity and is the only project image that is not evidence of running
+  software. Replace it only with a real capture — never a synthetic or
+  AI-generated UI.
+- **The 10 OG social cards are off-system.** `scripts/make-og-images.py` still
+  renders `public/og/*.jpg` in the retired moss/brass palette with rounded pill
+  status badges, which the current design system forbids.
