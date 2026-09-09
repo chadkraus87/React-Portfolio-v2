@@ -15,6 +15,11 @@ invents a metric, a status, a date or a description.
 
 Fonts are vendored under scripts/fonts/ so this renders identically anywhere
 with no network access — see scripts/fonts/README.md.
+
+The cards follow the site's C2 "Editorial Spatial" system: production tokens,
+the display ramp, and the F2 footprint translated to a 2400x1260 canvas — text
+composed left, a genuine screenshot dominating the right and bleeding off three
+edges. No inset panel, no invented metric, no generated imagery.
 """
 import os, re, sys
 from PIL import Image, ImageDraw, ImageFont, ImageOps
@@ -29,14 +34,14 @@ S = 2                      # 2x for retina
 W, H = 1200 * S, 630 * S
 
 # The design system's tokens, straight from src/index.css. Nothing else.
-PAPER    = (0xF7, 0xF7, 0xF5)
+PAPER    = (0xF2, 0xEE, 0xE6)   # warm page ground
 SURFACE  = (0xFF, 0xFF, 0xFF)
-INSET    = (0xEF, 0xEF, 0xEC)
-INK      = (0x14, 0x17, 0x1A)
-GRAPHITE = (0x5A, 0x61, 0x69)
-RULE     = (0xD6, 0xD9, 0xDD)
-BOUNDARY = (0x7F, 0x86, 0x8F)
-SIGNAL   = (0xB2, 0x3A, 0x16)
+INSET    = (0xE8, 0xE2, 0xD6)
+INK      = (0x14, 0x11, 0x0D)   # warm near-black
+GRAPHITE = (0x5C, 0x55, 0x4A)
+RULE     = (0xCF, 0xC7, 0xB8)   # decorative hairlines only
+BOUNDARY = (0x7C, 0x73, 0x64)   # the identifying edge of a control
+ACCENT   = (0x8A, 0x2B, 0x18)   # oxblood
 VERIFIED = (0x1F, 0x4B, 0x99)
 
 
@@ -62,14 +67,33 @@ def font(file, size, weight, width=None):
 
 
 # Type roles mirror DESIGN.md: Archivo for structure, Literata for prose,
-# Martian Mono for identifiers.
-f_title   = font("Archivo-var.ttf", 58, 700)
-f_name    = font("Archivo-var.ttf", 66, 700)
-f_label   = font("MartianMono-var.ttf", 15, 500)
-f_tagline = font("MartianMono-var.ttf", 15, 400)
-f_meta    = font("MartianMono-var.ttf", 16, 500)
+# Martian Mono for identifiers. Sizes are in points and multiplied by S, so a
+# 60 here is 120px on the 2400px canvas — the proportional equivalent of the
+# site's --d-major at a 1920 viewport.
+f_label   = font("MartianMono-var.ttf", 14, 500)
+f_tagline = font("MartianMono-var.ttf", 14, 400)
+f_meta    = font("MartianMono-var.ttf", 15, 500)
 f_prose   = font("Literata-var.ttf", 20, 400)
-f_role    = font("Literata-var.ttf", 24, 400)
+f_role    = font("Literata-var.ttf", 26, 400)
+
+# Display type is fitted per title rather than pinned, so a long name steps
+# down instead of wrapping to three lines or overflowing its column.
+TITLE_STEPS = [62, 58, 54, 50, 46, 42]
+NAME_STEPS  = [84, 78, 72, 66, 60]
+
+
+def fit(draw, text, steps, max_w, max_lines, file="Archivo-var.ttf", weight=700,
+        overflow=0):
+    """Largest step whose wrap fits max_lines within max_w (+overflow, which is
+    the deliberate edge crop the hero uses). Falls back to the smallest step."""
+    for pt in steps:
+        f = font(file, pt, weight)
+        lines = wrap(draw, text, f, max_w + overflow)
+        if len(lines) <= max_lines and all(
+                draw.textlength(l, font=f) <= max_w + overflow for l in lines):
+            return f, lines, pt
+    f = font(file, steps[-1], weight)
+    return f, wrap(draw, text, f, max_w + overflow)[:max_lines], steps[-1]
 
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -127,58 +151,87 @@ def updated_label(updated):
 def status_color(status):
     """Live reads as available now; the others stay quiet — same rule the
     cards on the site follow."""
-    return SIGNAL if status == "Live" else GRAPHITE
+    return ACCENT if status == "Live" else GRAPHITE
 
 
 def build(p):
+    """F2 on a 2400x1260 canvas: text composed left, the real screenshot
+    dominating the right and bleeding off the top, right and bottom edges."""
     img = Image.new("RGB", (W, H), PAPER)
     d = ImageDraw.Draw(img)
 
-    # The site's one structural divider: a 2px ink rule across the top.
-    d.rectangle([0, 0, W, 2 * S], fill=INK)
+    pad = 56 * S
+    shot_x = round(W * 0.47)           # screenshot takes the right 53%
+    text_w = shot_x - pad * 2
 
-    pad = 64 * S
-    panel_w = int(W * 0.46) - pad
-    x = pad
-    text_w = W - panel_w - pad * 3
-
-    # Evidence panel: the real screenshot, square corners, hairline border,
-    # 16:10 like .evi__figure img on the homepage.
+    # The screenshot is the composition, not an inset: it takes the right
+    # 55%, bleeds off the top and right edges, and keeps its own aspect ratio.
+    # Forcing it to bleed off the bottom as well would mean cropping a 16:10
+    # source into a 1:1 slot, which upscales 1.4x and cuts a third of the
+    # interface away — the opposite of evidence. Top-aligned, like
+    # .pcard--right .pcard-shot { align-self: start }.
     if p["image"]:
         src = os.path.join(IMGS, p["image"])
         if os.path.exists(src):
-            ph = round(panel_w * 10 / 16)
-            shot = ImageOps.fit(Image.open(src).convert("RGB"), (panel_w, ph),
-                                method=Image.LANCZOS, centering=(0.5, 0.0))
-            px, py = W - panel_w - pad, (H - ph) // 2
-            img.paste(shot, (px, py))
-            d.rectangle([px, py, px + panel_w - 1, py + ph - 1], outline=RULE, width=1 * S)
+            source = Image.open(src).convert("RGB")
+            sw = W - shot_x
+            # Natural height for the source's own aspect, floored at 76% of the
+            # canvas so the shot has real presence. That floor crops at most
+            # ~15% off a 16:10 screenshot's right edge, which the left-top
+            # anchor keeps clear of the interface.
+            sh = min(H, max(round(sw * source.height / source.width),
+                            round(H * 0.76)))
+            shot = ImageOps.fit(source, (sw, sh), method=Image.LANCZOS,
+                                centering=(0.0, 0.0))
+            img.paste(shot, (shot_x, 0))
+            # Boundary, not Rule: this is the edge of real evidence, and it is
+            # the only edge the image has left now that two sides bleed away.
+            d.rectangle([shot_x, 0, shot_x + 1 * S, sh], fill=BOUNDARY)
+            d.rectangle([shot_x, sh, W, sh + 1 * S], fill=BOUNDARY)
 
-    # Build the left column as a measured block first, so it can be centred
-    # against the panel instead of hanging from the top with dead space below.
-    block = [(p["category"].upper(), f_label, GRAPHITE, 44 * S)]
-    for line in wrap(d, p["title"], f_title, text_w)[:2]:
-        block.append((line, f_title, INK, 68 * S))
-    if p["tagline"]:
-        block[-1] = (*block[-1][:3], block[-1][3] + 10 * S)
-        for line in wrap(d, p["tagline"], f_tagline, text_w)[:2]:
-            block.append((line, f_tagline, GRAPHITE, 27 * S))
+    # A 2px ink rule across the text column only — the site's section divider,
+    # not a frame. It never crosses the screenshot.
+    d.rectangle([pad, pad, pad + text_w, pad + 2 * S], fill=INK)
+
+    foot_y = H - pad - 30 * S
+    rule_y = foot_y - 28 * S
+
+    y = pad + 34 * S
+    d.text((pad, y), p["category"].upper(), font=f_label, fill=GRAPHITE)
+    y += 46 * S
+
+    f_title, lines, pt = fit(d, p["title"], TITLE_STEPS, text_w, 2)
+    for line in lines:
+        d.text((pad, y), line, font=f_title, fill=INK)
+        y += round(pt * 1.02) * S
+    y += 14 * S
+
+    tag_lines = wrap(d, p["tagline"], f_tagline, text_w) if p["tagline"] else []
+    for line in tag_lines:
+        d.text((pad, y), line, font=f_tagline, fill=GRAPHITE)
+        y += 26 * S
+    if tag_lines:
+        y += 16 * S
+
+    # The summary is one whole sentence and is never cut. It steps down through
+    # the reading ramp until it fits the space left above the foot rule, so a
+    # long first sentence sets smaller rather than stopping mid-clause.
     if p["summary"]:
-        block[-1] = (*block[-1][:3], block[-1][3] + 22 * S)
-        for line in wrap(d, p["summary"], f_prose, text_w)[:3]:
-            block.append((line, f_prose, INK, 34 * S))
+        room = rule_y - 40 * S - y
+        for pts in (20, 19, 18, 17, 16):
+            fp = font("Literata-var.ttf", pts, 400)
+            step = round(pts * 1.7) * S
+            sum_lines = wrap(d, p["summary"], fp, text_w)
+            if len(sum_lines) * step <= room:
+                break
+        for line in sum_lines:
+            d.text((pad, y), line, font=fp, fill=INK)
+            y += step
 
-    foot_y = H - pad - 20 * S
-    rule_y = foot_y - 26 * S
-    height = sum(step for _, _, _, step in block)
-    y = max(pad + 8 * S, (rule_y - height) // 2)
-
-    for text, fnt, fill, step in block:
-        d.text((x, y), text, font=fnt, fill=fill)
-        y += step
-
-    # Status and date sit in their own position at the foot — never a badge.
-    d.rectangle([x, rule_y, x + text_w, rule_y + 1 * S], fill=RULE)
+    # Status and date pin to the foot; the slack between them and the block
+    # above is the intentional void, exactly like the footprint's trailing row.
+    d.rectangle([pad, rule_y, pad + text_w, rule_y + 1 * S], fill=RULE)
+    x = pad
     if p["status"]:
         d.text((x, foot_y), p["status"].upper(), font=f_meta, fill=status_color(p["status"]))
         x += d.textlength(p["status"].upper(), font=f_meta) + 18 * S
@@ -209,43 +262,51 @@ def site_role():
 
 
 def build_cover(projects):
-    """The site-wide card used for / and every non-project page."""
+    """The site-wide card used for / and every non-project page. Follows the
+    production hero and Background: identity at display scale with the first
+    line cropped past the left edge, and the portrait at real scale bleeding
+    off the right."""
     img = Image.new("RGB", (W, H), PAPER)
     d = ImageDraw.Draw(img)
-    d.rectangle([0, 0, W, 2 * S], fill=INK)
 
-    pad = 64 * S
-    D = 340 * S                      # square headshot — zero radius, like the site
-    x = pad
-    text_w = W - D - pad * 3
+    pad = 56 * S
+    port_x = round(W * 0.635)          # portrait takes the right ~36.5%
+    text_w = port_x - pad * 2
 
-    block = [(site_domain().upper(), f_label, GRAPHITE, 50 * S)]
-    for line in ("Chadwick (Chad)", "Kraus"):
-        block.append((line, f_name, INK, 76 * S))
+    # Portrait at column scale, bleeding off the top, right and bottom, the way
+    # the Background section runs it through the gutter.
+    photo = ImageOps.fit(Image.open(os.path.join(IMGS, "headshot.jpg")).convert("RGB"),
+                         (W - port_x, H), method=Image.LANCZOS, centering=(0.5, 0.30))
+    img.paste(photo, (port_x, 0))
+    d.rectangle([port_x, 0, port_x + 1 * S, H], fill=BOUNDARY)
+
+    d.rectangle([pad, pad, pad + text_w, pad + 2 * S], fill=INK)
+
+    y = pad + 34 * S
+    d.text((pad, y), site_domain().upper(), font=f_label, fill=GRAPHITE)
+    y += 52 * S
+
+    # The identity is allowed to crop past the left edge, as it does on the
+    # homepage. Line one hangs; line two is indented, same as .l1 / .l2.
+    crop = 26 * S
+    f_id, _, npt = fit(d, "Chadwick (Chad)", NAME_STEPS, text_w, 1, overflow=crop)
+    for i, line in enumerate(("Chadwick (Chad)", "Kraus")):
+        d.text((pad - crop if i == 0 else pad + 18 * S, y), line, font=f_id, fill=INK)
+        y += round(npt * 0.92) * S
+    y += 26 * S
+
     role = site_role()
     if role:
-        block[-1] = (*block[-1][:3], block[-1][3] + 20 * S)
         for line in wrap(d, role, f_role, text_w)[:4]:
-            block.append((line, f_role, GRAPHITE, 38 * S))
-
-    foot_y = H - pad - 20 * S
-    rule_y = foot_y - 26 * S
-    height = sum(step for _, _, _, step in block)
-    y = max(pad + 8 * S, (rule_y - height) // 2)
-    for text, fnt, fill, step in block:
-        d.text((x, y), text, font=fnt, fill=fill)
-        y += step
+            d.text((pad, y), line, font=f_role, fill=GRAPHITE)
+            y += 40 * S
 
     # Featured projects, taken from the top of projects.js so they stay current.
-    d.rectangle([x, rule_y, x + text_w, rule_y + 1 * S], fill=RULE)
-    d.text((x, foot_y), "  ·  ".join(p["title"] for p in projects[:3]),
+    foot_y = H - pad - 30 * S
+    rule_y = foot_y - 28 * S
+    d.rectangle([pad, rule_y, pad + text_w, rule_y + 1 * S], fill=RULE)
+    d.text((pad, foot_y), "  ·  ".join(p["title"] for p in projects[:3]),
            font=f_meta, fill=GRAPHITE)
-
-    photo = ImageOps.fit(Image.open(os.path.join(IMGS, "headshot.jpg")).convert("RGB"),
-                         (D, D), method=Image.LANCZOS, centering=(0.5, 0.4))
-    px, py = W - D - pad, (H - D) // 2
-    img.paste(photo, (px, py))
-    d.rectangle([px, py, px + D - 1, py + D - 1], outline=RULE, width=1 * S)
 
     dest = os.path.join(ROOT, "public", "og-image.png")
     img.save(dest, optimize=True)
