@@ -14,7 +14,12 @@ import { fileURLToPath } from 'node:url';
 // Titles are shared with the running app (src/components/DocumentTitle.jsx) so
 // a prerendered title and a client-side one cannot drift. siteMeta.js imports
 // nothing, which is why plain Node can import it here.
-import { ROUTE_TITLES, NOT_FOUND_TITLE, detailTitle } from '../src/data/siteMeta.js';
+import {
+  ROUTE_TITLES,
+  NOT_FOUND_TITLE,
+  HOME_DESCRIPTION,
+  detailTitle,
+} from '../src/data/siteMeta.js';
 
 const dist = join(dirname(fileURLToPath(import.meta.url)), '..', 'dist');
 const BASE = 'https://chad-kraus-portfolio.vercel.app';
@@ -116,6 +121,22 @@ if (shellCanonical !== `${BASE}/`) {
   );
 }
 
+// The three homepage description tags are authored in index.html so the dev
+// server matches production, and stamped from HOME_DESCRIPTION at build time.
+// Fail the build rather than let the authored copy rot.
+for (const [label, re_] of [
+  ['description', /<meta\s+name="description"\s+content="([^"]*)"/],
+  ['og:description', /<meta\s+property="og:description"\s+content="([^"]*)"/],
+  ['twitter:description', /<meta\s+name="twitter:description"\s+content="([^"]*)"/],
+]) {
+  const found = shell.match(re_)?.[1];
+  if (found !== HOME_DESCRIPTION) {
+    throw new Error(
+      `index.html ${label} and HOME_DESCRIPTION disagree:\n  ${found}\n  ${HOME_DESCRIPTION}`
+    );
+  }
+}
+
 // Replace the first occurrence of each tag's content, leaving everything else
 // (asset hashes, analytics, the 404 decoder) byte-identical to the shell.
 // Titles and descriptions are injected into markup, so a bare & (Packet & Pine)
@@ -171,6 +192,21 @@ for (const route of routes) {
   );
   console.log(`prerendered /${route.path}`);
 }
+
+// The home page is stamped from the same shell and the same swap(), which is
+// what makes description, og:description and twitter:description a single
+// value. It stays out of `routes` because the sitemap already lists BASE + '/'
+// and because its output path is dist/index.html, not dist/<path>/index.html.
+writeFileSync(
+  join(dist, 'index.html'),
+  swap(shell, {
+    title: ROUTE_TITLES['/'],
+    description: HOME_DESCRIPTION,
+    url: `${BASE}/`,
+  }),
+  'utf8'
+);
+console.log('prerendered /');
 
 // 404.html — served by Vercel for unmatched paths, with a real 404 status.
 // noindex so a soft-404 never enters the index.

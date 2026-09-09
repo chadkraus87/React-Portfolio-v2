@@ -20,6 +20,16 @@ export const ROUTE_TITLES = {
   '/contact': `Contact · ${SITE_NAME}`,
 };
 
+// The homepage's one description. It used to be authored three times in
+// index.html — as description, og:description and twitter:description — and
+// the three had drifted apart, because '/' is the only route the prerenderer
+// did not stamp. It now stamps the home page too, from this constant, so all
+// three tags cannot diverge again. Every other route's description lives in
+// the routes array in scripts/prerender.mjs.
+export const HOME_DESCRIPTION =
+  'Network IT Specialist focused on Tier 2/3 escalations, QA operations, ' +
+  'networking, and AI tooling, building AI agents and full-stack applications.';
+
 export const NOT_FOUND_TITLE = `Page not found · ${SITE_NAME}`;
 
 export const detailTitle = (title) => `${title} · ${SITE_NAME}`;
