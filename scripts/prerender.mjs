@@ -106,6 +106,16 @@ if (shellTitle !== ROUTE_TITLES['/']) {
   );
 }
 
+// The root canonical is authored in index.html because Vite does not process
+// it; BASE is the source of truth for every other route. Fail the build rather
+// than let the two disagree.
+const shellCanonical = shell.match(/<link\s+rel="canonical"\s+href="([^"]*)"/)?.[1];
+if (shellCanonical !== `${BASE}/`) {
+  throw new Error(
+    `index.html canonical and BASE disagree:\n  ${shellCanonical}\n  ${BASE}/`
+  );
+}
+
 // Replace the first occurrence of each tag's content, leaving everything else
 // (asset hashes, analytics, the 404 decoder) byte-identical to the shell.
 // Titles and descriptions are injected into markup, so a bare & (Packet & Pine)
@@ -143,6 +153,7 @@ const swap = (html, route) => {
       `$1${description}$2`
     )
     .replace(/(<meta\s+property="og:url"\s+content=")[^"]*(")/, `$1${url}$2`)
+    .replace(/(<link\s+rel="canonical"\s+href=")[^"]*(")/, `$1${url}$2`)
     .replace(/(<meta\s+name="twitter:title"\s+content=")[^"]*(")/, `$1${title}$2`)
     .replace(
       /(<meta\s+name="twitter:description"\s+content=")[^"]*(")/,
@@ -169,7 +180,11 @@ writeFileSync(
     title: NOT_FOUND_TITLE,
     description: 'That link does not point anywhere on this site.',
     url: `${BASE}/404`,
-  }).replace('</title>', '</title>\n    <meta name="robots" content="noindex" />'),
+  })
+    .replace('</title>', '</title>\n    <meta name="robots" content="noindex" />')
+    // A soft-404 is not a canonical anything. noindex is the whole signal;
+    // pointing it at itself or at the homepage would only muddy that.
+    .replace(/\n\s*<link\s+rel="canonical"\s+href="[^"]*"\s*\/>/, ''),
   'utf8'
 );
 console.log('wrote 404.html');

@@ -39,6 +39,11 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Chadwick (Chad) Kraus" />
     <meta property="og:url" content="https://chad-kraus-portfolio.vercel.app/" />
+    <!-- Self-referencing canonical. scripts/prerender.mjs rewrites this per
+         route from BASE, so every page points at its own absolute URL and the
+         git-main alias, the immutable dpl_* URLs and the old GitHub Pages host
+         all consolidate here. The build fails if this and BASE disagree. -->
+    <link rel="canonical" href="https://chad-kraus-portfolio.vercel.app/" />
     <meta property="og:title" content="Chadwick (Chad) Kraus · Network IT · QA Ops · AI Tooling" />
     <meta
       property="og:description"
