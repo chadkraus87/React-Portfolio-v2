@@ -36,17 +36,69 @@ const src = (f) =>
     .filter((line) => !/^\s*(\/\/|\*|\/\*)/.test(line))
     .join('\n');
 
+// The data files are read as text, so a value written as a JavaScript string
+// literal arrives with its escapes intact: `\u2019` is seven characters here,
+// not an apostrophe. Anything that reaches a meta tag has to be decoded first,
+// or the escape ships to crawlers verbatim.
+//
+// One left-to-right pass, so an escaped backslash is consumed as a backslash
+// and whatever follows it is left alone: `\\u2019` decodes to a backslash plus
+// the literal text u2019, never to an apostrophe. A chain of .replace() calls
+// would get that wrong. No eval, no Function, no module execution.
+const decodeJsStringEscapes = (value) =>
+  value.replace(
+    /\\(u\{([0-9a-fA-F]{1,6})\}|u([0-9a-fA-F]{4})|x([0-9a-fA-F]{2})|\r?\n|[\s\S])/g,
+    (match, whole, braced, four, hex) => {
+      if (braced !== undefined) return String.fromCodePoint(parseInt(braced, 16));
+      if (four !== undefined) return String.fromCharCode(parseInt(four, 16));
+      if (hex !== undefined) return String.fromCharCode(parseInt(hex, 16));
+      if (whole === '\n' || whole === '\r\n') return ''; // line continuation
+      switch (whole) {
+        case 'n': return '\n';
+        case 't': return '\t';
+        case 'r': return '\r';
+        case 'b': return '\b';
+        case 'f': return '\f';
+        case 'v': return '\v';
+        case '0': return '\0';
+        // Quotes, backslash, backtick and anything else: the character itself,
+        // which is what JavaScript does for an unrecognised escape.
+        default: return whole;
+      }
+    }
+  );
+
+// Self-test. These run on every build and cost nothing; they are here because
+// the one-pass rule above is easy to break and impossible to notice by eye.
+for (const [input, expected] of [
+  ["portfolio\\u2019s", 'portfolio\u2019s'],
+  ["a \\u2014 b", 'a \u2014 b'],
+  ["client\\'s", "client's"],
+  ["back\\\\slash", 'back\\slash'],
+  ["back\\\\u2019", 'back\\u2019'], // escaped backslash: u2019 must stay literal
+  ['plain text', 'plain text'],
+]) {
+  const got = decodeJsStringEscapes(input);
+  if (got !== expected) {
+    throw new Error(
+      `decodeJsStringEscapes(${JSON.stringify(input)}) = ${JSON.stringify(got)}, expected ${JSON.stringify(expected)}`
+    );
+  }
+}
+
 const parseEntries = (text) =>
-  [...text.matchAll(/slug:\s*'([^']+)'[\s\S]*?title:\s*'([^']+)'/g)].map((m) => ({
+  [...text.matchAll(/slug:\s*'([^']+)'[\s\S]*?title:\s*'((?:[^'\\]|\\.)*)'/g)].map((m) => ({
     slug: m[1],
-    title: m[2],
+    title: decodeJsStringEscapes(m[2]),
   }));
 
 const firstSentence = (text, slug) => {
   // Pull the entry's summary and trim to one sentence for the meta description.
+  // Decoding happens before the sentence cut and the length cap so both count
+  // real characters rather than escape sequences.
   const block = text.split(`slug: '${slug}'`)[1] ?? '';
   const raw = block.match(/summary:\s*\n?\s*'((?:[^'\\]|\\.)*)'/)?.[1] ?? '';
-  const clean = raw.replace(/\\'/g, "'");
+  const clean = decodeJsStringEscapes(raw);
   const cut = clean.match(/^.*?[.?!](\s|$)/)?.[0] ?? clean;
   return cut.trim().slice(0, 300);
 };
@@ -99,6 +151,25 @@ const routes = [
   ...projectRoutes,
   ...noteRoutes,
 ];
+
+// Nothing that reaches a meta tag may still carry a source-code escape. This
+// is the assertion that would have caught \u2019 shipping in a live meta
+// description; it covers every title and description the prerenderer writes,
+// including the home page's.
+const SOURCE_ESCAPE = /\\(u\{?[0-9a-fA-F]{1,6}\}?|x[0-9a-fA-F]{2}|[ntrbfv0'"\\])/;
+for (const { path, title, description } of [
+  { path: '/', title: ROUTE_TITLES['/'], description: HOME_DESCRIPTION },
+  ...routes,
+]) {
+  for (const [field, value] of [['title', title], ['description', description]]) {
+    const found = String(value).match(SOURCE_ESCAPE);
+    if (found) {
+      throw new Error(
+        `/${path} ${field} still contains the literal escape ${found[0]}:\n  ${value}`
+      );
+    }
+  }
+}
 
 const shell = readFileSync(join(dist, 'index.html'), 'utf8');
 
