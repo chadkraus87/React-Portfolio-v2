@@ -1,6 +1,8 @@
 import { useParams, Link } from 'react-router';
 import { projects } from '../data/projects.js';
 import { formatUpdated, statusModifier } from '../lib/projectMeta.js';
+import { cardSrcSet, DETAIL_SIZES } from '../lib/cardImages.js';
+import { useReveal } from '../lib/reveal.js';
 import NotFound from './NotFound.jsx';
 import './ProjectDetail.css';
 
@@ -13,6 +15,7 @@ import './ProjectDetail.css';
 export default function ProjectDetail() {
   const { slug } = useParams();
   const project = projects.find((p) => p.slug === slug);
+  useReveal([slug]);
 
   // Unknown slug falls through to the same 404 as any other bad path.
   if (!project) return <NotFound />;
@@ -57,7 +60,12 @@ export default function ProjectDetail() {
         </div>
 
         {image && (
-          <img src={image} alt={`${title} screenshot`} className="pdetail-img" />
+          /* Full-bleed on this page too, and now served from the AVIF ladder
+             rather than shipping the full-size original to every visitor. */
+          <picture>
+            <source type="image/avif" srcSet={cardSrcSet(image)} sizes={DETAIL_SIZES} />
+            <img src={image} alt={`${title} screenshot`} className="pdetail-img" />
+          </picture>
         )}
 
         <div className="pdetail-body">

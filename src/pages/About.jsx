@@ -2,8 +2,12 @@ import { Link } from 'react-router';
 import { profile } from '../data/profile.js';
 import { projects } from '../data/projects.js';
 import { formatUpdated, statusModifier } from '../lib/projectMeta.js';
-import { cardSrcSet, EVIDENCE_SIZES } from '../lib/cardImages.js';
+import { cardSrcSet, BAND_SIZES, HALF_SIZES, HERO_SIZES } from '../lib/cardImages.js';
+import { useReveal } from '../lib/reveal.js';
 import headshot from '../assets/images/headshot.jpg';
+// The evidence entries render in ProjectCard's footprints, so this page depends
+// on that stylesheet directly rather than on bundling order.
+import '../components/ProjectCard.css';
 import './About.css';
 
 // The homepage argues one thing before the visitor reads a paragraph: the
@@ -52,7 +56,37 @@ const RAIL = [
 
 // Selected evidence: the three projects named in the pairs above, so the hero's
 // claim and the proof below reference the same work.
-const EVIDENCE = ['petcenza', 'coachrhythm', 'jarvis'];
+//
+// Each entry is laid out in one of the SAME footprints /portfolio uses, so the
+// homepage previews the system instead of running a second visual language.
+// F1 opens full-bleed, then F3 and F2 mirror each other. F4 (minor) is left out
+// deliberately: nothing in the selected evidence should read as de-emphasised,
+// and skipping it keeps this from replaying the portfolio's own sequence.
+const EVIDENCE = [
+  { slug: 'petcenza', footprint: 'band' },
+  { slug: 'coachrhythm', footprint: 'left' },
+  { slug: 'jarvis', footprint: 'right' },
+];
+const EVIDENCE_SIZES_BY_FOOTPRINT = { band: BAND_SIZES, left: HALF_SIZES, right: HALF_SIZES };
+
+// The hero splits profile.title at its em dash rather than restating it:
+// "Network IT Specialist at Rockbot" becomes the eyebrow, the rest the role
+// line. One source, two positions.
+const [HERO_EYEBROW, HERO_ROLE] = (() => {
+  const [head, ...rest] = profile.title.split('—');
+  return [head.trim(), rest.join('—').trim()];
+})();
+
+// "Chadwick (Chad) Kraus" -> two display lines. Derived, never hardcoded.
+const NAME_LINES = (() => {
+  const i = profile.name.lastIndexOf(' ');
+  return i === -1 ? [profile.name, ''] : [profile.name.slice(0, i), profile.name.slice(i + 1)];
+})();
+
+// The hero carries one piece of real product evidence. Packet & Pine is a
+// shipped project whose on-screen numbers are unmistakably game state, so
+// nothing in it can be misread as a production or customer metric.
+const HERO_PROJECT = 'packet-and-pine';
 
 const FIELDS = {
   petcenza: {
@@ -75,52 +109,63 @@ const FIELDS = {
   },
 };
 
-function Evidence({ slug, index }) {
+function Evidence({ slug, footprint, index }) {
   const project = projects.find((p) => p.slug === slug);
   if (!project) return null;
 
-  const { title, image, projectLink, status, updated } = project;
+  const { title, image, projectLink, status, updated, category } = project;
   const fields = FIELDS[slug];
   // Private projects never render a link — see the policy in CLAUDE.md.
   const linked = Boolean(projectLink);
 
+  // Reuses ProjectCard's footprint grid rather than defining a second one:
+  // the same five areas (meta > title > shot > text > more) in the same DOM
+  // order, with the Condition/Action/Verify list occupying the text area.
   return (
-    <article className={`evi ${index % 2 === 1 ? 'evi--reverse' : ''}`}>
-      <figure className="evi__figure">
-        {image ? (
-          <picture>
-            <source type="image/avif" srcSet={cardSrcSet(image)} sizes={EVIDENCE_SIZES} />
-            <img src={image} alt={`${title} screenshot`} loading="lazy" />
-          </picture>
-        ) : (
-          <div className="evi__placeholder" aria-hidden="true">
-            <span>{status || 'No screenshot'}</span>
-          </div>
-        )}
-      </figure>
-
-      <div className="evi__body">
-        <span className="evi__num">{String(index + 1).padStart(2, '0')}</span>
-        <h3 className="evi__title">
-          {linked ? (
-            <a href={projectLink} target="_blank" rel="noopener noreferrer">{title}</a>
-          ) : (
-            title
-          )}
-        </h3>
-
-        <p className="evi__state">
+    <article className={`pcard pcard--${footprint} evi rev`}>
+      <div className="pcard-meta">
+        <span className="pcard-idx">{String(index + 1).padStart(2, '0')}</span>
+        <span className="pcard-category">{category}</span>
+        <span className="pcard-state">
           {status && (
-            <span className={`state state--${statusModifier(status)}`}>{status}</span>
+            <span className={`pcard-status pcard-status--${statusModifier(status)}`}>
+              {status}
+            </span>
           )}
           {/* The gap between these two is decorative CSS; assistive tech reads
               the text nodes, which would run together as "LiveAug 2026". This
-              separator is out of the flex flow (position: absolute), so it adds
-              no gap of its own. */}
+              separator is out of the flex flow, so it adds no gap. */}
           {status && updated && <span className="visually-hidden">{', '}</span>}
-          {updated && <span className="state__date">{formatUpdated(updated)}</span>}
-        </p>
+          {updated && <span className="pcard-updated">{formatUpdated(updated)}</span>}
+        </span>
+      </div>
 
+      <h3 className="pcard-title">
+        {linked ? (
+          <a href={projectLink} target="_blank" rel="noopener noreferrer">{title}</a>
+        ) : (
+          title
+        )}
+      </h3>
+
+      {image ? (
+        <div className="pcard-shot">
+          <picture>
+            <source
+              type="image/avif"
+              srcSet={cardSrcSet(image)}
+              sizes={EVIDENCE_SIZES_BY_FOOTPRINT[footprint]}
+            />
+            <img src={image} alt={`${title} screenshot`} loading="lazy" />
+          </picture>
+        </div>
+      ) : (
+        <div className="pcard-shot pcard-placeholder" aria-hidden="true">
+          <span>{status || 'No screenshot'}</span>
+        </div>
+      )}
+
+      <div className="pcard-text">
         <dl className="fields">
           <dt>Condition</dt>
           <dd>{fields.condition}</dd>
@@ -129,39 +174,84 @@ function Evidence({ slug, index }) {
           <dt>Verify</dt>
           <dd>{fields.verify}</dd>
         </dl>
+      </div>
 
-        <Link to={`/projects/${slug}`} className="evi__more">Full write-up</Link>
+      <div className="pcard-actions">
+        <Link to={`/projects/${slug}`} className="pcard-more-link">
+          Full write-up &rarr;
+        </Link>
       </div>
     </article>
   );
 }
 
 export default function About() {
+  useReveal();
+  const heroProject = projects.find((p) => p.slug === HERO_PROJECT);
+
   return (
     <>
       {/* Hero: identity, then the paired reasoning, then operations scale. */}
       <section className="hero">
         <div className="container">
-          <div className="identity">
-            <h1 className="identity__name">{profile.name}</h1>
-            <p className="identity__role">{profile.title}</p>
+          <p className="hero__eyebrow rev" style={{ '--i': 0 }}>{HERO_EYEBROW}</p>
+
+          <h1 className="identity__name rev" style={{ '--i': 1 }}>
+            <span className="l1">{NAME_LINES[0]}</span>
+            <span className="l2">{NAME_LINES[1]}</span>
+          </h1>
+
+          <div className="hero__grid">
+            <div className="hero__col">
+              <p className="identity__role rev" style={{ '--i': 2 }}>{HERO_ROLE}</p>
+
+              {/* Composes the left column with the page's own structure rather
+                  than with invented copy. Doubles as in-page navigation. */}
+              <dl className="hero__index rev" style={{ '--i': 3 }}>
+                <div><dt>01</dt><dd><a href="#work">Selected work</a></dd></div>
+                <div><dt>02</dt><dd><a href="#background">Background</a></dd></div>
+                <div><dt>03</dt><dd><Link to="/notes">Writing</Link></dd></div>
+              </dl>
+            </div>
+
+            {heroProject?.image && (
+              <figure className="hero__figure rev" style={{ '--i': 2 }}>
+                <picture>
+                  <source type="image/avif" srcSet={cardSrcSet(heroProject.image)} sizes={HERO_SIZES} />
+                  <img
+                    src={heroProject.image}
+                    alt={`${heroProject.title} screenshot`}
+                    width="1400"
+                    height="875"
+                    fetchPriority="high"
+                  />
+                </picture>
+                <figcaption className="hero__tag">
+                  <b>{heroProject.title}</b> · {heroProject.tagline} · {heroProject.status}
+                </figcaption>
+              </figure>
+            )}
           </div>
 
-          {/* Stated once here on small screens; the column headers carry it on
-              desktop, so it is not repeated inside every unit. */}
-          <p className="pairs__mobile-head">
+          <p className="hero__foot rev" style={{ '--i': 4 }}>
+            <span className="hero__foot-lead">Ten shipped applications</span>
+            <a className="hero__jump" href="#work">See the work &darr;</a>
+          </p>
+
+          {/* One standing statement of the relationship, at every width. It
+              already contains both former column headings verbatim, so the
+              two-column header row it replaces added nothing but a table. */}
+          <p className="pairs__head">
             What fails in the field <span aria-hidden="true">→</span> what I make structurally impossible
           </p>
 
+          {/* Each pair is one unit: the condition set at display scale, the
+              mechanism dropped and offset beneath it behind a rule. The offset
+              widens across the three, so the group has a rhythm instead of
+              three identical rows. --o carries that step. */}
           <div className="pairs">
-            <div className="pairs__head" aria-hidden="true">
-              <span className="pairs__num" />
-              <span className="pairs__label">What fails in the field</span>
-              <span className="pairs__label">What I make structurally impossible</span>
-            </div>
-
-            {PAIRS.map(({ id, fail, fix, attr }) => (
-              <div className="pair" key={id}>
+            {PAIRS.map(({ id, fail, fix, attr }, i) => (
+              <div className="pair" key={id} style={{ '--o': i }}>
                 <span className="pairs__num">{id}</span>
                 <p className="pair__fail">{fail}</p>
                 <div className="pair__fix">
@@ -172,20 +262,25 @@ export default function About() {
             ))}
           </div>
 
+          {/* Operations evidence. The figure is set as editorial display type
+              with its sentence running beneath it — deliberately not a metric
+              tile in a row of metric tiles. */}
           <div className="rail">
-            <div className="rail__cell rail__cell--figure">
+            <div className="rail__lead">
               <span className="rail__figure">2,000+</span>
               <p className="rail__caption">
                 End-of-life firmware devices identified in a business case that a customer
                 upgrade program was built around.
               </p>
             </div>
-            {RAIL.map(({ label, value }) => (
-              <div className="rail__cell" key={label}>
-                <span className="label">{label}</span>
-                <span className="rail__value">{value}</span>
-              </div>
-            ))}
+            <dl className="rail__list">
+              {RAIL.map(({ label, value }) => (
+                <div className="rail__row" key={label}>
+                  <dt className="label">{label}</dt>
+                  <dd className="rail__value">{value}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
 
           <p className="thesis">
@@ -198,12 +293,12 @@ export default function About() {
       {/* Selected evidence -------------------------------------------------- */}
       <section className="evidence">
         <div className="container">
-          <h2 className="section-rule">
-            <span className="section-rule__label">02 — Selected evidence</span>
+          <h2 className="section-rule rev" id="work">
+            <span className="section-rule__label">01 — Selected work</span>
           </h2>
 
-          {EVIDENCE.map((slug, i) => (
-            <Evidence key={slug} slug={slug} index={i} />
+          {EVIDENCE.map(({ slug, footprint }, i) => (
+            <Evidence key={slug} slug={slug} footprint={footprint} index={i} />
           ))}
 
           <p className="evidence__more">
@@ -215,41 +310,52 @@ export default function About() {
       {/* Background --------------------------------------------------------- */}
       <section className="background">
         <div className="container">
-          <h2 className="section-rule">
-            <span className="section-rule__label">03 — Background</span>
+          <h2 className="section-rule rev" id="background">
+            <span className="section-rule__label">02 — Background</span>
           </h2>
 
+          {/* Portrait leads at real scale and bleeds through the left gutter;
+              the bio sits in the wide column beside it. Credentials and the
+              toolbox then run full width as hairline structure rather than as
+              a sidebar appendix stacked under the photo. */}
           <div className="bg-grid">
+            <figure className="bg-portrait">
+              <img
+                src={headshot}
+                alt={`${profile.fullName} headshot`}
+                width="640"
+                height="640"
+              />
+            </figure>
+
             <div className="bg-bio prose">
               {profile.about.map((para) => (
                 <p key={para.slice(0, 40)}>{para}</p>
               ))}
             </div>
+          </div>
 
-            <aside className="bg-side">
-              <img
-                src={headshot}
-                alt={`${profile.fullName} headshot`}
-                className="bg-photo"
-                width="640"
-                height="640"
-              />
-
-              <h3 className="label bg-side__label">Certifications</h3>
+          <div className="bg-record">
+            <section className="bg-record__block">
+              <h3 className="bg-record__label">Certifications</h3>
               <ul className="bg-list">
                 {profile.certifications.map((c) => (
                   <li key={c}>{c}</li>
                 ))}
               </ul>
+            </section>
 
-              <h3 className="label bg-side__label">Toolbox</h3>
-              {profile.skillGroups.map(({ label, items }) => (
-                <div className="skill-group" key={label}>
-                  <h4 className="skill-group__label">{label}</h4>
-                  <p className="skill-group__items">{items.join(' · ')}</p>
-                </div>
-              ))}
-            </aside>
+            <section className="bg-record__block bg-record__block--wide">
+              <h3 className="bg-record__label">Toolbox</h3>
+              <div className="skill-grid">
+                {profile.skillGroups.map(({ label, items }) => (
+                  <div className="skill-group" key={label}>
+                    <h4 className="skill-group__label">{label}</h4>
+                    <p className="skill-group__items">{items.join(' · ')}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
           </div>
 
           <div className="bg-actions">

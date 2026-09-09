@@ -103,7 +103,7 @@ export default function Contact() {
     <section className="page">
       <div className="container">
         <span className="label">contact</span>
-        <h1 className="page-title">Get in touch</h1>
+        <h1 className="page-title contact-title">Get in touch</h1>
 
         <div className="contact-grid">
           <form className="contact-form" onSubmit={submit} noValidate>
@@ -165,23 +165,36 @@ export default function Contact() {
             </p>
           </form>
 
-          <aside className="contact-cards">
-            <a className="contact-card" href={`mailto:${profile.email}`}>
-              <span className="contact-label">email</span>
-              {profile.email}
-            </a>
-            <a className="contact-card" href={`tel:${profile.phone.replace(/[^0-9]/g, '')}`}>
-              <span className="contact-label">phone</span>
-              {profile.phone}
-            </a>
-            <a className="contact-card" href={profile.linkedin} target="_blank" rel="noopener noreferrer">
-              <span className="contact-label">linkedin</span>
-              linkedin.com/in/chadwick-kraus
-            </a>
-            <a className="contact-card" href={profile.github} target="_blank" rel="noopener noreferrer">
-              <span className="contact-label">github</span>
-              github.com/chadkraus87
-            </a>
+          {/* Was four bordered tiles. Same four channels, same labels and same
+              values, re-expressed as the term/definition list they always were:
+              hairlines instead of boxes, and the label is now a real <dt>. */}
+          <aside className="contact-direct">
+            <dl className="direct">
+              <div className="direct__row">
+                <dt className="contact-label">email</dt>
+                <dd><a href={`mailto:${profile.email}`}>{profile.email}</a></dd>
+              </div>
+              <div className="direct__row">
+                <dt className="contact-label">phone</dt>
+                <dd><a href={`tel:${profile.phone.replace(/[^0-9]/g, '')}`}>{profile.phone}</a></dd>
+              </div>
+              <div className="direct__row">
+                <dt className="contact-label">linkedin</dt>
+                <dd>
+                  <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">
+                    linkedin.com/in/chadwick-kraus
+                  </a>
+                </dd>
+              </div>
+              <div className="direct__row">
+                <dt className="contact-label">github</dt>
+                <dd>
+                  <a href={profile.github} target="_blank" rel="noopener noreferrer">
+                    github.com/chadkraus87
+                  </a>
+                </dd>
+              </div>
+            </dl>
           </aside>
         </div>
       </div>

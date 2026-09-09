@@ -1,39 +1,38 @@
+/* The portfolio is a vertical sequence of art-directed project compositions,
+   not a card grid. Spacing is generous so each footprint reads as its own
+   moment; the shared information skeleton keeps them comparable. */
+.project-grid {
+  display: grid;
+  gap: clamp(64px, 9vw, 140px);
+  margin-top: clamp(36px, 5vw, 72px);
+}
+
 .filter-row {
   display: flex;
   flex-wrap: wrap;
   gap: var(--s-2);
-  margin-bottom: var(--s-8);
+  margin-bottom: var(--s-6);
 }
 
 .filter-btn {
   font-family: var(--font-id);
-  font-size: var(--t-13);
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  font-size: var(--t-12);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--graphite);
   background: transparent;
-  /* Boundary, never Rule: this is a control's identifying edge and must clear
-     the 3:1 non-text minimum. */
   border: 1px solid var(--boundary);
   padding: var(--s-2) var(--s-3);
-  transition: background 0.12s linear, border-color 0.12s linear, color 0.12s linear;
 }
-.filter-btn:hover { border-color: var(--ink); }
-.filter-btn.is-active {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: #fff;
+.filter-btn:hover { color: var(--ink); border-color: var(--ink); }
+.filter-btn.is-active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .filter-btn { transition: background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease); }
+  .filter-btn:active { transform: translateY(1px); }
 }
 
+/* Touch targets by capability, not viewport width. */
 @media (pointer: coarse) {
   .filter-btn { min-height: 44px; }
-}
-
-.project-grid {
-  display: grid;
-  /* min() so the 300px floor cannot exceed the column itself; below ~348px
-     (300px + the container's 3rem of padding) a bare 300px would overflow. */
-  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
-  gap: var(--s-6);
 }

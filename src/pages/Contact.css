@@ -1,60 +1,75 @@
-/* Contact stays straightforward and accessible. All validation behaviour is
-   unchanged; only the surface language moves to the new system. */
+/* Contact in C2.
+   The page used to be a bordered form panel beside four bordered tiles. Both
+   containers are gone: the form sits directly on the page, and the four
+   channels are a hairline definition list. Every field id, label, validation
+   rule, aria attribute and focus behaviour is unchanged — only the surface
+   language moved. */
+
+.contact-title {
+  font-size: clamp(44px, 7vw, 104px);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  margin-bottom: clamp(36px, 6vw, 96px);
+}
+
 .contact-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-  gap: var(--s-12);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(32px, 6vw, 128px);
   align-items: start;
 }
 
-.contact-form {
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  padding: var(--s-6);
-}
+/* No panel. The fields are the composition. */
+.contact-form { max-width: 44rem; }
 
-.field { margin-bottom: var(--s-4); }
+.field + .field { margin-top: clamp(22px, 2.6vw, 38px); }
 .field label {
   display: block;
   font-family: var(--font-id);
-  font-size: var(--t-13);
+  font-size: var(--t-12);
   font-weight: 500;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--graphite);
   margin-bottom: var(--s-2);
 }
+
+/* A recessed field body plus a 2px bottom rule, instead of a 1px box inside a
+   card. The rule is Boundary, never Rule: it is the edge that identifies the
+   control, so it has to clear the 3:1 non-text minimum on its own. */
 .field input,
 .field textarea {
   width: 100%;
   font-family: var(--font-ui);
-  font-size: var(--t-15);
+  font-size: clamp(16px, 1.25vw, 19px);
+  line-height: 1.5;
   color: var(--ink);
-  background: var(--paper);
-  /* Boundary, never Rule: a field's edge is what identifies the control, and
-     it has to clear the 3:1 non-text minimum. */
-  border: 1px solid var(--boundary);
-  padding: var(--s-3);
-  transition: border-color 0.12s linear;
+  background: var(--inset);
+  border: 0;
+  border-bottom: 2px solid var(--boundary);
+  padding: var(--s-3) var(--s-3) 10px;
 }
+.field textarea { resize: vertical; min-height: 8.5rem; }
+
 .field input:focus,
 .field textarea:focus {
   outline: none;
-  border-color: var(--ink);
+  border-bottom-color: var(--ink);
+  background: var(--surface);
 }
 /* Keyboard users get a real ring — a border-colour shift alone is easy to
    miss and is the only focus cue on these fields otherwise. */
 .field input:focus-visible,
 .field textarea:focus-visible {
-  outline: 2px solid var(--signal);
-  outline-offset: 1px;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 @media (pointer: coarse) {
   .field input, .field textarea { min-height: 44px; }
 }
 
-/* Invalid fields: ink text and a signal border. The message text carries the
+/* Invalid fields: ink text and a signal rule. The message text carries the
    meaning, so nothing depends on colour alone. */
 .field-error {
   margin-top: var(--s-2);
@@ -64,9 +79,11 @@
 }
 .field input[aria-invalid='true'],
 .field textarea[aria-invalid='true'] {
-  border-color: var(--signal);
-  border-width: 2px;
+  border-bottom-color: var(--accent);
+  border-bottom-width: 3px;
 }
+
+.contact-form .btn { margin-top: clamp(26px, 3vw, 44px); }
 
 .form-note {
   margin-top: var(--s-3);
@@ -75,39 +92,54 @@
   color: var(--graphite);
 }
 
-.contact-cards {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-3);
-}
+/* Direct channels — hairlines, no tiles. Offset down from the form so the two
+   columns do not start on the same line. */
+.contact-direct { padding-top: clamp(0px, 3vw, 52px); }
 
-.contact-card {
-  display: block;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-left: 2px solid var(--ink);
-  padding: var(--s-3) var(--s-4);
-  color: var(--ink);
-  font-size: var(--t-15);
-  text-decoration: none;
-  transition: border-left-color 0.12s linear;
+.direct { border-top: 2px solid var(--ink); }
+.direct__row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.34fr) minmax(0, 1fr);
+  gap: var(--s-2) clamp(12px, 1.6vw, 26px);
+  align-items: baseline;
+  padding: clamp(15px, 1.8vw, 26px) 0;
+  border-bottom: 1px solid var(--rule);
 }
-.contact-card:hover { border-left-color: var(--signal); text-decoration: none; }
-
 .contact-label {
-  display: block;
   font-family: var(--font-id);
-  font-size: var(--t-13);
-  letter-spacing: 0.04em;
+  font-size: var(--t-12);
+  font-weight: 500;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--graphite);
-  margin-bottom: var(--s-1);
 }
+.direct dd { font-size: clamp(16px, 1.32vw, 21px); line-height: 1.35; }
+.direct a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--boundary);
+  padding-bottom: 2px;
+  overflow-wrap: anywhere;
+}
+.direct a:hover { color: var(--accent); border-bottom-color: var(--accent); text-decoration: none; }
 
 @media (max-width: 1023px) {
-  .contact-grid { grid-template-columns: 1fr; gap: var(--s-8); }
+  .contact-grid { grid-template-columns: 1fr; gap: clamp(40px, 8vw, 72px); }
+  .contact-direct { padding-top: 0; }
+}
+
+@media (max-width: 640px) {
+  .direct__row { grid-template-columns: 1fr; gap: var(--s-1); }
 }
 
 @media (pointer: coarse) {
-  .contact-card { min-height: 44px; }
+  .direct a { display: inline-flex; align-items: center; min-height: 44px; }
+}
+
+/* Positively gated, like every other transition in the redesign: a
+   reduced-motion visitor is never sent a rule that has to be cancelled. */
+@media (prefers-reduced-motion: no-preference) {
+  .field input,
+  .field textarea { transition: border-color .2s var(--ease), background .2s var(--ease); }
+  .direct a { transition: color .2s var(--ease), border-color .2s var(--ease); }
 }

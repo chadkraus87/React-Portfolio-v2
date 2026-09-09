@@ -1,5 +1,5 @@
 .nav-wrap {
-  background: var(--surface);
+  background: color-mix(in srgb, var(--paper) 90%, transparent);
   border-bottom: 1px solid var(--rule);
   position: sticky;
   top: 0;
@@ -15,30 +15,36 @@
 }
 
 .nav-brand {
-  font-family: var(--font-ui);
-  font-weight: 700;
-  font-size: var(--t-15);
-  letter-spacing: 0.06em;
+  font-family: var(--font-id);
+  font-weight: 500;
+  font-size: var(--t-12);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink);
   text-decoration: none;
 }
-.nav-brand:hover { text-decoration: none; color: var(--signal); }
+.nav-brand:hover { text-decoration: none; color: var(--accent); }
 
-.nav-links { display: flex; gap: var(--s-1); }
+.nav-links { display: flex; gap: var(--s-6); }
 
 .nav-link {
-  font-size: var(--t-13);
-  font-weight: 500;
-  letter-spacing: 0.06em;
+  font-family: var(--font-id);
+  font-size: var(--t-12);
+  font-weight: 400;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--graphite);
   text-decoration: none;
-  padding: var(--s-2) var(--s-3);
-  transition: background 0.12s linear, color 0.12s linear;
+  padding-bottom: 3px;
+  border-bottom: 2px solid transparent;
 }
 .nav-link:hover { color: var(--ink); text-decoration: none; }
-.nav-link.is-active { background: var(--signal); color: #fff; }
+.nav-link.is-active { color: var(--ink); border-bottom-color: var(--accent); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .nav-brand,
+  .nav-link { transition: color .25s var(--ease), border-color .25s var(--ease); }
+}
 
 /* Mobile toggle — 44x44 minimum; this is the primary navigation control on
    phones. */
@@ -69,9 +75,10 @@
     left: 0;
     right: 0;
     flex-direction: column;
-    background: var(--surface);
-    padding: var(--s-3) var(--s-6) var(--s-6);
+    background: var(--paper);
+    padding: var(--s-3) var(--gut) var(--s-6);
     border-bottom: 2px solid var(--ink);
+    gap: var(--s-2);
   }
   .nav-links.is-open { display: flex; }
 }

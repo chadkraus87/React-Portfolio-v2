@@ -15,7 +15,7 @@ const formatDate = (iso) =>
 export function NotesIndex() {
   return (
     <section className="page">
-      <div className="container notes">
+      <div className="container notes-index">
         <span className="label">notes</span>
         <h1 className="page-title">Writing</h1>
         <p className="notes-intro">

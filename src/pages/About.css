@@ -1,206 +1,316 @@
 /* Homepage — identity, paired reasoning, operations rail, selected evidence. */
 
-.hero { padding: var(--s-8) 0 var(--s-8); }
+/* ── Hero: the arrival ─────────────────────────────────────────────────────
+   The old hero opened on a 32px name and a table. This one opens on the name
+   at display scale with a real product screenshot sharing the same band, so
+   roughly half the first viewport is evidence rather than chrome. */
+.hero { padding: clamp(26px, 4.4vh, 52px) 0 clamp(30px, 4.4vh, 54px); }
 
-/* Identity: establishes who this is, then gets out of the way. Deliberately
-   not a display-scale "Hi, I'm ..." intro. */
-.identity { margin-bottom: var(--s-6); }
-.identity__name {
-  font-size: var(--d-32);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.015em;
+.hero__eyebrow {
+  font-family: var(--font-id);
+  font-size: var(--t-12);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--graphite);
+  margin-bottom: clamp(12px, 2vh, 22px);
 }
+
+.identity__name {
+  font-size: var(--d-name);
+  font-weight: 700;
+  line-height: 0.85;
+  letter-spacing: -0.042em;
+}
+.identity__name span { display: block; }
+/* Line one crops past the gutter. It stays fully legible; only the leading
+   whitespace is lost. */
+.identity__name .l1 { margin-left: calc(var(--gut) * -0.6); }
+.identity__name .l2 { margin-left: calc(var(--gut) * 0.4); }
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(20px, 3vw, 44px);
+  align-items: start;
+}
+.hero__col {
+  display: grid;
+  gap: clamp(18px, 2.6vw, 32px);
+  align-content: start;
+  padding-top: clamp(10px, 1.6vw, 22px);
+}
+
 .identity__role {
   font-family: var(--font-prose);
-  font-size: var(--t-17);
+  font-size: clamp(16.5px, 1.28vw, 20px);
   line-height: 1.5;
   color: var(--graphite);
-  margin-top: var(--s-2);
-  max-width: 66ch;
+  max-width: 34ch;
 }
 
-/* Paired reasoning -------------------------------------------------------- */
+/* The page's own sections, as a numbered index. Structure, not new copy. */
+.hero__index { border-top: 1px solid var(--rule); max-width: 32ch; }
+.hero__index > div {
+  display: flex;
+  gap: var(--s-4);
+  align-items: baseline;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.hero__index dt { font-family: var(--font-id); font-size: 11.5px; color: var(--accent); letter-spacing: 0.06em; }
+.hero__index dd { font-family: var(--font-id); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; }
+.hero__index a { color: var(--graphite); text-decoration: none; border-bottom: 1px solid transparent; }
+.hero__index a:hover { color: var(--ink); border-bottom-color: var(--accent); text-decoration: none; }
 
-.pairs__mobile-head { display: none; }
+/* Sits in the interline gap: overlaps line one horizontally for depth, while
+   its top edge clears the glyph bottoms so the name is never occluded. */
+.hero__figure {
+  position: relative;
+  z-index: 2;
+  margin-top: clamp(-84px, -5.8vw, -40px);
+  margin-right: calc(var(--gut) * -1);
+}
+.hero__figure img {
+  width: 100%;
+  aspect-ratio: 16 / 10;    /* reserves space — keeps CLS at zero */
+  object-fit: cover;
+  object-position: left top;
+  border: 1px solid var(--boundary);
+  background: #0b0b0d;
+}
+/* Border and background live on the image so the caption sits on paper at
+   full contrast rather than dark-on-dark inside the figure box. */
+.hero__tag {
+  font-family: var(--font-id);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--graphite);
+  padding-top: 9px;
+}
+.hero__tag b { color: var(--ink); font-weight: 500; }
+
+.hero__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-2) var(--s-8);
+  margin-top: clamp(22px, 2.6vw, 40px);
+  padding-top: 13px;
+  border-top: 2px solid var(--ink);
+}
+.hero__foot-lead {
+  font-family: var(--font-id);
+  font-size: var(--t-12);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+.hero__jump {
+  font-weight: 600;
+  font-size: var(--t-17);
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 2px;
+}
+.hero__jump:hover { color: var(--accent); text-decoration: none; }
+
+/* Paired reasoning --------------------------------------------------------
+   The old presentation was a three-column table with a header row, and it was
+   the main reason the page read like a spec sheet. Same words, same
+   CONDITION -> ACTION meaning, re-set as three editorial units: the condition
+   at display scale, the mechanism dropped and offset beneath it behind a rule
+   and a directional glyph. --o steps the offset across the three so the group
+   builds instead of repeating. */
+
+.pairs__head {
+  margin: clamp(56px, 8vw, 120px) 0 clamp(20px, 2.6vw, 40px);
+  font-family: var(--font-id);
+  font-size: var(--t-13);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--graphite);
+  line-height: 1.6;
+  max-width: 62ch;
+}
+.pairs__head span { color: var(--accent); padding: 0 var(--s-1); }
 
 .pairs { border-top: 2px solid var(--ink); }
 
-.pairs__head,
 .pair {
   display: grid;
-  grid-template-columns: 64px minmax(0, 5fr) minmax(0, 7fr);
-  gap: var(--s-6);
-  align-items: start;
+  grid-template-columns: clamp(44px, 4.6vw, 96px) minmax(0, 1fr);
+  grid-template-areas: "num fail" ".   fix";
+  column-gap: clamp(14px, 2vw, 34px);
+  padding: clamp(30px, 4.4vw, 76px) 0;
 }
-
-.pairs__head {
-  background: var(--inset);
-  border-bottom: 1px solid var(--rule);
-  padding: var(--s-3) 0;
-}
-.pairs__label {
-  font-family: var(--font-id);
-  font-size: var(--t-13);
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--graphite);
-}
-
-.pair { padding: 20px 0; border-bottom: 1px solid var(--rule); }
+.pair + .pair { border-top: 1px solid var(--rule); }
 
 .pairs__num {
+  grid-area: num;
   font-family: var(--font-id);
-  font-size: var(--d-24);
+  font-size: clamp(15px, 1.5vw, 22px);
   font-weight: 500;
-  color: var(--signal);
-  line-height: 1.1;
-  padding-left: var(--s-3);
+  color: var(--accent);
+  line-height: 1.35;
+  letter-spacing: 0.04em;
 }
-.pairs__head .pairs__num { font-size: var(--t-13); }
 
+/* The oversized half. Display type, tight, on a short measure so it breaks
+   into two or three deliberate lines rather than running as a paragraph. */
 .pair__fail {
-  font-family: var(--font-prose);
-  font-size: var(--t-17);
-  color: var(--graphite);
-  line-height: 1.5;
+  grid-area: fail;
+  font-family: var(--font-ui);
+  font-size: clamp(25px, 3.15vw, 52px);
+  font-weight: 700;
+  letter-spacing: -0.032em;
+  line-height: 1.02;
+  color: var(--ink);
+  max-width: 21ch;
 }
-.pair__fix p { font-weight: 600; font-size: var(--t-19); line-height: 1.4; color: var(--ink); }
+
+/* The answer: offset right, on a rule, behind a direction marker. Serif and
+   smaller than the condition, which is the typographic contrast doing the
+   work — the condition shouts, the mechanism is stated. */
+.pair__fix {
+  grid-area: fix;
+  position: relative;
+  margin-top: clamp(20px, 2.6vw, 42px);
+  margin-left: calc(var(--o, 0) * clamp(18px, 6vw, 158px));
+  padding-left: clamp(26px, 3vw, 48px);
+  padding-top: clamp(12px, 1.4vw, 20px);
+  border-top: 1px solid var(--boundary);
+  max-width: 52ch;
+}
+.pair__fix::before {
+  content: '↳';
+  position: absolute;
+  left: 0;
+  top: clamp(12px, 1.4vw, 20px);
+  font-family: var(--font-id);
+  font-size: clamp(15px, 1.4vw, 20px);
+  line-height: 1.5;
+  color: var(--accent);
+}
+.pair__fix p {
+  font-family: var(--font-prose);
+  font-size: clamp(16.5px, 1.32vw, 21px);
+  line-height: 1.52;
+  color: var(--ink);
+}
 .pair__attr {
   display: block;
-  margin-top: var(--s-2);
+  margin-top: var(--s-3);
   font-family: var(--font-id);
-  font-size: var(--t-13);
+  font-size: var(--t-12);
   font-weight: 500;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--graphite);
 }
 
-/* Operations evidence rail ------------------------------------------------ */
+/* Operations evidence -----------------------------------------------------
+   Was a four-cell bordered strip with vertical dividers. Same facts, same
+   labels, no cells: the figure is editorial display type carrying its own
+   sentence, and the three entries are a hairline-separated list beside it.
+   No boxes, no gauges, nothing that resembles a metric tile. */
 .rail {
   display: grid;
-  grid-template-columns: 1.5fr 1.5fr 1.6fr 0.7fr;
-  margin-top: var(--s-8);
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: clamp(28px, 5vw, 96px);
+  align-items: start;
+  margin-top: clamp(56px, 8vw, 128px);
+  padding-top: clamp(20px, 2.4vw, 36px);
+  border-top: 2px solid var(--ink);
 }
-.rail__cell { padding: var(--s-6) var(--s-6) var(--s-6) 0; }
-.rail__cell + .rail__cell { border-left: 1px solid var(--rule); padding-left: var(--s-6); }
 
 .rail__figure {
   display: block;
-  font-size: var(--d-32);
+  font-size: clamp(58px, 8.4vw, 124px);
   font-weight: 700;
-  color: var(--signal);
-  line-height: 1.05;
-  letter-spacing: -0.01em;
+  color: var(--ink);
+  line-height: 0.84;
+  letter-spacing: -0.05em;
 }
 .rail__caption {
-  margin-top: var(--s-2);
+  margin-top: clamp(14px, 1.8vw, 26px);
   font-family: var(--font-prose);
-  font-size: var(--t-15);
-  line-height: 1.5;
+  font-size: clamp(15px, 1.16vw, 18px);
+  line-height: 1.55;
   color: var(--graphite);
-  max-width: 40ch;
+  max-width: 34ch;
 }
+
+.rail__row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.5fr) minmax(0, 1fr);
+  gap: var(--s-3) clamp(16px, 2.4vw, 40px);
+  padding: clamp(14px, 1.7vw, 26px) 0;
+  align-items: baseline;
+}
+.rail__row + .rail__row { border-top: 1px solid var(--rule); }
+.rail__row:first-child { padding-top: 0; }
+
 .rail__value {
-  display: block;
-  margin-top: var(--s-2);
   font-family: var(--font-prose);
-  font-size: var(--t-15);
+  font-size: clamp(16px, 1.24vw, 19.5px);
   line-height: 1.5;
   color: var(--ink);
 }
 
+/* Thesis ------------------------------------------------------------------
+   The site's argument, given a band of its own instead of a trailing italic
+   line. Offset to the right of the figure column so the void on the left is
+   deliberate, and set on a short measure so it breaks into three lines. */
 .thesis {
+  margin: clamp(60px, 9vw, 150px) 0 clamp(30px, 4vw, 60px);
+  margin-left: auto;
+  width: min(100%, 26ch);
+  padding-top: clamp(18px, 2.2vw, 32px);
+  border-top: 2px solid var(--accent);
   font-family: var(--font-prose);
-  font-style: italic;
-  font-size: var(--t-17);
-  color: var(--graphite);
-  margin-top: var(--s-6);
-  max-width: 62ch;
+  font-size: clamp(27px, 3.35vw, 56px);
+  line-height: 1.12;
+  letter-spacing: -0.022em;
+  color: var(--ink);
 }
 
-/* Selected evidence ------------------------------------------------------- */
-.evidence { padding-bottom: var(--s-8); }
+/* Selected evidence -------------------------------------------------------
+   The entries render in ProjectCard's footprints (F1 band, F3 left, F2 right),
+   so the homepage previews the portfolio system rather than running a second
+   layout language. Only what differs from a portfolio card is set here: an h3
+   instead of an h2, and a Condition/Action/Verify list in the text area. */
+.evidence { padding-bottom: clamp(40px, 6vw, 96px); }
 
-.evi {
-  display: grid;
-  grid-template-columns: minmax(0, 55fr) minmax(0, 45fr);
-  gap: var(--s-12);
-  align-items: start;
-  padding: var(--s-12) 0;
-  border-bottom: 1px solid var(--rule);
-}
-.evi--reverse .evi__figure { order: 2; }
+.evi { margin-top: clamp(44px, 6.4vw, 104px); }
+.evi + .evi { padding-top: clamp(36px, 5vw, 80px); border-top: 1px solid var(--rule); }
 
-.evi__figure { border: 1px solid var(--rule); background: var(--surface); }
-.evi__figure img {
-  width: 100%;
-  aspect-ratio: 16 / 10;   /* reserves space — keeps CLS at zero */
-  object-fit: cover;
-  object-position: top;
-}
-.evi__placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  aspect-ratio: 16 / 10;
-  background: var(--inset);
-  font-family: var(--font-id);
-  font-size: var(--t-13);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--graphite);
+/* The evidence text area carries a definition list, which is taller than a
+   card's summary, so these two footprints get a wider text column than
+   /portfolio uses. */
+/* Two classes outrank ProjectCard.css's single-class footprint rules, so these
+   must stay above the 980px collapse or the evidence entries would keep their
+   two columns on a phone. */
+@media (min-width: 981px) {
+  .evi.pcard--left  { grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr); }
+  .evi.pcard--right { grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr); }
+
+  /* The band's field list runs three across, so it takes the full width rather
+     than the 1.15fr text column a portfolio card's summary sits in. */
+  .evi.pcard--band { grid-template-areas: "shot shot" "title meta" "text text" "more more"; }
+  .evi.pcard--band .pcard-text { max-width: none; }
+  .evi.pcard--band .pcard-actions { margin-top: clamp(20px, 2.4vw, 36px); }
 }
 
-.evi__num {
-  font-family: var(--font-id);
-  font-size: var(--d-24);
-  font-weight: 500;
-  color: var(--signal);
-  line-height: 1;
-}
-.evi__title { font-size: var(--d-32); line-height: 1.15; margin-top: var(--s-2); }
-.evi__title a { color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--verified); }
-.evi__title a:hover { color: var(--verified); text-decoration: none; }
-
-.evi__state {
-  display: flex;
-  align-items: baseline;
-  gap: var(--s-2);
-  margin-top: var(--s-2);
-  font-size: var(--t-15);
-}
-.state {
-  font-family: var(--font-id);
-  font-size: var(--t-15);
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-.state--live { color: var(--signal); }
-.state--in-progress,
-.state--private { color: var(--graphite); }
-.state__date { font-family: var(--font-id); font-size: var(--t-15); color: var(--graphite); }
-.evi__more {
-  display: inline-block;
-  margin-top: var(--s-4);
-  font-family: var(--font-id);
-  font-size: var(--t-13);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--verified);
-}
-
-.fields { margin-top: var(--s-6); }
+.fields { display: grid; }
 .fields dt {
   font-family: var(--font-id);
-  font-size: var(--t-13);
+  font-size: var(--t-12);
   font-weight: 500;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--graphite);
   padding-top: var(--s-3);
@@ -208,132 +318,198 @@
 }
 .fields dd {
   font-family: var(--font-prose);
-  font-size: var(--t-15);
+  font-size: clamp(15.5px, 1.15vw, 18px);
   line-height: 1.6;
   color: var(--ink);
-  margin: var(--s-1) 0 var(--s-4);
+  margin: var(--s-2) 0 var(--s-4);
+  max-width: 58ch;
+}
+.fields dd:last-child { margin-bottom: 0; }
+
+/* The band's two text areas sit side by side at desktop width so the list does
+   not run to a single tall column under a full-bleed image. */
+@media (min-width: 981px) {
+  .evi.pcard--band .fields { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: clamp(24px, 3vw, 56px); }
+  .evi.pcard--band .fields dt { grid-row: 1; }
+  .evi.pcard--band .fields dd { grid-row: 2; margin-bottom: 0; }
 }
 
-.evidence__more { margin-top: var(--s-6); font-size: var(--t-15); }
+.evidence__more {
+  margin-top: clamp(36px, 5vw, 80px);
+  padding-top: var(--s-4);
+  border-top: 2px solid var(--ink);
+  font-family: var(--font-id);
+  font-size: var(--t-13);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.evidence__more a { color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--accent); padding-bottom: 2px; }
+.evidence__more a:hover { color: var(--accent); text-decoration: none; }
 
-/* Background -------------------------------------------------------------- */
+/* Background -------------------------------------------------------------
+   Was a 1.6fr prose column beside a 180px headshot with the credentials and
+   toolbox stacked under it as a sidebar appendix. Same words, same photo, same
+   credentials: the portrait now leads at real scale through the left gutter,
+   the bio runs beside it with a lead paragraph, and the record below is
+   hairline structure across the full width instead of a résumé column. */
 .background { padding-bottom: var(--s-24); }
 
 .bg-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-  gap: var(--s-12);
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(24px, 5vw, 96px);
   align-items: start;
-  padding-top: var(--s-8);
-}
-.bg-bio p { max-width: 68ch; color: var(--ink); }
-
-.bg-photo { width: 180px; border: 1px solid var(--rule); margin-bottom: var(--s-6); }
-.bg-side__label { margin-bottom: var(--s-2); padding-top: var(--s-3); border-top: 1px solid var(--rule); }
-.bg-list { list-style: none; margin-bottom: var(--s-6); }
-.bg-list li {
-  font-family: var(--font-prose);
-  font-size: var(--t-15);
-  line-height: 1.5;
-  padding: var(--s-1) 0;
-  color: var(--ink);
+  padding-top: clamp(36px, 5vw, 76px);
 }
 
-.skill-group { margin-bottom: var(--s-4); }
-.skill-group__label {
+.bg-portrait { margin-left: calc(var(--gut) * -1); }
+.bg-portrait img {
+  width: 100%;
+  aspect-ratio: 1 / 1;    /* the source is a square crop — reserves space, CLS 0 */
+  object-fit: cover;
+  border: 1px solid var(--boundary);
+  border-left: 0;
+}
+
+/* The first paragraph carries the section the way the thesis carries the hero:
+   larger, on a shorter measure, with the rest at reading size beneath it. */
+.bg-bio p { max-width: 66ch; color: var(--ink); }
+.bg-bio p:first-child {
+  font-size: clamp(20px, 1.85vw, 30px);
+  line-height: 1.36;
+  letter-spacing: -0.012em;
+  max-width: 34ch;
+  margin-bottom: clamp(20px, 2.4vw, 36px);
+}
+
+/* The record: two blocks, hairline-separated, no boxes and no sidebar. */
+.bg-record {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(28px, 5vw, 96px);
+  align-items: start;
+  margin-top: clamp(52px, 8vw, 128px);
+  padding-top: clamp(18px, 2.2vw, 32px);
+  border-top: 2px solid var(--ink);
+}
+
+.bg-record__label {
   font-family: var(--font-id);
-  font-size: var(--t-13);
+  font-size: var(--t-12);
   font-weight: 500;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--graphite);
+  margin-bottom: clamp(14px, 1.6vw, 24px);
+}
+
+.bg-list { list-style: none; }
+.bg-list li {
+  font-family: var(--font-prose);
+  font-size: clamp(16px, 1.24vw, 19px);
+  line-height: 1.45;
+  padding: clamp(10px, 1.2vw, 16px) 0;
+  color: var(--ink);
+  border-top: 1px solid var(--rule);
+}
+
+.skill-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(20px, 3vw, 56px);
+}
+.skill-group { padding: clamp(10px, 1.2vw, 16px) 0; border-top: 1px solid var(--rule); }
+.skill-group__label {
+  font-family: var(--font-id);
+  font-size: var(--t-12);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
   margin-bottom: var(--s-1);
 }
-.skill-group__items { font-size: var(--t-15); color: var(--ink); line-height: 1.5; }
+.skill-group__items {
+  font-family: var(--font-prose);
+  font-size: clamp(15px, 1.14vw, 18px);
+  color: var(--ink);
+  line-height: 1.5;
+}
 
-.bg-actions { display: flex; gap: var(--s-3); flex-wrap: wrap; margin-top: var(--s-12); }
+.bg-actions {
+  display: flex;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+  margin-top: clamp(40px, 6vw, 96px);
+}
 
 /* ---------------------------------------------------------------------------
-   Breakpoints derived from the grid: 6-column band, then single column.
+   Breakpoints. The evidence footprints collapse in ProjectCard.css at 980px,
+   so only what is defined on this page needs a rule here.
 --------------------------------------------------------------------------- */
 
+/* The hero's two columns collapse at the same 980px the project footprints do,
+   so the whole page changes shape at one threshold. Below it the figure stops
+   tucking into the interline gap and becomes a full-bleed band under the name:
+   at 390px the two-column version left a 128px text column and a 205px image. */
+@media (max-width: 980px) {
+  .hero__grid { grid-template-columns: 1fr; gap: clamp(18px, 3.4vw, 30px); }
+  .hero__col { padding-top: 0; gap: clamp(16px, 3vw, 26px); }
+  .identity__name .l1 { margin-left: calc(var(--gut) * -0.28); }
+  .identity__name .l2 { margin-left: calc(var(--gut) * 0.2); }
+  .identity__role { max-width: 46ch; }
+  .hero__index { max-width: 40ch; }
+
+  .hero__figure {
+    margin-top: 0;
+    margin-left: calc(var(--gut) * -1);
+    margin-right: calc(var(--gut) * -1);
+  }
+  .hero__figure img { border-left: 0; border-right: 0; aspect-ratio: 16 / 9; }
+  .hero__tag { padding: 9px var(--gut) 0; }
+}
+
 @media (max-width: 1023px) {
-  .rail { grid-template-columns: 1fr 1fr; }
-  .rail__cell:nth-child(3) { border-left: none; padding-left: 0; }
-  .rail__cell:nth-child(3), .rail__cell:nth-child(4) { border-top: 1px solid var(--rule); }
-  .evi { grid-template-columns: 1fr; gap: var(--s-6); }
-  .evi--reverse .evi__figure { order: 0; }
-  .bg-grid { grid-template-columns: 1fr; gap: var(--s-8); }
+  /* The figure stops sharing a line with the list and leads it instead. */
+  .rail { grid-template-columns: 1fr; gap: clamp(24px, 4vw, 48px); }
+  .rail__caption { max-width: 52ch; }
+  .rail__row:first-child { padding-top: clamp(14px, 1.7vw, 26px); border-top: 1px solid var(--rule); }
+
+  /* Portrait leads the section full-bleed, then the bio, then the record. */
+  .bg-grid, .bg-record { grid-template-columns: 1fr; gap: clamp(24px, 5vw, 48px); }
+  .bg-portrait { margin-right: calc(var(--gut) * -1); }
+  .bg-portrait img { aspect-ratio: 16 / 9; object-position: center 28%; border-right: 0; }
+  .bg-record__block + .bg-record__block { padding-top: clamp(20px, 3vw, 36px); }
 }
 
 @media (max-width: 640px) {
   .hero { padding: var(--s-6) 0; }
 
-  .identity { margin-bottom: var(--s-6); }
-  .identity__name { font-size: var(--d-24); }
   .identity__role { font-size: var(--t-15); }
 
-  .pairs__head { display: none; }
+  .pairs__head { margin-top: clamp(40px, 11vw, 64px); }
 
-  .pairs__mobile-head {
-    display: block;
-    margin-bottom: var(--s-3);
-    font-family: var(--font-id);
-    font-size: var(--t-13);
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--graphite);
-    line-height: 1.5;
+  /* One column: numeral, condition, then the mechanism dropped beneath it.
+     The progressive offset collapses — at this width it would only cost
+     measure — but the rule and the direction marker still carry the link. */
+  .pair {
+    grid-template-columns: 1fr;
+    grid-template-areas: "num" "fail" "fix";
+    row-gap: var(--s-2);
+    padding: clamp(26px, 8vw, 40px) 0;
   }
-  .pairs__mobile-head span { color: var(--signal); }
+  .pair__fail { font-size: clamp(24px, 7.4vw, 34px); max-width: none; }
+  .pair__fix { margin-left: 0; max-width: none; }
 
-  /* Each pair stays ONE unit: numeral, failure, then the mechanism indented
-     beneath it behind an arrow. Not two stacked lists. */
-  .pair { display: block; padding: var(--s-6) 0; }
-  .pair .pairs__num {
-    display: inline-block;
-    padding-left: 0;
-    font-size: var(--d-24);
-    margin-bottom: var(--s-1);
-  }
-  .pair__fail { font-size: var(--t-17); }
-  .pair__fix {
-    margin-top: var(--s-3);
-    padding-left: var(--s-6);
-    border-left: 2px solid var(--rule);
-    position: relative;
-  }
-  .pair__fix::before {
-    content: '↳';
-    position: absolute;
-    left: 0;
-    top: 0;
-    font-family: var(--font-id);
-    font-size: var(--t-15);
-    color: var(--signal);
-    transform: translateX(-2px);
-  }
-  .pair__fix p { font-size: var(--t-17); }
-  .pair__attr { margin-top: var(--s-2); }
+  .rail__figure { font-size: clamp(52px, 16vw, 78px); }
+  .rail__row { grid-template-columns: 1fr; gap: var(--s-1); }
 
-  .rail { grid-template-columns: 1fr; margin-top: var(--s-8); }
-  .rail__cell { padding: var(--s-4) 0; }
-  .rail__cell + .rail__cell {
-    border-left: none;
-    border-top: 1px solid var(--rule);
-    padding-left: 0;
-  }
+  .thesis { width: 100%; font-size: clamp(25px, 7.4vw, 36px); }
 
-  .evi { padding: var(--s-8) 0; }
-  .evi__title { font-size: var(--d-24); }
-  .bg-photo { width: 140px; }
+  .skill-grid { grid-template-columns: 1fr; }
 }
 
 /* Card link targets sized by capability, not width. */
 @media (pointer: coarse) {
-  .evi__title a,
-  .evi__more,
   .evidence__more a {
     display: inline-flex;
     align-items: center;

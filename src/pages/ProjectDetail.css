@@ -2,6 +2,18 @@
    report. Reading measure is preserved. */
 .pdetail { max-width: 46rem; }
 
+/* The prose keeps its 46rem measure; the screenshot breaks out of it and runs
+   wider, which is the whole point of the redesign. The negative margins centre
+   the breakout on the reading column — growing it only rightward pushed its
+   right edge 2px past the layout width at 1440, because 100vw counts the
+   scrollbar the grid does not. */
+.pdetail > picture {
+  display: block;
+  --break: min(64rem, calc(100vw - var(--gut) * 2));
+  width: var(--break);
+  margin-inline: calc((100% - var(--break)) / 2);
+}
+
 .pdetail-back {
   display: inline-block;
   font-family: var(--font-id);
@@ -25,8 +37,12 @@
 }
 
 .pdetail-img {
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: left top;
   width: 100%;
-  border: 1px solid var(--rule);
+  border: 1px solid var(--boundary);
+  background: #0b0b0d;
   margin-bottom: var(--s-8);
 }
 

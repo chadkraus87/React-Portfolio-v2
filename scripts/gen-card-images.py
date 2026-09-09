@@ -34,9 +34,11 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "src", "assets", "images")
 OUT = os.path.join(SRC, "cards")
 
-# 352 and 704 cover the smaller slots at 1x and 2x. 1216 covers the featured
-# band and hero, which reach full viewport width.
-WIDTHS = [352, 704, 1216]
+# 352 and 704 cover the smaller slots at 1x and 2x. 896 sits under the C2
+# half-width and hero slots, which measure 750-880px at 1x -- without it the
+# browser jumps straight to 1216 and overshoots by more than half. 1216 covers
+# the featured band and hero, which reach full viewport width.
+WIDTHS = [352, 704, 896, 1216]
 # Screenshots are detail-heavy; below ~55 the UI text in them starts to mush.
 QUALITY = 60
 

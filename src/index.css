@@ -1,30 +1,29 @@
 /* ---------------------------------------------------------------------------
-   Design tokens — the "quick reference" system.
+   Design tokens — C2 "Editorial Spatial".
 
-   Replaces the old forest-green / Bitter / IBM Plex world documented in
-   DESIGN.md. That system is retired, not layered over: moss and brass are gone,
-   as are the four ad-hoc breakpoints, the three radii and the single overloaded
-   shadow token. Change values here and the whole site follows.
+   Replaces the near-neutral paper/ink system documented in DESIGN.md. That
+   system is retired, not layered over. The ground is warmer, the type range is
+   far wider (13-32px becomes 12-138px), and depth now comes from full-bleed
+   imagery, scale contrast and deliberate voids rather than from a flat plane.
+   Change values here and the whole site follows.
 --------------------------------------------------------------------------- */
 :root {
-  /* Palette. Contrast measured, not assumed (white / paper):
-     ink 17.99 / 16.77 · graphite 6.27 / 5.85 · signal 5.98 / 5.58
-     verified 8.32 / 7.75 · boundary 3.68 / 3.43 (non-text 1.4.11)         */
-  --paper:    #F7F7F5;  /* page ground                                     */
+  /* Palette. Contrast measured against --paper, not assumed:
+     ink 16.27 · ink-2 6.36 · accent 7.44 · boundary 4.04 (non-text 1.4.11)
+     rule 1.45 -- DECORATIVE only, never a control's only edge.            */
+  --paper:    #F2EEE6;  /* warm page ground                                */
   --surface:  #FFFFFF;  /* raised content surfaces                         */
-  --inset:    #EFEFEC;  /* recessed band: table header, placeholder plate  */
-  --ink:      #14171A;  /* primary text                                    */
-  --graphite: #5A6169;  /* secondary text                                  */
-  --rule:     #D6D9DD;  /* DECORATIVE hairlines only — carries no contrast
-                           claim and must never be a control's only edge   */
-  --boundary: #7F868F;  /* the identifying edge of an interactive control  */
-  --signal:   #B23A16;  /* numerals, active nav, Live. Kept under ~5%      */
-  --verified: #1F4B99;  /* links and verification markers                  */
+  --inset:    #E8E2D6;  /* recessed band                                   */
+  --ink:      #14110D;  /* primary text, warm near-black                   */
+  --graphite: #5C554A;  /* secondary text                                  */
+  --rule:     #CFC7B8;  /* DECORATIVE hairlines only                       */
+  --boundary: #7C7364;  /* the identifying edge of an interactive control  */
+  --accent:   #8A2B18;  /* oxblood: numerals, Live, active nav. Under ~5%  */
+  --verified: #1F4B99;  /* links that leave the site                       */
 
-  /* Type — an intentionally limited optical ramp, NOT a modular scale.
-     Text register 13/15/17/19 (~x1.13); display 24/32/48 (x1.33 then x1.5).
-     The 19 -> 24 gap is the seam between reading and structure.
-     Nothing below 13px exists anywhere on the site.                        */
+  /* Type. Two registers: a reading ramp, and a display ramp that the old
+     system did not have at all. Nothing below 12px exists on the site.    */
+  --t-12: 0.75rem;
   --t-13: 0.8125rem;
   --t-15: 0.9375rem;
   --t-17: 1.0625rem;
@@ -32,16 +31,25 @@
   --d-24: 1.5rem;
   --d-32: 2rem;
   --d-48: 3rem;
+  /* Fluid display sizes. These carry the redesign. */
+  --d-name:  clamp(52px, 9.6vw, 138px);   /* the hero identity            */
+  --d-major: clamp(38px, 5.4vw, 82px);    /* featured project titles      */
+  --d-mid:   clamp(34px, 4.6vw, 66px);    /* standard project titles      */
+  --d-page:  clamp(38px, 5vw, 72px);      /* page titles                  */
 
-  --font-ui:    'Archivo', system-ui, sans-serif;      /* structure, UI     */
-  --font-prose: 'Literata', Georgia, serif;            /* long-form only    */
-  --font-id:    'Martian Mono', ui-monospace, monospace;/* identifiers only */
+  --font-ui:    'Archivo', system-ui, sans-serif;
+  --font-prose: 'Literata', Georgia, serif;
+  --font-id:    'Martian Mono', ui-monospace, monospace;
 
   /* 4px spacing base */
   --s-1: 4px;  --s-2: 8px;  --s-3: 12px;  --s-4: 16px;
   --s-6: 24px; --s-8: 32px; --s-12: 48px; --s-16: 64px; --s-24: 96px;
 
-  --container: 1200px;
+  /* The gutter is now fluid: edge-bleeds are measured against it. */
+  --gut: clamp(20px, 4vw, 72px);
+  --container: 1560px;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -50,7 +58,7 @@
    the old 10/8/6/999px radii and the single shadow doing eight jobs. */
 *, *::before, *::after { border-radius: 0; box-shadow: none; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: clip; }
 
 body {
   font-family: var(--font-ui);
@@ -58,6 +66,7 @@ body {
   color: var(--ink);
   font-size: var(--t-17);
   line-height: 1.55;
+  overflow-x: clip;      /* deliberate edge-crops must never scroll the page */
   font-variant-numeric: tabular-nums;
   -webkit-font-smoothing: antialiased;
 }
@@ -71,7 +80,7 @@ img { max-width: 100%; height: auto; display: block; }
 
 button { font-family: inherit; cursor: pointer; }
 
-:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 /* Layout helpers ---------------------------------------------------------- */
 
@@ -86,8 +95,14 @@ button { font-family: inherit; cursor: pointer; }
 .container {
   max-width: var(--container);
   margin: 0 auto;
-  padding: 0 var(--s-6);
+  padding: 0 var(--gut);
 }
+
+/* Opt an element out of the container so it reaches the viewport edge.
+   This is the mechanism the whole project system is built on. */
+.bleed-r { margin-right: calc(var(--gut) * -1); }
+.bleed-l { margin-left: calc(var(--gut) * -1); }
+.bleed-x { margin-left: calc(var(--gut) * -1); margin-right: calc(var(--gut) * -1); }
 
 .page { padding: var(--s-12) 0 var(--s-24); }
 
@@ -129,7 +144,7 @@ main:focus { outline: none; }
 /* Section rule — the site's one structural divider. */
 .section-rule {
   border-top: 2px solid var(--ink);
-  margin-top: var(--s-16);
+  margin-top: var(--s-24);
   padding-top: var(--s-3);
   font-size: inherit;
   font-weight: 400;
@@ -155,8 +170,9 @@ main:focus { outline: none; }
 }
 
 .page-title {
-  font-size: var(--d-32);
-  letter-spacing: -0.015em;
+  font-size: var(--d-page);
+  letter-spacing: -0.035em;
+  line-height: .95;
   margin-bottom: var(--s-6);
 }
 
@@ -184,12 +200,11 @@ main:focus { outline: none; }
   padding: var(--s-3) var(--s-4);
   border: 1px solid var(--boundary);   /* clears 3:1 — never --rule here */
   text-decoration: none;
-  transition: background 0.12s linear, color 0.12s linear, border-color 0.12s linear;
 }
 .btn:hover { text-decoration: none; }
 
 .btn-primary { background: var(--ink); color: #fff; border-color: var(--ink); }
-.btn-primary:hover { background: var(--signal); border-color: var(--signal); }
+.btn-primary:hover { background: var(--accent); border-color: var(--accent); }
 
 .btn-outline { background: transparent; color: var(--ink); }
 .btn-outline:hover { background: var(--surface); border-color: var(--ink); }
@@ -201,7 +216,25 @@ main:focus { outline: none; }
   .btn { min-height: 44px; }
 }
 
-/* Reduced motion ---------------------------------------------------------- */
+/* Motion ------------------------------------------------------------------
+   MOTION_INTENSITY 5. Every transition and the reveal's hidden start state are
+   declared ONLY inside the positive guard, so a reduced-motion visitor never
+   receives a rule that has to be cancelled. Nothing begins hidden for them. */
+@media (prefers-reduced-motion: no-preference) {
+  .btn { transition: background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease); }
+  .btn:active { transform: translateY(1px); }
+
+  /* Scroll reveal. Driven by one IntersectionObserver in src/lib/reveal.js. */
+  .rev { opacity: 0; transform: translateY(20px); }
+  .rev.is-in {
+    opacity: 1;
+    transform: none;
+    transition: opacity .7s var(--ease), transform .7s var(--ease);
+    transition-delay: calc(var(--i, 0) * 70ms);
+  }
+}
+
+/* Belt and braces. Nothing above depends on this to be correct. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }

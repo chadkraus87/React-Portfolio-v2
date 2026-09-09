@@ -1,151 +1,167 @@
-/* Portfolio card — the same evidence language as the homepage, at index
-   density. Rule-bordered, flat, square. No shadows, no radii. */
-.pcard {
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  display: flex;
-  flex-direction: column;
-  transition: border-color 0.12s linear;
-}
-.pcard:hover { border-color: var(--boundary); }
+/* C2 project footprints.
+   Every footprint shares one DOM order (meta > title > shot > text > actions)
+   and differs only in grid placement. Slack collects in a trailing row so the
+   text column groups tightly instead of spreading against a taller image. */
 
-/* <picture> only carries the AVIF <source>; it must not become the flex item
-   in the image's place. */
-.pcard picture { display: contents; }
+.pcard { display: grid; gap: clamp(14px, 1.8vw, 26px); }
 
-.pcard-img {
-  width: 100%;
-  aspect-ratio: 16 / 9;   /* reserves space — keeps CLS at zero */
-  object-fit: cover;
-  object-position: top;
-  border-bottom: 1px solid var(--rule);
-}
+.pcard-meta   { grid-area: meta; display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s-2) var(--s-4); }
+.pcard-title  { grid-area: title; font-weight: 700; letter-spacing: -0.035em; line-height: 0.94; }
+.pcard-shot   { grid-area: shot; border: 1px solid var(--boundary); background: #0b0b0d; overflow: hidden; }
+.pcard-text   { grid-area: text; display: grid; gap: var(--s-3); }
+.pcard-actions{ grid-area: more; display: flex; flex-wrap: wrap; align-items: center;
+                gap: var(--s-3); justify-self: start; align-self: start; }
 
-.pcard-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--inset);
-  font-family: var(--font-id);
-  font-size: var(--t-13);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--graphite);
-}
+.pcard-idx      { font-family: var(--font-id); font-size: var(--t-13); color: var(--accent); letter-spacing: 0.06em; }
+.pcard-category { font-family: var(--font-id); font-size: var(--t-12); letter-spacing: 0.1em;
+                  text-transform: uppercase; color: var(--graphite); }
+.pcard-state    { font-family: var(--font-id); font-size: var(--t-12); letter-spacing: 0.1em;
+                  text-transform: uppercase; margin-left: auto; display: inline-flex;
+                  align-items: baseline; gap: var(--s-2); flex-shrink: 0; }
+.pcard-status--live { color: var(--accent); }
+.pcard-status--in-progress,
+.pcard-status--private { color: var(--graphite); }
+.pcard-updated  { color: var(--graphite); white-space: nowrap; }
 
-.pcard-body {
-  padding: var(--s-4) var(--s-4) var(--s-6);
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-2);
-  flex: 1;
-}
+.pcard-title a { color: var(--ink); text-decoration: none; border-bottom: 3px solid transparent; }
+.pcard-title a:hover { border-bottom-color: var(--accent); text-decoration: none; }
 
-.pcard-meta {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--s-2);
-  flex-wrap: wrap;
-  padding-bottom: var(--s-2);
-  border-bottom: 1px solid var(--rule);
-}
+.pcard-tagline { font-family: var(--font-id); font-size: 12.5px; line-height: 1.6; color: var(--graphite); }
+.pcard-desc    { font-family: var(--font-prose); font-size: 16.5px; line-height: 1.62; max-width: 58ch; }
 
-.pcard-category {
-  font-family: var(--font-id);
-  font-size: var(--t-13);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--graphite);
-}
-
-.pcard-title { font-size: var(--d-24); line-height: 1.2; }
-.pcard-title a { color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--verified); }
-.pcard-title a:hover { color: var(--verified); text-decoration: none; }
-
-/* The scannable differentiator strip — mono because it reads as a label. */
-.pcard-tagline {
-  font-family: var(--font-id);
-  font-size: var(--t-13);
-  line-height: 1.5;
-  color: var(--graphite);
-}
-
-.pcard-desc {
-  font-family: var(--font-prose);
-  font-size: var(--t-15);
-  line-height: 1.6;
-  color: var(--ink);
+.pcard-stack { list-style: none; display: flex; flex-wrap: wrap; gap: var(--s-1) var(--s-2); }
+.pcard-stack li {
+  font-family: var(--font-id); font-size: var(--t-12); color: var(--graphite);
+  border: 1px solid var(--rule); padding: 2px var(--s-2);
 }
 
 .pcard-more-link {
-  font-family: var(--font-id);
-  font-size: var(--t-13);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--verified);
-  align-self: flex-start;
+  font-family: var(--font-id); font-size: var(--t-12); letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink); text-decoration: none;
+  border-bottom: 1px solid var(--boundary); padding-bottom: 2px;
+}
+.pcard-more-link:hover { color: var(--accent); border-bottom-color: var(--accent); text-decoration: none; }
+
+.pcard-shot img { width: 100%; display: block; }
+.pcard-placeholder {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--inset); border-color: var(--rule);
+  font-family: var(--font-id); font-size: var(--t-13); letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--graphite); min-height: 220px;
 }
 
-.pcard-stack {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-1) var(--s-2);
+/* F1 — featured band. Full-bleed image, then a structural band beneath it.
+   No card, no notch, no scrim: the band is the composition. */
+.pcard--band {
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  grid-template-areas: "shot shot" "title meta" "text more";
+  column-gap: clamp(24px, 4vw, 72px);
+  row-gap: 0;
 }
-.pcard-stack li {
-  font-family: var(--font-id);
-  font-size: var(--t-13);
-  color: var(--graphite);
-  border: 1px solid var(--rule);
-  padding: 2px var(--s-2);
+.pcard--band .pcard-shot { margin: 0 calc(var(--gut) * -1); border-left: 0; border-right: 0; }
+.pcard--band .pcard-shot img { aspect-ratio: 21 / 9; object-fit: cover; object-position: center top; }
+.pcard--band .pcard-title { font-size: var(--d-major); padding-top: clamp(16px, 2vw, 30px); }
+.pcard--band .pcard-meta { align-self: end; justify-content: flex-end; padding-bottom: 10px; }
+.pcard--band .pcard-meta .pcard-state { margin-left: 0; }
+.pcard--band .pcard-text { padding-top: clamp(12px, 1.6vw, 22px); border-top: 1px solid var(--rule); margin-top: 14px; }
+/* Its own measure, set deliberately rather than inherited from the column. */
+.pcard--band .pcard-desc { max-width: 60ch; }
+.pcard--band .pcard-actions { align-self: start; margin-top: calc(14px + clamp(12px, 1.6vw, 22px)); }
+
+/* F2 — text left, image right bleeding through the gutter */
+.pcard--right {
+  grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+  grid-template-areas: "meta shot" "title shot" "text shot" "more shot" ". shot";
+  grid-template-rows: auto auto auto auto 1fr;
+  column-gap: clamp(24px, 4vw, 64px);
+  row-gap: var(--s-3);
+}
+.pcard--right .pcard-title { font-size: var(--d-mid); }
+.pcard--right .pcard-shot { margin-right: calc(var(--gut) * -1); border-right: 0; align-self: start; }
+.pcard--right .pcard-shot img { aspect-ratio: 16 / 10; object-fit: cover; object-position: left top; }
+
+/* F3 — mirror: image left bleeding through the gutter, text right, dropped */
+.pcard--left {
+  grid-template-columns: minmax(0, 1.14fr) minmax(0, 0.86fr);
+  grid-template-areas: "shot meta" "shot title" "shot text" "shot more" "shot .";
+  grid-template-rows: auto auto auto auto 1fr;
+  column-gap: clamp(24px, 4vw, 64px);
+  row-gap: var(--s-3);
+}
+.pcard--left .pcard-title { font-size: var(--d-mid); }
+.pcard--left .pcard-shot { margin-left: calc(var(--gut) * -1); border-left: 0; align-self: start; }
+.pcard--left .pcard-shot img { aspect-ratio: 16 / 10; object-fit: cover; object-position: left top; }
+.pcard--left .pcard-meta { padding-top: clamp(20px, 4vw, 64px); }
+
+/* F4 — minor: big type, smaller image, offset low */
+.pcard--minor {
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+  grid-template-areas: "meta shot" "title shot" "text shot" "more shot" ". shot";
+  grid-template-rows: auto auto auto auto 1fr;
+  column-gap: clamp(24px, 4vw, 60px);
+  row-gap: var(--s-3);
+}
+.pcard--minor .pcard-title { font-size: clamp(34px, 5vw, 74px); }
+.pcard--minor .pcard-shot { align-self: end; }
+.pcard--minor .pcard-shot img { aspect-ratio: 4 / 3; object-fit: cover; object-position: left top; }
+
+/* Coda — used once, to close the sequence. A wide letterbox, deliberately not
+   a reusable family. See DESIGN notes: intentional asymmetry, not an accident. */
+.pcard--coda {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas: "meta meta" "title text" "shot shot" "more more";
+  column-gap: clamp(24px, 4vw, 64px);
+  row-gap: var(--s-4);
+}
+.pcard--coda .pcard-title { font-size: clamp(34px, 4.8vw, 70px); }
+.pcard--coda .pcard-shot { margin: 0 calc(var(--gut) * -1); border-left: 0; border-right: 0; }
+.pcard--coda .pcard-shot img { aspect-ratio: 24 / 9; object-fit: cover; object-position: center; }
+.pcard--coda .pcard-text { align-self: end; }
+
+/* ── Tablet: every footprint collapses to the SAME single column ───────── */
+@media (max-width: 980px) {
+  .pcard--band, .pcard--right, .pcard--left, .pcard--minor, .pcard--coda {
+    grid-template-columns: 1fr;
+    grid-template-areas: "meta" "title" "shot" "text" "more";
+    grid-template-rows: none;
+    row-gap: var(--s-4);
+  }
+  .pcard--band .pcard-meta,
+  .pcard--left .pcard-meta { padding: 0; justify-content: flex-start; }
+  .pcard--band .pcard-title { padding-top: 0; }
+  .pcard--band .pcard-text { border-top: 0; margin-top: 0; padding-top: 0; }
+  .pcard--band .pcard-actions { margin-top: 0; }
+  .pcard--band .pcard-shot,
+  .pcard--right .pcard-shot,
+  .pcard--left .pcard-shot,
+  .pcard--minor .pcard-shot,
+  .pcard--coda .pcard-shot {
+    margin: 0 calc(var(--gut) * -1);
+    border-left: 0; border-right: 0;
+  }
 }
 
-/* auto top margin pins the buttons to the bottom of the card, so cards in a
-   stretched grid row align their actions regardless of text length. */
-.pcard-actions {
-  display: flex;
-  gap: var(--s-2);
-  flex-wrap: wrap;
-  margin-top: auto;
-  padding-top: var(--s-3);
+/* ── Mobile: full-bleed imagery, rhythm carried by aspect ratio ────────── */
+@media (max-width: 620px) {
+  .pcard-title { font-size: clamp(32px, 10.5vw, 50px) !important; }
+  .pcard-desc { font-size: var(--t-17); }
+  .pcard-state { margin-left: 0; width: 100%; }
+  .pcard--band  .pcard-shot img { aspect-ratio: 16 / 10; }
+  .pcard--right .pcard-shot img { aspect-ratio: 5 / 4; }
+  .pcard--left  .pcard-shot img { aspect-ratio: 3 / 2; }
+  .pcard--minor .pcard-shot img { aspect-ratio: 1 / 1; }
+  .pcard--coda  .pcard-shot img { aspect-ratio: 16 / 9; }
 }
-
-/* Status + last-updated --------------------------------------------------- */
-.pcard-state {
-  display: inline-flex;
-  align-items: baseline;
-  gap: var(--s-2);
-  flex-shrink: 0;
-}
-
-.pcard-updated {
-  font-family: var(--font-id);
-  font-size: var(--t-15);
-  color: var(--graphite);
-  white-space: nowrap;
-}
-
-/* Live reads as available now; the others stay quieter so a private or
-   in-flight project doesn't shout louder than a shipped one. */
-.pcard-status {
-  font-family: var(--font-id);
-  font-size: var(--t-15);
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-.pcard-status--live { color: var(--signal); }
-.pcard-status--in-progress { color: var(--graphite); }
-.pcard-status--private { color: var(--graphite); }
 
 /* Touch targets by capability, not viewport width. */
-@media (max-width: 640px), (pointer: coarse) {
+@media (pointer: coarse) {
   .pcard-title a,
-  .pcard-more-link {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-  }
+  .pcard-more-link { display: inline-flex; align-items: center; min-height: 44px; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pcard-shot img { transition: transform .7s var(--ease); }
+  .pcard:hover .pcard-shot img { transform: scale(1.018); }
+  .pcard-title a,
+  .pcard-more-link { transition: color .25s var(--ease), border-color .25s var(--ease); }
 }
