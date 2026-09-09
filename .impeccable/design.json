@@ -1,194 +1,434 @@
 {
-  "schemaVersion": 2,
-  "generatedAt": "2026-09-08T00:00:00Z",
-  "title": "Design System: Chad Kraus Portfolio",
-  "extensions": {
-    "colorMeta": {
-      "paper": {
-        "role": "neutral",
-        "displayName": "Paper",
-        "canonical": "#F7F7F5",
-        "tonalRamp": ["#1c1c1a", "#333330", "#4f4f4b", "#6f6f6a", "#94948e", "#bcbcb6", "#dedeD9", "#f7f7f5"]
-      },
-      "surface": {
-        "role": "neutral",
-        "displayName": "Surface",
-        "canonical": "#FFFFFF",
-        "tonalRamp": ["#1a1a1a", "#333333", "#4d4d4d", "#737373", "#999999", "#c4c4c4", "#e8e8e8", "#ffffff"]
-      },
-      "inset": {
-        "role": "neutral",
-        "displayName": "Inset",
-        "canonical": "#EFEFEC",
-        "tonalRamp": ["#1b1b19", "#31312e", "#4c4c48", "#6b6b66", "#909089", "#b7b7b0", "#d6d6d1", "#efefec"]
-      },
-      "ink": {
-        "role": "primary",
-        "displayName": "Ink",
-        "canonical": "#14171A",
-        "tonalRamp": ["#08090a", "#0e1012", "#14171a", "#252a30", "#3b434c", "#66707c", "#9aa3ad", "#d5dae0"]
-      },
-      "graphite": {
-        "role": "secondary",
-        "displayName": "Graphite",
-        "canonical": "#5A6169",
-        "tonalRamp": ["#131518", "#22262a", "#343a40", "#474e56", "#5a6169", "#828a93", "#adb4bb", "#dde1e5"]
-      },
-      "rule": {
-        "role": "neutral",
-        "displayName": "Rule (decorative only)",
-        "canonical": "#D6D9DD",
-        "tonalRamp": ["#1a1c1e", "#2f3235", "#494d52", "#696e74", "#909599", "#b7bbbf", "#d6d9dd", "#f0f1f3"]
-      },
-      "boundary": {
-        "role": "neutral",
-        "displayName": "Boundary (interactive edge)",
-        "canonical": "#7F868F",
-        "tonalRamp": ["#17191b", "#282c30", "#3c4147", "#535a61", "#6c737b", "#7f868f", "#a9aeb5", "#d9dcdf"]
-      },
-      "signal": {
-        "role": "primary",
-        "displayName": "Signal",
-        "canonical": "#B23A16",
-        "tonalRamp": ["#210b04", "#3c1408", "#5a1e0c", "#7c2a10", "#b23a16", "#d75f39", "#e79170", "#f6d8cc"]
-      },
-      "verified": {
-        "role": "tertiary",
-        "displayName": "Verified",
-        "canonical": "#1F4B99",
-        "tonalRamp": ["#060f1f", "#0b1c38", "#112b54", "#173b73", "#1f4b99", "#3f6fc0", "#7c9ddb", "#ccdaf0"]
-      }
-    },
-    "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "Homepage name, page titles, evidence entry titles. Archivo 700 at 32px." },
-      "title": { "displayName": "Title", "purpose": "Card titles, note list entries, and the homepage name below 640px. Archivo 700 at 24px." },
-      "emphasis": { "displayName": "Emphasis", "purpose": "The mechanism statements in the paired table, and project summaries. Archivo 600 at 19px." },
-      "body": { "displayName": "Body", "purpose": "Every sentence a visitor reads. Literata 400 at 17px. Never Archivo, never mono." },
-      "small": { "displayName": "Small", "purpose": "Field values, captions, rail values, status and date. Literata 400 at 15px." },
-      "label": { "displayName": "Label", "purpose": "Identifiers only: column headers, field headers, attributions, section markers, nav links, dates. Martian Mono 500 at 13px uppercase. Never prose." }
-    },
-    "shadows": [],
-    "motion": [
-      { "name": "state-transition", "value": "0.12s linear", "purpose": "The site's only duration. Background, colour and border-color on buttons, nav links, filter chips, cards and contact cards." },
-      { "name": "reduced-motion", "value": "transition: none !important; animation: none !important", "purpose": "Under prefers-reduced-motion all transitions, animations and smooth scrolling are disabled globally." }
-    ],
-    "breakpoints": [
-      { "name": "single-column", "value": "640px" },
-      { "name": "resume-handoff", "value": "700px" },
-      { "name": "six-column", "value": "1023px" },
-      { "name": "coarse-pointer", "value": "(pointer: coarse)" }
+ "schemaVersion": 2,
+ "generatedAt": "2026-09-08T00:00:00Z",
+ "title": "Design System: Chad Kraus Portfolio",
+ "extensions": {
+  "colorMeta": {
+   "paper": {
+    "role": "neutral",
+    "displayName": "Paper",
+    "canonical": "#F2EEE6",
+    "tonalRamp": [
+     "#0d0b07",
+     "#221c11",
+     "#3c331f",
+     "#5e4f31",
+     "#8d7649",
+     "#b69f72",
+     "#d5c8ae",
+     "#f2eee6"
     ]
+   },
+   "surface": {
+    "role": "neutral",
+    "displayName": "Surface",
+    "canonical": "#FFFFFF",
+    "tonalRamp": [
+     "#0a0a0a",
+     "#1a1a1a",
+     "#2e2e2e",
+     "#474747",
+     "#6b6b6b",
+     "#949494",
+     "#c2c2c2",
+     "#ffffff"
+    ]
+   },
+   "inset": {
+    "role": "neutral",
+    "displayName": "Inset",
+    "canonical": "#E8E2D6",
+    "tonalRamp": [
+     "#0d0b07",
+     "#211c12",
+     "#3b3221",
+     "#5b4e33",
+     "#89754d",
+     "#b29e76",
+     "#d3c8b1",
+     "#e8e2d6"
+    ]
+   },
+   "ink": {
+    "role": "primary",
+    "displayName": "Ink",
+    "canonical": "#14110D",
+    "tonalRamp": [
+     "#14110d",
+     "#1f1a14",
+     "#382f24",
+     "#574a38",
+     "#826e54",
+     "#ab977d",
+     "#cfc4b5",
+     "#f3f0ec"
+    ]
+   },
+   "graphite": {
+    "role": "secondary",
+    "displayName": "Graphite",
+    "canonical": "#5C554A",
+    "tonalRamp": [
+     "#0b0a09",
+     "#1c1a17",
+     "#332f29",
+     "#5c554a",
+     "#776e5f",
+     "#a09688",
+     "#c8c3bb",
+     "#f1f0ee"
+    ]
+   },
+   "rule": {
+    "role": "neutral",
+    "displayName": "Rule (decorative only)",
+    "canonical": "#CFC7B8",
+    "tonalRamp": [
+     "#0c0b08",
+     "#1e1b15",
+     "#373125",
+     "#554c3a",
+     "#807156",
+     "#a99a7f",
+     "#cfc7b8",
+     "#f3f1ed"
+    ]
+   },
+   "boundary": {
+    "role": "neutral",
+    "displayName": "Boundary (interactive edge)",
+    "canonical": "#7C7364",
+    "tonalRamp": [
+     "#0b0a09",
+     "#1c1a17",
+     "#332f29",
+     "#4f4940",
+     "#7c7364",
+     "#9f9788",
+     "#c8c3bb",
+     "#f1f0ee"
+    ]
+   },
+   "accent": {
+    "role": "primary",
+    "displayName": "Accent",
+    "canonical": "#8A2B18",
+    "tonalRamp": [
+     "#110503",
+     "#2b0e08",
+     "#4e180e",
+     "#8a2b18",
+     "#b63920",
+     "#df6249",
+     "#eda597",
+     "#fae9e5"
+    ]
+   },
+   "verified": {
+    "role": "tertiary",
+    "displayName": "Verified",
+    "canonical": "#1F4B99",
+    "tonalRamp": [
+     "#030811",
+     "#09152a",
+     "#0f254c",
+     "#183a77",
+     "#1f4b99",
+     "#4d80db",
+     "#99b6ea",
+     "#e6edfa"
+    ]
+   }
   },
-  "components": [
-    {
-      "name": "Paired Reasoning Table",
-      "kind": "custom",
-      "refersTo": null,
-      "description": "The homepage's signature element and the site's whole argument: a failure pattern from operations beside the mechanism built so it cannot recur. Each row crosses both columns so the pair reads horizontally.",
-      "html": "<div class=\"ds-pairs\"><div class=\"ds-pairs-head\"><span></span><span class=\"ds-pairs-label\">What fails in the field</span><span class=\"ds-pairs-label\">What I make structurally impossible</span></div><div class=\"ds-pair\"><span class=\"ds-pairs-num\">01</span><p class=\"ds-pair-fail\">A check that lived in the client instead of the database.</p><div class=\"ds-pair-fix\"><p>Row-level security in the database instead of checks in the client.</p><span class=\"ds-pair-attr\">PetCenza</span></div></div></div>",
-      "css": ".ds-pairs { border-top: 2px solid #14171A; } .ds-pairs-head, .ds-pair { display: grid; grid-template-columns: 64px minmax(0,5fr) minmax(0,7fr); gap: 24px; align-items: start; } .ds-pairs-head { background: #EFEFEC; border-bottom: 1px solid #D6D9DD; padding: 12px 0; } .ds-pairs-label { font-family: 'Martian Mono', ui-monospace, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: #5A6169; } .ds-pair { padding: 20px 0; border-bottom: 1px solid #D6D9DD; } .ds-pairs-num { font-family: 'Martian Mono', ui-monospace, monospace; font-size: 24px; font-weight: 500; color: #B23A16; line-height: 1.1; padding-left: 12px; } .ds-pair-fail { font-family: Literata, Georgia, serif; font-size: 17px; color: #5A6169; line-height: 1.5; margin: 0; } .ds-pair-fix p { font-family: Archivo, system-ui, sans-serif; font-weight: 600; font-size: 19px; line-height: 1.4; color: #14171A; margin: 0; } .ds-pair-attr { display: block; margin-top: 8px; font-family: 'Martian Mono', ui-monospace, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #5A6169; }"
-    },
-    {
-      "name": "Evidence Rail",
-      "kind": "custom",
-      "refersTo": null,
-      "description": "Gives operations concrete weight without giving it screenshot real estate. The first cell is emphasised with the one authoritative figure; the rest are quiet label/value pairs.",
-      "html": "<div class=\"ds-rail\"><div class=\"ds-rail-cell\"><span class=\"ds-rail-figure\">2,000+</span><p class=\"ds-rail-caption\">End-of-life firmware devices identified in a business case that a customer upgrade program was built around.</p></div><div class=\"ds-rail-cell\"><span class=\"ds-label\">Escalation scope</span><span class=\"ds-rail-value\">Tier 2/3 across networking, AV hardware, APIs, identity systems and SaaS platform behavior.</span></div></div>",
-      "css": ".ds-rail { display: grid; grid-template-columns: 1.5fr 1.5fr; border-top: 1px solid #D6D9DD; border-bottom: 1px solid #D6D9DD; } .ds-rail-cell { padding: 24px 24px 24px 0; } .ds-rail-cell + .ds-rail-cell { border-left: 1px solid #D6D9DD; padding-left: 24px; } .ds-rail-figure { display: block; font-family: Archivo, system-ui, sans-serif; font-size: 32px; font-weight: 700; color: #B23A16; line-height: 1.05; letter-spacing: -0.01em; } .ds-rail-caption { margin: 8px 0 0; font-family: Literata, Georgia, serif; font-size: 15px; line-height: 1.5; color: #5A6169; max-width: 40ch; } .ds-label { display: block; font-family: 'Martian Mono', ui-monospace, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: #5A6169; } .ds-rail-value { display: block; margin-top: 8px; font-family: Literata, Georgia, serif; font-size: 15px; line-height: 1.5; color: #14171A; }"
-    },
-    {
-      "name": "Evidence Entry Fields",
-      "kind": "custom",
-      "refersTo": null,
-      "description": "Condition / Action / Verify beneath each project. Mono header over a hairline, serif value. Status and date sit at 15px, never in a badge.",
-      "html": "<div><span class=\"ds-evi-num\">01</span><h3 class=\"ds-evi-title\"><a href=\"#\">PetCenza</a></h3><p class=\"ds-evi-state\"><span class=\"ds-state-live\">Live</span> <span class=\"ds-state-date\">Aug 2026</span></p><dl class=\"ds-fields\"><dt>Condition</dt><dd>A check that lived in the client instead of the database.</dd><dt>Action</dt><dd>Row-level security in the database instead of checks in the client.</dd></dl></div>",
-      "css": ".ds-evi-num { font-family: 'Martian Mono', ui-monospace, monospace; font-size: 24px; font-weight: 500; color: #B23A16; line-height: 1; } .ds-evi-title { font-family: Archivo, system-ui, sans-serif; font-size: 32px; font-weight: 700; line-height: 1.15; margin: 8px 0 0; } .ds-evi-title a { color: #14171A; text-decoration: none; border-bottom: 2px solid #1F4B99; } .ds-evi-title a:hover { color: #1F4B99; } .ds-evi-state { display: flex; align-items: baseline; gap: 8px; margin: 8px 0 0; } .ds-state-live { font-family: 'Martian Mono', ui-monospace, monospace; font-size: 15px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: #B23A16; } .ds-state-date { font-family: 'Martian Mono', ui-monospace, monospace; font-size: 15px; color: #5A6169; } .ds-fields { margin-top: 24px; } .ds-fields dt { font-family: 'Martian Mono', ui-monospace, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: #5A6169; padding-top: 12px; border-top: 1px solid #D6D9DD; } .ds-fields dd { font-family: Literata, Georgia, serif; font-size: 15px; line-height: 1.6; color: #14171A; margin: 4px 0 16px; }"
-    },
-    {
-      "name": "Primary Button",
-      "kind": "button",
-      "refersTo": "button-primary",
-      "description": "Ink fill that hovers to Signal. Square, bounded, no shadow.",
-      "html": "<a class=\"ds-btn ds-btn-primary\">View resume</a>",
-      "css": ".ds-btn { display: inline-flex; align-items: center; gap: 8px; font-family: Archivo, system-ui, sans-serif; font-weight: 600; font-size: 15px; padding: 12px 16px; border: 1px solid #7F868F; text-decoration: none; cursor: pointer; transition: background .12s linear, color .12s linear, border-color .12s linear; } .ds-btn-primary { background: #14171A; color: #fff; border-color: #14171A; } .ds-btn-primary:hover { background: #B23A16; border-color: #B23A16; } .ds-btn:focus-visible { outline: 2px solid #B23A16; outline-offset: 2px; }"
-    },
-    {
-      "name": "Filter Chip",
-      "kind": "chip",
-      "refersTo": "filter-chip",
-      "description": "Portfolio category filter. Bounded with Boundary so the resting edge clears 3:1; the active state takes an ink fill. aria-pressed carries the state to assistive tech.",
-      "html": "<div style=\"display:flex;gap:8px;flex-wrap:wrap\"><button class=\"ds-filter is-active\">All</button><button class=\"ds-filter\">AI &amp; Claude Code</button><button class=\"ds-filter\">Infrastructure &amp; Ops</button></div>",
-      "css": ".ds-filter { font-family: 'Martian Mono', ui-monospace, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: #14171A; background: transparent; border: 1px solid #7F868F; padding: 8px 12px; cursor: pointer; transition: background .12s linear, border-color .12s linear, color .12s linear; } .ds-filter:hover { border-color: #14171A; } .ds-filter.is-active { background: #14171A; border-color: #14171A; color: #fff; } .ds-filter:focus-visible { outline: 2px solid #B23A16; outline-offset: 2px; }"
-    },
-    {
-      "name": "Text Field",
-      "kind": "input",
-      "refersTo": "input",
-      "description": "Paper fill so the field recedes into the page. Boundary edge clears the 3:1 non-text minimum. Focus shifts the border to ink AND adds a Signal ring; invalid takes a 2px Signal border plus a serif message.",
-      "html": "<div class=\"ds-field\"><label for=\"ds-email\">Your email</label><input id=\"ds-email\" type=\"email\" /></div>",
-      "css": ".ds-field { max-width: 320px; } .ds-field label { display: block; font-family: 'Martian Mono', ui-monospace, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: #5A6169; margin-bottom: 8px; } .ds-field input { width: 100%; font-family: Archivo, system-ui, sans-serif; font-size: 15px; color: #14171A; background: #F7F7F5; border: 1px solid #7F868F; padding: 12px; transition: border-color .12s linear; } .ds-field input:focus { outline: none; border-color: #14171A; } .ds-field input:focus-visible { outline: 2px solid #B23A16; outline-offset: 1px; } .ds-field input[aria-invalid='true'] { border-color: #B23A16; border-width: 2px; }"
-    },
-    {
-      "name": "Navigation Bar",
-      "kind": "nav",
-      "refersTo": "nav-link",
-      "description": "Surface bar with a hairline base. Uppercase mono links; the active one takes a solid Signal plane. Collapses to a 44x44 toggle below 640px with Escape, outside-press and focus return.",
-      "html": "<header class=\"ds-nav\"><a class=\"ds-nav-brand\">Chadwick (Chad) Kraus</a><nav class=\"ds-nav-links\"><a class=\"ds-nav-link is-active\">About</a><a class=\"ds-nav-link\">Portfolio</a><a class=\"ds-nav-link\">Notes</a><a class=\"ds-nav-link\">Resume</a><a class=\"ds-nav-link\">Contact</a></nav></header>",
-      "css": ".ds-nav { background: #fff; border-bottom: 1px solid #D6D9DD; display: flex; align-items: center; justify-content: space-between; min-height: 60px; padding: 0 24px; gap: 24px; } .ds-nav-brand { font-family: Archivo, system-ui, sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.06em; text-transform: uppercase; color: #14171A; text-decoration: none; } .ds-nav-links { display: flex; gap: 4px; } .ds-nav-link { font-family: Archivo, system-ui, sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #5A6169; text-decoration: none; padding: 8px 12px; cursor: pointer; transition: background .12s linear, color .12s linear; } .ds-nav-link:hover { color: #14171A; } .ds-nav-link.is-active { background: #B23A16; color: #fff; } .ds-nav-link:focus-visible { outline: 2px solid #B23A16; outline-offset: 2px; }"
-    },
-    {
-      "name": "Project Card",
-      "kind": "card",
-      "refersTo": "card",
-      "description": "The portfolio grid unit. Square, hairline-bordered, no shadow; the border shifts to Boundary on hover. Actions pin to the bottom so grid rows align.",
-      "html": "<article class=\"ds-card\"><div class=\"ds-card-img\"></div><div class=\"ds-card-body\"><div class=\"ds-card-meta\"><span class=\"ds-card-cat\">ai &amp; claude code</span><span class=\"ds-card-state\">Live · Aug 2026</span></div><h3 class=\"ds-card-title\"><a href=\"#\">PetCenza</a></h3><p class=\"ds-card-tag\">Offline-first · sharing enforced in Postgres</p></div></article>",
-      "css": ".ds-card { background: #fff; border: 1px solid #D6D9DD; display: flex; flex-direction: column; max-width: 368px; transition: border-color .12s linear; } .ds-card:hover { border-color: #7F868F; } .ds-card-img { width: 100%; aspect-ratio: 16/9; background: #EFEFEC; border-bottom: 1px solid #D6D9DD; } .ds-card-body { padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 8px; } .ds-card-meta { display: flex; justify-content: space-between; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid #D6D9DD; } .ds-card-cat, .ds-card-state { font-family: 'Martian Mono', ui-monospace, monospace; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: #5A6169; } .ds-card-title { font-family: Archivo, system-ui, sans-serif; font-size: 24px; font-weight: 700; line-height: 1.2; margin: 0; } .ds-card-title a { color: #14171A; text-decoration: none; border-bottom: 2px solid #1F4B99; } .ds-card-tag { font-family: 'Martian Mono', ui-monospace, monospace; font-size: 13px; line-height: 1.5; color: #5A6169; margin: 0; }"
-    },
-    {
-      "name": "Skip Link",
-      "kind": "custom",
-      "refersTo": null,
-      "description": "First focusable element on every page. Fixed, so it stays reachable at any scroll position; revealed on :focus rather than only :focus-visible so any legitimate focus path shows it.",
-      "html": "<a class=\"ds-skip\" href=\"#main\">Skip to content</a>",
-      "css": ".ds-skip { position: fixed; left: 12px; top: 12px; z-index: 100; background: #14171A; color: #fff; font-family: Archivo, system-ui, sans-serif; font-weight: 600; font-size: 15px; padding: 12px 16px; text-decoration: none; } .ds-skip:focus-visible { outline: 2px solid #B23A16; outline-offset: 2px; }"
-    }
+  "typographyMeta": {
+   "identity": {
+    "displayName": "Identity",
+    "purpose": "The homepage name only. Archivo 700 at clamp(52px, 9.6vw, 138px), line-height 0.85, tracking -0.042em. Line one crops past the left gutter."
+   },
+   "displayMajor": {
+    "displayName": "Display Major",
+    "purpose": "Featured band project titles. Archivo 700 at clamp(38px, 5.4vw, 82px), tracking -0.035em."
+   },
+   "displayMid": {
+    "displayName": "Display Mid",
+    "purpose": "Standard project titles across the F2, F3 and F4 footprints. Archivo 700 at clamp(34px, 4.6vw, 66px)."
+   },
+   "pageTitle": {
+    "displayName": "Page Title",
+    "purpose": "Page h1 on Portfolio, Notes, Resume, Contact and 404. Archivo 700 at clamp(38px, 5vw, 72px)."
+   },
+   "statement": {
+    "displayName": "Statement",
+    "purpose": "The homepage thesis, set as its own band. Literata 400 at clamp(27px, 3.35vw, 56px) on a 26ch measure. Not italic: italic at display size reads weak."
+   },
+   "lead": {
+    "displayName": "Lead",
+    "purpose": "The first paragraph of the Background bio. Literata 400 at clamp(20px, 1.85vw, 30px) on a 34ch measure, with the rest of the bio at body size beneath it."
+   },
+   "body": {
+    "displayName": "Body",
+    "purpose": "Every sentence a visitor reads. Literata 400 at 17px, line-height 1.7. Never Archivo, never mono."
+   },
+   "small": {
+    "displayName": "Small",
+    "purpose": "Field values, captions, rail values and note excerpts. Literata 400 at 15-19px depending on slot."
+   },
+   "label": {
+    "displayName": "Label",
+    "purpose": "Identifiers only: eyebrows, section markers, category, status, dates, field headers, attributions, nav. Martian Mono 500 at 12-13px, tracking 0.08-0.1em. Never a sentence."
+   }
+  },
+  "shadows": [],
+  "motion": [
+   {
+    "name": "reveal",
+    "value": "opacity + translateY(20px) over 0.7s cubic-bezier(0.22, 1, 0.36, 1), staggered by calc(var(--i) * 70ms)",
+    "purpose": "Scroll entrance at MOTION_INTENSITY 5, driven by one IntersectionObserver in src/lib/reveal.js. Each element is unobserved the moment it lands. No scroll listener, no rAF, no animation library."
+   },
+   {
+    "name": "state-transition",
+    "value": "0.2-0.25s cubic-bezier(0.22, 1, 0.36, 1)",
+    "purpose": "Colour, background and border-color on buttons, filter chips, nav links, form fields, contact links and card titles. Buttons additionally translateY(1px) on :active."
+   },
+   {
+    "name": "image-hover",
+    "value": "transform: scale(1.018) over 0.7s cubic-bezier(0.22, 1, 0.36, 1)",
+    "purpose": "The only transform on imagery. Clipped by overflow: hidden on the shot, so it never affects layout."
+   },
+   {
+    "name": "positive-gating",
+    "value": "@media (prefers-reduced-motion: no-preference)",
+    "purpose": "Every transition AND the reveal's hidden start state are declared only inside this guard. A reduced-motion visitor is never sent a rule that has to be cancelled, and nothing is ever hidden that JavaScript has to rescue. The reduce block that also zeroes transitions is belt-and-braces; nothing depends on it."
+   }
   ],
-  "narrative": {
-    "northStar": "Two columns of one table",
-    "overview": "The site is a hiring surface, and its whole argument is structural: a visitor who reads nothing still sees two columns, one naming a failure pattern from years of Tier 2/3 escalations, the other naming the mechanism built so that pattern cannot recur. Operations and engineering are not two sections; they are two columns of the same table.\n\nEverything else is subordinate to that. There is no ornament, no elevation, and no decorative colour. Structure is carried entirely by rules, spacing and one signal colour used at roughly 5% of any viewport. A serif reads the prose, a grotesk carries the structure, and a monospace is confined to identifiers so that labels never compete with content.\n\nThe register is a well-run engineering organisation's internal document: sober, current, and specific. Nothing on the page is decorative; if an element is present it is carrying a fact.",
-    "keyCharacteristics": [
-      "Paired failure/mechanism reasoning as the page's skeleton, not a section",
-      "Serif prose, grotesk structure, mono identifiers — three faces, three jobs",
-      "Zero shadows and zero radii; depth comes from rules and opaque surfaces",
-      "One signal colour, held under ~5% of a viewport",
-      "Breakpoints derived from where the grid actually breaks, not invented",
-      "Touch targets keyed to pointer capability, not viewport width"
-    ],
-    "rules": [
-      { "name": "The Two-Token Boundary Rule", "body": "Rule (#D6D9DD) and Boundary (#7F868F) are not interchangeable. Rule is decorative only and carries no contrast claim (1.42:1 on surface). Boundary is the identifying edge of an interactive control and clears WCAG 1.4.11 at 3.68:1. A control bounded only by Rule is a defect.", "section": "colors" },
-      { "name": "The One Warm Value Rule", "body": "Signal is the only non-neutral in the system and is never used for a surface, a body of text, or more than about 5% of a viewport. Its rarity is what makes a numeral or a Live badge register at all.", "section": "colors" },
-      { "name": "The No-Lighter-Grey Rule", "body": "Graphite is the floor for text. Anything that would need a paler grey to read correctly is instead made smaller, moved, or deleted.", "section": "colors" },
-      { "name": "The Mono-Is-Never-Prose Rule", "body": "Martian Mono sets identifiers only — section numbers, field headers, attributions, dates, slugs. It never sets a sentence.", "section": "typography" },
-      { "name": "The 13px Floor", "body": "No text anywhere is smaller than 13px. Status and date sit at 15px, not in a badge — currency is part of the evidence and should be readable, not decorative.", "section": "typography" },
-      { "name": "The Capability Rule", "body": "Touch target sizing is keyed to (pointer: coarse), not viewport width. A tablet in portrait is wider than any phone breakpoint and still finger-driven.", "section": "layout" }
-    ],
-    "dos": [
-      "Do use Boundary, never Rule, for anything a visitor can interact with.",
-      "Do keep Martian Mono for identifiers only.",
-      "Do key touch targets to (pointer: coarse).",
-      "Do set status and date at 15px in their own position, never as a badge.",
-      "Do reserve image space with aspect-ratio so CLS stays at zero.",
-      "Do let reading measure follow content type — 44rem notes, 46rem project pages, 68ch bio.",
-      "Do honour prefers-reduced-motion; the only motion is 120ms state changes."
-    ],
-    "donts": [
-      "Don't introduce a radius or a shadow. The global reset removes both, and re-enabling either for one component breaks the only depth model the site has.",
-      "Don't add a second accent colour. Signal's rarity is the effect.",
-      "Don't use a grey lighter than Graphite for text.",
-      "Don't set prose in Archivo or Martian Mono.",
-      "Don't push the CONDITION to ACTION grammar onto Notes. Notes are long-form reading and stay that way.",
-      "Don't add a size outside the seven-step ramp.",
-      "Don't assume dark mode exists. There is none; the document declares itself light-only with meta color-scheme light."
-    ]
+  "breakpoints": [
+   {
+    "name": "mobile-rhythm",
+    "value": "620px"
+   },
+   {
+    "name": "single-column",
+    "value": "640px"
+   },
+   {
+    "name": "notes-index",
+    "value": "700px"
+   },
+   {
+    "name": "footprint-collapse (981px min-width counterpart for homepage evidence overrides)",
+    "value": "980px"
+   },
+   {
+    "name": "rail-and-background",
+    "value": "1023px"
+   },
+   {
+    "name": "container-cap (sizes only)",
+    "value": "1704px"
+   },
+   {
+    "name": "coarse-pointer",
+    "value": "(pointer: coarse)"
+   }
+  ]
+ },
+ "components": [
+  {
+   "name": "Project Footprints",
+   "kind": "custom",
+   "refersTo": null,
+   "description": "The portfolio's whole layout system. Five footprints -- F1 band, F2 right, F3 left, F4 minor, and a coda used once -- that differ ONLY in CSS grid placement. Every one renders the identical DOM order (meta, title, screenshot, text, actions), so composition can vary widely while keyboard and screen-reader order never diverge from reading order. Imagery bleeds through the fluid gutter; F1 and the coda bleed both sides. Each footprint carries a trailing 1fr row so slack collects there instead of spreading the text column against a taller image. Below 980px all five collapse to the same single column and the rhythm is carried by aspect ratio alone.",
+   "html": "<article class=\"ds-pcard ds-pcard--right\"><div class=\"ds-meta\"><span class=\"ds-idx\">01</span><span class=\"ds-cat\">AI &amp; Claude Code</span><span class=\"ds-state\">Private<span class=\"ds-vh\">, </span>Aug 2026</span></div><h2 class=\"ds-title\"><a href=\"#\">Jarvis</a></h2><div class=\"ds-shot\"><img alt=\"Jarvis screenshot\"></div><div class=\"ds-text\"><p class=\"ds-tagline\">Local-first · permission-gated · on-device voice</p><p class=\"ds-desc\">A local-first, permission-gated personal AI assistant.</p></div><div class=\"ds-more\"><a href=\"#\">Full write-up →</a></div></article>",
+   "css": ".ds-pcard { display: grid; gap: clamp(14px, 1.8vw, 26px); } .ds-meta { grid-area: meta; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; } .ds-title { grid-area: title; font-family: Archivo, system-ui, sans-serif; font-weight: 700; letter-spacing: -0.035em; line-height: 0.94; } .ds-shot { grid-area: shot; border: 1px solid #7C7364; background: #0b0b0d; overflow: hidden; } .ds-text { grid-area: text; } .ds-more { grid-area: more; } .ds-pcard--right { grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr); grid-template-areas: \"meta shot\" \"title shot\" \"text shot\" \"more shot\" \". shot\"; grid-template-rows: auto auto auto auto 1fr; column-gap: clamp(24px, 4vw, 64px); } .ds-pcard--right .ds-title { font-size: clamp(34px, 4.6vw, 66px); } .ds-pcard--right .ds-shot { margin-right: calc(clamp(20px, 4vw, 72px) * -1); border-right: 0; } .ds-pcard--band { grid-template-areas: \"shot shot\" \"title meta\" \"text more\"; } .ds-pcard--band .ds-shot { margin: 0 calc(clamp(20px, 4vw, 72px) * -1); border-left: 0; border-right: 0; } .ds-pcard--band .ds-title { font-size: clamp(38px, 5.4vw, 82px); } @media (max-width: 980px) { .ds-pcard { grid-template-columns: 1fr; grid-template-areas: \"meta\" \"title\" \"shot\" \"text\" \"more\"; } }"
+  },
+  {
+   "name": "Paired Reasoning Units",
+   "kind": "custom",
+   "refersTo": null,
+   "description": "The homepage's signature element and the site's argument, re-set from a three-column table into three editorial units. The condition runs at display scale on a 21ch measure; the mechanism is dropped and offset beneath it behind a Boundary rule and an Accent direction marker. The offset steps linearly across the three via --o, so the group builds rather than repeating. Serif answer against sans condition is the typographic contrast. One standing header states the relationship for all three; it contains both former column headings verbatim.",
+   "html": "<p class=\"ds-pairs-head\">What fails in the field <span aria-hidden=\"true\">→</span> what I make structurally impossible</p><div class=\"ds-pairs\"><div class=\"ds-pair\" style=\"--o:0\"><span class=\"ds-pairs-num\">01</span><p class=\"ds-pair-fail\">A check that lived in the client instead of the database.</p><div class=\"ds-pair-fix\"><p>Row-level security in the database instead of checks in the client.</p><span class=\"ds-pair-attr\">PetCenza</span></div></div></div>",
+   "css": ".ds-pairs { border-top: 2px solid #14110D; } .ds-pair { display: grid; grid-template-columns: clamp(44px, 4.6vw, 96px) minmax(0, 1fr); grid-template-areas: \"num fail\" \".   fix\"; column-gap: clamp(14px, 2vw, 34px); padding: clamp(30px, 4.4vw, 76px) 0; } .ds-pair + .ds-pair { border-top: 1px solid #CFC7B8; } .ds-pairs-num { grid-area: num; font-family: 'Martian Mono', ui-monospace, monospace; font-size: clamp(15px, 1.5vw, 22px); font-weight: 500; color: #8A2B18; } .ds-pair-fail { grid-area: fail; font-family: Archivo, system-ui, sans-serif; font-size: clamp(25px, 3.15vw, 52px); font-weight: 700; letter-spacing: -0.032em; line-height: 1.02; color: #14110D; max-width: 21ch; } .ds-pair-fix { grid-area: fix; position: relative; margin-top: clamp(20px, 2.6vw, 42px); margin-left: calc(var(--o, 0) * clamp(18px, 6vw, 158px)); padding: clamp(12px, 1.4vw, 20px) 0 0 clamp(26px, 3vw, 48px); border-top: 1px solid #7C7364; max-width: 52ch; } .ds-pair-fix::before { content: '\\21b3'; position: absolute; left: 0; top: clamp(12px, 1.4vw, 20px); font-family: 'Martian Mono', ui-monospace, monospace; color: #8A2B18; } .ds-pair-fix p { font-family: Literata, Georgia, serif; font-size: clamp(16.5px, 1.32vw, 21px); line-height: 1.52; color: #14110D; }"
+  },
+  {
+   "name": "Operations Rail",
+   "kind": "custom",
+   "refersTo": null,
+   "description": "Gives operations concrete weight without giving it screenshot real estate. Was a four-cell bordered strip with vertical dividers; now the source-backed figure is set as editorial display type carrying its own sentence, beside a hairline definition list. Deliberately NOT a metric tile: no box, no track, no fill, and the figure is Ink rather than Accent -- at 124px an oxblood numeral would blow the accent budget and read as a dashboard.",
+   "html": "<div class=\"ds-rail\"><div class=\"ds-rail-lead\"><span class=\"ds-rail-figure\">2,000+</span><p class=\"ds-rail-caption\">End-of-life firmware devices identified in a business case that a customer upgrade program was built around.</p></div><dl class=\"ds-rail-list\"><div class=\"ds-rail-row\"><dt class=\"ds-label\">Shipped</dt><dd class=\"ds-rail-value\">Ten applications</dd></div></dl></div>",
+   "css": ".ds-rail { display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); gap: clamp(28px, 5vw, 96px); align-items: start; margin-top: clamp(56px, 8vw, 128px); padding-top: clamp(20px, 2.4vw, 36px); border-top: 2px solid #14110D; } .ds-rail-figure { display: block; font-family: Archivo, system-ui, sans-serif; font-size: clamp(58px, 8.4vw, 124px); font-weight: 700; color: #14110D; line-height: 0.84; letter-spacing: -0.05em; } .ds-rail-caption { margin-top: clamp(14px, 1.8vw, 26px); font-family: Literata, Georgia, serif; font-size: clamp(15px, 1.16vw, 18px); line-height: 1.55; color: #5C554A; max-width: 34ch; } .ds-rail-row { display: grid; grid-template-columns: minmax(0, 0.5fr) minmax(0, 1fr); gap: 12px clamp(16px, 2.4vw, 40px); padding: clamp(14px, 1.7vw, 26px) 0; align-items: baseline; } .ds-rail-row + .ds-rail-row { border-top: 1px solid #CFC7B8; } .ds-rail-value { font-family: Literata, Georgia, serif; font-size: clamp(16px, 1.24vw, 19.5px); color: #14110D; } @media (max-width: 1023px) { .ds-rail { grid-template-columns: 1fr; } }"
+  },
+  {
+   "name": "Evidence Entry Fields",
+   "kind": "custom",
+   "refersTo": null,
+   "description": "Condition / Action / Verify inside a homepage evidence entry. The entries render in the SAME footprints /portfolio uses (F1, F3, F2), so the homepage previews the project system rather than running a second layout language. F4 is deliberately unused: nothing in the selected evidence should read as de-emphasised. Under the F1 band the list runs three across at desktop; elsewhere it stacks. Mono header over a hairline, serif value. Status and date are never a badge.",
+   "html": "<dl class=\"ds-fields\"><dt>Condition</dt><dd>A permission that was too broad.</dd><dt>Action</dt><dd>Deny-by-default connectors, and human confirmation before anything destructive.</dd><dt>Verify</dt><dd>Local-first · permission-gated · on-device voice</dd></dl>",
+   "css": ".ds-fields { display: grid; } .ds-fields dt { font-family: 'Martian Mono', ui-monospace, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #5C554A; padding-top: 12px; border-top: 1px solid #CFC7B8; } .ds-fields dd { font-family: Literata, Georgia, serif; font-size: clamp(15.5px, 1.15vw, 18px); line-height: 1.6; color: #14110D; margin: 8px 0 16px; max-width: 58ch; } @media (min-width: 981px) { .ds-band .ds-fields { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: clamp(24px, 3vw, 56px); } .ds-band .ds-fields dt { grid-row: 1; } .ds-band .ds-fields dd { grid-row: 2; margin-bottom: 0; } }"
+  },
+  {
+   "name": "Background Composition",
+   "kind": "custom",
+   "refersTo": null,
+   "description": "The homepage's closing section. Was a prose column beside a 180px headshot with credentials stacked under it as a sidebar appendix. Now the portrait leads at full column scale and bleeds through the left gutter, the bio runs beside it opening on a lead paragraph, and the record (certifications, toolbox) runs full width beneath as hairline structure. No cards. Below 1023px the portrait becomes a full-bleed 16:9 strip that leads the section.",
+   "html": "<div class=\"ds-bg-grid\"><figure class=\"ds-bg-portrait\"><img alt=\"headshot\" width=\"640\" height=\"640\"></figure><div class=\"ds-bg-bio\"><p>Lead paragraph at display-adjacent scale.</p><p>Body paragraphs at reading size.</p></div></div><div class=\"ds-bg-record\"><section><h3 class=\"ds-label\">Certifications</h3><ul class=\"ds-bg-list\"><li>Google IT Support Professional Certificate</li></ul></section><section><h3 class=\"ds-label\">Toolbox</h3><div class=\"ds-skill-grid\"><div><h4 class=\"ds-skill-label\">AI Tooling &amp; Ops</h4><p>Claude Code · Agentic Workflows</p></div></div></section></div>",
+   "css": ".ds-bg-grid, .ds-bg-record { display: grid; grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr); gap: clamp(24px, 5vw, 96px); align-items: start; } .ds-bg-record { margin-top: clamp(52px, 8vw, 128px); padding-top: clamp(18px, 2.2vw, 32px); border-top: 2px solid #14110D; } .ds-bg-portrait { margin-left: calc(clamp(20px, 4vw, 72px) * -1); } .ds-bg-portrait img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border: 1px solid #7C7364; border-left: 0; } .ds-bg-bio p:first-child { font-family: Literata, Georgia, serif; font-size: clamp(20px, 1.85vw, 30px); line-height: 1.36; letter-spacing: -0.012em; max-width: 34ch; } .ds-bg-list li { font-family: Literata, Georgia, serif; font-size: clamp(16px, 1.24vw, 19px); padding: clamp(10px, 1.2vw, 16px) 0; border-top: 1px solid #CFC7B8; } .ds-skill-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(20px, 3vw, 56px); } .ds-skill-label { font-family: 'Martian Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A2B18; } @media (max-width: 1023px) { .ds-bg-grid, .ds-bg-record { grid-template-columns: 1fr; } .ds-bg-portrait img { aspect-ratio: 16 / 9; object-position: center 28%; } }"
+  },
+  {
+   "name": "Notes Index Entry",
+   "kind": "custom",
+   "refersTo": null,
+   "description": "An editorial publication index, not project cards: no image, no status, no stack, no box. A mono date rail on the left, the title at the same display register a standard project title uses, and the excerpt dropped and indented under its own hairline. DOM order stays time, heading, excerpt. Note detail is deliberately untouched by this: a 44rem measure, 17px Literata at 1.8, and an Accent drop cap.",
+   "html": "<ul class=\"ds-notes-list\"><li class=\"ds-notes-item\"><time class=\"ds-notes-date\" datetime=\"2026-09-03\">September 3, 2026</time><h2 class=\"ds-notes-title\"><a href=\"#\">A rate limiter that limited nothing</a></h2><p class=\"ds-notes-summary\">The bug was in the key, not the logic.</p></li></ul>",
+   "css": ".ds-notes-list { list-style: none; border-top: 2px solid #14110D; } .ds-notes-item { display: grid; grid-template-columns: clamp(92px, 13vw, 210px) minmax(0, 1fr); grid-template-areas: \"date title\" \".    summary\"; column-gap: clamp(16px, 2.6vw, 52px); padding: clamp(28px, 4.2vw, 68px) 0; } .ds-notes-item + .ds-notes-item { border-top: 1px solid #CFC7B8; } .ds-notes-date { grid-area: date; font-family: 'Martian Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.08em; color: #5C554A; } .ds-notes-title { grid-area: title; font-family: Archivo, system-ui, sans-serif; font-size: clamp(32px, 4.3vw, 62px); letter-spacing: -0.035em; line-height: 0.98; max-width: 20ch; } .ds-notes-title a { color: #14110D; text-decoration: none; border-bottom: 3px solid transparent; } .ds-notes-title a:hover { border-bottom-color: #8A2B18; } .ds-notes-summary { grid-area: summary; font-family: Literata, Georgia, serif; font-size: clamp(16px, 1.24vw, 19px); color: #5C554A; max-width: 58ch; margin-top: clamp(14px, 1.8vw, 26px); padding-top: clamp(12px, 1.4vw, 20px); border-top: 1px solid #CFC7B8; } @media (max-width: 700px) { .ds-notes-item { grid-template-columns: 1fr; grid-template-areas: \"date\" \"title\" \"summary\"; } }"
+  },
+  {
+   "name": "Text Field",
+   "kind": "input",
+   "refersTo": "input",
+   "description": "No panel and no card. The field sits directly on the page: a recessed Inset body with a 2px Boundary bottom rule, which is the edge that identifies the control and clears the 3:1 non-text minimum on its own. Focus shifts the rule to Ink, lifts the body to Surface, and adds an Accent ring. Invalid takes an Accent rule at 3px plus a text message, so nothing depends on colour alone.",
+   "html": "<div class=\"ds-field\"><label for=\"email\">Your email</label><input id=\"email\" type=\"email\" aria-invalid=\"true\" aria-describedby=\"email-error\"><p class=\"ds-field-error\" id=\"email-error\">That address is missing an @ or a domain.</p></div>",
+   "css": ".ds-field label { display: block; font-family: 'Martian Mono', ui-monospace, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #5C554A; margin-bottom: 8px; } .ds-field input { width: 100%; font-family: Archivo, system-ui, sans-serif; font-size: clamp(16px, 1.25vw, 19px); color: #14110D; background: #E8E2D6; border: 0; border-bottom: 2px solid #7C7364; padding: 12px 12px 10px; } .ds-field input:focus { outline: none; border-bottom-color: #14110D; background: #FFFFFF; } .ds-field input:focus-visible { outline: 2px solid #8A2B18; outline-offset: 2px; } .ds-field input[aria-invalid='true'] { border-bottom-color: #8A2B18; border-bottom-width: 3px; } .ds-field-error { margin-top: 8px; font-family: Literata, Georgia, serif; font-size: 15px; color: #14110D; } @media (pointer: coarse) { .ds-field input { min-height: 44px; } }"
+  },
+  {
+   "name": "Direct Contact List",
+   "kind": "custom",
+   "refersTo": null,
+   "description": "The four contact channels. Was four bordered tiles; now the term/definition list they always were. Hairline rows on an Ink top rule, mono term, Boundary-underlined value. Sits in a column offset down from the form so the two halves of Contact do not start on the same line.",
+   "html": "<dl class=\"ds-direct\"><div class=\"ds-direct-row\"><dt class=\"ds-label\">email</dt><dd><a href=\"mailto:\">address</a></dd></div><div class=\"ds-direct-row\"><dt class=\"ds-label\">github</dt><dd><a href=\"#\">profile</a></dd></div></dl>",
+   "css": ".ds-direct { border-top: 2px solid #14110D; } .ds-direct-row { display: grid; grid-template-columns: minmax(0, 0.34fr) minmax(0, 1fr); gap: 8px clamp(12px, 1.6vw, 26px); align-items: baseline; padding: clamp(15px, 1.8vw, 26px) 0; border-bottom: 1px solid #CFC7B8; } .ds-direct dd { font-size: clamp(16px, 1.32vw, 21px); line-height: 1.35; } .ds-direct a { color: #14110D; text-decoration: none; border-bottom: 1px solid #7C7364; padding-bottom: 2px; overflow-wrap: anywhere; } .ds-direct a:hover { color: #8A2B18; border-bottom-color: #8A2B18; } @media (max-width: 640px) { .ds-direct-row { grid-template-columns: 1fr; } } @media (pointer: coarse) { .ds-direct a { display: inline-flex; align-items: center; min-height: 44px; } }"
+  },
+  {
+   "name": "Primary Button",
+   "kind": "button",
+   "refersTo": "button-primary",
+   "description": "Ink fill that hovers to Accent. Square, bounded, no shadow. Presses 1px on :active. Bounded with Boundary so an outline variant's resting edge still clears 3:1.",
+   "html": "<a class=\"ds-btn ds-btn-primary\">View resume</a>",
+   "css": ".ds-btn { display: inline-flex; align-items: center; gap: 8px; font-family: Archivo, system-ui, sans-serif; font-weight: 600; font-size: 15px; padding: 12px 16px; border: 1px solid #7C7364; text-decoration: none; cursor: pointer; } .ds-btn-primary { background: #14110D; color: #fff; border-color: #14110D; } .ds-btn-primary:hover { background: #8A2B18; border-color: #8A2B18; } .ds-btn:focus-visible { outline: 2px solid #8A2B18; outline-offset: 3px; } @media (prefers-reduced-motion: no-preference) { .ds-btn { transition: background .2s cubic-bezier(0.22, 1, 0.36, 1), color .2s cubic-bezier(0.22, 1, 0.36, 1), border-color .2s cubic-bezier(0.22, 1, 0.36, 1); } .ds-btn:active { transform: translateY(1px); } } @media (pointer: coarse) { .ds-btn { min-height: 44px; } }"
+  },
+  {
+   "name": "Filter Chip",
+   "kind": "chip",
+   "refersTo": "filter-chip",
+   "description": "Portfolio category filter. Bounded with Boundary so the resting edge clears 3:1; the active state takes an Ink fill with Paper text. aria-pressed carries the state to assistive technology, and a polite live region announces the resulting count.",
+   "html": "<div><button type=\"button\" class=\"ds-chip is-active\" aria-pressed=\"true\">All</button><button type=\"button\" class=\"ds-chip\" aria-pressed=\"false\">AI &amp; Claude Code</button><p class=\"ds-vh\" role=\"status\" aria-live=\"polite\">10 projects shown</p></div>",
+   "css": ".ds-chip { font-family: 'Martian Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: #5C554A; background: transparent; border: 1px solid #7C7364; padding: 8px 12px; } .ds-chip:hover { color: #14110D; border-color: #14110D; } .ds-chip.is-active { background: #14110D; border-color: #14110D; color: #F2EEE6; } @media (prefers-reduced-motion: no-preference) { .ds-chip { transition: background .2s cubic-bezier(0.22, 1, 0.36, 1), color .2s cubic-bezier(0.22, 1, 0.36, 1), border-color .2s cubic-bezier(0.22, 1, 0.36, 1); } }"
+  },
+  {
+   "name": "Navigation Bar",
+   "kind": "nav",
+   "refersTo": "nav-link",
+   "description": "Hairline-based bar with mono identifiers. The active link takes an Accent underline rather than a filled plane. Collapses to a 44x44 toggle below the mobile breakpoint with aria-expanded, aria-controls, Escape-to-close with focus return, and outside-pointerdown close. The component's markup and ARIA were carried through the redesign unchanged; only its styling moved.",
+   "html": "<header class=\"ds-nav\"><a class=\"ds-brand\" href=\"/\">Chadwick (Chad) Kraus</a><button class=\"ds-nav-toggle\" aria-expanded=\"false\" aria-controls=\"primary-nav\" aria-label=\"Open menu\"></button><nav id=\"primary-nav\"><a class=\"ds-nav-link is-active\" href=\"/\">About</a><a class=\"ds-nav-link\" href=\"/portfolio\">Portfolio</a></nav></header>",
+   "css": ".ds-nav { border-bottom: 1px solid #CFC7B8; } .ds-brand, .ds-nav-link { font-family: 'Martian Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; } .ds-brand { color: #14110D; font-weight: 500; } .ds-nav-link { color: #5C554A; padding: 8px 12px; border-bottom: 2px solid transparent; } .ds-nav-link:hover { color: #14110D; } .ds-nav-link.is-active { color: #14110D; border-bottom-color: #8A2B18; } .ds-nav-toggle { width: 44px; height: 44px; background: transparent; border: 0; } @media (prefers-reduced-motion: no-preference) { .ds-nav-link { transition: color .2s cubic-bezier(0.22, 1, 0.36, 1), border-color .2s cubic-bezier(0.22, 1, 0.36, 1); } }"
+  },
+  {
+   "name": "Skip Link",
+   "kind": "custom",
+   "refersTo": null,
+   "description": "First focusable element on every page. Fixed, so it stays reachable at any scroll position; revealed on :focus rather than only :focus-visible so any legitimate focus path shows it. Targets a main element that takes focus programmatically and suppresses its own ring.",
+   "html": "<a class=\"ds-skip\" href=\"#main\">Skip to content</a>",
+   "css": ".ds-skip { position: fixed; left: 12px; top: -100%; z-index: 100; background: #14110D; color: #fff; font-family: Archivo, system-ui, sans-serif; font-weight: 600; font-size: 15px; padding: 12px 16px; text-decoration: none; } .ds-skip:focus { top: 12px; } main:focus { outline: none; }"
+  },
+  {
+   "name": "Bleed Utilities",
+   "kind": "custom",
+   "refersTo": null,
+   "description": "The mechanism the entire project system is built on. One fluid gutter token controls every edge-bleed on the site, so imagery reaching the viewport edge is a system behaviour rather than a per-component exception. html and body carry overflow-x: clip so a deliberate edge-crop can never produce a horizontal scrollbar.",
+   "html": "<figure class=\"ds-bleed-r\"><img alt=\"project screenshot\"></figure>",
+   "css": ":root { --gut: clamp(20px, 4vw, 72px); --container: 1560px; } .ds-container { max-width: var(--container); margin: 0 auto; padding: 0 var(--gut); } .ds-bleed-r { margin-right: calc(var(--gut) * -1); } .ds-bleed-l { margin-left: calc(var(--gut) * -1); } .ds-bleed-x { margin-left: calc(var(--gut) * -1); margin-right: calc(var(--gut) * -1); } html, body { overflow-x: clip; }"
   }
+ ],
+ "narrative": {
+  "northStar": "Evidence at scale, structure underneath",
+  "overview": "The site is a hiring surface for a technical practitioner, and it argues in two registers at once. The first is structural: failure patterns from years of Tier 2/3 escalations, each answered by the mechanism built so that pattern cannot recur. The second is evidential: real product screenshots, at real scale, so a visitor who reads nothing still sees shipped software. Editorial Spatial is the language that carries both. It behaves like a printed publication rather than a web template -- a wide measure, a fluid gutter that imagery is allowed to break through, display type running from 12px to 138px, and deliberate voids that give a statement room to land. Variance is high but systematic: every asymmetry comes from a named footprint or a declared offset, never from hand-placement. Two things it deliberately is not. It is not agency-portfolio styling: no rotated navigation, no scroll hijack, no marquee, no locale strip, no section-number eyebrows. And it is not a cockpit: no gauges, no KPI tiles, no pseudo-telemetry, no fake instrumentation. The register is a well-run engineering organisation's document that happens to be beautifully set.",
+  "keyCharacteristics": [
+   "Genuine product screenshots are a primary visual material, not decoration",
+   "Five compositional footprints over one invariant DOM order",
+   "A fluid gutter that imagery bleeds through; a 1560px container",
+   "Zero shadows and zero radii; depth comes from bleeds, scale and voids",
+   "One accent colour, held under roughly 5% of any viewport",
+   "Breakpoints derived from where the grid actually breaks",
+   "Touch targets keyed to pointer capability, not viewport width"
+  ],
+  "rules": [
+   {
+    "name": "The Two-Token Boundary Rule",
+    "body": "Rule (#CFC7B8) and Boundary (#7C7364) are not interchangeable. Rule is decorative only and carries no contrast claim (1.45:1 on paper). Boundary is the identifying edge of an interactive control and clears WCAG 1.4.11 at 4.04:1. A control bounded only by Rule is a defect.",
+    "section": "colors"
+   },
+   {
+    "name": "The One Warm Value Rule",
+    "body": "Accent (#8A2B18, oxblood) is the only non-neutral in the system and is never used for a surface, a body of text, or more than about 5% of a viewport. It appears on index numerals, Live, the active nav underline, the mechanism marker, skill-group labels, the drop cap, the thesis rule and focus rings. Nowhere else.",
+    "section": "colors"
+   },
+   {
+    "name": "The Ink-Not-Accent Figure Rule",
+    "body": "The one source-backed operations figure is set in Ink at display scale, not Accent. At 124px an oxblood numeral would exceed the accent budget and read as a dashboard metric tile, which is the exact thing the rail was rebuilt to stop being.",
+    "section": "colors"
+   },
+   {
+    "name": "The No-Lighter-Grey Rule",
+    "body": "Graphite is the floor for text. Anything that would need a paler grey to read correctly is instead made smaller, moved, or deleted.",
+    "section": "colors"
+   },
+   {
+    "name": "The Mono-Is-Never-Prose Rule",
+    "body": "Martian Mono sets identifiers only -- eyebrows, section markers, category, status, dates, field headers, attributions, navigation. It never sets a sentence.",
+    "section": "typography"
+   },
+   {
+    "name": "The 12px Floor",
+    "body": "No text anywhere is smaller than 12px. Status and date are text, never a badge: currency is part of the evidence and should be readable rather than decorative.",
+    "section": "typography"
+   },
+   {
+    "name": "The One DOM Order Rule",
+    "body": "Every project footprint renders the identical order -- meta, title, screenshot, text, actions -- and differs only in CSS grid placement. Art direction on the outside, one predictable skeleton inside, so keyboard and screen-reader order can never diverge from reading order however unusual the composition looks.",
+    "section": "layout"
+   },
+   {
+    "name": "The Single-Gutter Rule",
+    "body": "Every bleed is measured against --gut: clamp(20px, 4vw, 72px). One token controls the whole edge behaviour of the site, and overflow-x: clip on html and body guarantees a deliberate edge-crop can never produce a horizontal scrollbar.",
+    "section": "layout"
+   },
+   {
+    "name": "The Composed Void Rule",
+    "body": "Empty space is a material. The paired reasoning block leaves roughly half the width empty at 1920 on purpose, and the thesis balances it from the opposite side. Voids are composed, not left over, and are not to be tightened merely because they are unusual.",
+    "section": "layout"
+   },
+   {
+    "name": "The Capability Rule",
+    "body": "Touch target sizing is keyed to (pointer: coarse), not viewport width. A tablet in portrait is wider than any phone breakpoint and still finger-driven.",
+    "section": "layout"
+   },
+   {
+    "name": "The Positive Motion Gate",
+    "body": "Every transition and the reveal's hidden start state are declared only inside @media (prefers-reduced-motion: no-preference). A reduced-motion visitor is never sent a rule that has to be cancelled, and nothing is ever hidden that JavaScript then has to rescue -- the page is fully composed with scripting off.",
+    "section": "motion"
+   },
+   {
+    "name": "The Painted-Pixel Rule",
+    "body": "Image verification must probe painted pixels, never intrinsic dimensions. A tiled AVIF reports a correct naturalWidth, raises no load error, logs nothing, and paints a blank rectangle. naturalWidth > 0 cannot detect it.",
+    "section": "images"
+   }
+  ],
+  "dos": [
+   "Reach for an existing footprint before inventing a composition",
+   "Let imagery bleed through the gutter; that is the system, not an exception",
+   "Keep the accent under roughly 5% of any viewport",
+   "Declare motion inside the positive no-preference guard",
+   "Re-derive a sizes hint whenever a slot's column split changes",
+   "Verify images by painted pixels",
+   "Use genuine product screenshots; no generated or stock imagery"
+  ],
+  "donts": [
+   "Add a radius, a shadow, or a second accent",
+   "Put Rule on a control",
+   "Introduce a sixth footprint, or hand-place an asymmetry",
+   "Add cards, tiles, gauges, KPI styling or fake instrumentation",
+   "Set a metric in accent at display scale",
+   "Use sips for AVIF, or trust naturalWidth as proof an image rendered",
+   "Let mono set a sentence, or let a display headline mix two families"
+  ]
+ }
 }
