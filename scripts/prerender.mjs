@@ -126,7 +126,7 @@ const routes = [
     path: 'portfolio',
     title: ROUTE_TITLES['/portfolio'],
     description:
-      'AI tooling, infrastructure consoles, and systems games built with Claude Code — Jarvis, Meridian, PetCenza, HomeLab Commander, Stack City and more.',
+      'AI tooling, infrastructure consoles, and systems games built with Claude Code and Codex — Jarvis, Meridian, PetCenza, HomeLab Commander, Stack City and more.',
   },
   {
     path: 'resume',

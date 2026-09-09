@@ -14,7 +14,7 @@ export const resume = {
   ],
 
   summary:
-    'Technical professional with 5+ years spanning network and IT support, AV systems, QA operations, and AI tooling across SaaS and networked-device environments. Currently Network IT Specialist at Rockbot, owning Tier 2/3 escalations end to end while leading initiatives that convert reactive support into proactive programs — including a fleet-wide legacy-hardware business case covering 2,000+ devices and an AI voice model that absorbed overflow call-center volume. Builds the tooling as well as the process: ten production applications shipped with Claude Code, including incident-response simulators, infrastructure consoles, and AI systems designed around explicit permission boundaries and database-enforced access control. Known for identifying operational gaps, engineering them closed, and translating fluently between engineering and non-technical stakeholders.',
+    'Technical professional with 5+ years spanning network and IT support, AV systems, QA operations, and AI tooling across SaaS and networked-device environments. Currently Network IT Specialist at Rockbot, owning Tier 2/3 escalations end to end while leading initiatives that convert reactive support into proactive programs — including a fleet-wide legacy-hardware business case covering 2,000+ devices and an AI voice model that absorbed overflow call-center volume. Builds the tooling as well as the process: ten production applications shipped with Claude Code and Codex, including incident-response simulators, infrastructure consoles, and AI systems designed around explicit permission boundaries and database-enforced access control. Known for identifying operational gaps, engineering them closed, and translating fluently between engineering and non-technical stakeholders.',
 
   skills: [
     ['AI Tooling & Ops',
@@ -79,7 +79,7 @@ export const resume = {
     },
   ],
 
-  projectsIntro: 'Ten production applications built with Claude Code — full portfolio at chad-kraus-portfolio.vercel.app',
+  projectsIntro: 'Ten production applications built with Claude Code and Codex — full portfolio at chad-kraus-portfolio.vercel.app',
   projects: [
     {
       name: 'TechOps Command Center',
