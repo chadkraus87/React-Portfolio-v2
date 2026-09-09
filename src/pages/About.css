@@ -73,7 +73,12 @@
 }
 .hero__figure img {
   width: 100%;
-  aspect-ratio: 16 / 10;    /* reserves space — keeps CLS at zero */
+  /* The Packet & Pine capture's own ratio (1845x1199), not a rounded 16/10.
+     A 16/10 frame cover-crops 3.8% off the bottom, which lands exactly on the
+     game's keybind strip and cuts the row mid-glyph. Declaring the source
+     ratio shows the frame whole and still reserves space, so CLS stays at 0.
+     The figure's top edge is unchanged, so name clearance is unaffected. */
+  aspect-ratio: 1845 / 1199;
   object-fit: cover;
   object-position: left top;
   border: 1px solid var(--boundary);
@@ -464,7 +469,8 @@
     margin-left: calc(var(--gut) * -1);
     margin-right: calc(var(--gut) * -1);
   }
-  .hero__figure img { border-left: 0; border-right: 0; aspect-ratio: 16 / 9; }
+  /* Same reason as above: 16/9 would crop 13% and take the HUD with it. */
+  .hero__figure img { border-left: 0; border-right: 0; aspect-ratio: 1845 / 1199; }
   .hero__tag { padding: 9px var(--gut) 0; }
 }
 
