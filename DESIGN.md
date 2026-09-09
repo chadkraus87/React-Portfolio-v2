@@ -1,33 +1,52 @@
 ---
 name: Chad Kraus Portfolio
-description: An evidence-first hiring portfolio where operational failure patterns and the mechanisms built against them share one page.
+description: An evidence-first hiring portfolio in an editorial-spatial language, where operational failure patterns, the mechanisms built against them, and full-bleed product screenshots share one page.
 colors:
-  paper: "#F7F7F5"
+  paper: "#F2EEE6"
   surface: "#FFFFFF"
-  inset: "#EFEFEC"
-  ink: "#14171A"
-  graphite: "#5A6169"
-  rule: "#D6D9DD"
-  boundary: "#7F868F"
-  signal: "#B23A16"
+  inset: "#E8E2D6"
+  ink: "#14110D"
+  graphite: "#5C554A"
+  rule: "#CFC7B8"
+  boundary: "#7C7364"
+  accent: "#8A2B18"
   verified: "#1F4B99"
 typography:
-  display:
+  identity:
     fontFamily: "Archivo, system-ui, sans-serif"
-    fontSize: "2rem"
+    fontSize: "clamp(52px, 9.6vw, 138px)"
     fontWeight: 700
-    lineHeight: 1.1
-    letterSpacing: "-0.015em"
-  title:
+    lineHeight: 0.85
+    letterSpacing: "-0.042em"
+  displayMajor:
     fontFamily: "Archivo, system-ui, sans-serif"
-    fontSize: "1.5rem"
+    fontSize: "clamp(38px, 5.4vw, 82px)"
     fontWeight: 700
-    lineHeight: 1.2
-  emphasis:
+    lineHeight: 0.94
+    letterSpacing: "-0.035em"
+  displayMid:
     fontFamily: "Archivo, system-ui, sans-serif"
-    fontSize: "1.1875rem"
-    fontWeight: 600
-    lineHeight: 1.4
+    fontSize: "clamp(34px, 4.6vw, 66px)"
+    fontWeight: 700
+    lineHeight: 0.94
+    letterSpacing: "-0.035em"
+  pageTitle:
+    fontFamily: "Archivo, system-ui, sans-serif"
+    fontSize: "clamp(38px, 5vw, 72px)"
+    fontWeight: 700
+    lineHeight: 0.95
+    letterSpacing: "-0.035em"
+  statement:
+    fontFamily: "Literata, Georgia, serif"
+    fontSize: "clamp(27px, 3.35vw, 56px)"
+    fontWeight: 400
+    lineHeight: 1.12
+    letterSpacing: "-0.022em"
+  lead:
+    fontFamily: "Literata, Georgia, serif"
+    fontSize: "clamp(20px, 1.85vw, 30px)"
+    fontWeight: 400
+    lineHeight: 1.36
   body:
     fontFamily: "Literata, Georgia, serif"
     fontSize: "1.0625rem"
@@ -40,10 +59,10 @@ typography:
     lineHeight: 1.6
   label:
     fontFamily: "Martian Mono, ui-monospace, monospace"
-    fontSize: "0.8125rem"
+    fontSize: "0.75rem"
     fontWeight: 500
     lineHeight: 1.4
-    letterSpacing: "0.04em"
+    letterSpacing: "0.1em"
 rounded:
   none: "0"
 spacing:
@@ -53,6 +72,8 @@ spacing:
   lg: "24px"
   xl: "48px"
   xxl: "96px"
+  gutter: "clamp(20px, 4vw, 72px)"
+  container: "1560px"
 components:
   button-primary:
     backgroundColor: "{colors.ink}"
@@ -60,7 +81,7 @@ components:
     rounded: "{rounded.none}"
     padding: "12px 16px"
   button-primary-hover:
-    backgroundColor: "{colors.signal}"
+    backgroundColor: "{colors.accent}"
     textColor: "#ffffff"
   button-outline:
     backgroundColor: "transparent"
@@ -69,327 +90,371 @@ components:
     padding: "12px 16px"
   filter-chip:
     backgroundColor: "transparent"
-    textColor: "{colors.ink}"
+    textColor: "{colors.graphite}"
     rounded: "{rounded.none}"
     padding: "8px 12px"
   filter-chip-active:
     backgroundColor: "{colors.ink}"
-    textColor: "#ffffff"
+    textColor: "{colors.paper}"
     rounded: "{rounded.none}"
     padding: "8px 12px"
-  card:
-    backgroundColor: "{colors.surface}"
+  project-shot:
+    backgroundColor: "#0b0b0d"
     rounded: "{rounded.none}"
-    padding: "16px 16px 24px"
+    padding: "0"
   input:
-    backgroundColor: "{colors.paper}"
+    backgroundColor: "{colors.inset}"
     textColor: "{colors.ink}"
     rounded: "{rounded.none}"
-    padding: "12px"
+    padding: "12px 12px 10px"
+  input-focus:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.ink}"
   nav-link:
     backgroundColor: "transparent"
     textColor: "{colors.graphite}"
     rounded: "{rounded.none}"
     padding: "8px 12px"
   nav-link-active:
-    backgroundColor: "{colors.signal}"
-    textColor: "#ffffff"
+    backgroundColor: "transparent"
+    textColor: "{colors.ink}"
     rounded: "{rounded.none}"
     padding: "8px 12px"
-  table-header-band:
-    backgroundColor: "{colors.inset}"
+  section-rule:
+    backgroundColor: "transparent"
     textColor: "{colors.graphite}"
     rounded: "{rounded.none}"
-    padding: "12px 0"
+    padding: "12px 0 0"
 ---
-
 # Design System: Chad Kraus Portfolio
 
-> This records the system currently implemented. It supersedes the forest-green
-> Bitter/IBM Plex system that preceded it; that baseline is preserved in git
-> history and is not carried forward here. PRODUCT.md remains authoritative for
-> positioning and product truth.
+> This records the system currently in production: **C2 — Editorial Spatial**,
+> shipped in `2c513e2`. It supersedes the flat paper/ink system documented here
+> before, which is preserved in git history and is not carried forward.
+> PRODUCT.md remains authoritative for positioning and product truth.
 
-## Overview
+## Design thesis
 
-The site is a hiring surface, and its whole argument is structural: a visitor
-who reads nothing still sees two columns, one naming a failure pattern from
-years of Tier 2/3 escalations, the other naming the mechanism built so that
-pattern cannot recur. Operations and engineering are not two sections; they are
-two columns of the same table.
+The site is a hiring surface for a technical practitioner, and it argues in two
+registers at once. The first is structural: failure patterns from years of Tier
+2/3 escalations, each answered by the mechanism built so that pattern cannot
+recur. The second is evidential: real product screenshots, at real scale, so a
+visitor who reads nothing still sees shipped software.
 
-Everything else is subordinate to that. There is no ornament, no elevation, and
-no decorative colour. Structure is carried entirely by rules, spacing and one
-signal colour used at roughly 5% of any viewport. A serif reads the prose, a
-grotesk carries the structure, and a monospace is confined to identifiers so
-that labels never compete with content.
+Editorial Spatial is the language that carries both. It behaves like a printed
+publication rather than a web template — a wide measure, a fluid gutter that
+imagery is allowed to break through, display type that runs from 12px to 138px,
+and deliberate voids that give a statement room to land. Variance is high, but
+it is systematic: every asymmetry comes from a named footprint or a declared
+offset, never from hand-placement.
 
-The register is a well-run engineering organisation's internal document: sober,
-current, and specific. Nothing on the page is decorative; if an element is
-present it is carrying a fact.
+Two things it deliberately is not. It is not agency-portfolio styling — no
+rotated navigation, no scroll hijack, no marquee, no locale strip, no
+section-number eyebrows. And it is not a cockpit — no gauges, no KPI tiles, no
+pseudo-telemetry, no fake instrumentation. The register is a well-run
+engineering organisation's document that happens to be beautifully set.
 
-**Key Characteristics:**
-- Paired failure/mechanism reasoning as the page's skeleton, not a section
-- Serif prose, grotesk structure, mono identifiers — three faces, three jobs
-- Zero shadows and zero radii; depth comes from rules and opaque surfaces
-- One signal colour, held under ~5% of a viewport
-- Breakpoints derived from where the grid actually breaks, not invented
+**Key characteristics**
+- Genuine product screenshots are a primary visual material, not decoration
+- Five compositional footprints over one invariant DOM order
+- A fluid gutter that imagery bleeds through; a 1560px container
+- Zero shadows and zero radii; depth comes from bleeds, scale and voids
+- One accent colour, held under roughly 5% of any viewport
+- Breakpoints derived from where the grid actually breaks
 - Touch targets keyed to pointer capability, not viewport width
-
-## Colors
-
-A neutral document palette with two functional accents. There are no decorative
-colours: every value below has a job.
-
-### Primary
-- **Ink** (`#14171A`): All primary text, the 2px section rules, primary button
-  fills, and the active filter chip. 17.99:1 on surface, 16.77:1 on paper.
-- **Signal** (`#B23A16`): The only warm value. Sequence numerals, the `2,000+`
-  figure, the active nav plane, `Live` status, and the focus ring. 5.98:1 on
-  surface, 5.58:1 on paper. Held to roughly 5% of any viewport; measured at
-  0.37% of fills on the homepage.
-
-### Secondary
-- **Graphite** (`#5A6169`): Secondary text — mono labels, failure-pattern prose,
-  captions, dates, inactive nav. 6.27:1 / 5.85:1. There is no lighter text
-  colour; nothing on the site sits between graphite and ink.
-- **Verified** (`#1F4B99`): Links, the 2px underline beneath linked titles, and
-  "full write-up" affordances. 8.32:1 / 7.75:1.
-
-### Neutral
-- **Paper** (`#F7F7F5`): The page ground. Cool, not cream.
-- **Surface** (`#FFFFFF`): Raised content — nav bar, cards, the contact form.
-- **Inset** (`#EFEFEC`): The one recessed value. The paired-table header band and
-  screenshot placeholder plates.
-
-### Named Rules
-**The Two-Token Boundary Rule.** `Rule` (`#D6D9DD`) and `Boundary` (`#7F868F`)
-look similar and are not interchangeable. **Rule is decorative only** — hairline
-dividers, row separators, figure frames — and carries no contrast claim: it
-measures 1.42:1 on surface and 1.32:1 on paper. **Boundary is the identifying
-edge of an interactive control** — inputs, filter chips, buttons — and clears
-WCAG 1.4.11 at 3.68:1 / 3.43:1. A control bounded only by `Rule` is a defect.
-
-**The One Warm Value Rule.** Signal is the only non-neutral in the system and is
-never used for a surface, a body of text, or more than about 5% of a viewport.
-Its rarity is what makes a numeral or a `Live` badge register at all.
-
-**The No-Lighter-Grey Rule.** Graphite is the floor for text. Anything that
-would need a paler grey to read correctly is instead made smaller, moved, or
-deleted.
 
 ## Typography
 
-**Structure / UI:** Archivo (with system-ui, sans-serif) — 400/500/600/700
-**Long-form prose:** Literata (with Georgia, serif) — 400/500 plus italic
-**Identifiers:** Martian Mono (with ui-monospace, monospace) — 400/500
+Three families, three jobs. Loaded from Google Fonts in `index.html`.
 
-**Character:** An engineered grotesk carries every structural role, a genuine
-reading serif carries every sentence a visitor is expected to read, and a
-monospace is reserved for things that identify rather than describe. The split
-is strict: prose is never set in mono, and labels are never set in the serif.
+| Family | Token | Job |
+|---|---|---|
+| **Archivo** | `--font-ui` | Structure and display. Every heading, every button, the identity. |
+| **Literata** | `--font-prose` | Reading. Body copy, summaries, field values, the thesis. |
+| **Martian Mono** | `--font-id` | Identifiers only. Eyebrows, labels, dates, status, category, nav. |
 
-### Hierarchy
+Nothing below 12px exists on the site. Mono is confined to identifiers so labels
+never compete with content. Emphasis inside a headline uses weight in the same
+family, never a second family.
 
-Seven sizes in two registers. This is **not** a modular scale — the ratios are
-1.13 within the text register and 1.33 then 1.50 within the display register.
-The gap between 19 and 24 is the deliberate seam: below it everything is
-reading, above it everything is structure. **Nothing below 13px exists.**
+### Reading ramp (fixed)
 
-- **Display** (Archivo 700, 32px, 1.1, −0.015em): The name on the homepage,
-  page titles, evidence entry titles.
-- **Title** (Archivo 700, 24px, 1.2): Card titles, note list entries, and the
-  homepage name at mobile sizes.
-- **Emphasis** (Archivo 600, 19px, 1.4): The mechanism statements in the paired
-  table, and project-page summaries.
-- **Body** (Literata 400, 17px, 1.7): All reading text — bios, note bodies,
-  failure-pattern statements, the thesis line in italic.
-- **Small** (Literata 400, 15px, 1.6): Field values, captions, rail values,
-  status and date.
-- **Label** (Martian Mono 500, 13px, +0.04em, uppercase): Column headers, field
-  headers, project attributions, section markers, nav links, dates.
+| Token | Size |
+|---|---|
+| `--t-12` | 0.75rem / 12px |
+| `--t-13` | 0.8125rem / 13px |
+| `--t-15` | 0.9375rem / 15px |
+| `--t-17` | 1.0625rem / 17px — body default |
+| `--t-19` | 1.1875rem / 19px |
 
-### Named Rules
-**The Mono-Is-Never-Prose Rule.** Martian Mono sets identifiers only — section
-numbers, field headers, attributions, dates, slugs. It never sets a sentence.
-This is a rule the codebase learned the hard way under the previous system,
-where mono prose measured harder to read and wrapped badly on mobile.
+### Display ramp (fluid)
 
-**The 13px Floor.** No text anywhere is smaller than 13px. Status and date sit
-at 15px, not in a badge — currency is part of the evidence and should be
-readable, not decorative.
+The display ramp is what the previous system did not have at all, and it is what
+carries the redesign.
+
+| Token | Value | Used by |
+|---|---|---|
+| `--d-name` | `clamp(52px, 9.6vw, 138px)` | The hero identity |
+| `--d-major` | `clamp(38px, 5.4vw, 82px)` | Featured band project titles |
+| `--d-mid` | `clamp(34px, 4.6vw, 66px)` | Standard project titles |
+| `--d-page` | `clamp(38px, 5vw, 72px)` | Page titles |
+| `--d-24` `--d-32` `--d-48` | 1.5 / 2 / 3rem | Fixed steps still in use |
+
+Local display sizes are declared inline where a component owns its own scale:
+the PAIRS condition at `clamp(25px, 3.15vw, 52px)`, the thesis at
+`clamp(27px, 3.35vw, 56px)`, the operations figure at `clamp(58px, 8.4vw, 124px)`,
+the Contact title at `clamp(44px, 7vw, 104px)`, and Notes index titles at
+`clamp(32px, 4.3vw, 62px)`.
+
+Display type is tracked tight: `-0.035em` on headings, `-0.042em` on the
+identity, `-0.05em` on the operations figure.
+
+## Colour and surfaces
+
+Warm-neutral canvas. Every ratio below is measured against `--paper`, not
+assumed.
+
+| Token | Value | Contrast | Job |
+|---|---|---|---|
+| `--paper` | `#F2EEE6` | — | Warm page ground |
+| `--surface` | `#FFFFFF` | — | Raised surface; focused field body |
+| `--inset` | `#E8E2D6` | 1.11 vs paper | Recessed band; resting field body |
+| `--ink` | `#14110D` | **16.27** | Primary text, warm near-black |
+| `--graphite` | `#5C554A` | **6.36** | Secondary text |
+| `--rule` | `#CFC7B8` | 1.45 | **Decorative hairlines only** |
+| `--boundary` | `#7C7364` | **4.04** | The identifying edge of a control |
+| `--accent` | `#8A2B18` | **7.44** | Oxblood: numerals, Live, active nav, key rules |
+| `--verified` | `#1F4B99` | **7.19** | Links that leave the site |
+
+### Named rules
+
+- **Rule versus Boundary.** `--rule` is decorative and may never be a control's
+  only edge; `--boundary` is what identifies an interactive control and clears
+  the 3:1 non-text minimum on its own. Collapsing the two is what produced 1.12:1
+  control borders in the system before last.
+- **One accent, under ~5%.** Oxblood appears on index numerals, `Live`, the
+  active nav underline, the `↳` mechanism marker, skill-group labels, the drop
+  cap, the thesis rule and focus rings. Nowhere else. The 2,000+ operations
+  figure is deliberately **ink, not accent** — at 124px it would blow the budget
+  and read as a metric tile.
+- **Zero radius, zero shadow.** Enforced globally by
+  `*, *::before, *::after { border-radius: 0; box-shadow: none }`. This is a
+  policy, not a default, and it still holds with no exceptions in production.
+- **Colour never carries meaning alone.** Invalid fields change their rule
+  colour *and* gain a text message; status words are spelled out.
 
 ## Layout
 
-A single 1200px container with 24px side padding governs every page. Spacing
-comes from a 4px base: 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 96.
+- **Container** `--container: 1560px`, centred, padded by the gutter.
+- **Gutter** `--gut: clamp(20px, 4vw, 72px)` — fluid. Every bleed is measured
+  against it, so one token controls the whole edge behaviour of the site.
+- **Bleeds** `.bleed-l` / `.bleed-r` / `.bleed-x` apply `margin: calc(var(--gut) * -1)`
+  on the relevant side. This is the mechanism the entire project system is built
+  on. `html` and `body` carry `overflow-x: clip` so a deliberate edge-crop can
+  never produce a horizontal scrollbar.
+- **Hero structure** eyebrow → identity at display scale (line one cropped past
+  the left gutter) → a two-column band whose left column carries the role line
+  and a numbered index of the page's own sections, and whose right column
+  carries a real product screenshot tucked into the interline gap. A foot rule
+  closes it. Below 980px the band collapses to one column and the figure becomes
+  a full-bleed strip.
+- **Asymmetry** is systematic. Column splits are declared per footprint; the
+  PAIRS mechanism offset steps linearly by `--o`; the thesis is the only
+  right-aligned block on the homepage.
+- **Void** is a material. The PAIRS block leaves roughly half the width empty at
+  1920 on purpose, and the thesis balances it from the opposite side. Voids are
+  composed, not left over.
+- **Breakpoints** come from where the grid actually breaks: **980px** (project
+  footprints and the hero collapse), **1023px** (rail and background), **700px**
+  (Notes index), **640/620px** (typographic and rhythm adjustments). Touch
+  targets are keyed to `@media (pointer: coarse)`, never to width.
 
-The homepage is three stacked systems inside that container: a compact identity
-block, the paired reasoning table (a 64px numeral column, then 5fr failure and
-7fr mechanism), and a four-cell evidence rail. Selected evidence below alternates
-55/45 figure-and-fields rows.
+## The project system
 
-Reading measures are set per surface and are load-bearing: notes and the notes
-index at 44rem, project detail at 46rem, homepage bio paragraphs at 68ch, the
-identity role line at 66ch, the thesis at 62ch, intros at 60ch.
+Five footprints, defined in `ProjectCard.css`. They differ **only** in CSS grid
+placement.
 
-### Responsive behavior
+| Footprint | Composition |
+|---|---|
+| **F1 band** | Full-bleed image both sides, then a structural band beneath: title left, meta right, text and actions below a hairline |
+| **F2 right** | Text left, image right bleeding through the right gutter |
+| **F3 left** | Image left bleeding through the left gutter, text right, dropped |
+| **F4 minor** | Big type, smaller non-bleeding image offset low |
+| **Coda** | Used once, to close `/portfolio`: meta full width, title beside text, then a 24:9 full-bleed letterbox |
 
-Breakpoints are derived from where the grid actually breaks rather than chosen:
+### One DOM order, always
 
-- **≤640px** — one column. The paired table stops being a table: each pair
-  becomes a single block with the numeral, the failure sentence, then the
-  mechanism indented behind a `↳` and a 2px rule, with the relationship stated
-  once above the table rather than repeated in every unit.
-- **641–1023px** — the six-column band. The rail halves to 2×2, evidence rows
-  stack figure-over-text, the background grid becomes one column.
-- **≥1024px** — full twelve-column behaviour.
-- **≤700px** — one surface-specific exception: the resume swaps its inline PDF
-  frame for a direct download hand-off, because inline PDF embedding is
-  unreliable on phones.
+Every footprint renders the same order:
 
-The project grid uses `repeat(auto-fill, minmax(min(300px, 100%), 1fr))`; the
-`min()` is what stops a 300px floor overflowing a 320px viewport.
+```
+meta  →  title  →  screenshot  →  tagline + summary + stack  →  actions
+```
 
-### Named Rules
-**The Capability Rule.** Touch target sizing is keyed to `(pointer: coarse)`,
-not viewport width. A tablet in portrait is wider than any phone breakpoint and
-still finger-driven, so width alone was raising targets on the wrong devices.
+Art direction on the outside, one predictable skeleton inside. Keyboard and
+screen-reader order can therefore never diverge from reading order, however
+unusual the composition looks. Each footprint carries a trailing `1fr` row so
+slack collects there instead of spreading the text column against a taller
+image.
 
-## Elevation & Depth
+`/portfolio` runs a nine-step rhythm — `right · minor · band · left · right ·
+minor · left · minor · band` — and appends the coda when the list holds more
+than four projects, so a filtered view never ends on a one-off treatment.
 
-**There are no shadows.** The rule is absolute and enforced globally:
-`border-radius: 0` and `box-shadow: none` are set on every element, including
-pseudo-elements. Depth is produced three ways only — the ground/surface/inset
-tonal step, 1px `Rule` hairlines, and 2px `Ink` rules that open a section.
+Below 980px every footprint collapses to the identical single column and the
+rhythm is carried by aspect ratio alone (16:10, 5:4, 3:2, 1:1, 16:9).
 
-This replaces a previous system in which one shadow token served eight distinct
-surface roles while three radii and inconsistent 2/3/4px edges competed with it.
+Actions hide themselves when a link is null. That is how the private-project
+policy is enforced in code rather than by convention.
 
-## Shapes
+## Homepage
 
-One geometry: the rectangle. No radii anywhere, no pills, no rounded frames.
-Borders are 1px `Rule` for decoration, 1px `Boundary` for controls, and 2px
-`Ink` for section openings and the invalid-field state. Screenshots sit flush
-inside a 1px frame with no inset and no shadow.
+| Block | Treatment |
+|---|---|
+| **Hero** | Identity at `--d-name`, edge-cropped left, with a real Packet & Pine screenshot in the interline gap. Roughly half the first viewport is evidence. |
+| **Section index** | The page's own sections as a numbered `<dl>` (01 Selected work, 02 Background, 03 Writing). Structure used as composition, and as in-page navigation. |
+| **PAIRS** | Three editorial units, not a table. Condition at `clamp(25px, 3.15vw, 52px)` on a 21ch measure; mechanism dropped, offset by `--o × clamp(18px, 6vw, 158px)`, behind a boundary rule and an accent `↳`. Serif answer against sans condition is the typographic contrast. |
+| **RAIL** | `2,000+` as ink display type at `clamp(58px, 8.4vw, 124px)` carrying its own sentence, beside a hairline `<dl>`. No cells, no dividers, no tiles. |
+| **Thesis** | Its own band: accent rule, `clamp(27px, 3.35vw, 56px)` Literata on a 26ch measure, right-aligned against the void the pairs leave. |
+| **Evidence** | The three named projects rendered in the *same* footprints `/portfolio` uses — F1, F3, F2 — with Condition/Action/Verify in the text area. F4 is deliberately unused: nothing in the selected evidence should read as de-emphasised. |
+| **Background** | Portrait at full column scale bleeding through the left gutter, a lead paragraph at `clamp(20px, 1.85vw, 30px)` on 34ch, then certifications and toolbox as full-width hairline structure rather than a sidebar appendix. |
 
-## Components
+## Other routes
 
-### Buttons
-- **Shape:** Square, 12px/16px padding, 1px `Boundary` border so filled and
-  outline variants occupy identical space.
-- **Primary:** Ink fill, white text; hovers to Signal.
-- **Outline:** Transparent, ink text; hovers to a surface fill.
-- **Disabled:** 50% opacity. Used only while a form submit is in flight.
-- **Touch:** 44px minimum under `(pointer: coarse)`.
+- **`/portfolio`** — page title, filter chips, then the nine-step footprint
+  rhythm and the coda.
+- **`/projects/:slug`** — a 46rem reading column; the screenshot breaks out of it
+  to `min(64rem, 100vw − 2·gut)`, centred on the column by negative margins.
+- **Notes index** — an editorial publication index: a mono date rail
+  (`clamp(92px, 13vw, 210px)`), titles at `clamp(32px, 4.3vw, 62px)` on a 20ch
+  measure, and the excerpt dropped and indented under its own hairline. Not
+  project cards: no image, no status, no stack.
+- **Note detail** — deliberately unchanged reading: a 44rem measure, 17px
+  Literata at 1.8, and an accent drop cap on the first paragraph.
+- **`/contact`** — no form panel and no contact tiles. An oversized title, the
+  fields sitting directly on the page, and the four channels as a hairline `<dl>`
+  in a column offset down from the form.
+- **`/resume`** — an embedded PDF viewer. Intentionally the plainest surface.
+- **404** — page title, one prose line, two buttons.
 
-### Paired reasoning table (signature component)
-The homepage's defining element. A 2px ink rule opens it; an inset header band
-carries two mono column labels; three rows follow, each crossing both columns so
-a pair reads horizontally. Signal numerals sit in a 64px column, failure prose is
-graphite serif, the mechanism is 19px semibold ink, and the project attribution
-sits beneath in mono. On phones each row becomes one indented block.
+## Motion
 
-### Evidence rail
-Four cells divided by hairlines, the first emphasised with a 32px Signal figure
-and a serif caption; the rest are mono label over serif value. It exists to give
-operations concrete weight without giving it screenshot real estate.
+`MOTION_INTENSITY 5`. Plain CSS plus one IntersectionObserver
+(`src/lib/reveal.js`). No animation library, no GSAP, no scroll hijack, no
+parallax, no infinite loops, no scroll listeners.
 
-### Evidence entry
-55/45 figure-and-fields row, alternating sides. The figure is a flush 1px frame
-with `aspect-ratio: 16/10` reserving space. Fields are a `<dl>` with mono `dt`
-headers over a hairline and serif `dd` values. Status and date sit at 15px.
+- Scroll reveal: 20px rise plus fade, 0.7s on `--ease`
+  (`cubic-bezier(0.22, 1, 0.36, 1)`), staggered by `calc(var(--i) * 70ms)`.
+  Each element is unobserved the moment it lands.
+- Hover: a 1.8% image scale over 0.7s, colour and border transitions at
+  0.2–0.25s, and a 1px press translate on buttons.
 
-### Cards
-Square, 1px `Rule` border, no shadow; the border shifts to `Boundary` on hover.
-A `16/9` image with a 1px bottom rule, a meta row separated by a hairline, and
-actions pinned to the card bottom with `margin-top: auto` so grid rows align.
-
-### Inputs
-Paper fill so fields recede into the page, 1px `Boundary` edge, 12px padding.
-Focus shifts the border to ink **and** adds a 2px Signal `:focus-visible` ring —
-a border shift alone is too easy to miss. Invalid fields take a 2px Signal
-border plus a serif message; the message carries the meaning, never colour alone.
-
-### Navigation
-Surface bar, 60px, sticky, 1px bottom rule. Uppercase mono links; the active one
-takes a solid Signal plane. Below 640px it collapses to a 44×44 toggle with
-`aria-expanded`, `aria-controls`, Escape-to-close, outside-press-to-close and
-focus return to the toggle.
-
-### Skip link
-The first focusable element on every page. `position: fixed` so it stays
-reachable at any scroll position, revealed on `:focus` (not only
-`:focus-visible`) so any legitimate focus path shows it.
-
-## Do's and Don'ts
-
-### Do:
-- **Do** use `Boundary`, never `Rule`, for anything a visitor can interact with.
-- **Do** keep Martian Mono for identifiers only.
-- **Do** key touch targets to `(pointer: coarse)`.
-- **Do** set status and date at 15px in their own position, never as a badge.
-- **Do** reserve image space with `aspect-ratio` so CLS stays at zero.
-- **Do** let reading measure follow content type — 44rem notes, 46rem project
-  pages, 68ch bio.
-- **Do** honour `prefers-reduced-motion`; the only motion is 120ms state changes.
-
-### Don't:
-- **Don't** introduce a radius or a shadow. The global reset removes both, and
-  re-enabling either for one component breaks the only depth model the site has.
-- **Don't** add a second accent colour. Signal's rarity is the effect.
-- **Don't** use a grey lighter than Graphite for text.
-- **Don't** set prose in Archivo or Martian Mono.
-- **Don't** push the CONDITION → ACTION grammar onto Notes. Notes are long-form
-  reading and stay that way.
-- **Don't** add a size outside the seven-step ramp.
-- **Don't** assume dark mode exists. There is none; the document declares itself
-  light-only with `<meta name="color-scheme" content="light">`.
+**Positive gating is the rule.** Every transition and the reveal's hidden start
+state are declared *only* inside
+`@media (prefers-reduced-motion: no-preference)`. A reduced-motion visitor is
+never sent a rule that then has to be cancelled, and nothing is ever hidden that
+JavaScript has to rescue — the page is fully composed with scripting off. The
+`reduce` block that also zeroes transitions is belt-and-braces; nothing depends
+on it. Verified in production: the deployed stylesheet contains exactly one
+`opacity: 0` declaration, and it is inside the positive guard.
 
 ## Images
 
-Project screenshots ship as AVIF at three widths — 352w, 704w and 1216w —
-generated by `scripts/gen-card-images.mjs` and committed, since the generator
-shells out to macOS `sips` and Vercel builds on Linux. The original stays the
-`<img>` fallback, so a browser without AVIF renders exactly what it did before.
-Sources may be JPEG or PNG — a screenshot handed over as a lossless PNG remains
-the canonical file rather than being re-encoded, and both the generator and
-`src/lib/cardImages.js` accept either.
+Real screenshots of real software. No AI-generated imagery, no stock, no
+div-built fake product UI. Every tracked asset is scanned for C2PA / `caBX` /
+`gpt-image` provenance markers before it ships.
 
-Two `sizes` values exist because two slots exist: `CARD_SIZES` for the portfolio
-grid, which caps at 368px, and `EVIDENCE_SIZES` for the homepage evidence
-figures, which reach 607px and therefore need the 1216w step on a 2x display.
-Both are derived from the real grid, with upper bounds set roughly 20px above
-each layout threshold to absorb the scrollbar discrepancy between media
-conditions and layout width.
+### The responsive ladder
 
-### Social cards
+**352 · 704 · 896 · 1216**, generated by `scripts/gen-card-images.py` (Pillow)
+into `src/assets/images/cards/` and committed. Not part of `npm run build` —
+Vercel's build image has no Pillow, and these only change when a screenshot
+changes.
 
-`scripts/make-og-images.py` renders one 2400x1260 card per project into
-`public/og/`, plus the site cover at `public/og-image.png`. They use the same
-tokens and the same three type roles as the site, so a shared link previews in
-the portfolio's own language rather than a separate one: paper ground, a 2px
-ink rule across the top, an Archivo title, a Martian Mono category and status,
-a Literata summary trimmed to its first sentence, and the project's real
-screenshot in a 1px `Rule` frame at 16:10. Square corners throughout; status is
-plain coloured text, never a badge.
+- **896 exists for DPR2 on small slots and DPR1 on the 750–880px slots.** Without
+  it a 390px phone at 2× jumps to 1216 (25.6 KB avg) where 896 (16.7 KB) serves;
+  that is −35% per image, about −89 KB on `/portfolio`.
+- **1216 is the maximum** and covers full-bleed bands and the hero.
 
-Every string is parsed from `src/data/projects.js` or read from
-`src/data/profile.js` — the generator invents nothing, and never touches that
-file's email or phone. The three families are vendored under `scripts/fonts/`
-with their OFL licences, so generation is deterministic and works offline.
-Output is committed; the script is not part of `npm run build`, because Vercel's
-image has no Python.
+### The grid-box guard
+
+The previous generator shelled out to macOS `sips`, which above roughly 1024px
+silently emits a **tiled** AVIF: a `grid` derived-image box plus an `irot`
+transform instead of a single coded image. Chrome parses the header — correct
+intrinsic size, `naturalWidth` reports fine, no load error, nothing in the
+console — and then paints a blank rectangle. That shipped, and it was invisible
+to a 1× check.
+
+`naturalWidth > 0` cannot detect this. The generator now fails the run if any
+output contains a `grid` box, and image verification must probe **painted
+pixels** (draw onto a canvas primed with a known colour and read it back), never
+intrinsic dimensions.
+
+### Sizes logic
+
+Each slot has its own `sizes` expression in `src/lib/cardImages.js`, derived from
+the real layout rather than estimated:
+
+| Export | Slot |
+|---|---|
+| `HERO_SIZES` | right column of a 0.82/1.18 split plus one gutter; 100vw below 980px |
+| `BAND_SIZES` | `100vw` |
+| `HALF_SIZES` | F2/F3 image column plus one gutter |
+| `MINOR_SIZES` | F4 column, no bleed |
+| `DETAIL_SIZES` | `min(64rem, 100vw − 2·gut)`, exact at 350 / 706 / 1024 |
+
+Upper bounds sit slightly above each layout threshold on purpose: media
+conditions resolve against the viewport *including* the classic scrollbar, while
+the grid lays out against the content width that excludes it.
+
+## Accessibility
+
+The semantics are load-bearing and are preserved through every visual change.
+
+- **One DOM order per component**, so composition never reorders content for
+  keyboard or screen-reader users.
+- **Status and date** are separated by a visually-hidden `", "` so they are not
+  announced as `LiveAug 2026`.
+- **Filters** are `aria-pressed` buttons with an `aria-live="polite"` count.
+- **Contact** keeps `aria-invalid`, `aria-describedby`, focus-to-first-error
+  deferred to a commit-safe effect, and `role="status"` on the result.
+- **Mobile nav** keeps `aria-expanded`, `aria-controls`, Escape-to-close with
+  focus return, and outside-pointerdown close. `NavBar.jsx` was not touched by
+  the redesign.
+- **Skip link** is `position: fixed` so it works at any scroll position.
+- **Contrast floors**: 4.5:1 for text, 3:1 for control boundaries. Current values
+  are in the colour table; `--rule` at 1.45 is decorative-only by policy.
+- **Touch targets** are 44px minimum under `@media (pointer: coarse)`.
+
+## Do's and Don'ts
+
+### Do
+- Reach for an existing footprint before inventing a composition
+- Let imagery bleed through the gutter; that is the system, not an exception
+- Keep the accent under ~5% of any viewport
+- Declare motion inside the positive `no-preference` guard
+- Re-derive a `sizes` hint whenever a slot's column split changes
+- Verify images by painted pixels
+
+### Don't
+- Add a radius, a shadow, or a second accent
+- Put `--rule` on a control
+- Introduce a sixth footprint, or hand-place an asymmetry
+- Add cards, tiles, gauges, KPI styling or fake instrumentation
+- Set a metric in accent at display scale
+- Use `sips` for AVIF, or trust `naturalWidth` as proof an image rendered
 
 ## Unresolved
 
-Recorded here as open items, unaddressed by this system.
-
-- **The old GitHub Pages URL is a redirect stub, not a mirror.**
-  `chadkraus87.github.io/React-Portfolio-v2/` serves three files and no
-  portfolio content: a "moved" page carrying `noindex, follow` and a
-  `rel=canonical` to the Vercel site, a matching `404.html` that forwards the
-  deep path, and a `robots.txt` that allows crawling so those directives are
-  actually readable. It is kept so old inbound links resolve. `index.html`
-  still carries a second Search Console verification token for that property;
-  both it and the stub are retired only after Google drops the old URL.
+- **`.impeccable/design.json` is stale.** The machine-readable sidecar beside
+  this file still encodes the retired palette (`#F7F7F5` paper, `signal`
+  instead of `accent`), the retired 0.12s motion duration, the pre-C2 breakpoint
+  set, and a `Paired Reasoning Table` component that no longer exists. It has
+  not been regenerated; treat this document as authoritative until it is.
+- **OG/social cards** were generated for the previous visual system and have not
+  been rebuilt for C2. Their text is still accurate; their visual language is
+  not. See the audit notes in the project history.
+- **No `rel=canonical`** anywhere on the site; `og:url` carries the absolute URL.
+  Pre-existing, unchanged by the redesign.
+- **The homepage's three description variants differ from each other**
+  (`description`, `og:description`, `twitter:description`). `/` is served from
+  `index.html` verbatim rather than rewritten by the prerenderer. Pre-existing.
