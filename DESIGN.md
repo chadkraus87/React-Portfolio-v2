@@ -445,16 +445,20 @@ The semantics are load-bearing and are preserved through every visual change.
 
 ## Unresolved
 
-- **`.impeccable/design.json` is stale.** The machine-readable sidecar beside
-  this file still encodes the retired palette (`#F7F7F5` paper, `signal`
-  instead of `accent`), the retired 0.12s motion duration, the pre-C2 breakpoint
-  set, and a `Paired Reasoning Table` component that no longer exists. It has
-  not been regenerated; treat this document as authoritative until it is.
-- **OG/social cards** were generated for the previous visual system and have not
-  been rebuilt for C2. Their text is still accurate; their visual language is
-  not. See the audit notes in the project history.
-- **No `rel=canonical`** anywhere on the site; `og:url` carries the absolute URL.
-  Pre-existing, unchanged by the redesign.
-- **The homepage's three description variants differ from each other**
-  (`description`, `og:description`, `twitter:description`). `/` is served from
-  `index.html` verbatim rather than rewritten by the prerenderer. Pre-existing.
+Nothing outstanding in the design system itself. The four items listed here
+while C2 was landing were all closed by later commits, and are recorded below so
+this section is not mistaken for open work:
+
+- **`.impeccable/design.json`** was regenerated against the C2 palette and
+  motion values in `c36f84f`. It is current; this document remains the prose
+  authority, the sidecar the machine-readable one.
+- **OG/social cards** were rebuilt in the C2 language in `ee3d11f` and are
+  regenerated from `scripts/make-og-images.py` whenever project copy or a
+  screenshot changes.
+- **`rel=canonical`** was added in `e1df125`. Every indexable route carries one
+  absolute self-referencing canonical matching its `og:url`; `scripts/
+  prerender.mjs` fails the build if the shell canonical and `BASE` disagree.
+  The 404 is `noindex` and deliberately carries none.
+- **The homepage's three description variants** were unified in `cb7753f`. All
+  three are stamped from `HOME_DESCRIPTION` in `src/data/siteMeta.js`, including
+  `/`, which the prerenderer now rewrites rather than serving verbatim.

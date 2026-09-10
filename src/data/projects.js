@@ -28,6 +28,9 @@
 //               'Watch demo' when the link goes to a walkthrough video rather
 //               than a running deployment.
 //   repoLink    GitHub URL, or null (button hides itself)
+//   linkNote    optional one-line explanation shown on the project page when
+//               BOTH links are null. Defaults to the private-infrastructure
+//               wording; set it when that reason is not the real one.
 //   status      short state badge: 'Live' (publicly reachable), 'In progress'
 //               (actively built, no public deploy) or 'Private'
 //               (deployed, but not publicly linked). Omit to hide the badge.
@@ -45,8 +48,9 @@ import HomeLabCommander from '../assets/images/HomeLabCommander.jpg';
 import DeskDaemon from '../assets/images/DeskDaemon.jpg';
 import StackCity from '../assets/images/StackCity.jpg';
 import PacketAndPine from '../assets/images/PacketAndPine.jpg';
-// Real capture of Meridian's agent roster. PNG, kept lossless as supplied.
-import Meridian from '../assets/images/MeridianTeam.png';
+// Real capture of Meridian's Lodge view — the spatial map where each cabin is a
+// department and the agents move between them.
+import Meridian from '../assets/images/MeridianLodge.jpg';
 
 export const projects = [
   // ---- AI & Claude Code -------------------------------------------------
@@ -83,6 +87,8 @@ export const projects = [
     image: Meridian,
     projectLink: null, // local-first — runs on your own machine, no hosted instance
     repoLink: null, // repo is private
+    linkNote:
+      'There is no hosted instance to link. Meridian is built to run on your own machine, behind your own sign-in — a public demo would defeat the point.',
   },
   {
     id: 2,

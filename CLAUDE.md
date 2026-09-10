@@ -121,7 +121,7 @@ them.
   `google-site-verification` token from `index.html`, and optionally disabling
   Pages entirely. None of that happens before de-indexing is confirmed; the
   redirect stays indefinitely for now.
-- Nothing else outstanding. Meridian now ships a real screenshot of its agent
-  roster (`src/assets/images/MeridianTeam.png`) and the social cards were
+- Nothing else outstanding. Meridian now ships a real screenshot of its Lodge
+  view (`src/assets/images/MeridianLodge.jpg`) and the social cards were
   rebuilt in the current design system — both were open items and both are
   closed.

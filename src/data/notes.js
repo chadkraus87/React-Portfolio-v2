@@ -25,6 +25,22 @@
 
 export const notes = [
   {
+    slug: 'the-image-that-decoded-but-never-painted',
+    title: 'The image that decoded but never painted',
+    date: '2026-09-10',
+    summary:
+      'The file loaded, reported the right dimensions, raised no error, and drew nothing. The check I was using to verify it could not have caught it.',
+    body: [
+      'Every project screenshot on this site is served as a set of AVIF variants at four widths, so a phone does not download an image sized for a desktop. The script that generates them used to shell out to sips, the image tool that ships with macOS. It ran clean, produced files of a sensible size at every width, and I committed the output.',
+      'Above roughly 1024px, sips does not write what I assumed it was writing. Instead of one coded image it emits a tiled one — a grid box that stitches together smaller tiles, plus a rotation transform. It is a legal AVIF. Chrome reads the header, agrees on the dimensions, fires no error, logs nothing, and then paints a blank rectangle where the screenshot should be.',
+      'So the widest variant of every screenshot in the repo was broken, and I had shipped it. The reason I did not notice is that the 1216px file is only ever chosen on a high-density display. On the screen I had been checking, the browser picked a smaller variant, and every smaller variant was fine.',
+      'The part worth writing down is that my verification could not have caught it. I had been checking naturalWidth > 0 — the image loaded, so it must have rendered. But naturalWidth reports what the header claims, and the header was honest. The dimensions were right. The decode succeeded. There were simply no pixels at the end of it. I had written a test that confirmed the exact property that was not broken.',
+      'The fix for the generator was to stop using sips and encode with Pillow, which writes a single coded image at every width. It now fails the run outright if any file it produced contains a grid box, so this cannot reach a commit again without something shouting.',
+      'The fix for the checking was the more useful one. To know an image rendered, I draw it onto a canvas that I have already filled with a colour the image does not contain, then read the pixels back. If the sentinel colour is still there, nothing was painted, whatever the header says. That works on any image, and it does not care why the decode failed.',
+      'The generalisation I keep coming back to is that “it loaded” and “it is on the screen” are separate claims, and the cheap check only ever proves the first. That is the same shape as most of the escalations I take at work: the service is up, the endpoint answers, the dashboard is green, and the customer still cannot do the thing. The assertion has to be about the outcome the user gets, not about the step that is easy to measure.',
+    ],
+  },
+  {
     slug: 'a-rate-limiter-that-limited-nothing',
     title: 'A rate limiter that limited nothing',
     date: '2026-09-03',

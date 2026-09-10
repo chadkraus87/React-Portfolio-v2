@@ -13,8 +13,10 @@ import { NotesIndex, NoteDetail } from './pages/Notes.jsx';
 import { notes } from './data/notes.js';
 
 // Real paths (/portfolio, not /#/portfolio) so pages are indexable and links
-// are shareable. GitHub Pages has no server-side rewrite, so public/404.html
-// bounces unknown paths back through index.html — see the comment there.
+// are shareable. Every route is prerendered to its own static file by
+// scripts/prerender.mjs, and Vercel serves dist/404.html — with a real 404
+// status — for anything unmatched. The old GitHub Pages redirect hack that
+// used to live here is gone.
 //
 // basename comes from Vite's base so it can't drift from vite.config.js.
 export default function App() {

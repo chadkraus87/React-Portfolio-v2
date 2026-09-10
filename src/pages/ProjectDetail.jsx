@@ -30,6 +30,7 @@ export default function ProjectDetail() {
     projectLink,
     projectLinkLabel,
     repoLink,
+    linkNote,
     status,
     updated,
     category,
@@ -101,7 +102,7 @@ export default function ProjectDetail() {
 
         {!projectLink && !repoLink && (
           <p className="pdetail-note">
-            This project isn&rsquo;t publicly linked — it runs on private infrastructure.
+            {linkNote || 'This project isn\u2019t publicly linked \u2014 it runs on private infrastructure.'}
           </p>
         )}
       </div>

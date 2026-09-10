@@ -95,8 +95,10 @@ published today. A 404 route exists.
 - Project `status` is one of `Live`, `In progress`, or `Private`, paired with an
   `updated` month. Currency is part of the evidence.
 
-Undecided / open: the old GitHub Pages URL still serves a stale mirror and has
-not been formally retired.
+Undecided / open: the old GitHub Pages URL now serves a redirect stub — noindex,
+canonical to the live site, and a forwarding script — rather than a stale mirror.
+It stays until Search Console shows the old URL dropped or consolidated, and is
+not formally retired before then.
 
 ## Brand Commitments
 
@@ -118,11 +120,12 @@ Three constraints are binding on all future work:
 The name and voice are established: first person, plain, specific, and
 unembellished; failures are described as readily as successes.
 
-**Not declared binding:** the incumbent forest-green visual identity
-(pine/forest/moss with Bitter + IBM Plex, matched to the resume PDF) was
-explicitly left off the non-negotiable list. It is the incumbent implementation
-and current design authority, not a locked brand commitment — a future redesign
-may replace it, subject to the parity constraint above.
+**Not declared binding:** the visual identity was explicitly left off the
+non-negotiable list, and the forest-green system that held it when this was
+written has since been replaced by C2 — Editorial Spatial. DESIGN.md is the
+current design authority. The principle stands: the visual system is the
+current implementation, not a locked brand commitment, and a future redesign
+may replace it subject to the parity constraint above.
 
 ## Evidence on Hand
 
@@ -146,8 +149,8 @@ Real, in the repository:
   bug triage; the onboarding package new escalation engineers train from.
 
 Absent, and not to be invented: testimonials, client logos, press coverage,
-traffic or usage numbers, awards, revenue, and team size. Meridian has a
-placeholder title card rather than a real screenshot.
+traffic or usage numbers, awards, revenue, and team size. Every project now
+ships a genuine screenshot; Meridian's is a capture of its Lodge view.
 
 ## Product Principles
 
