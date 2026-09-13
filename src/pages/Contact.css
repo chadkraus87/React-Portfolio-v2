@@ -1,9 +1,9 @@
 .ct-head { display: grid; gap: 16px; margin-bottom: 56px; }
 .contact-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
-.contact-form { display: grid; gap: 20px; padding: clamp(20px, 3vw, 32px); border: 1px solid var(--line-2); background: linear-gradient(180deg, #110c09, #0a0706); }
+.contact-form { display: grid; gap: 20px; padding: clamp(20px, 3vw, 32px); border: 1px solid var(--line-2); background: var(--surface); }
 .field { display: grid; gap: 8px; }
 .field label { font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-.field input, .field textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--edge); background: #0a0705; color: var(--text); font: 500 16px/1.5 var(--f-ui); }
+.field input, .field textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--edge); background: var(--field); color: var(--text); font: 500 16px/1.5 var(--f-ui); }
 .field textarea { resize: vertical; }
 .field input:focus, .field textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
 .field [aria-invalid="true"] { border-color: var(--danger); }

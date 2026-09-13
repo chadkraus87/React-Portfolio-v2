@@ -22,10 +22,12 @@
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- The site is dark-only by design. Declaring it keeps scrollbars and native
-         form controls dark for every visitor, whatever their OS setting. -->
-    <meta name="color-scheme" content="dark" />
+    <!-- Dark by default; light is opt-in from the nav and saved per browser.
+         theme.js applies a saved choice before first paint (the CSP forbids
+         inline scripts, so it is a tiny same-origin file). -->
+    <meta name="color-scheme" content="dark light" />
     <meta name="theme-color" content="#080605" />
+    <script src="/theme.js"></script>
     <!-- All three description tags below are stamped from HOME_DESCRIPTION in
          src/data/siteMeta.js at prerender time. They are authored here too so
          `npm run dev` matches production; the build fails if they drift. -->

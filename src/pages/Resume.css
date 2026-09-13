@@ -7,6 +7,6 @@
 
 @media (max-width: 700px) {
   .rs-frame, .resume-fallback, .rs-head .btn { display: none; }
-  .resume-mobile { display: grid; gap: 16px; padding: 22px; border: 1px solid var(--line-2); background: #0d0907; color: var(--prose); }
+  .resume-mobile { display: grid; gap: 16px; padding: 22px; border: 1px solid var(--line-2); background: var(--surface); color: var(--prose); }
   .resume-mobile-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 }

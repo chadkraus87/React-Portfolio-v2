@@ -98,6 +98,13 @@ project stories now live on the PetCenza and CoachRhythm case studies.
 - Commit activity is public GitHub data only, fetched unauthenticated by
   `scripts/fetch-activity.mjs` into `src/data/activity.json` — a private repo
   can never appear, and a project with no public repo shows as such.
+- Every screenshot and demo carries its capture date, and is flagged on the site
+  when it predates the project's last update. Demos carry timed captions of what
+  is on screen; masked names and simulated data are captioned as such.
+- Recruiter conveniences: `/?unit=<slug>` links open the room with one project
+  pulled out, and `hire` in the console opens a printable one-page snapshot.
+- A light theme is available for bright rooms and shared screens; dark remains
+  the default and the brand.
 - Project `status` is one of `Live`, `In progress`, or `Private`, paired with an
   `updated` month. Currency is part of the evidence.
 
@@ -179,7 +186,8 @@ ships a genuine screenshot; Meridian's is a capture of its Lodge view.
 
 ## Accessibility & Inclusion
 
-No project-specific standard has been established. The recruiter audience skews
+WCAG 2.2 AA is the working standard, checked by axe on every route in both
+themes on every push (`.github/workflows/ci.yml`). The recruiter audience skews
 toward shared screens, phones, and quick scanning, so legible type sizing,
-visible focus, and real contrast are practical requirements rather than
-compliance targets.
+visible focus, and real contrast are practical requirements, not just compliance
+targets. Silent demos carry captions and a written list of what is on screen.

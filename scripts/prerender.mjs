@@ -130,6 +130,30 @@ const projectRoutes = parseEntries(projectsSrc).map(({ slug, title }) => ({
   if (problems.length) throw new Error(`racks.js:\n  ${problems.join('\n  ')}`);
 }
 
+// Evidence dates. Every project says when its screenshot was captured; every demo
+// says when it was recorded and what is on screen. Missing fields fail the build;
+// evidence older than the project's last update only warns.
+{
+  const month = /^\d{4}-(0[1-9]|1[0-2])$/;
+  const problems = [];
+  const stale = [];
+  for (const { slug } of parseEntries(projectsSrc)) {
+    const block = (projectsSrc.split(`slug: '${slug}'`)[1] ?? '').split(/\n {2}\},?\n/)[0];
+    const field = (key) => block.match(new RegExp(`\\b${key}:\\s*'([^']*)'`))?.[1];
+    const demo = field('demo');
+    const imageDate = field('imageDate');
+    const demoDate = field('demoDate');
+    const updated = field('updated');
+    if (!month.test(imageDate ?? '')) problems.push(`${slug}: imageDate must be 'YYYY-MM'`);
+    if (demo && !month.test(demoDate ?? '')) problems.push(`${slug}: a demo needs demoDate 'YYYY-MM'`);
+    if (demo && !/demoChapters:\s*\[\s*\[\s*0\s*,/.test(block)) problems.push(`${slug}: a demo needs demoChapters starting at 0`);
+    const captured = demo ? demoDate : imageDate;
+    if (captured && updated && captured < updated) stale.push(`${slug}: ${demo ? 'demo' : 'screenshot'} from ${captured}, project updated ${updated}`);
+  }
+  if (problems.length) throw new Error(`projects.js evidence:\n  ${problems.join('\n  ')}`);
+  if (stale.length) console.warn(`evidence older than the project's last update:\n  ${stale.join('\n  ')}`);
+}
+
 // Rack model self-test: stack matching, trunks across racks, and the refusal to
 // silently drop a project that is in no rack.
 {

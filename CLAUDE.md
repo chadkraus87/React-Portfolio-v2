@@ -22,6 +22,9 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   image at the top of the file and references it by variable. Optional `demo` is a
   path to a silent MP4 in `public/demos/` (privacy-review every frame first);
   `demoNote` captions it when names are masked or the data is simulated.
+  Every project needs `imageDate`; a demo also needs `demoDate` and
+  `demoChapters` (timed captions of what is on screen). The build fails without
+  them and warns when evidence is older than the project's `updated` month.
 - Home is the server room: `src/components/ServerRoom.jsx` renders the racks once,
   `src/lib/serverRoom.js` is the imperative engine (camera, cables, console,
   detail sheet), and `src/lib/rackModel.js` is the pure model the build self-tests.
@@ -66,6 +69,14 @@ section was removed; old `/notes` URLs redirect permanently in `vercel.json`.
 - Absolute URLs (og:url, og:image, sitemap, robots) live in `index.html` and
   `scripts/prerender.mjs` — both must be updated together if the domain changes.
 
+## Quality gate
+`.github/workflows/ci.yml` runs on every push and pull request: `npm run build`,
+then `npm run test:e2e` (Playwright + axe: WCAG 2.2 AA on every route in both
+themes, phone-width overflow, the room, console, shared unit links, captions,
+reduced motion, theme toggle), then Lighthouse budgets from `lighthouserc.json`.
+Vercel deploys pushes to `main` regardless of CI unless Deployment Checks are
+enabled for this workflow in the Vercel project settings.
+
 ## Non-negotiable working rules
 1. **Always `git pull origin main` before making any changes.** I sometimes edit
    on github.com directly, so the local copy is often behind. Start every session
@@ -85,7 +96,7 @@ section was removed; old `/notes` URLs redirect permanently in `vercel.json`.
 ## Standard workflow for any update
 1. `git pull origin main`
 2. Make the requested edits (favor the data files).
-3. `npm run build` — confirm it passes.
+3. `npm run build` — confirm it passes, then `npm run test:e2e`.
 4. Optionally `npm run dev` so I can preview locally.
 5. Summarize the changes and the exact commit message you'll use.
 6. **Stop and wait for my approval.**
@@ -100,7 +111,9 @@ section was removed; old `/notes` URLs redirect permanently in `vercel.json`.
   (short differentiator strip), `summary` (always visible on the card),
   optional `details` (the write-up on its own page), `stack`, `image`,
   `projectLink` / `projectLinkLabel` / `repoLink`, `status`
-  ('Live' | 'In progress' | 'Private') and `updated` ('YYYY-MM').
+  ('Live' | 'In progress' | 'Private'), `updated` ('YYYY-MM') and `imageDate`
+  ('YYYY-MM' the screenshot was captured). A demo adds `demo`, `demoDate`,
+  `demoChapters` and optionally `demoNote`.
 - **Change bio / title / tagline / experience / skills / certifications / contact** →
   `src/data/profile.js`. Certifications are `{ name, meta }` objects.
 - **Swap the resume** → replace the PDF in `src/assets/files/` and update the import

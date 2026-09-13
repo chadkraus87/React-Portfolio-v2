@@ -8,6 +8,7 @@ import { STATUS_VFD, formatUpdated } from '../lib/projectMeta.js';
 import { cardSrcSet } from '../lib/cardImages.js';
 import { mountServerRoom } from '../lib/serverRoom.js';
 import { BUILD_STAMP } from '../lib/build.js';
+import resumePdf from '../assets/files/Chadwick_Kraus_Resume_2026.pdf';
 import './ServerRoom.css';
 
 // "Network IT Specialist at Rockbot" — the part of profile.title before the dash.
@@ -134,6 +135,20 @@ export default function ServerRoom() {
     navigate: (to) => navigateRef.current(to, { viewTransition: true }),
     srcSetFor: cardSrcSet,
     formatUpdated,
+    snapshot: {
+      name: profile.fullName,
+      title: profile.title,
+      tagline: profile.tagline,
+      location: profile.location,
+      email: profile.email,
+      phone: profile.phone,
+      linkedin: profile.linkedin,
+      github: profile.github,
+      experience: profile.experience,
+      certifications: profile.certifications,
+      skillGroups: profile.skillGroups,
+      resumeUrl: resumePdf,
+    },
   }), []);
 
   return (

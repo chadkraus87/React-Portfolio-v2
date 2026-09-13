@@ -18,6 +18,7 @@ npm install
 npm run dev       # http://localhost:5173
 npm run build     # vite build + prerender into dist/
 npm run preview   # serve dist/ locally
+npm run test:e2e  # accessibility + behaviour checks against dist/ (build first)
 ```
 
 > `npm run preview` has SPA fallback, so an unmatched path returns `index.html`
@@ -90,6 +91,8 @@ scripts/
 ├── prerender.mjs        runs after vite build; checks racks, self-tests the rack model, emits per-route HTML, sitemap, robots, 404
 ├── fetch-activity.mjs   run manually; public GitHub commit counts
 └── make-og-images.py    run manually; regenerates social cards
+e2e/site.spec.js         Playwright + axe checks (npm run test:e2e)
+lighthouserc.json        Lighthouse budgets enforced in CI
 ```
 
 - **Routing** — BrowserRouter with real paths. `basename` comes from
@@ -108,6 +111,19 @@ scripts/
   signal trace; reduced motion turns both off.
 - **Rack sound** — optional Web Audio sounds (`src/lib/rackSound.js`), off by
   default and remembered per browser.
+- **Shareable units** — pulling a unit writes `?unit=<slug>` into the address;
+  opening that address pulls the unit out. Case studies link back with "Show in
+  the rack".
+- **Operator snapshot** — `hire` in the console opens a printable one-page
+  summary built from `profile.js`, with the resume PDF one click away.
+- **Demo captions** — `demoChapters` drive timed captions over each silent demo
+  and a "What's on screen" list beneath it (`src/lib/demoCaptions.js`).
+- **Evidence dates** — every screenshot and demo shows when it was captured, and
+  is flagged when it predates the project's last update.
+- **Light theme** — opt-in from the nav, saved per browser, applied before first
+  paint by `public/theme.js`. The server room and other hardware stay dark.
+- **CI** — `.github/workflows/ci.yml` runs the build, the Playwright + axe suite
+  and Lighthouse budgets on every push and pull request.
 - **Analytics** — GoatCounter, with `no_onload` set so `src/components/
   Analytics.jsx` can record one pageview per client-side route.
 - **Contact** — posts to Formspree; `FORM_ENDPOINT` in `src/pages/Contact.jsx`

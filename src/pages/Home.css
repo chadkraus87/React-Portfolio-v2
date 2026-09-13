@@ -21,7 +21,7 @@
 .ops-rail div { display: grid; gap: 6px; padding: 16px 0; border-top: 1px solid var(--line); }
 .ops-rail dt { font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
 .ops-rail dd { font-size: 16px; line-height: 1.55; color: var(--prose); }
-.log { border: 1px solid var(--line-2); background: linear-gradient(180deg, #0d0906, #0a0705); }
+.log { border: 1px solid var(--line-2); background: var(--surface); }
 .log-head { display: flex; flex-wrap: wrap; gap: 10px; padding: 14px 18px; border-bottom: 1px solid var(--line-2); font: 500 11.5px/1.4 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .log-list { list-style: none; }
 .log-list li { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr) auto; align-items: start; gap: 12px 24px; padding: 22px 18px; border-bottom: 1px solid var(--line); }
@@ -33,7 +33,7 @@
 
 /* Background */
 .bg-grid { display: grid; grid-template-columns: minmax(220px, 360px) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); align-items: start; margin-bottom: 64px; }
-.bg-photo { padding: 10px; border: 1px solid var(--line-2); background: linear-gradient(180deg, #1d1612, #0f0b09); }
+.bg-photo { padding: 10px; border: 1px solid var(--line-2); background: var(--surface-2); }
 .bg-photo img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; }
 .bg-bio p { max-width: 68ch; font-size: 17px; line-height: 1.72; color: var(--prose); }
 .bg-bio p + p { margin-top: 16px; }
@@ -46,7 +46,7 @@
 .tool-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px 40px; margin-top: 22px; }
 .tool-groups h4 { margin-bottom: 10px; font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
 .labels { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
-.labels li { padding: 5px 8px 4px; border: 1px solid var(--line-2); background: var(--steel-2); font: 600 12px/1 var(--f-ui); font-stretch: 85%; letter-spacing: .03em; text-transform: uppercase; }
+.labels li { padding: 5px 8px 4px; border: 1px solid var(--line-2); background: var(--surface-2); font: 600 12px/1 var(--f-ui); font-stretch: 85%; letter-spacing: .03em; text-transform: uppercase; }
 
 /* Colophon */
 .built-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 40px 56px; }

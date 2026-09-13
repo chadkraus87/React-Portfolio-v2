@@ -25,6 +25,11 @@
 //   image       import at the top, or null for a styled placeholder
 //   demo        optional path to a silent looping MP4 in public/demos/, shown in
 //               place of the screenshot on the case study and in the rack sheet
+//   imageDate   'YYYY-MM' the screenshot was captured. Shown on the case study;
+//               the build fails without it and warns when it predates `updated`.
+//   demoDate    'YYYY-MM' a demo was recorded (required with `demo`)
+//   demoChapters [[seconds, text], ...] captions for a demo, first at 0 (required
+//               with `demo`). Describe only what is actually on screen.
 //   demoNote    optional one-line caption under a demo, e.g. when names are
 //               masked or the data shown is simulated. Say so; never imply it's real.
 //   projectLink live URL, or null (button hides itself)
@@ -72,6 +77,7 @@ export const projects = [
       'Wake-phrase detection runs on the Mac Mini itself, so audio never leaves the machine, and dictation drops straight into the vault inbox. The console is reached over a private Tailscale link rather than an exposed port. Every connector is deny-by-default and requires an explicit permission grant; anything destructive requires human confirmation before it executes, and the audit log and permission state are first-class panels in the interface rather than buried in config. Built end-to-end with Claude Code across a full day-long session, including a real security audit that caught and fixed an OAuth CSRF gap and a container timezone bug.',
     stack: ['FastAPI', 'Docker Compose', 'Chroma (Vector DB)', 'Claude API', 'Google OAuth2', 'Tailscale'],
     image: Jarvis,
+    imageDate: '2026-09',
     projectLink: null, // intentionally not linked — private for security reasons
     repoLink: null, // intentionally not linked — private for security reasons
   },
@@ -89,7 +95,14 @@ export const projects = [
       'Nineteen specialists each hold their own identity, expertise and memory, and they are allowed to disagree: if Security finds a critical flaw or QA finds a failing test, the Chief of Staff reports NOT READY rather than smoothing it over. Anything that reaches outside the machine, spends money, or cannot be undone stops in an Approval Inbox with the exact payload shown before it runs. Memory carries provenance — where a fact came from, when, and how confident it is — so speculation is never stored as fact. The audit trail is append-only and hash-chained, which means a modified or deleted record breaks the chain and is detectable rather than silent. Everything except model inference stays on the machine, running in Docker across an API, a worker, an MCP server and a web console.',
     stack: ['Next.js 16', 'TypeScript', 'Docker Compose', 'MCP', 'pnpm monorepo', 'Playwright'],
     image: Meridian,
+    imageDate: '2026-09',
     demo: '/demos/meridian.mp4',
+    demoDate: '2026-09',
+    demoChapters: [
+      [0, "The Lodge view: each cabin is a room agents work in, from Engineering and Research & Analysis to Product & Design and Growth & Revenue."],
+      [5, "Agents move around the Lodge in real time."],
+      [9, "A live timeline runs along the bottom of the view."],
+    ],
     projectLink: null, // local-first — runs on your own machine, no hosted instance
     repoLink: null, // repo is private
     linkNote:
@@ -117,7 +130,15 @@ export const projects = [
       'Vitest + Playwright',
     ],
     image: PetCenza,
+    imageDate: '2026-09',
     demo: '/demos/petcenza.mp4',
+    demoDate: '2026-09',
+    demoChapters: [
+      [0, "Dashboard: what needs attention today, active medications and upcoming vet visits for three pets."],
+      [5, "Pets: every pet in the household, with breed and age."],
+      [9, "Medication rounds, grouped into morning and evening doses."],
+      [13, "Calendar, with reminders that can be marked done or snoozed."],
+    ],
     projectLink: 'https://pawchart-zeta.vercel.app/',
     repoLink: 'https://github.com/chadkraus87/petcenza',
   },
@@ -135,7 +156,13 @@ export const projects = [
       'Everything on screen comes from one underlying model, so the story always holds together — the charts, the logs, the dependency map and the customer complaints agree with each other because they are all computed from the same source rather than written separately. Failures spread the way they do in real systems: losing a cache makes things slow, losing a database makes them stop. One rule produces both, with no script per scenario. Nothing is random either, so an incident unfolds identically every time — which is also what lets an investigation survive a page refresh while storing almost nothing. Eight scenarios each teach a different shape of problem, and a wrong answer explains which evidence rules it out instead of just marking you incorrect. An optional guided mode walks newcomers through it, and any finished incident can be replayed second by second to watch the failure spread. Backed by 187 automated tests that run on every push.',
     stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS v4', 'Recharts', 'Vitest', 'Playwright'],
     image: TechOps,
+    imageDate: '2026-08',
     demo: '/demos/techops-command-center.mp4',
+    demoDate: '2026-09',
+    demoChapters: [
+      [0, "Simulation Center: eight incident scenarios, each tagged with severity and difficulty."],
+      [5, "Each scenario lists the expected impact, customer impact and affected systems before you start it."],
+    ],
     projectLink: 'https://techops-command-center.vercel.app/',
     repoLink: 'https://github.com/chadkraus87/techops-command-center',
   },
@@ -153,8 +180,15 @@ export const projects = [
       'Exercises are screened against each client\'s logged injuries by a deterministic filter that runs before the model is prompted, so the AI only ever programs from an already-filtered pool — safety never depends on the model following instructions. Its output then clears a second deterministic pass that re-checks movement balance, pull-to-push volume, recovery spacing, rep ranges and progression, with no LLM anywhere in the verification path; a failed check feeds one automatic retry, and plans that still fail are stored as flagged drafts rather than presented as finished. Trainers work from a 543-exercise library tagged by movement pattern, equipment and contraindication, extensible with their own movements. Multi-tenant isolation is enforced in Postgres row-level security and proven by a two-tenant test suite rather than assumed.',
     stack: ['Next.js 15', 'TypeScript', 'Supabase (Postgres RLS)', 'Claude API', 'Playwright'],
     image: CoachRhythm,
+    imageDate: '2026-08',
     demo: '/demos/coachrhythm.mp4',
-    demoNote: "Recorded from a real coaching account. Client names other than Chad's are masked.",
+    demoNote: "From a real coaching account. Client names other than Chad's are masked.",
+    demoDate: '2026-09',
+    demoChapters: [
+      [0, "Gym floor dashboard: active clients, plans built and the QA pass rate. Client names are masked."],
+      [5, "Exercise library by training category; custom exercises carry safety tags."],
+      [13, "Build a plan: choose a client and workout type. Unsafe and unavailable exercises are removed before generation."],
+    ],
     projectLink: 'https://coachrhythm.vercel.app/',
     repoLink: 'https://github.com/chadkraus87/traincraft',
   },
@@ -172,8 +206,19 @@ export const projects = [
       'Bills, income, expenses, budgets, goals, reserves and debt each keep their own ledger, and the calendar puts every scheduled flow on a date so a shortfall shows up weeks before it lands — receipts scan straight into an expense. Data is scoped per account by row-level security across 12 tables, and the deployment ships its own CSP with HSTS and frame-deny, not the framework defaults. Installable and offline-capable as a PWA.',
     stack: ['React + TypeScript', 'Supabase (Postgres RLS)', 'Vite', 'Recharts', 'PWA / Offline', 'Vitest + Playwright'],
     image: Greenline,
+    imageDate: '2026-08',
     demo: '/demos/greenline.mp4',
-    demoNote: "Recorded with simulated budget data. No real account data is shown.",
+    demoNote: "Simulated budget data. No real account data is shown.",
+    demoDate: '2026-09',
+    demoChapters: [
+      [0, "Monthly overview with simulated data: cash runway, income, spending and a calendar of bills."],
+      [9, "Bills for the month, ticked off as they are paid."],
+      [12, "Category budgets, with a warning when spending runs ahead of the month."],
+      [14, "Savings goals and their monthly contributions."],
+      [16, "Debts, with a payoff plan comparing avalanche and snowball."],
+      [18, "Reports: net worth, savings rate, emergency fund and projected balance."],
+      [22, "Back to the monthly overview."],
+    ],
     projectLink: 'https://greenline-chadwick-kraus-projects.vercel.app/',
     repoLink: 'https://github.com/chadkraus87/greenline',
   },
@@ -193,7 +238,13 @@ export const projects = [
       'The hosted demo is deliberately not the real thing, and says so: Vercel cannot reach a visitor\'s private network, so the public build runs a complete simulated lab on deterministic telemetry, keeps every edit inside that browser tab, and never writes to a shared database. Run it locally and it gains the parts that must touch your own network — discovery across approved ranges only, read-only Docker inventory, provider health, TLS expiry and Wake-on-LAN — each behind an explicit boundary rather than enabled by default. A guided outage scenario walks an incident across the command center and device views and can be replayed through to recovery, which makes it demonstrable without an audience needing a homelab of their own. Accessibility is checked in CI with axe rather than by eye.',
     stack: ['Next.js', 'TypeScript', 'React Flow', 'Recharts', 'Playwright + axe', 'Docker'],
     image: HomeLabCommander,
+    imageDate: '2026-09',
     demo: '/demos/homelab-commander.mp4',
+    demoDate: '2026-09',
+    demoChapters: [
+      [0, "Hosted showcase running a simulated outage, with a guided tour that starts at the command center."],
+      [7, "Network health, active alerts and recent activity for the simulated lab."],
+    ],
     projectLink: 'https://home-lab-commander.vercel.app/?scenario=outage&tour=1',
     projectLinkLabel: 'Open demo',
     repoLink: 'https://github.com/chadkraus87/home-lab-commander',
@@ -212,6 +263,7 @@ export const projects = [
       'Astro with static output by default; exactly three routes render on demand — the home page, so the email signup still returns a real result with JavaScript disabled, the /go/[slug] redirects, and the subscribe handler. Everything else is prerendered at build time. Styling is plain CSS with custom properties: no Tailwind, no UI kit. Inter and JetBrains Mono are self-hosted as latin-subset woff2 rather than pulled from a font CDN, so a visitor loads the page without a single third-party request.',
     stack: ['Astro', 'TypeScript', 'Plain CSS', 'Vercel'],
     image: DeskDaemon,
+    imageDate: '2026-09',
     projectLink: 'https://deskdaemon.com',
     repoLink: null, // repo is private
   },
@@ -231,6 +283,7 @@ export const projects = [
       'Traffic arrives in waves and the city either holds or it does not — add a cache and latency and database pressure visibly fall, skip a load balancer and the queue backs up in front of you. Missions set concrete targets, like sustaining a request rate under an error budget. An optional six-step guided first run explains telemetry, construction, routing and bottlenecks before the opening wave. There are no accounts, API keys, ads or paid services: state is local-first, so the game opens and plays immediately. Built with Codex.',
     stack: ['Next.js', 'React 19', 'TypeScript', 'Drizzle', 'Tailwind CSS'],
     image: StackCity,
+    imageDate: '2026-09',
     projectLink: 'https://stack-city-eight.vercel.app',
     projectLinkLabel: 'Play live',
     repoLink: 'https://github.com/chadkraus87/stack-city',
@@ -249,6 +302,7 @@ export const projects = [
       'Thirty multi-step story missions, four wireless-planning missions and forty-six evidence-based chapter decisions sit on top of a real systems model — a cable, power, thermal and incident homelab, plus a visual topology and capacity lab. Educators get visual challenge authoring, signed challenge packs, deterministic classroom replay and aggregate-only exports, so a class can be graded without collecting anything personal. Progress is local-first and anonymous play is the default; optional cloud snapshots are encrypted in the browser before they leave it, and passkeys are an opt-in authorization layer rather than a login wall. Renders with streamed distance-based LOD, GPU-instanced foliage, dynamic lighting and spatial audio. Keyboard, mouse, gamepad and touch all work. Built with Codex.',
     stack: ['Three.js', 'TypeScript', 'Vite', 'WebAuthn / Passkeys', 'Vercel Blob', 'Vitest'],
     image: PacketAndPine,
+    imageDate: '2026-09',
     projectLink: 'https://packet-and-pine.vercel.app',
     projectLinkLabel: 'Play live',
     repoLink: null, // repo is private

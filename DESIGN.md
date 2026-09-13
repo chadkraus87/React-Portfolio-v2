@@ -46,6 +46,18 @@ strip plus a number, never a tint over text.
 **Patch panel** is the named alternate palette (swap values in the comment at
 the top of `index.css`): `#0B0C0D` ground, `#F4C430` accent, cyan build signal.
 
+### Light theme
+
+Opt-in from the nav toggle, saved per browser, applied before first paint by
+`public/theme.js` (a same-origin file, because the CSP forbids inline scripts).
+Dark stays the default and the brand. `:root[data-theme="light"]` swaps the
+reading tokens: ground `#F4F1EA`, surface `#FFFFFF`, text `#14110D`, muted
+`#5B5248` (6.7:1), accent `#8F5A00` (5.2:1 as text, white on it 5.8:1), edge
+`#857A6C` (3.8:1). Hardware never changes: the server room, monitors, unit
+faceplates, the resume bezel and terminals re-declare the dark tokens, so the
+racks, cables and readouts look the same in both themes. Reading surfaces use
+`--surface`, `--surface-2` and `--field` rather than hard-coded colours.
+
 ## Typography
 
 | Face | Token | Use |
@@ -81,7 +93,13 @@ Rendered once by `ServerRoom.jsx`; driven by `src/lib/serverRoom.js`.
   a patch port lights every unit that uses the tool; lens buttons dim the other
   rack; Commit heat swaps vents for the heat ramp with numbers; ⌘K / Ctrl K opens
   the KVM console (`signal`, `open`, `rack a|b|all`, `heat`, `clear`, `help`,
-  `exit`, `sound`; unknown input answers "No route to host").
+  `exit`, `sound`, `hire`; unknown input answers "No route to host"). `hire`
+  opens a printable operator snapshot built from profile.js; printing shows only
+  that sheet, black on white.
+- **Shareable units:** pulling a unit writes `?unit=<slug>` into the address with
+  replaceState (no navigation, no analytics event); loading that address pulls
+  the unit out. The sheet has "Copy link to this unit"; case studies link back
+  with "Show in the rack".
 - **Sound:** off by default. When on, pulling a unit plays a rail slide and latch,
   a signal plays two short tones. Synthesised with Web Audio; no audio files.
 - **Build readout:** rack B01's base carries a VFD with the deployed commit and
@@ -127,6 +145,11 @@ is off-screen.
 - Demos: silent H.264 MP4, 1120px wide, 24fps, CRF 30, faststart, under
   ~500KB, in `public/demos/`. Every frame is privacy-reviewed; no browser chrome,
   extension banners, personal contact data, or credentials may appear.
+- Demos are silent, so each carries `demoChapters`: timed captions over the video
+  (toggle with "Captions") and a "What's on screen" list beneath it. Captions
+  describe only what is visible.
+- Every capture shows its date ("Screenshot from Sep 2026", "Recorded Sep 2026"),
+  and a red note appears when it is older than the project's last update.
 
 ## Accessibility
 
@@ -135,7 +158,8 @@ and heat buttons; one `aria-live` region narrates room actions; the sheet is
 `inert` when closed and returns focus to its trigger; console suggestions are a
 real combobox and Tab never traps. `forced-colors` gets plain text for the
 gradient name. Touch targets are 44px on coarse pointers. One `h1` per page and
-an unbroken heading order.
+an unbroken heading order. axe checks WCAG 2.2 AA on every route in both themes
+in CI, alongside Lighthouse budgets.
 
 ## Do / Don't
 

@@ -10,8 +10,9 @@
      --bg #0B0C0D  --bg2 #1C1F22  --line #24272A  --accent #F4C430
      --r-net #F4C430  --r-build #2EC4D6  --r-body #FF7A30  --signal #FFFFFF
 --------------------------------------------------------------------------- */
-:root {
-  --bg: #080605; --bg2: #1E0E07;
+:root,
+:root[data-theme="light"] :is(.sr, .monitor, .urow-plate, .urow-shot, .rs-frame, .nf-term) {
+  --bg: #080605; --bg2: #1E0E07; --surface: #0E0A08; --surface-2: #17110E; --field: #0A0705;
   --text: #F5EDE6; --prose: #E4D9CF; --muted: #A9978B;
   --line: #2C221D; --line-2: #3B2F28; --edge: #7A6A5E;
   --accent: #FFB547; --accent-hi: #FFC870; --accent-ink: #1A0F03;
@@ -31,6 +32,22 @@
   --nav-h: 56px;
   --ease: cubic-bezier(.22, 1, .36, 1);
   color-scheme: dark;
+  color: var(--text);
+}
+
+/* Light theme: opt-in from the nav, for bright rooms and shared screens.
+   Contrast against --bg (#F4F1EA), approximate: --text 17 · --prose 13 ·
+   --muted 6.7 · --accent 5.2 (white on --accent 5.8) · --edge 3.8.
+   Hardware stays dark in both themes: the server room, monitors, faceplates,
+   the resume bezel and terminals keep the dark tokens above. */
+:root[data-theme="light"] {
+  --bg: #F4F1EA; --bg2: #E9E2D4; --surface: #FFFFFF; --surface-2: #ECE6DA; --field: #FFFFFF;
+  --text: #14110D; --prose: #2B2620; --muted: #5B5248;
+  --line: #DCD4C6; --line-2: #CBC2B2; --edge: #857A6C;
+  --accent: #8F5A00; --accent-hi: #734800; --accent-ink: #FFFFFF;
+  --r-net: #C2410C; --r-build: #8F5A00; --r-body: #B4233A; --signal: #E08A00;
+  --live: #1F7A3A; --private: #6B6259; --danger: #B42318;
+  color-scheme: light;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -100,9 +117,18 @@ main:focus { outline: none; }
 .monitor-glass img, .monitor-glass video { width: 100%; height: 100%; object-fit: cover; object-position: left top; }
 .monitor-glass::after { content: ''; position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(115deg, rgba(255, 255, 255, .06), transparent 36%); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .6), inset 0 0 40px rgba(0, 0, 0, .35); }
-.monitor-toggle { position: absolute; z-index: 1; right: 12px; bottom: 12px; min-height: 44px; padding: 10px 13px; border: 1px solid var(--edge); background: rgba(8, 6, 5, .85); color: var(--text);
+.monitor-controls { position: absolute; z-index: 1; top: 12px; right: 12px; display: flex; gap: 6px; }
+.monitor-btn { min-height: 44px; padding: 10px 13px; border: 1px solid var(--edge); background: rgba(8, 6, 5, .85); color: var(--text);
   font: 600 12px/1 var(--f-ui); font-stretch: 85%; letter-spacing: .06em; text-transform: uppercase; }
-.monitor-note { margin-top: 10px; font: 500 11.5px/1.5 var(--f-mono); color: var(--muted); }
+.monitor-btn[aria-pressed="false"] { color: var(--muted); }
+.monitor-cc { position: absolute; z-index: 1; left: 50%; bottom: 14px; transform: translateX(-50%); width: max-content; max-width: min(92%, 62ch);
+  padding: 7px 12px; background: rgba(8, 6, 5, .88); color: var(--text); text-align: center; font: 500 clamp(12px, 1.2vw, 15px)/1.4 var(--f-ui); }
+.monitor-transcript { margin-top: 8px; color: var(--prose); }
+.monitor-transcript summary { display: inline-flex; align-items: center; min-height: 44px; cursor: pointer; font: 500 11.5px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text); }
+.monitor-transcript ol { list-style: none; display: grid; gap: 6px; padding: 2px 0 8px; font-size: 14px; line-height: 1.5; }
+.monitor-transcript .t { margin-right: 10px; font: 500 11.5px/1 var(--f-mono); color: var(--accent); }
+.monitor-stale { color: var(--danger); }
+.monitor-note { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 10px; font: 500 11.5px/1.5 var(--f-mono); color: var(--muted); }
 .spark { margin-top: 18px; }
 .spark svg { display: block; width: 100%; max-width: 420px; height: 52px; }
 .spark .bar { fill: var(--accent); } .spark .zero { fill: var(--line-2); }
@@ -132,7 +158,7 @@ main:focus { outline: none; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .btn, .seg button, .chip, .monitor-toggle { transition: color .2s var(--ease), background-color .2s var(--ease), border-color .2s var(--ease); }
+  .btn, .seg button, .chip, .monitor-btn, .nav-theme { transition: color .2s var(--ease), background-color .2s var(--ease), border-color .2s var(--ease); }
   .btn:active { transform: translateY(1px); }
 }
 @media (prefers-reduced-motion: reduce) {

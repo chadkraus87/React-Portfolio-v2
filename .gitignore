@@ -20,3 +20,8 @@ resume-src/resume.html
 # durable record is DESIGN.md, .impeccable/design.json and git history.
 .impeccable/mocks/
 .impeccable/prototype/
+
+# Test output
+test-results/
+playwright-report/
+.lighthouseci/

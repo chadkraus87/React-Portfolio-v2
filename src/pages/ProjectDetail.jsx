@@ -40,6 +40,7 @@ export default function ProjectDetail() {
             <li className="chip">{p.act ? `${p.act.total} public commits · 12 wk` : 'No public repo'}</li>
             <li className="chip">{p.lensNames.join(' + ')} lens</li>
           </ul>
+          <p className="cs-rack-link"><Link viewTransition to={`/?unit=${p.slug}`} className="btn">Show in the rack</Link></p>
         </header>
 
         <Monitor project={p} sizes={DETAIL_SIZES} />

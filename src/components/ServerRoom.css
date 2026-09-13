@@ -202,7 +202,7 @@
 .sr-sheet .s-monitor { position: relative; margin-bottom: 28px; padding: 10px; background: linear-gradient(180deg, #221a16, #110d0b); border: 1px solid var(--steel-4); }
 .sr-sheet .s-glass { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: #000; }
 .sr-sheet .s-glass img, .sr-sheet .s-glass video { width: 100%; height: 100%; object-fit: cover; object-position: left top; }
-.sr-sheet .s-demo { position: absolute; right: 18px; bottom: 18px; min-height: 40px; padding: 9px 12px; border: 1px solid var(--edge); background: rgba(8, 6, 5, .85); color: var(--text);
+.sr-sheet .s-demo { position: absolute; right: 18px; top: 18px; min-height: 40px; padding: 9px 12px; border: 1px solid var(--edge); background: rgba(8, 6, 5, .85); color: var(--text);
   font: 600 11.5px/1 var(--f-ui); font-stretch: 85%; letter-spacing: .06em; text-transform: uppercase; }
 .sr-sheet .s-path { position: relative; list-style: none; }
 .sr-sheet .s-path::before { content: ''; position: absolute; left: 5px; top: 8px; bottom: 16px; width: 1px; background: linear-gradient(var(--accent), var(--line)); }
@@ -281,4 +281,33 @@
   @keyframes sr-travel { from { top: 0; opacity: 1; } to { top: calc(100% - 48px); opacity: 0; } }
   @keyframes sr-boot { 0% { background: #140f0d; border-color: #3b2f28; box-shadow: none; } }
   @keyframes sr-vfd { 0% { color: transparent; text-shadow: none; } }
+}
+
+/* ---- Sheet extras: share link, captions, transcript, operator snapshot ---- */
+.sr-sheet .s-open-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+.sr-sheet .s-open-row .s-open { margin-bottom: 0; }
+.sr-sheet .s-cc { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); width: max-content; max-width: 92%; padding: 5px 9px;
+  background: rgba(8, 6, 5, .88); color: var(--text); text-align: center; font: 500 12px/1.35 var(--f-ui); }
+.sr-sheet .s-transcript { margin: -12px 0 22px; color: var(--prose); }
+.sr-sheet .s-transcript summary { display: inline-flex; align-items: center; min-height: 40px; cursor: pointer; font: 500 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text); }
+.sr-sheet .s-transcript ol { list-style: none; display: grid; gap: 5px; font-size: 13.5px; line-height: 1.5; }
+.sr-sheet .s-transcript .t { margin-right: 8px; font: 500 11px/1 var(--f-mono); color: var(--accent); }
+.sr-sheet .s-stale { color: var(--danger); }
+.sr-sheet .s-hire-lede { margin-bottom: 14px; font-size: 15px; line-height: 1.6; color: var(--prose); }
+.sr-sheet .s-hire-contact { list-style: none; display: grid; gap: 2px; margin-bottom: 16px; font: 500 13px/1.5 var(--f-mono); color: var(--muted); }
+.sr-sheet .s-hire-contact a { display: inline-flex; align-items: center; min-height: 32px; color: var(--text); overflow-wrap: anywhere; }
+.sr-sheet .s-hire-list { list-style: none; margin-bottom: 18px; border-top: 1px solid var(--line); }
+.sr-sheet .s-hire-list li { display: grid; gap: 3px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.sr-sheet .s-hire-list strong { font: 600 15px/1.3 var(--f-ui); }
+.sr-sheet .s-hire-list span { font: 500 11px/1.5 var(--f-mono); color: var(--muted); }
+@media (pointer: coarse) { .sr-sheet .s-transcript summary, .sr-sheet .s-hire-contact a { min-height: 44px; } }
+
+/* Printing the operator snapshot: only the sheet, black on white. */
+@media print {
+  .sr-printing .app-shell > :not(main), .sr-printing main > :not(.sr), .sr-printing .sr-hero > :not(.sr-sheet),
+  .sr-printing .sr-sheet-bar, .sr-printing .s-print-hide, .sr-printing .sr-hero::after { display: none !important; }
+  .sr-printing body, .sr-printing .sr, .sr-printing .sr-hero { position: static !important; height: auto !important; min-height: 0 !important; overflow: visible !important; background: #fff !important; }
+  .sr-printing .sr-sheet { position: static !important; visibility: visible !important; transform: none !important; width: auto !important; max-height: none !important; border: 0 !important; box-shadow: none !important; background: #fff !important; }
+  .sr-printing .sr-sheet-body { overflow: visible !important; padding: 0 !important; }
+  .sr-printing .sr-sheet * { color: #000 !important; background: transparent !important; box-shadow: none !important; text-shadow: none !important; border-color: #bbb !important; }
 }

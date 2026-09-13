@@ -1,5 +1,7 @@
 import { activityRange } from './rackModel.js';
 import { createRackSound } from './rackSound.js';
+import { followCaptions, clock } from './demoCaptions.js';
+import { evidenceOf } from './projectMeta.js';
 
 // ---------------------------------------------------------------------------
 // Server room behaviour: camera, cables, signals, console and detail sheet.
@@ -17,7 +19,7 @@ const lerp = (a, b, t) => a + (b - a) * t;
 const DEFAULT_NOTE = 'This project isn’t publicly linked — it runs on private infrastructure.';
 const STATUS_COLOR = { Live: 'var(--live)', 'In progress': 'var(--accent)', Private: 'var(--private)' };
 
-export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, formatUpdated }) {
+export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, formatUpdated, snapshot }) {
   const doc = root.ownerDocument;
   const win = doc.defaultView;
   const reduced = win.matchMedia('(prefers-reduced-motion: reduce)');
@@ -112,7 +114,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     return [w, h];
   };
   const readColors = () => {
-    const cs = win.getComputedStyle(doc.documentElement);
+    const cs = win.getComputedStyle(root);
     const rgb = (v) => { const h = cs.getPropertyValue(v).trim().replace('#', ''); return [0, 2, 4].map((k) => parseInt(h.slice(k, k + 2), 16)).join(','); };
     COL = { hot: rgb('--r-build'), warm: rgb('--r-net'), cool: rgb('--r-body'), signal: rgb('--signal') };
   };
@@ -319,15 +321,29 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
       ? `<video src="${esc(p.demo)}" poster="${esc(p.image)}" muted loop playsinline autoplay aria-label="${esc(p.title)} demo recording"></video>`
       : `<img src="${esc(p.image)}" srcset="${esc(srcSetFor(p.image) || '')}" sizes="(max-width: 999px) calc(100vw - 48px), 420px" alt="${esc(p.title)} screenshot" width="1400" height="875">`;
     const toggle = p.demo && motion() ? '<button type="button" class="s-demo" data-demo-toggle>Pause demo</button>' : '';
+    // Under reduced motion the sheet shows the screenshot, so the notes describe that instead.
+    const showsDemo = Boolean(p.demo && motion());
+    const chapters = showsDemo && p.demoChapters?.length ? p.demoChapters : null;
+    const ev = evidenceOf(showsDemo ? p : { ...p, demo: null });
+    const notes = [
+      ev && esc(ev.label),
+      ev?.stale && `<span class="s-stale">Older than the ${esc(formatUpdated(p.updated))} update</span>`,
+      showsDemo && p.demoNote && esc(p.demoNote),
+    ].filter(Boolean);
+    const cc = chapters ? '<p class="s-cc" aria-hidden="true"></p>' : '';
+    const transcript = chapters
+      ? `<details class="s-transcript"><summary>What’s on screen</summary><ol>${chapters.map(([at, text]) => `<li><span class="t">${esc(clock(at))}</span>${esc(text)}</li>`).join('')}</ol></details>`
+      : '';
     return {
       where: `Rack ${r.code} · ${p.u}`,
+      captions: chapters,
       body: `
         <p class="kicker">${esc(r.name)} · ${esc(p.lensNames.join(' + '))}</p>
         <h2 id="sr-sheet-title" tabindex="-1">${esc(p.title)}</h2>
         <p class="s-tag">${esc(p.tagline)}</p>
         <ul class="s-chips"><li class="chip"><span class="dot" style="color:${STATUS_COLOR[p.status]}"></span>${esc(p.status)}</li><li class="chip">Updated ${esc(formatUpdated(p.updated))}</li><li class="chip">${p.act ? `${p.act.total} public commits` : 'No public repo'}</li></ul>
-        <a class="btn btn-primary s-open" href="/projects/${esc(p.slug)}" data-nav>Open the case study →</a>
-        <div class="s-monitor"><div class="s-glass">${media}</div>${toggle}</div>${p.demo && p.demoNote ? `<p class="s-note s-demo-note">${esc(p.demoNote)}</p>` : ''}
+        <div class="s-open-row"><a class="btn btn-primary s-open" href="/projects/${esc(p.slug)}" data-nav>Open the case study →</a><button type="button" class="btn s-copy" data-copy-link>Copy link to this unit</button></div>
+        <div class="s-monitor"><div class="s-glass">${media}${cc}</div>${toggle}</div>${notes.length ? `<p class="s-note s-demo-note">${notes.join(' · ')}</p>` : ''}${transcript}
         <ol class="s-path">
           <li><span class="s-step">01 · Input</span><h3>What it answers</h3><p>${esc(p.summary)}</p></li>
           <li><span class="s-step">02 · Process</span><h3>How it’s built</h3>${p.details ? `<p>${esc(p.details)}</p>` : ''}<p class="s-stack">${p.stack.map(esc).join(' · ')}</p></li>
@@ -348,10 +364,70 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
         <ul class="s-units">${ms.map((p) => `<li><button type="button" class="s-unit" data-i="${p.i}">${esc(p.title)}</button><span>${esc(rackOf(p.rack).code)} · ${esc(p.u)} · ${esc(p.status)}</span></li>`).join('')}</ul>`,
     };
   }
+  // "hire" in the console: a one-page operator snapshot from profile.js, printable.
+  function hireSheet() {
+    const s = snapshot;
+    const bare = (url) => url.replace(/^https?:\/\/(www\.)?/, '');
+    const rows = (items) => items.map(([head, sub]) => `<li><strong>${esc(head)}</strong><span>${esc(sub)}</span></li>`).join('');
+    return {
+      where: 'Operator snapshot',
+      body: `
+        <p class="kicker">Hire the operator</p>
+        <h2 id="sr-sheet-title" tabindex="-1">${esc(s.name)}</h2>
+        <p class="s-tag">${esc(s.title)}</p>
+        <p class="s-hire-lede">${esc(s.tagline)}</p>
+        <ul class="s-hire-contact">
+          <li><a href="mailto:${esc(s.email)}">${esc(s.email)}</a></li>
+          <li><a href="tel:${esc(s.phone.replace(/[^0-9+]/g, ''))}">${esc(s.phone)}</a></li>
+          <li>${esc(s.location)}</li>
+          <li><a href="${esc(s.linkedin)}" target="_blank" rel="noopener noreferrer">${esc(bare(s.linkedin))}</a></li>
+          <li><a href="${esc(s.github)}" target="_blank" rel="noopener noreferrer">${esc(bare(s.github))}</a></li>
+        </ul>
+        <div class="s-actions s-print-hide">
+          <button type="button" class="btn btn-primary" data-print>Print this snapshot</button>
+          <a class="btn" href="${esc(s.resumeUrl)}" download="Chadwick_Kraus_Resume.pdf">Download the resume (PDF)</a>
+        </div>
+        <p class="s-sub">Experience</p>
+        <ul class="s-hire-list">${rows(s.experience.map((e) => [e.title, `${e.org} · ${e.dates}`]))}</ul>
+        <p class="s-sub">Credentials</p>
+        <ul class="s-hire-list">${rows(s.certifications.map((c) => [c.name, c.meta]))}</ul>
+        <p class="s-sub">Toolbox</p>
+        <ul class="s-hire-list">${rows(s.skillGroups.map((g) => [g.label, g.items.join(' · ')]))}</ul>
+        <p class="s-sub">In the racks</p>
+        <p class="s-note">${P.length} projects: ${P.map((p) => esc(p.title)).join(' · ')}</p>`,
+    };
+  }
+  function printSheet() {
+    const html = doc.documentElement;
+    const done = () => { html.classList.remove('sr-printing'); win.removeEventListener('afterprint', done); };
+    html.classList.add('sr-printing');
+    win.addEventListener('afterprint', done);
+    win.print();
+  }
+  async function copyLink(button) {
+    const url = new win.URL(win.location.href); url.hash = '';
+    let copied = false;
+    try { await win.navigator.clipboard.writeText(url.href); copied = true; } catch { /* clipboard unavailable */ }
+    button.textContent = copied ? 'Link copied' : 'Copy it from the address bar';
+    say(copied ? 'Link to this unit copied' : `Clipboard unavailable. The link is ${url.href}`);
+    later(() => { if (button.isConnected) button.textContent = 'Copy link to this unit'; }, 2400);
+  }
+
+  // A shareable address: /?unit=<slug> opens the room with that unit pulled out.
+  // replaceState keeps React Router's own history state, so no navigation fires.
+  const setUnitParam = (slug) => {
+    const url = new win.URL(win.location.href);
+    if (slug) url.searchParams.set('unit', slug); else url.searchParams.delete('unit');
+    if (url.href !== win.location.href) win.history.replaceState(win.history.state, '', url);
+  };
+
   let lastTrigger = null;
+  let stopCaptions = () => {};
   function showSheet(content, keyboard) {
+    stopCaptions();
     sheetWhere.textContent = content.where;
     sheetBody.innerHTML = content.body;
+    stopCaptions = followCaptions(sheetBody.querySelector('video'), content.captions, sheetBody.querySelector('.s-cc'));
     sheetBody.scrollTop = 0;
     sheet.classList.add('open'); sheet.removeAttribute('inert'); sheet.setAttribute('aria-hidden', 'false');
     root.classList.add('sheet-open'); state.sheetOpen = true;
@@ -360,6 +436,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   function hideSheet() {
     if (!state.sheetOpen) return;
     const hadFocus = sheet.contains(doc.activeElement);
+    stopCaptions();
     sheetBody.querySelector('video')?.pause();
     sheet.classList.remove('open'); sheet.setAttribute('inert', ''); sheet.setAttribute('aria-hidden', 'true');
     root.classList.remove('sheet-open'); state.sheetOpen = false;
@@ -385,16 +462,18 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     root.classList.toggle('heat-on', state.heat);
     q('.sr-legend').hidden = !state.heat;
   }
-  function selectUnit(i, keyboard = false) {
+  function selectUnit(i, keyboard = false, quiet = false) {
     Object.assign(state, { mode: 'unit', sel: i, tool: null, preview: null });
     lastTrigger = units[i];
-    sync(); showSheet(unitSheet(P[i]), keyboard); camGoals(); if (!running) snap(); sound.pull();
+    setUnitParam(P[i].slug);
+    sync(); showSheet(unitSheet(P[i]), keyboard); camGoals(); if (!running) snap(); if (!quiet) sound.pull();
     if (motion()) { const now = win.performance.now(); cables.filter((c) => c.kind === 'unit' && c.p === i).forEach((c, j) => spawn(c, 1, now + 300 + j * 90, 0)); }
     say(`${P[i].title} pulled out of rack ${rackOf(P[i].rack).code}`);
   }
   function selectTool(t, keyboard = false) {
     Object.assign(state, { mode: 'tool', sel: -1, tool: t, preview: null });
     if (doc.activeElement && root.contains(doc.activeElement)) lastTrigger = doc.activeElement;
+    setUnitParam(null);
     sync(); showSheet(toolSheet(t), keyboard); camGoals(); if (!running) snap(); sound.blip();
     if (motion()) {
       const now = win.performance.now();
@@ -405,8 +484,15 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   }
   function overview() {
     Object.assign(state, { mode: 'overview', sel: -1, tool: null, preview: null });
+    setUnitParam(null);
     sync(); hideSheet(); camGoals(); if (!running) snap();
     say('Showing both racks');
+  }
+  function showHire() {
+    Object.assign(state, { mode: 'overview', sel: -1, tool: null, preview: null });
+    setUnitParam(null);
+    sync(); showSheet(hireSheet(), false); camGoals(); if (!running) snap();
+    say('Operator snapshot open');
   }
   const setLens = (l) => { state.lens = l; sync(); drawSoon(); };
   const setHeat = (onOff) => { state.heat = onOff; sync(); };
@@ -425,6 +511,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     if (!raw) return null;
     const [verb, ...rest] = raw.split(' '); const arg = rest.join(' ');
     if (verb === 'help') return { cmd: 'help' };
+    if (['hire', 'resume', 'whoami'].includes(verb)) return { cmd: 'hire' };
     if (verb === 'clear') return { cmd: 'clear' };
     if (['exit', 'close', 'reset'].includes(verb)) return { cmd: 'reset' };
     if (verb === 'heat') return { cmd: 'heat' };
@@ -439,7 +526,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     const p = projectBy(raw); if (p) return { cmd: 'open', p };
     return { cmd: 'unknown', text: raw };
   }
-  const STARTERS = ['signal playwright', 'open petcenza', 'heat', 'rack b', 'help'];
+  const STARTERS = ['hire', 'signal playwright', 'open petcenza', 'heat', 'help'];
   function suggestions(input) {
     const raw = norm(input);
     if (!raw) return STARTERS;
@@ -449,7 +536,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     if (verb === 'signal' || verb === 'ping') tools.filter((t) => t.includes(arg)).forEach((t) => out.push(`signal ${t}`));
     else if (verb === 'open') names.filter((n) => n.includes(arg)).forEach((n) => out.push(`open ${n}`));
     else {
-      ['help', 'heat', 'sound', 'clear', 'rack a', 'rack b', 'rack all', 'exit'].filter((c) => c.startsWith(raw)).forEach((c) => out.push(c));
+      ['help', 'hire', 'heat', 'sound', 'clear', 'rack a', 'rack b', 'rack all', 'exit'].filter((c) => c.startsWith(raw)).forEach((c) => out.push(c));
       tools.filter((t) => t.includes(raw)).forEach((t) => out.push(`signal ${t}`));
       names.filter((n) => n.includes(raw)).forEach((n) => out.push(`open ${n}`));
     }
@@ -491,9 +578,10 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     logLine(`$ ${text}`, 'cmd');
     state.preview = null;
     if (!r) return;
-    if (r.cmd === 'help') logLine('signal <tool> · open <project> · rack a | b | all · heat · sound · clear · exit');
+    if (r.cmd === 'help') logLine('hire · signal <tool> · open <project> · rack a | b | all · heat · sound · clear · exit');
     else if (r.cmd === 'clear') logEl.textContent = '';
     else if (r.cmd === 'reset') { overview(); closeKvm(); }
+    else if (r.cmd === 'hire') { showHire(); logLine('↳ operator snapshot on screen: print it or grab the PDF', 'ok'); }
     else if (r.cmd === 'sound') { sound.set(!sound.enabled); logLine(`rack sound ${sound.enabled ? 'on' : 'off'}`, 'ok'); }
     else if (r.cmd === 'heat') { setHeat(!state.heat); logLine(`commit heat ${state.heat ? 'on' : 'off'}`, 'ok'); }
     else if (r.cmd === 'lens') { setLens(r.lens); logLine(r.lens === 'all' ? 'both racks lit' : `${lenses[r.lens].name} lens: ${lenses[r.lens].slugs.length} units lit`, 'ok'); }
@@ -561,6 +649,8 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
       e.preventDefault(); navigate(link.getAttribute('href')); return;
     }
     const b = e.target.closest('button'); if (!b) return;
+    if (b.hasAttribute('data-copy-link')) { copyLink(b); return; }
+    if (b.hasAttribute('data-print')) { printSheet(); return; }
     if (b.hasAttribute('data-demo-toggle')) {
       const v = sheetBody.querySelector('video');
       if (v?.paused) { v.play().catch(() => {}); b.textContent = 'Pause demo'; } else if (v) { v.pause(); b.textContent = 'Play demo'; }
@@ -597,11 +687,17 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   setDive(); readColors(); [CW, CH] = fit(canvas, ctx); sizeMotes(); sync(); readDive(); camGoals(); Object.assign(cam, goal); applyCam();
   if (motion()) { root.classList.add('is-booting'); bootStart = win.performance.now(); later(() => root.classList.remove('is-booting'), 2300); }
   start(); drawSoon();
+  const shared = new win.URLSearchParams(win.location.search).get('unit');
+  const sharedUnit = shared && P.find((p) => p.slug === shared);
+  if (sharedUnit) selectUnit(sharedUnit.i, false, true);
+  else if (shared) setUnitParam(null);
 
   return () => {
     destroyed = true;
     stop();
     sound.close();
+    stopCaptions();
+    doc.documentElement.classList.remove('sr-printing');
     cleanups.forEach((fn) => fn());
     timers.forEach((id) => win.clearTimeout(id));
     root.classList.remove('is-dive', 'is-booting', 'heat-on', 'sheet-open');

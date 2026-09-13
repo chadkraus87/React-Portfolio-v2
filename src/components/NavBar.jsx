@@ -9,6 +9,28 @@ const links = [
   { to: '/contact', label: 'Contact' },
 ];
 
+// Dark is the default. Light is opt-in for bright rooms and shared screens, saved
+// per browser; public/theme.js applies a saved choice before first paint.
+const THEME_COLOR = { dark: '#080605', light: '#F4F1EA' };
+
+function ThemeToggle() {
+  const [theme, setTheme] = useState(() => (document.documentElement.dataset.theme === 'light' ? 'light' : 'dark'));
+  const next = theme === 'light' ? 'dark' : 'light';
+  const flip = () => {
+    const root = document.documentElement;
+    if (next === 'light') root.dataset.theme = 'light';
+    else delete root.dataset.theme;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', THEME_COLOR[next]);
+    try { localStorage.setItem('theme', next); } catch { /* not remembered */ }
+    setTheme(next);
+  };
+  return (
+    <button type="button" className="nav-theme" onClick={flip} aria-label={`Switch to ${next} theme`} title={`Switch to ${next} theme`}>
+      <span className="nav-theme-icon" aria-hidden="true" />
+    </button>
+  );
+}
+
 export default function NavBar() {
   const [open, setOpen] = useState(false);
   const headerRef = useRef(null);
@@ -42,31 +64,35 @@ export default function NavBar() {
           <span>Chad Kraus</span>
         </NavLink>
 
-        <button
-          ref={toggleRef}
-          className="nav-toggle"
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          aria-expanded={open}
-          aria-controls="primary-nav"
-          onClick={() => setOpen(!open)}
-        >
-          <span /><span /><span />
-        </button>
+        <div className="nav-end">
+          <nav id="primary-nav" aria-label="Primary" className={`nav-links ${open ? 'is-open' : ''}`}>
+            {links.map(({ to, label }) => (
+              <NavLink
+                viewTransition
+                key={to}
+                to={to}
+                end={to === '/'}
+                className={({ isActive }) => `nav-link ${isActive ? 'is-active' : ''}`}
+                onClick={() => setOpen(false)}
+              >
+                {label}
+              </NavLink>
+            ))}
+          </nav>
 
-        <nav id="primary-nav" aria-label="Primary" className={`nav-links ${open ? 'is-open' : ''}`}>
-          {links.map(({ to, label }) => (
-            <NavLink
-              viewTransition
-              key={to}
-              to={to}
-              end={to === '/'}
-              className={({ isActive }) => `nav-link ${isActive ? 'is-active' : ''}`}
-              onClick={() => setOpen(false)}
-            >
-              {label}
-            </NavLink>
-          ))}
-        </nav>
+          <ThemeToggle />
+
+          <button
+            ref={toggleRef}
+            className="nav-toggle"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+            aria-controls="primary-nav"
+            onClick={() => setOpen(!open)}
+          >
+            <span /><span /><span />
+          </button>
+        </div>
       </div>
     </header>
   );
