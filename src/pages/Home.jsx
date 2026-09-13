@@ -42,7 +42,7 @@ export default function Home() {
                 <ul className="ix-list">
                   {rack.units.map((p) => (
                     <li key={p.slug}>
-                      <Link to={`/projects/${p.slug}`} className="ix-link">
+                      <Link viewTransition to={`/projects/${p.slug}`} className="ix-link">
                         <span className="ix-title">{p.title}</span>
                         <span className="vfd">{p.u}</span>
                       </Link>
@@ -55,7 +55,7 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <p className="home-more"><Link to="/portfolio" className="btn">Browse every project</Link></p>
+          <p className="home-more"><Link viewTransition to="/portfolio" className="btn">Browse every project</Link></p>
         </div>
       </section>
 
@@ -153,8 +153,8 @@ export default function Home() {
         <div className="container cta-inner">
           <h2 className="sec-title" id="cta-title">Next step</h2>
           <div className="cta-actions">
-            <Link to="/resume" className="btn btn-primary">View resume</Link>
-            <Link to="/contact" className="btn">Get in touch</Link>
+            <Link viewTransition to="/resume" className="btn btn-primary">View resume</Link>
+            <Link viewTransition to="/contact" className="btn">Get in touch</Link>
           </div>
         </div>
       </section>

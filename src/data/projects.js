@@ -25,6 +25,8 @@
 //   image       import at the top, or null for a styled placeholder
 //   demo        optional path to a silent looping MP4 in public/demos/, shown in
 //               place of the screenshot on the case study and in the rack sheet
+//   demoNote    optional one-line caption under a demo, e.g. when names are
+//               masked or the data shown is simulated. Say so; never imply it's real.
 //   projectLink live URL, or null (button hides itself)
 //   projectLinkLabel optional button text — defaults to 'View project'. Use
 //               'Watch demo' when the link goes to a walkthrough video rather
@@ -151,6 +153,8 @@ export const projects = [
       'Exercises are screened against each client\'s logged injuries by a deterministic filter that runs before the model is prompted, so the AI only ever programs from an already-filtered pool — safety never depends on the model following instructions. Its output then clears a second deterministic pass that re-checks movement balance, pull-to-push volume, recovery spacing, rep ranges and progression, with no LLM anywhere in the verification path; a failed check feeds one automatic retry, and plans that still fail are stored as flagged drafts rather than presented as finished. Trainers work from a 543-exercise library tagged by movement pattern, equipment and contraindication, extensible with their own movements. Multi-tenant isolation is enforced in Postgres row-level security and proven by a two-tenant test suite rather than assumed.',
     stack: ['Next.js 15', 'TypeScript', 'Supabase (Postgres RLS)', 'Claude API', 'Playwright'],
     image: CoachRhythm,
+    demo: '/demos/coachrhythm.mp4',
+    demoNote: "Recorded from a real coaching account. Client names other than Chad's are masked.",
     projectLink: 'https://coachrhythm.vercel.app/',
     repoLink: 'https://github.com/chadkraus87/traincraft',
   },
@@ -168,6 +172,8 @@ export const projects = [
       'Bills, income, expenses, budgets, goals, reserves and debt each keep their own ledger, and the calendar puts every scheduled flow on a date so a shortfall shows up weeks before it lands — receipts scan straight into an expense. Data is scoped per account by row-level security across 12 tables, and the deployment ships its own CSP with HSTS and frame-deny, not the framework defaults. Installable and offline-capable as a PWA.',
     stack: ['React + TypeScript', 'Supabase (Postgres RLS)', 'Vite', 'Recharts', 'PWA / Offline', 'Vitest + Playwright'],
     image: Greenline,
+    demo: '/demos/greenline.mp4',
+    demoNote: "Recorded with simulated budget data. No real account data is shown.",
     projectLink: 'https://greenline-chadwick-kraus-projects.vercel.app/',
     repoLink: 'https://github.com/chadkraus87/greenline',
   },

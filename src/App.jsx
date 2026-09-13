@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router';
 import NavBar from './components/NavBar.jsx';
 import Footer from './components/Footer.jsx';
@@ -26,6 +26,14 @@ function ScrollManager() {
   return null;
 }
 
+// A signal line races under the nav on each route change, leading the page wipe
+// in index.css. Skipped on first load; hidden under reduced motion.
+function RouteTrace() {
+  const { key } = useLocation();
+  const first = useRef(key);
+  return first.current === key ? null : <span key={key} className="route-trace" aria-hidden="true" />;
+}
+
 // Real paths (/portfolio, not /#/portfolio). Every route is prerendered to its
 // own static file by scripts/prerender.mjs, and Vercel serves dist/404.html,
 // with a real 404 status, for anything unmatched.
@@ -37,6 +45,7 @@ export default function App() {
         <Analytics />
         <DocumentTitle />
         <ScrollManager />
+        <RouteTrace />
         <a className="skip-link" href="#main">Skip to content</a>
         <NavBar />
         <main id="main" tabIndex={-1}>

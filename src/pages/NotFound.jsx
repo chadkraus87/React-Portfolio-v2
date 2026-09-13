@@ -13,8 +13,8 @@ export default function NotFound() {
         <pre className="nf-term"><code>{`$ curl chad-kraus-portfolio.vercel.app${pathname}\n`}<span className="err">curl: (7) Failed to connect: No route to host</span></code></pre>
         <p className="lede">That link doesn’t point anywhere on this site. It may be out of date, or slightly mistyped.</p>
         <div className="nf-actions">
-          <Link to="/" className="btn btn-primary">Back to the racks</Link>
-          <Link to="/portfolio" className="btn">All projects</Link>
+          <Link viewTransition to="/" className="btn btn-primary">Back to the racks</Link>
+          <Link viewTransition to="/portfolio" className="btn">All projects</Link>
         </div>
       </div>
     </section>

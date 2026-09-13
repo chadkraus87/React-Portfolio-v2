@@ -1,6 +1,6 @@
 #!/usr/bin/env /usr/bin/python3
-"""Generate the site social card (public/og-image.png) and one per project
-(public/og/<slug>.jpg).
+"""Generate the site social card (public/og-image.png) and one card per project
+(public/og/<slug>.jpg) in the Server Room design system.
 
 Run locally after adding or renaming a project, or after changing project copy:
 
@@ -10,22 +10,18 @@ The output is COMMITTED. It is not part of `npm run build` because Vercel's
 build image has Node but not Python/Pillow, and because these only change when
 project copy changes — not on every deploy.
 
-Everything the cards say is parsed out of src/data/projects.js. Nothing here
-invents a metric, a status, a date or a description.
+Everything a card says is parsed from src/data/projects.js, src/data/racks.js
+and the `title` line of src/data/profile.js. Nothing here invents a metric, a
+status, a date or a description.
 
 Fonts are vendored under scripts/fonts/ so this renders identically anywhere
 with no network access — see scripts/fonts/README.md.
-
-The cards follow the site's C2 "Editorial Spatial" system: production tokens,
-the display ramp, and the F2 footprint translated to a 2400x1260 canvas — text
-composed left, a genuine screenshot dominating the right and bleeding off three
-edges. No inset panel, no invented metric, no generated imagery.
 """
 import os, re, sys
-from PIL import Image, ImageDraw, ImageFont, ImageOps
+from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA = os.path.join(ROOT, "src", "data", "projects.js")
+DATA = os.path.join(ROOT, "src", "data")
 IMGS = os.path.join(ROOT, "src", "assets", "images")
 FONTS = os.path.join(ROOT, "scripts", "fonts")
 OUT = os.path.join(ROOT, "public", "og")
@@ -33,114 +29,100 @@ OUT = os.path.join(ROOT, "public", "og")
 S = 2                      # 2x for retina
 W, H = 1200 * S, 630 * S
 
-# The design system's tokens, straight from src/index.css. Nothing else.
-PAPER    = (0xF2, 0xEE, 0xE6)   # warm page ground
-SURFACE  = (0xFF, 0xFF, 0xFF)
-INSET    = (0xE8, 0xE2, 0xD6)
-INK      = (0x14, 0x11, 0x0D)   # warm near-black
-GRAPHITE = (0x5C, 0x55, 0x4A)
-RULE     = (0xCF, 0xC7, 0xB8)   # decorative hairlines only
-BOUNDARY = (0x7C, 0x73, 0x64)   # the identifying edge of a control
-ACCENT   = (0x8A, 0x2B, 0x18)   # oxblood
-VERIFIED = (0x1F, 0x4B, 0x99)
+# Thermal tokens, straight from src/index.css. Nothing else.
+BG       = (0x08, 0x06, 0x05)
+BG2      = (0x1E, 0x0E, 0x07)
+TEXT     = (0xF5, 0xED, 0xE6)
+PROSE    = (0xE4, 0xD9, 0xCF)
+MUTED    = (0xA9, 0x97, 0x8B)
+ACCENT   = (0xFF, 0xB5, 0x47)
+ACC_INK  = (0x1A, 0x0F, 0x03)
+LIVE     = (0x7F, 0xD6, 0x8A)
+PRIVATE  = (0xE4, 0xDA, 0xCF)
+STEEL    = [(0x06, 0x04, 0x03), (0x0F, 0x0B, 0x09), (0x19, 0x13, 0x10),
+            (0x26, 0x1E, 0x19), (0x3B, 0x2F, 0x28), (0x5E, 0x4D, 0x41)]
+TAPE     = (0xEC, 0xE4, 0xD3)
+TAPE_INK = (0x16, 0x12, 0x0E)
+VFD_BG   = (0x0A, 0x06, 0x03)
+
+STATUS_VFD = {"Live": "LIVE", "In progress": "IN PROG", "Private": "PRIVATE"}
+STATUS_LED = {"Live": LIVE, "In progress": ACCENT, "Private": PRIVATE}
+MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
+
+# Type roles mirror DESIGN.md.
+DISPLAY = "BigShouldersDisplay-var.ttf"   # titles and the name
+UI = "Saira-var.ttf"                      # prose and label tape
+MONO = "GeistMono-var.ttf"                # kickers and metadata
+DOT = "Doto-var.ttf"                      # front-panel readouts only
+
+_fonts = {}
 
 
 def font(file, size, weight, width=None):
-    """Load a vendored variable font pinned to one weight.
-
-    The axes are set explicitly so output does not depend on the file's default
-    instance — that is what keeps these cards reproducible.
-    """
-    f = ImageFont.truetype(os.path.join(FONTS, file), size * S)
-    axes = f.get_variation_axes()
-    vals = []
-    for a in axes:
-        name = a["name"] if isinstance(a["name"], str) else a["name"].decode()
-        if name == "Weight":
-            vals.append(weight)
-        elif name == "Width":
-            vals.append(width if width is not None else a["default"])
-        else:
-            vals.append(a["default"])
-    f.set_variation_by_axes(vals)
-    return f
-
-
-# Type roles mirror DESIGN.md: Archivo for structure, Literata for prose,
-# Martian Mono for identifiers. Sizes are in points and multiplied by S, so a
-# 60 here is 120px on the 2400px canvas — the proportional equivalent of the
-# site's --d-major at a 1920 viewport.
-f_label   = font("MartianMono-var.ttf", 14, 500)
-f_tagline = font("MartianMono-var.ttf", 14, 400)
-f_meta    = font("MartianMono-var.ttf", 15, 500)
-f_prose   = font("Literata-var.ttf", 20, 400)
-f_role    = font("Literata-var.ttf", 26, 400)
-
-# Display type is fitted per title rather than pinned, so a long name steps
-# down instead of wrapping to three lines or overflowing its column.
-TITLE_STEPS = [62, 58, 54, 50, 46, 42]
-NAME_STEPS  = [84, 78, 72, 66, 60]
+    """A vendored variable font pinned to explicit axes, so output never depends
+    on the file's default instance. Sizes are points; S scales them to pixels."""
+    key = (file, size, weight, width)
+    if key not in _fonts:
+        f = ImageFont.truetype(os.path.join(FONTS, file), round(size * S))
+        vals = []
+        for a in f.get_variation_axes():
+            name = a["name"] if isinstance(a["name"], str) else a["name"].decode()
+            if name == "Weight":
+                vals.append(weight)
+            elif name == "Width" and width is not None:
+                vals.append(width)
+            else:
+                vals.append(a["default"])
+        f.set_variation_by_axes(vals)
+        _fonts[key] = f
+    return _fonts[key]
 
 
-def fit(draw, text, steps, max_w, max_lines, file="Archivo-var.ttf", weight=700,
-        overflow=0):
-    """Largest step whose wrap fits max_lines within max_w (+overflow, which is
-    the deliberate edge crop the hero uses). Falls back to the smallest step."""
-    for pt in steps:
-        f = font(file, pt, weight)
-        lines = wrap(draw, text, f, max_w + overflow)
-        if len(lines) <= max_lines and all(
-                draw.textlength(l, font=f) <= max_w + overflow for l in lines):
-            return f, lines, pt
-    f = font(file, steps[-1], weight)
-    return f, wrap(draw, text, f, max_w + overflow)[:max_lines], steps[-1]
+# ---------------------------------------------------------------- data
 
-MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+def js_string(block, key):
+    m = re.search(rf"{key}:\s*\n?\s*'((?:[^'\\]|\\.)*)'", block)
+    return m.group(1).replace("\\'", "'") if m else None
 
 
-def parse():
-    src = open(DATA).read()
+def parse_projects():
+    src = open(os.path.join(DATA, "projects.js")).read()
     imports = dict(re.findall(r"import\s+(\w+)\s+from\s+'\.\./assets/images/([^']+)'", src))
-    blocks = re.split(r"\n  \{\n", src)[1:]
     out = []
-    for b in blocks:
-        def g(k, q="'"):
-            m = re.search(rf"{k}:\s*\n?\s*{q}((?:[^{q}\\\\]|\\\\.)*){q}", b)
-            return m.group(1).replace("\\'", "'") if m else None
-        slug, title = g("slug"), g("title")
+    for b in re.split(r"\n  \{\n", src)[1:]:
+        slug = js_string(b, "slug")
         if not slug:
             continue
         var = re.search(r"image:\s*(\w+)", b)
         out.append({
-            "slug": slug, "title": title, "category": g("category"),
-            "tagline": g("tagline"), "summary": first_sentence(g("summary")),
-            "status": g("status"), "updated": g("updated"),
+            "slug": slug, "title": js_string(b, "title"), "tagline": js_string(b, "tagline"),
+            "summary": first_sentence(js_string(b, "summary")),
+            "status": js_string(b, "status"), "updated": js_string(b, "updated"),
             "image": imports.get(var.group(1)) if var else None,
         })
     return out
 
 
+def parse_racks():
+    """Rack code, name and top-to-bottom slugs, read from src/data/racks.js."""
+    src = open(os.path.join(DATA, "racks.js")).read().split("export const lenses")[0]
+    racks = []
+    for m in re.finditer(r"code:\s*'([^']+)',\s*name:\s*'([^']+)',.*?slugs:\s*\[([^\]]*)\]", src, re.S):
+        racks.append({"code": m.group(1), "name": m.group(2), "slugs": re.findall(r"'([^']+)'", m.group(3))})
+    return racks
+
+
 def first_sentence(text):
-    """One sentence, the same trim scripts/prerender.mjs applies to meta
-    descriptions. A card that stops mid-clause reads as broken."""
+    """One sentence, the same trim scripts/prerender.mjs applies to meta descriptions."""
     if not text:
         return None
     m = re.match(r"^.*?[.?!](\s|$)", text)
     return (m.group(0) if m else text).strip()
 
 
-def wrap(draw, text, fnt, max_w):
-    words, lines, cur = text.split(), [], ""
-    for w in words:
-        t = (cur + " " + w).strip()
-        if draw.textlength(t, font=fnt) <= max_w:
-            cur = t
-        else:
-            lines.append(cur); cur = w
-    if cur:
-        lines.append(cur)
-    return lines
+def unit_label(k):
+    """U position of the k-th unit from the top, matching src/lib/rackModel.js."""
+    return f"U{10 - 2 * k}–{11 - 2 * k}"
 
 
 def updated_label(updated):
@@ -148,177 +130,348 @@ def updated_label(updated):
     return f"{MONTHS[int(mo) - 1]} {yr}"
 
 
-def status_color(status):
-    """Live reads as available now; the others stay quiet — same rule the
-    cards on the site follow."""
-    return ACCENT if status == "Live" else GRAPHITE
-
-
-def build(p):
-    """F2 on a 2400x1260 canvas: text composed left, the real screenshot
-    dominating the right and bleeding off the top, right and bottom edges."""
-    img = Image.new("RGB", (W, H), PAPER)
-    d = ImageDraw.Draw(img)
-
-    pad = 56 * S
-    shot_x = round(W * 0.47)           # screenshot takes the right 53%
-    text_w = shot_x - pad * 2
-
-    # The screenshot is the composition, not an inset: it takes the right
-    # 55%, bleeds off the top and right edges, and keeps its own aspect ratio.
-    # Forcing it to bleed off the bottom as well would mean cropping a 16:10
-    # source into a 1:1 slot, which upscales 1.4x and cuts a third of the
-    # interface away — the opposite of evidence. Top-aligned, like
-    # .pcard--right .pcard-shot { align-self: start }.
-    if p["image"]:
-        src = os.path.join(IMGS, p["image"])
-        if os.path.exists(src):
-            source = Image.open(src).convert("RGB")
-            sw = W - shot_x
-            # Natural height for the source's own aspect, floored at 76% of the
-            # canvas so the shot has real presence. That floor crops at most
-            # ~15% off a 16:10 screenshot's right edge, which the left-top
-            # anchor keeps clear of the interface.
-            sh = min(H, max(round(sw * source.height / source.width),
-                            round(H * 0.76)))
-            shot = ImageOps.fit(source, (sw, sh), method=Image.LANCZOS,
-                                centering=(0.0, 0.0))
-            img.paste(shot, (shot_x, 0))
-            # Boundary, not Rule: this is the edge of real evidence, and it is
-            # the only edge the image has left now that two sides bleed away.
-            d.rectangle([shot_x, 0, shot_x + 1 * S, sh], fill=BOUNDARY)
-            d.rectangle([shot_x, sh, W, sh + 1 * S], fill=BOUNDARY)
-
-    # A 2px ink rule across the text column only — the site's section divider,
-    # not a frame. It never crosses the screenshot.
-    d.rectangle([pad, pad, pad + text_w, pad + 2 * S], fill=INK)
-
-    foot_y = H - pad - 30 * S
-    rule_y = foot_y - 28 * S
-
-    y = pad + 34 * S
-    d.text((pad, y), p["category"].upper(), font=f_label, fill=GRAPHITE)
-    y += 46 * S
-
-    f_title, lines, pt = fit(d, p["title"], TITLE_STEPS, text_w, 2)
-    for line in lines:
-        d.text((pad, y), line, font=f_title, fill=INK)
-        y += round(pt * 1.02) * S
-    y += 14 * S
-
-    tag_lines = wrap(d, p["tagline"], f_tagline, text_w) if p["tagline"] else []
-    for line in tag_lines:
-        d.text((pad, y), line, font=f_tagline, fill=GRAPHITE)
-        y += 26 * S
-    if tag_lines:
-        y += 16 * S
-
-    # The summary is one whole sentence and is never cut. It steps down through
-    # the reading ramp until it fits the space left above the foot rule, so a
-    # long first sentence sets smaller rather than stopping mid-clause.
-    if p["summary"]:
-        room = rule_y - 40 * S - y
-        for pts in (20, 19, 18, 17, 16):
-            fp = font("Literata-var.ttf", pts, 400)
-            step = round(pts * 1.7) * S
-            sum_lines = wrap(d, p["summary"], fp, text_w)
-            if len(sum_lines) * step <= room:
-                break
-        for line in sum_lines:
-            d.text((pad, y), line, font=fp, fill=INK)
-            y += step
-
-    # Status and date pin to the foot; the slack between them and the block
-    # above is the intentional void, exactly like the footprint's trailing row.
-    d.rectangle([pad, rule_y, pad + text_w, rule_y + 1 * S], fill=RULE)
-    x = pad
-    if p["status"]:
-        d.text((x, foot_y), p["status"].upper(), font=f_meta, fill=status_color(p["status"]))
-        x += d.textlength(p["status"].upper(), font=f_meta) + 18 * S
-    if p["updated"]:
-        d.text((x, foot_y), updated_label(p["updated"]), font=f_meta, fill=GRAPHITE)
-
-    os.makedirs(OUT, exist_ok=True)
-    dest = os.path.join(OUT, p["slug"] + ".jpg")
-    img.save(dest, quality=88, optimize=True)
-    return dest
-
-
 def site_domain():
-    """Read the canonical domain from the prerender script so the cover card
-    can never drift from the deployed URL again."""
+    """The canonical domain, read from the prerender script so it can't drift."""
     src = open(os.path.join(ROOT, "scripts", "prerender.mjs")).read()
     m = re.search(r"const BASE = '(?:https?://)?([^\']+)'", src)
     return m.group(1).rstrip("/") if m else "chad-kraus-portfolio.vercel.app"
 
 
-def site_role():
-    """The role line, read from profile.js so it matches the homepage rather
-    than being restated here. Only `title` is read — profile.js also holds an
-    email and a phone number, which must never reach a social card."""
-    src = open(os.path.join(ROOT, "src", "data", "profile.js")).read()
+def eyebrow():
+    """The part of profile.title before the dash, as the home page shows it.
+    Only `title` is read — profile.js also holds contact details that must never
+    reach a social card."""
+    src = open(os.path.join(DATA, "profile.js")).read()
     m = re.search(r"\n  title:\s*\n?\s*'((?:[^'\\]|\\.)*)'", src)
-    return m.group(1).replace("\\'", "'") if m else None
+    return m.group(1).replace("\\'", "'").split("—")[0].strip() if m else None
 
 
-def build_cover(projects):
-    """The site-wide card used for / and every non-project page. Follows the
-    production hero and Background: identity at display scale with the first
-    line cropped past the left edge, and the portrait at real scale bleeding
-    off the right."""
-    img = Image.new("RGB", (W, H), PAPER)
+# ---------------------------------------------------------------- drawing
+
+def tracked(d, xy, text, f, fill, track=0.0):
+    """Draw text with letter-spacing (a fraction of the font size). Returns end x."""
+    x, y = xy
+    gap = f.size * track
+    for ch in text:
+        d.text((x, y), ch, font=f, fill=fill)
+        x += d.textlength(ch, font=f) + gap
+    return x
+
+
+def tracked_len(d, text, f, track=0.0):
+    return sum(d.textlength(ch, font=f) for ch in text) + f.size * track * max(len(text) - 1, 0)
+
+
+def wrap(d, text, f, max_w):
+    words, lines, cur = text.split(), [], ""
+    for w in words:
+        t = (cur + " " + w).strip()
+        if d.textlength(t, font=f) <= max_w:
+            cur = t
+        else:
+            lines.append(cur)
+            cur = w
+    if cur:
+        lines.append(cur)
+    return lines
+
+
+def vgrad(w, h, top, bottom):
+    strip = Image.new("RGB", (1, 256))
+    for i in range(256):
+        t = i / 255
+        strip.putpixel((0, i), tuple(round(top[k] + (bottom[k] - top[k]) * t) for k in range(3)))
+    return strip.resize((max(w, 1), max(h, 1)), Image.BILINEAR)
+
+
+def ground(cx=0.64, cy=0.42):
+    """The room: near-black with the warm light falloff behind the racks."""
+    sw, sh = 240, 126
+    small = Image.new("RGB", (sw, sh))
+    px = small.load()
+    for y in range(sh):
+        for x in range(sw):
+            dx, dy = (x / sw - cx) / 0.6, (y / sh - cy) / 0.8
+            t = max(0.0, 1 - (dx * dx + dy * dy) ** 0.5) ** 2
+            px[x, y] = tuple(round(BG[k] + (BG2[k] - BG[k]) * t) for k in range(3))
+    return small.resize((W, H), Image.BICUBIC).convert("RGBA")
+
+
+def shadow(img, box, blur, alpha=170):
+    x0, y0, x1, y1 = box
+    m = blur * 3
+    layer = Image.new("RGBA", (x1 - x0 + 2 * m, y1 - y0 + 2 * m), (0, 0, 0, 0))
+    ImageDraw.Draw(layer).rectangle([m, m, m + x1 - x0, m + y1 - y0], fill=(0, 0, 0, alpha))
+    layer = layer.filter(ImageFilter.GaussianBlur(blur))
+    img.alpha_composite(layer, (max(x0 - m, 0), max(y0 - m, 0)),
+                        (max(m - x0, 0), max(m - y0, 0)))
+
+
+def kicker(d, x, y, text):
+    f = font(MONO, 13, 500)
+    d.rectangle([x, y + 8 * S, x + 26 * S, y + 9 * S], fill=ACCENT)
+    return tracked(d, (x + 38 * S, y), text.upper(), f, ACCENT, 0.12)
+
+
+def brand(d, x, y):
+    f = font(DISPLAY, 14, 900)
+    chip_w = tracked_len(d, "CK", f, 0.12) + 12 * S
+    d.rectangle([x, y, x + chip_w, y + 24 * S], fill=ACCENT)
+    tracked(d, (x + 6 * S, y + 3 * S), "CK", f, ACC_INK, 0.12)
+    tracked(d, (x + chip_w + 12 * S, y + 1 * S), "CHAD KRAUS", font(DISPLAY, 19, 800), TEXT, 0.06)
+
+
+def vfd(img, x, y, text, size=13):
+    """An amber dot-matrix readout with its glow. Returns the box."""
+    d = ImageDraw.Draw(img)
+    f = font(DOT, size, 800)
+    top = d.textbbox((0, 0), text, font=f)
+    tw, th = tracked_len(d, text, f, 0.06), top[3] - top[1]
+    px, py = 8 * S, 6 * S
+    box = (x, y, round(x + tw + 2 * px), round(y + th + 2 * py))
+    d.rectangle(box, fill=VFD_BG, outline=(0, 0, 0), width=S)
+    m = 10 * S
+    glow = Image.new("RGBA", (box[2] - box[0] + 2 * m, box[3] - box[1] + 2 * m), (0, 0, 0, 0))
+    tracked(ImageDraw.Draw(glow), (m + px, m + py - top[1]), text, f, ACCENT + (160,), 0.06)
+    img.alpha_composite(glow.filter(ImageFilter.GaussianBlur(4 * S)), (box[0] - m, box[1] - m))
+    tracked(ImageDraw.Draw(img), (x + px, y + py - top[1]), text, f, ACCENT, 0.06)
+    return box
+
+
+def tape(img, x, y, text, size, max_w):
+    """A label-maker strip. Steps the size down until the label fits max_w."""
+    d = ImageDraw.Draw(img)
+    t = text.upper()
+    pt = size
+    while pt > 7 and tracked_len(d, t, font(UI, pt, 700, 78), 0.02) + 12 * S > max_w:
+        pt -= 0.5
+    f = font(UI, pt, 700, 78)
+    top = d.textbbox((0, 0), t, font=f)
+    px, py = 6 * S, 3 * S
+    box = (x, y, round(x + tracked_len(d, t, f, 0.02) + 2 * px), round(y + top[3] - top[1] + 2 * py))
+    d.rectangle((box[0], box[1] + S, box[2], box[3] + S), fill=(0, 0, 0))
+    d.rectangle(box, fill=TAPE)
+    tracked(d, (x + px, y + py - top[1]), t, f, TAPE_INK, 0.02)
+    return box
+
+
+def monitor(img, x, y, w, path):
+    """A real screenshot in a monitor bezel, 16:10, anchored top-left."""
+    bezel = 12 * S
+    gw = w - 2 * bezel
+    gh = round(gw * 10 / 16)
+    h = gh + 2 * bezel
+    shadow(img, (x, y + 20 * S, x + w, y + h + 10 * S), 26 * S)
+    img.paste(vgrad(w, h, (0x23, 0x1B, 0x17), (0x11, 0x0D, 0x0B)), (x, y))
+    shot = ImageOps.fit(Image.open(path).convert("RGB"), (gw, gh), method=Image.LANCZOS, centering=(0.0, 0.0))
+    img.paste(shot, (x + bezel, y + bezel))
+    sheen = Image.new("RGBA", (gw, gh), (0, 0, 0, 0))
+    ImageDraw.Draw(sheen).polygon([(0, 0), (gw * 0.4, 0), (gw * 0.16, gh), (0, gh)], fill=(255, 255, 255, 12))
+    img.alpha_composite(sheen, (x + bezel, y + bezel))
+    d = ImageDraw.Draw(img)
+    d.rectangle([x, y, x + w - 1, y + h - 1], outline=STEEL[4], width=S)
+    d.rectangle([x + bezel - S, y + bezel - S, x + bezel + gw, y + bezel + gh], outline=(0, 0, 0), width=S)
+    return h
+
+
+def fit_title(d, text, max_w, steps, max_lines):
+    for pt in steps:
+        f = font(DISPLAY, pt, 900)
+        lines = wrap(d, text.upper(), f, max_w)
+        if len(lines) <= max_lines:
+            return f, lines, pt
+    f = font(DISPLAY, steps[-1], 900)
+    return f, wrap(d, text.upper(), f, max_w)[:max_lines], steps[-1]
+
+
+# ---------------------------------------------------------------- cards
+
+def build(p, where):
+    img = ground()
+    d = ImageDraw.Draw(img)
+    pad = 60 * S
+    col = round(W * 0.47)
+    text_w = col - pad - 36 * S
+
+    brand(d, pad, pad)
+    y = pad + 76 * S
+    if where:
+        kicker(d, pad, y, where)
+        y += 40 * S
+
+    f_title, lines, pt = fit_title(d, p["title"], text_w, [92, 84, 76, 68, 60, 54], 2)
+    for line in lines:
+        d.text((pad, y), line, font=f_title, fill=TEXT)
+        y += round(pt * 0.9) * S
+    y += 30 * S
+
+    if p["tagline"]:
+        for line in wrap(d, p["tagline"], font(MONO, 14, 500), text_w)[:2]:
+            d.text((pad, y), line, font=font(MONO, 14, 500), fill=PROSE)
+            y += 24 * S
+        y += 14 * S
+
+    foot_y = H - pad - 30 * S
+    if p["summary"]:
+        room = foot_y - 28 * S - y
+        for pts in (21, 20, 19, 18, 17, 16):
+            fp = font(UI, pts, 400)
+            step = round(pts * 1.55) * S
+            body = wrap(d, p["summary"], fp, text_w)
+            if len(body) * step <= room:
+                break
+        for line in body:
+            d.text((pad, y), line, font=fp, fill=MUTED)
+            y += step
+
+    x = pad
+    if p["status"]:
+        box = vfd(img, x, foot_y - 2 * S, STATUS_VFD.get(p["status"], p["status"].upper()))
+        x = box[2] + 16 * S
+    d = ImageDraw.Draw(img)
+    if p["updated"]:
+        tracked(d, (x, foot_y + 5 * S), f"UPDATED {updated_label(p['updated'])}", font(MONO, 13, 500), MUTED, 0.08)
+
+    mon_w = W - pad - col
+    if p["image"] and os.path.exists(os.path.join(IMGS, p["image"])):
+        gh = round((mon_w - 24 * S) * 10 / 16) + 24 * S
+        my = (H - gh) // 2 - 16 * S
+        monitor(img, col, my, mon_w, os.path.join(IMGS, p["image"]))
+        d = ImageDraw.Draw(img)
+        dom = site_domain().upper()
+        fd = font(MONO, 12, 500)
+        tracked(d, (W - pad - tracked_len(d, dom, fd, 0.08), my + gh + 22 * S), dom, fd, MUTED, 0.08)
+
+    os.makedirs(OUT, exist_ok=True)
+    dest = os.path.join(OUT, p["slug"] + ".jpg")
+    img.convert("RGB").save(dest, quality=88, optimize=True)
+    return dest
+
+
+def draw_rack(img, x, y, w, rack, by_slug):
+    """A flat, front-on rack: cap with the stencilled code, a patch row, and one
+    2U unit per project with its label tape, status readout and power LED."""
+    d = ImageDraw.Draw(img)
+    cap, patch, unit, blank, foot = 44, 72, 138, 22, 30
+    rail = 22
+    h = cap + patch + blank + unit * len(rack["slugs"]) + blank + foot
+    shadow(img, (x, y + 30, x + w, y + h + 20), 40, 200)
     d = ImageDraw.Draw(img)
 
-    pad = 56 * S
-    port_x = round(W * 0.635)          # portrait takes the right ~36.5%
-    text_w = port_x - pad * 2
+    img.paste(vgrad(w, cap, STEEL[3], STEEL[1]), (x, y))
+    d.rectangle([x, y, x + w - 1, y + cap - 1], outline=STEEL[4], width=2)
+    fs = font(DISPLAY, 13, 900)
+    sw = tracked_len(d, rack["code"], fs, 0.1)
+    d.rectangle([x + 16, y + 8, x + 32 + sw, y + cap - 8], fill=STEEL[1], outline=STEEL[5], width=2)
+    tracked(d, (x + 24, y + 9), rack["code"], fs, (0xEA, 0xDC, 0xC8), 0.1)
+    fn = font(MONO, 9, 500)
+    name = rack["name"].upper()
+    tracked(d, (x + w - 16 - tracked_len(d, name, fn, 0.1), y + 13), name, fn, MUTED, 0.1)
 
-    # Portrait at column scale, bleeding off the top, right and bottom, the way
-    # the Background section runs it through the gutter.
-    photo = ImageOps.fit(Image.open(os.path.join(IMGS, "headshot.jpg")).convert("RGB"),
-                         (W - port_x, H), method=Image.LANCZOS, centering=(0.5, 0.30))
-    img.paste(photo, (port_x, 0))
-    d.rectangle([port_x, 0, port_x + 1 * S, H], fill=BOUNDARY)
+    body_y = y + cap
+    body_h = h - cap - foot
+    img.paste(vgrad(w, body_h, STEEL[1], STEEL[0]), (x, body_y))
+    for rx in (x, x + w - rail):
+        img.paste(vgrad(rail, body_h, STEEL[3], STEEL[2]), (rx, body_y))
+        for ty in range(body_y + 10, body_y + body_h - 6, 23):
+            d.rectangle([rx + 7, ty, rx + rail - 7, ty + 7], fill=STEEL[0])
 
-    d.rectangle([pad, pad, pad + text_w, pad + 2 * S], fill=INK)
+    py = body_y + 12
+    d.rectangle([x + rail + 8, py, x + w - rail - 8, py + patch - 24], fill=STEEL[2], outline=STEEL[4], width=2)
+    jacks = 8
+    span = (w - 2 * rail - 48) / jacks
+    for j in range(jacks):
+        jx = round(x + rail + 24 + j * span)
+        d.rectangle([jx, py + 14, jx + 18, py + 30], fill=STEEL[0], outline=STEEL[5], width=2)
+        d.ellipse([jx + 6, py + 36, jx + 12, py + 42], fill=ACCENT if j % 3 == 0 else STEEL[4])
 
-    y = pad + 34 * S
-    d.text((pad, y), site_domain().upper(), font=f_label, fill=GRAPHITE)
-    y += 52 * S
+    uy = body_y + patch + blank
+    for k, slug in enumerate(rack["slugs"]):
+        p = by_slug.get(slug)
+        if not p:
+            continue
+        fx0, fx1 = x + rail + 4, x + w - rail - 4
+        fy0, fy1 = uy + 5, uy + unit - 5
+        img.paste(vgrad(fx1 - fx0, fy1 - fy0, (0x2A, 0x21, 0x1C), (0x14, 0x10, 0x0D)), (fx0, fy0))
+        d = ImageDraw.Draw(img)
+        d.rectangle([fx0, fy0, fx1, fy1], outline=STEEL[4], width=2)
+        d.line([fx0 + 2, fy0 + 2, fx1 - 2, fy0 + 2], fill=(0x4A, 0x3C, 0x33), width=2)
+        for vx in range(fx0 + 16, fx0 + 40, 7):
+            d.rectangle([vx, fy0 + 18, vx + 3, fy1 - 18], fill=STEEL[0])
+        readout = STATUS_VFD.get(p["status"], "")
+        rw = tracked_len(ImageDraw.Draw(img), readout, font(DOT, 9, 800), 0.06) + 16 * S
+        rb = vfd(img, round(fx1 - 18 - rw), fy0 + 18, readout, size=9)
+        tape(img, fx0 + 54, fy0 + 20, p["title"], 12, rb[0] - (fx0 + 54) - 16)
+        d = ImageDraw.Draw(img)
+        for b in range(4):
+            bx = fx0 + 54 + b * 30
+            d.rectangle([bx, fy1 - 40, bx + 24, fy1 - 22], fill=STEEL[0], outline=STEEL[4], width=2)
+        led = STATUS_LED.get(p["status"], MUTED)
+        lx, ly = fx1 - 44, fy1 - 42
+        glow = Image.new("RGBA", (60, 60), (0, 0, 0, 0))
+        ImageDraw.Draw(glow).ellipse([20, 20, 40, 40], fill=led + (190,))
+        img.alpha_composite(glow.filter(ImageFilter.GaussianBlur(7)), (lx - 20, ly - 20))
+        d = ImageDraw.Draw(img)
+        d.ellipse([lx - 1, ly - 1, lx + 21, ly + 21], outline=STEEL[0], width=3)
+        d.ellipse([lx + 3, ly + 3, lx + 17, ly + 17], fill=led)
+        uy += unit
 
-    # The identity is allowed to crop past the left edge, as it does on the
-    # homepage. Line one hangs; line two is indented, same as .l1 / .l2.
-    crop = 26 * S
-    f_id, _, npt = fit(d, "Chadwick (Chad)", NAME_STEPS, text_w, 1, overflow=crop)
-    for i, line in enumerate(("Chadwick (Chad)", "Kraus")):
-        d.text((pad - crop if i == 0 else pad + 18 * S, y), line, font=f_id, fill=INK)
-        y += round(npt * 0.92) * S
-    y += 26 * S
+    fy = y + h - foot
+    img.paste(vgrad(w, foot, STEEL[2], STEEL[0]), (x, fy))
+    ImageDraw.Draw(img).rectangle([x, y, x + w - 1, y + h - 1], outline=STEEL[4], width=2)
+    return h
 
-    role = site_role()
+
+def build_cover(projects, racks):
+    img = ground(cx=0.76, cy=0.45)
+    d = ImageDraw.Draw(img)
+    pad = 60 * S
+    by_slug = {p["slug"]: p for p in projects}
+
+    brand(d, pad, pad)
+    y = pad + 100 * S
+    role = eyebrow()
     if role:
-        for line in wrap(d, role, f_role, text_w)[:4]:
-            d.text((pad, y), line, font=f_role, fill=GRAPHITE)
-            y += 40 * S
+        kicker(d, pad, y, role)
+        y += 46 * S
 
-    # Featured projects, taken from the top of projects.js so they stay current.
-    foot_y = H - pad - 30 * S
-    rule_y = foot_y - 28 * S
-    d.rectangle([pad, rule_y, pad + text_w, rule_y + 1 * S], fill=RULE)
-    d.text((pad, foot_y), "  ·  ".join(p["title"] for p in projects[:3]),
-           font=f_meta, fill=GRAPHITE)
+    f_name = font(DISPLAY, 150, 900)
+    for word in ("CHAD", "KRAUS"):
+        box = d.textbbox((0, 0), word, font=f_name)
+        mask = Image.new("L", (box[2], box[3]), 0)
+        ImageDraw.Draw(mask).text((0, 0), word, font=f_name, fill=255)
+        fill = vgrad(box[2], box[3], (0xFF, 0xF8, 0xEE), (0xB8, 0x97, 0x7C))
+        img.paste(fill, (pad - box[0], y - box[1]), mask)
+        y += round(150 * 0.8) * S
+    d = ImageDraw.Draw(img)
+    y += 30 * S
+    tracked(d, (pad, y), "NETWORKS. SOFTWARE. THE BODY.", font(DISPLAY, 34, 700), TEXT, 0.02)
+
+    dom = site_domain().upper()
+    tracked(d, (pad, H - pad - 16 * S), dom, font(MONO, 13, 500), MUTED, 0.1)
+
+    rack_w, gap = 480, 56
+    shown = racks[:2]
+    x0 = W - pad - rack_w * len(shown) - gap * (len(shown) - 1)
+    for k, rack in enumerate(shown):
+        draw_rack(img, x0 + k * (rack_w + gap), 150 + k * 34, rack_w, rack, by_slug)
 
     dest = os.path.join(ROOT, "public", "og-image.png")
-    img.save(dest, optimize=True)
+    img.convert("RGB").save(dest, optimize=True)
     return dest
 
 
 if __name__ == "__main__":
-    projects = parse()
-    if not projects:
-        sys.exit("no projects parsed — check src/data/projects.js")
+    projects = parse_projects()
+    racks = parse_racks()
+    if not projects or not racks:
+        sys.exit("nothing parsed — check src/data/projects.js and src/data/racks.js")
+    where = {}
+    for r in racks:
+        for k, slug in enumerate(r["slugs"]):
+            where[slug] = f"Rack {r['code']} · {unit_label(k)} · {r['name']}"
     print(f"  {'og-image.png':<28} site cover ({site_domain()})")
-    build_cover(projects)
+    build_cover(projects, racks)
     for p in projects:
-        print(f"  {os.path.basename(build(p)):<28} {p['title']}")
+        print(f"  {os.path.basename(build(p, where.get(p['slug']))):<28} {p['title']}")
     print(f"generated {len(projects) + 1} og images")

@@ -18,7 +18,7 @@ function UnitRow({ p }) {
         <span className="urow-u">{p.u}</span>
       </div>
       {p.image && (
-        <Link to={`/projects/${p.slug}`} className="urow-shot" tabIndex={-1} aria-hidden="true">
+        <Link viewTransition to={`/projects/${p.slug}`} className="urow-shot" tabIndex={-1} aria-hidden="true">
           <picture>
             <source type="image/avif" srcSet={cardSrcSet(p.image)} sizes={ROW_SIZES} />
             <img src={p.image} alt="" width="1400" height="875" loading="lazy" />
@@ -26,7 +26,7 @@ function UnitRow({ p }) {
         </Link>
       )}
       <div className="urow-body">
-        <h3 className="urow-title"><Link to={`/projects/${p.slug}`}>{p.title}</Link></h3>
+        <h3 className="urow-title"><Link viewTransition to={`/projects/${p.slug}`}>{p.title}</Link></h3>
         <p className="urow-tag">{p.tagline}</p>
         <p className="urow-sum">{p.summary}</p>
         <p className="urow-meta">
@@ -34,7 +34,7 @@ function UnitRow({ p }) {
         </p>
         <ul className="urow-stack">{p.stack.map((tech) => <li key={tech}>{tech}</li>)}</ul>
         <div className="urow-actions">
-          <Link to={`/projects/${p.slug}`} className="btn btn-primary">Case study</Link>
+          <Link viewTransition to={`/projects/${p.slug}`} className="btn btn-primary">Case study</Link>
           {p.projectLink && <a href={p.projectLink} className="btn" target="_blank" rel="noopener noreferrer">{p.projectLinkLabel || 'View project'} ↗</a>}
           {p.repoLink && <a href={p.repoLink} className="btn" target="_blank" rel="noopener noreferrer">GitHub repo ↗</a>}
         </div>

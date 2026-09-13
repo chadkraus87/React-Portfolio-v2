@@ -37,7 +37,7 @@ export default function NavBar() {
   return (
     <header className="nav-wrap" ref={headerRef}>
       <div className="nav-inner">
-        <NavLink to="/" end className="nav-brand" onClick={() => setOpen(false)}>
+        <NavLink viewTransition to="/" end className="nav-brand" onClick={() => setOpen(false)}>
           <span className="nav-code" aria-hidden="true">CK</span>
           <span>Chad Kraus</span>
         </NavLink>
@@ -56,6 +56,7 @@ export default function NavBar() {
         <nav id="primary-nav" aria-label="Primary" className={`nav-links ${open ? 'is-open' : ''}`}>
           {links.map(({ to, label }) => (
             <NavLink
+              viewTransition
               key={to}
               to={to}
               end={to === '/'}

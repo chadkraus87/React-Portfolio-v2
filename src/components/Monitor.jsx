@@ -5,7 +5,7 @@ import { cardSrcSet } from '../lib/cardImages.js';
 // monitor bezel. A recording never autoplays under reduced motion, pauses when
 // scrolled out of view, and always has a visible pause control.
 export default function Monitor({ project, sizes }) {
-  const { title, image, demo } = project;
+  const { title, image, demo, demoNote } = project;
   const videoRef = useRef(null);
   const wantedRef = useRef(true);
   const [playing, setPlaying] = useState(false);
@@ -49,12 +49,13 @@ export default function Monitor({ project, sizes }) {
             <img src={image} alt={`${title} screenshot`} width="1400" height="875" />
           </picture>
         ) : null}
+        {demo && (
+          <button type="button" className="monitor-toggle" onClick={toggle}>
+            {playing ? 'Pause demo' : 'Play demo'}
+          </button>
+        )}
       </div>
-      {demo && (
-        <button type="button" className="monitor-toggle" onClick={toggle}>
-          {playing ? 'Pause demo' : 'Play demo'}
-        </button>
-      )}
+      {demo && demoNote && <figcaption className="monitor-note">{demoNote}</figcaption>}
     </figure>
   );
 }

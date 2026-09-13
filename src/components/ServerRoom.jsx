@@ -7,6 +7,7 @@ import { RACK_U, HEAT_BANDS, heatBand, blinkOf, activityRange } from '../lib/rac
 import { STATUS_VFD, formatUpdated } from '../lib/projectMeta.js';
 import { cardSrcSet } from '../lib/cardImages.js';
 import { mountServerRoom } from '../lib/serverRoom.js';
+import { BUILD_STAMP } from '../lib/build.js';
 import './ServerRoom.css';
 
 // "Network IT Specialist at Rockbot" — the part of profile.title before the dash.
@@ -110,7 +111,9 @@ function Rack({ rack }) {
         <Rail />
         <div className="mgr" data-mgr={rack.id} aria-hidden="true" />
       </div>
-      <div className="cap cap-bottom" aria-hidden="true" />
+      <div className="cap cap-bottom" aria-hidden="true">
+        {rack.id === RACK_MODEL.racks.at(-1).id && BUILD_STAMP && <span className="vfd cap-build">{BUILD_STAMP}</span>}
+      </div>
       <div className="side r" aria-hidden="true" />
       <div className="side l" aria-hidden="true" />
       <div className="roof" aria-hidden="true" />
@@ -128,7 +131,7 @@ export default function ServerRoom() {
   useEffect(() => mountServerRoom(rootRef.current, {
     model: RACK_MODEL,
     lenses,
-    navigate: (to) => navigateRef.current(to),
+    navigate: (to) => navigateRef.current(to, { viewTransition: true }),
     srcSetFor: cardSrcSet,
     formatUpdated,
   }), []);
@@ -174,6 +177,7 @@ export default function ServerRoom() {
               ))}
             </div>
             <button type="button" className="sr-heat" aria-pressed="false"><span className="sw" aria-hidden="true" />Commit heat</button>
+            <button type="button" className="sr-sound" aria-pressed="false"><span className="spk" aria-hidden="true" />Sound</button>
           </div>
           <div className="sr-legend" hidden>
             <span>Public commits · {RANGE}</span>

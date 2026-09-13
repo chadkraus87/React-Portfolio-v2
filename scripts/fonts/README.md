@@ -1,41 +1,34 @@
 # Vendored fonts
 
-These are the three families the portfolio's design system uses, vendored so
+The four families the Server Room design system uses, vendored so
 `scripts/make-og-images.py` renders identical social cards on any machine, with
 no network access and nothing to install. See DESIGN.md for the type roles.
 
-| File                  | Family       | Used for                                   |
-| --------------------- | ------------ | ------------------------------------------ |
-| `Archivo-var.ttf`     | Archivo      | Card titles and the cover name (weight 700) |
-| `Literata-var.ttf`    | Literata     | Prose — project summaries, the cover role line (weight 400) |
-| `MartianMono-var.ttf` | Martian Mono | Identifiers — category, tagline, status, date (weights 400 / 500) |
+| File                          | Family                | Used for |
+| ----------------------------- | --------------------- | -------- |
+| `BigShouldersDisplay-var.ttf` | Big Shoulders Display | Card titles, the cover name, rack stencils (weights 700–900) |
+| `Saira-var.ttf`               | Saira                 | Summaries (400) and label tape (700 at width 78) |
+| `GeistMono-var.ttf`           | Geist Mono            | Kickers, taglines, dates, the domain (500) |
+| `Doto-var.ttf`                | Doto                  | Front-panel status readouts only (800) |
 
 ## Why variable files rather than static weights
 
-Google Fonts ships these families as variable fonts only; there are no static
-instances in the upstream repository, and cutting our own would mean adding
-`fonttools` as a build dependency for four files. Pillow instances the axes
-directly instead — `scripts/make-og-images.py` pins every weight through
-`set_variation_by_axes`, so the rendered output is deterministic even though the
-file carries the whole range.
+Google Fonts ships these as variable fonts. Pillow instances the axes directly:
+`make-og-images.py` pins weight and width through `set_variation_by_axes`, so the
+output is deterministic even though each file carries the whole range.
 
 ## Source and licence
 
-Downloaded from the Google Fonts repository, `main` branch:
+Downloaded from the Google Fonts repository, `main` branch, on 2026-09-13:
 
-- Archivo      — https://github.com/google/fonts/tree/main/ofl/archivo
-- Literata     — https://github.com/google/fonts/tree/main/ofl/literata
-- Martian Mono — https://github.com/google/fonts/tree/main/ofl/martianmono
+- Big Shoulders Display — https://github.com/google/fonts/tree/main/ofl/bigshouldersdisplay
+- Saira                 — https://github.com/google/fonts/tree/main/ofl/saira
+- Geist Mono            — https://github.com/google/fonts/tree/main/ofl/geistmono
+- Doto                  — https://github.com/google/fonts/tree/main/ofl/doto
 
-Retrieved 2026-09-08.
+All four are licensed under the SIL Open Font License 1.1, which permits
+redistribution with the licence included. Each upstream `OFL.txt` is committed
+beside its font as `OFL-<family>.txt`.
 
-All three are licensed under the SIL Open Font License 1.1, which permits
-redistribution with the licence included. The upstream `OFL.txt` for each family
-is committed beside its font file:
-
-- `OFL-archivo.txt`
-- `OFL-literata.txt`
-- `OFL-martianmono.txt`
-
-The fonts are used here to render images only; they are not served to visitors.
-The site itself loads the same families from Google Fonts (see `index.html`).
+The fonts render images only; they are not served to visitors. The site loads
+the same families from Google Fonts (see `index.html`).

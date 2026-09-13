@@ -47,7 +47,7 @@ Almost everything is data, not components.
 | Projects (rows, case studies, badges, demo video) | `src/data/projects.js` |
 | Which rack / lens a project belongs to | `src/data/racks.js` |
 | Case-study and colophon stories | `src/data/stories.js` |
-| Public commit activity | `node scripts/fetch-activity.mjs` → `src/data/activity.json` |
+| Public commit activity | `node scripts/fetch-activity.mjs` → `src/data/activity.json` (also runs daily in GitHub Actions) |
 | Bio, experience, skills, certifications, contact | `src/data/profile.js` |
 | Resume PDF | `src/assets/files/` |
 | Design tokens (colours, type) | `src/index.css` |
@@ -59,7 +59,8 @@ at build time. Field documentation is at the top of `projects.js`.
 
 **Demo videos** are silent H.264 MP4s in `public/demos/`, referenced by a
 project's `demo` field. They pause off-screen, never autoplay under reduced
-motion, and always show a pause control.
+motion, and always show a pause control. `demoNote` adds a caption when client
+names are masked or the data shown is simulated.
 
 **Social cards** are generated locally and committed:
 
@@ -101,6 +102,12 @@ scripts/
   console, detail sheet) from one effect with full cleanup. Reduced motion
   turns the scroll dive, signals and ambient animation off.
 - **Redirects** — the removed `/notes` URLs 301 to their new homes in `vercel.json`.
+- **Build readout** — `vite.config.js` injects the build time and commit
+  (`__BUILD__`), shown on rack B01's base and in the footer.
+- **Route changes** — React Router view transitions wipe the new page in behind a
+  signal trace; reduced motion turns both off.
+- **Rack sound** — optional Web Audio sounds (`src/lib/rackSound.js`), off by
+  default and remembered per browser.
 - **Analytics** — GoatCounter, with `no_onload` set so `src/components/
   Analytics.jsx` can record one pageview per client-side route.
 - **Contact** — posts to Formspree; `FORM_ENDPOINT` in `src/pages/Contact.jsx`

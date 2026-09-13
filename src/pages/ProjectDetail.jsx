@@ -28,7 +28,7 @@ export default function ProjectDetail() {
   return (
     <article className="page cs">
       <div className="container">
-        <Link to="/portfolio" className="cs-back"><span aria-hidden="true">←</span> All projects</Link>
+        <Link viewTransition to="/portfolio" className="cs-back"><span aria-hidden="true">←</span> All projects</Link>
 
         <header className="cs-head">
           <p className="kicker">Rack {rack.code} · {p.u} · {rack.name}</p>
@@ -84,7 +84,7 @@ export default function ProjectDetail() {
               <>
                 <h2>Shares a tool with</h2>
                 <ul className="cs-peers">
-                  {peers.map((o) => <li key={o.slug}><Link to={`/projects/${o.slug}`}>{o.title}</Link></li>)}
+                  {peers.map((o) => <li key={o.slug}><Link viewTransition to={`/projects/${o.slug}`}>{o.title}</Link></li>)}
                 </ul>
               </>
             )}
@@ -100,8 +100,8 @@ export default function ProjectDetail() {
         )}
 
         <nav className="cs-pager" aria-label="More projects">
-          <Link to={`/projects/${prev.slug}`}><span>← Previous unit</span><strong>{prev.title}</strong></Link>
-          <Link to={`/projects/${next.slug}`}><span>Next unit →</span><strong>{next.title}</strong></Link>
+          <Link viewTransition to={`/projects/${prev.slug}`}><span>← Previous unit</span><strong>{prev.title}</strong></Link>
+          <Link viewTransition to={`/projects/${next.slug}`}><span>Next unit →</span><strong>{next.title}</strong></Link>
         </nav>
       </div>
     </article>

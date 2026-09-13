@@ -81,7 +81,11 @@ Rendered once by `ServerRoom.jsx`; driven by `src/lib/serverRoom.js`.
   a patch port lights every unit that uses the tool; lens buttons dim the other
   rack; Commit heat swaps vents for the heat ramp with numbers; ⌘K / Ctrl K opens
   the KVM console (`signal`, `open`, `rack a|b|all`, `heat`, `clear`, `help`,
-  `exit`; unknown input answers "No route to host").
+  `exit`, `sound`; unknown input answers "No route to host").
+- **Sound:** off by default. When on, pulling a unit plays a rail slide and latch,
+  a signal plays two short tones. Synthesised with Web Audio; no audio files.
+- **Build readout:** rack B01's base carries a VFD with the deployed commit and
+  build date, injected at build time. The footer repeats it as text.
 - **Scroll dive:** the hero is sticky over 185vh and the camera eases in from
   scroll progress. Pointer parallax is a few degrees at most.
 - **Mobile (≤999px):** racks flatten and stack, the sheet becomes a bottom
@@ -104,6 +108,9 @@ Rendered once by `ServerRoom.jsx`; driven by `src/lib/serverRoom.js`.
 - **404:** "No route to host" with a curl transcript.
 
 ## Motion
+
+Route changes use view transitions: the old page dims, the new one wipes in from
+the left behind a 2px signal trace under the nav. The nav itself does not move.
 
 All animation sits inside `prefers-reduced-motion: no-preference`. Reduced
 motion removes the scroll dive, boot sequence, blinking LEDs, signal travel,

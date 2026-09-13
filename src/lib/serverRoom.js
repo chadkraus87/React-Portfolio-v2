@@ -1,4 +1,5 @@
 import { activityRange } from './rackModel.js';
+import { createRackSound } from './rackSound.js';
 
 // ---------------------------------------------------------------------------
 // Server room behaviour: camera, cables, signals, console and detail sheet.
@@ -58,6 +59,8 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   const sheetBody = q('.sr-sheet-body');
   const liveEl = q('.sr-live');
   const say = (text) => { liveEl.textContent = text; };
+  const sound = createRackSound(win);
+  const soundBtn = q('.sr-sound');
 
   const units = P.map((p) => q(`.unit[data-i="${p.i}"]`));
   const ports = {};
@@ -324,7 +327,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
         <p class="s-tag">${esc(p.tagline)}</p>
         <ul class="s-chips"><li class="chip"><span class="dot" style="color:${STATUS_COLOR[p.status]}"></span>${esc(p.status)}</li><li class="chip">Updated ${esc(formatUpdated(p.updated))}</li><li class="chip">${p.act ? `${p.act.total} public commits` : 'No public repo'}</li></ul>
         <a class="btn btn-primary s-open" href="/projects/${esc(p.slug)}" data-nav>Open the case study →</a>
-        <div class="s-monitor"><div class="s-glass">${media}</div>${toggle}</div>
+        <div class="s-monitor"><div class="s-glass">${media}</div>${toggle}</div>${p.demo && p.demoNote ? `<p class="s-note s-demo-note">${esc(p.demoNote)}</p>` : ''}
         <ol class="s-path">
           <li><span class="s-step">01 · Input</span><h3>What it answers</h3><p>${esc(p.summary)}</p></li>
           <li><span class="s-step">02 · Process</span><h3>How it’s built</h3>${p.details ? `<p>${esc(p.details)}</p>` : ''}<p class="s-stack">${p.stack.map(esc).join(' · ')}</p></li>
@@ -378,20 +381,21 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     });
     root.querySelectorAll('[data-lens-btn]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lensBtn === state.lens)));
     q('.sr-heat').setAttribute('aria-pressed', String(state.heat));
+    soundBtn.setAttribute('aria-pressed', String(sound.enabled));
     root.classList.toggle('heat-on', state.heat);
     q('.sr-legend').hidden = !state.heat;
   }
   function selectUnit(i, keyboard = false) {
     Object.assign(state, { mode: 'unit', sel: i, tool: null, preview: null });
     lastTrigger = units[i];
-    sync(); showSheet(unitSheet(P[i]), keyboard); camGoals(); if (!running) snap();
+    sync(); showSheet(unitSheet(P[i]), keyboard); camGoals(); if (!running) snap(); sound.pull();
     if (motion()) { const now = win.performance.now(); cables.filter((c) => c.kind === 'unit' && c.p === i).forEach((c, j) => spawn(c, 1, now + 300 + j * 90, 0)); }
     say(`${P[i].title} pulled out of rack ${rackOf(P[i].rack).code}`);
   }
   function selectTool(t, keyboard = false) {
     Object.assign(state, { mode: 'tool', sel: -1, tool: t, preview: null });
     if (doc.activeElement && root.contains(doc.activeElement)) lastTrigger = doc.activeElement;
-    sync(); showSheet(toolSheet(t), keyboard); camGoals(); if (!running) snap();
+    sync(); showSheet(toolSheet(t), keyboard); camGoals(); if (!running) snap(); sound.blip();
     if (motion()) {
       const now = win.performance.now();
       model.racks.forEach((r) => { if (r.tools.includes(t)) downs(r.id, t, -1, now + 120); });
@@ -424,6 +428,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     if (verb === 'clear') return { cmd: 'clear' };
     if (['exit', 'close', 'reset'].includes(verb)) return { cmd: 'reset' };
     if (verb === 'heat') return { cmd: 'heat' };
+    if (verb === 'sound') return { cmd: 'sound' };
     if (verb === 'rack' || verb === 'lens') {
       const lens = { a: 'builder', builder: 'builder', b: 'operations', operations: 'operations', all: 'all', both: 'all' }[arg];
       return lens ? { cmd: 'lens', lens } : { cmd: 'unknown', text: raw };
@@ -444,7 +449,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     if (verb === 'signal' || verb === 'ping') tools.filter((t) => t.includes(arg)).forEach((t) => out.push(`signal ${t}`));
     else if (verb === 'open') names.filter((n) => n.includes(arg)).forEach((n) => out.push(`open ${n}`));
     else {
-      ['help', 'heat', 'clear', 'rack a', 'rack b', 'rack all', 'exit'].filter((c) => c.startsWith(raw)).forEach((c) => out.push(c));
+      ['help', 'heat', 'sound', 'clear', 'rack a', 'rack b', 'rack all', 'exit'].filter((c) => c.startsWith(raw)).forEach((c) => out.push(c));
       tools.filter((t) => t.includes(raw)).forEach((t) => out.push(`signal ${t}`));
       names.filter((n) => n.includes(raw)).forEach((n) => out.push(`open ${n}`));
     }
@@ -486,9 +491,10 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     logLine(`$ ${text}`, 'cmd');
     state.preview = null;
     if (!r) return;
-    if (r.cmd === 'help') logLine('signal <tool> · open <project> · rack a | b | all · heat · clear · exit');
+    if (r.cmd === 'help') logLine('signal <tool> · open <project> · rack a | b | all · heat · sound · clear · exit');
     else if (r.cmd === 'clear') logEl.textContent = '';
     else if (r.cmd === 'reset') { overview(); closeKvm(); }
+    else if (r.cmd === 'sound') { sound.set(!sound.enabled); logLine(`rack sound ${sound.enabled ? 'on' : 'off'}`, 'ok'); }
     else if (r.cmd === 'heat') { setHeat(!state.heat); logLine(`commit heat ${state.heat ? 'on' : 'off'}`, 'ok'); }
     else if (r.cmd === 'lens') { setLens(r.lens); logLine(r.lens === 'all' ? 'both racks lit' : `${lenses[r.lens].name} lens: ${lenses[r.lens].slugs.length} units lit`, 'ok'); }
     else if (r.cmd === 'open') { selectUnit(r.p.i); logLine(`↳ ${r.p.title} pulled from rack ${rackOf(r.p.rack).code} · ${r.p.u}`, 'ok'); }
@@ -566,6 +572,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   });
   root.querySelectorAll('[data-lens-btn]').forEach((b) => on(b, 'click', () => setLens(b.dataset.lensBtn)));
   on(q('.sr-heat'), 'click', () => { setHeat(!state.heat); say(state.heat ? 'Commit heat on' : 'Commit heat off'); });
+  on(soundBtn, 'click', () => { sound.set(!sound.enabled); sync(); say(sound.enabled ? 'Rack sound on' : 'Rack sound off'); });
   on(doc, 'keydown', (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); if (kvmScreen.hidden) openKvm(); else closeKvm(); return; }
     if (e.key === 'Escape') { if (!kvmScreen.hidden) closeKvm(); else if (state.mode !== 'overview') overview(); }
@@ -594,6 +601,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   return () => {
     destroyed = true;
     stop();
+    sound.close();
     cleanups.forEach((fn) => fn());
     timers.forEach((id) => win.clearTimeout(id));
     root.classList.remove('is-dive', 'is-booting', 'heat-on', 'sheet-open');

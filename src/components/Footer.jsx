@@ -1,4 +1,5 @@
 import { profile } from '../data/profile.js';
+import { BUILD_SHA, BUILD_DATE } from '../lib/build.js';
 import './Footer.css';
 
 export default function Footer() {
@@ -7,6 +8,7 @@ export default function Footer() {
       <div className="footer-inner">
         <span className="footer-mono">
           chad kraus · built with react + claude code
+          {BUILD_DATE && ` · build ${[BUILD_SHA, BUILD_DATE].filter(Boolean).join(', ')}`}
         </span>
         <div className="footer-links">
           <a href={profile.github} target="_blank" rel="noopener noreferrer">GitHub</a>

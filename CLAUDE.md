@@ -16,9 +16,12 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   until Chad approves the wording).
 - `src/data/activity.json` — generated. Refresh with `node scripts/fetch-activity.mjs`
   (unauthenticated GitHub API, so only public repos are ever counted).
+  `.github/workflows/refresh-activity.yml` runs it daily and commits to `main`
+  only when the numbers change, which redeploys the site.
 - `src/data/projects.js` — all portfolio projects. Each project imports its
   image at the top of the file and references it by variable. Optional `demo` is a
-  path to a silent MP4 in `public/demos/` (privacy-review every frame first).
+  path to a silent MP4 in `public/demos/` (privacy-review every frame first);
+  `demoNote` captions it when names are masked or the data is simulated.
 - Home is the server room: `src/components/ServerRoom.jsx` renders the racks once,
   `src/lib/serverRoom.js` is the imperative engine (camera, cables, console,
   detail sheet), and `src/lib/rackModel.js` is the pure model the build self-tests.
@@ -130,5 +133,5 @@ them.
   `google-site-verification` token from `index.html`, and optionally disabling
   Pages entirely. None of that happens before de-indexing is confirmed; the
   redirect stays indefinitely for now.
-- The social cards in `public/og*` still use the previous (C2) design and
-  should be regenerated in the Server Room style.
+- Social cards (`public/og-image.png`, `public/og/`) are regenerated with
+  `/usr/bin/python3 scripts/make-og-images.py` whenever project copy changes.

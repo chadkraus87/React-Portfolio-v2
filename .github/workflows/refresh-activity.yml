@@ -1,0 +1,46 @@
+# Refreshes src/data/activity.json (public GitHub commits per project) once a
+# day and commits it only when the numbers changed. The push to main is what
+# redeploys the site on Vercel.
+#
+# The script runs WITHOUT a token on purpose: the unauthenticated API can only
+# ever see public repositories, so a private repo cannot leak into the heat map.
+# Runners share an IP, so the 60-requests-an-hour anonymous limit is sometimes
+# hit; the script then exits before writing anything and tomorrow's run retries.
+name: Refresh activity
+
+on:
+  schedule:
+    - cron: '17 9 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-activity
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      - name: Fetch public commit activity
+        run: node scripts/fetch-activity.mjs
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- src/data/activity.json; then
+            echo "Activity unchanged."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/activity.json
+          git commit -m "chore: refresh public commit activity"
+          git push origin HEAD:main
