@@ -24,6 +24,7 @@ import {
 // every project stands in a rack and self-test the model the server room uses.
 import { racks, lenses } from '../src/data/racks.js';
 import { toolsOf, buildRackModel } from '../src/lib/rackModel.js';
+import { evidenceReport } from './evidence.mjs';
 
 const dist = join(dirname(fileURLToPath(import.meta.url)), '..', 'dist');
 const BASE = 'https://chad-kraus-portfolio.vercel.app';
@@ -132,26 +133,12 @@ const projectRoutes = parseEntries(projectsSrc).map(({ slug, title }) => ({
 
 // Evidence dates. Every project says when its screenshot was captured; every demo
 // says when it was recorded and what is on screen. Missing fields fail the build;
-// evidence older than the project's last update only warns.
+// evidence older than the project's last update only warns (and the daily Action
+// opens an issue for it).
 {
-  const month = /^\d{4}-(0[1-9]|1[0-2])$/;
-  const problems = [];
-  const stale = [];
-  for (const { slug } of parseEntries(projectsSrc)) {
-    const block = (projectsSrc.split(`slug: '${slug}'`)[1] ?? '').split(/\n {2}\},?\n/)[0];
-    const field = (key) => block.match(new RegExp(`\\b${key}:\\s*'([^']*)'`))?.[1];
-    const demo = field('demo');
-    const imageDate = field('imageDate');
-    const demoDate = field('demoDate');
-    const updated = field('updated');
-    if (!month.test(imageDate ?? '')) problems.push(`${slug}: imageDate must be 'YYYY-MM'`);
-    if (demo && !month.test(demoDate ?? '')) problems.push(`${slug}: a demo needs demoDate 'YYYY-MM'`);
-    if (demo && !/demoChapters:\s*\[\s*\[\s*0\s*,/.test(block)) problems.push(`${slug}: a demo needs demoChapters starting at 0`);
-    const captured = demo ? demoDate : imageDate;
-    if (captured && updated && captured < updated) stale.push(`${slug}: ${demo ? 'demo' : 'screenshot'} from ${captured}, project updated ${updated}`);
-  }
+  const { problems, stale } = evidenceReport(projectsSrc);
   if (problems.length) throw new Error(`projects.js evidence:\n  ${problems.join('\n  ')}`);
-  if (stale.length) console.warn(`evidence older than the project's last update:\n  ${stale.join('\n  ')}`);
+  if (stale.length) console.warn(`evidence older than the project's last update:\n  ${stale.map((x) => `${x.slug}: ${x.kind} from ${x.captured}, updated ${x.updated}`).join('\n  ')}`);
 }
 
 // Rack model self-test: stack matching, trunks across racks, and the refusal to
@@ -319,6 +306,29 @@ writeFileSync(
   'utf8'
 );
 console.log('prerendered /');
+
+// Share previews for /?unit=<slug>. middleware.js rewrites those requests to
+// these copies of the home page, so a shared unit link unfurls with the project's
+// own title, description and card. Same app; canonical points at the home page
+// and none of them are in the sitemap.
+for (const rack of racks) {
+  for (const slug of rack.slugs) {
+    const entry = parseEntries(projectsSrc).find((e) => e.slug === slug);
+    const dir = join(dist, 'units', slug);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(
+      join(dir, 'index.html'),
+      swap(shell, {
+        title: detailTitle(`${entry.title} in rack ${rack.code}`),
+        description: firstSentence(projectsSrc, slug),
+        url: `${BASE}/?unit=${slug}`,
+        image: `${BASE}/og/${slug}.jpg`,
+      }).replace(/(<link\s+rel="canonical"\s+href=")[^"]*(")/, `$1${BASE}/$2`),
+      'utf8'
+    );
+  }
+}
+console.log('wrote unit share previews');
 
 // 404.html — served by Vercel for unmatched paths, with a real 404 status.
 // noindex so a soft-404 never enters the index.

@@ -17,7 +17,9 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
 - `src/data/activity.json` — generated. Refresh with `node scripts/fetch-activity.mjs`
   (unauthenticated GitHub API, so only public repos are ever counted).
   `.github/workflows/refresh-activity.yml` runs it daily and commits to `main`
-  only when the numbers change, which redeploys the site.
+  only when the numbers change, which redeploys the site. The same job opens,
+  updates or closes a "Stale portfolio evidence" GitHub issue
+  (`scripts/check-evidence.mjs`).
 - `src/data/projects.js` — all portfolio projects. Each project imports its
   image at the top of the file and references it by variable. Optional `demo` is a
   path to a silent MP4 in `public/demos/` (privacy-review every frame first);
@@ -25,9 +27,15 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   Every project needs `imageDate`; a demo also needs `demoDate` and
   `demoChapters` (timed captions of what is on screen). The build fails without
   them and warns when evidence is older than the project's `updated` month.
+  `architecture` lists the layers drawn on the case study ("How it fits
+  together"); every item must come from that project's own details or stack.
 - Home is the server room: `src/components/ServerRoom.jsx` renders the racks once,
   `src/lib/serverRoom.js` is the imperative engine (camera, cables, console,
-  detail sheet), and `src/lib/rackModel.js` is the pure model the build self-tests.
+  detail sheet, first-visit tour, anonymous GoatCounter events), and
+  `src/lib/rackModel.js` is the pure model the build self-tests.
+- `middleware.js` (Vercel Routing Middleware) serves `/?unit=<slug>` the
+  prerendered `dist/units/<slug>/index.html` copy of the home page, so a shared
+  unit link unfurls with that project's card. Only known slugs are rewritten.
 - `src/assets/images/` — screenshots/headshot. `src/assets/files/` — resume PDF.
 - `src/pages/` and `src/components/` — layout/design. Only touch when I ask for a
   design or structural change, not for content updates.
@@ -70,12 +78,18 @@ section was removed; old `/notes` URLs redirect permanently in `vercel.json`.
   `scripts/prerender.mjs` — both must be updated together if the domain changes.
 
 ## Quality gate
-`.github/workflows/ci.yml` runs on every push and pull request: `npm run build`,
-then `npm run test:e2e` (Playwright + axe: WCAG 2.2 AA on every route in both
-themes, phone-width overflow, the room, console, shared unit links, captions,
-reduced motion, theme toggle), then Lighthouse budgets from `lighthouserc.json`.
-Vercel deploys pushes to `main` regardless of CI unless Deployment Checks are
-enabled for this workflow in the Vercel project settings.
+`.github/workflows/ci.yml` runs on every push and pull request, in two jobs:
+- `quality`: `npm run build`, then `npm run test:e2e` (Playwright + axe: WCAG 2.2
+  AA on every route in both themes, phone-width overflow, the room, console,
+  tour, analytics events, shared unit links and previews, captions, architecture,
+  reduced motion, theme toggle), then Lighthouse budgets from `lighthouserc.json`.
+- `visual`: screenshot comparison against the Linux baselines in
+  `e2e/visual.spec.js-snapshots/`, inside the pinned Playwright image. After an
+  intentional design change run `npm run test:visual:update` (Docker), look at
+  every PNG, and commit them with the change. `sh scripts/update-visual-baselines.sh
+  check` runs the same comparison locally without touching the baselines.
+Vercel Deployment Checks should require both jobs so a red build never reaches
+production; that is set in the Vercel project settings, not in this repo.
 
 ## Non-negotiable working rules
 1. **Always `git pull origin main` before making any changes.** I sometimes edit

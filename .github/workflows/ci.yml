@@ -1,5 +1,6 @@
 # Quality gate on every push and pull request: the production build, then
-# accessibility and behaviour checks (Playwright + axe), then Lighthouse budgets.
+# accessibility and behaviour checks (Playwright + axe), Lighthouse budgets, and
+# screenshot comparison against committed baselines.
 # A failure here marks the commit red. Vercel still deploys pushes to main on its
 # own; to hold a failing build back from production, enable Deployment Checks for
 # this workflow in the Vercel project settings.
@@ -41,5 +42,29 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: playwright-report
+          path: test-results/
+          retention-days: 7
+
+  # Screenshot comparison, inside the pinned Playwright image the baselines were
+  # rendered in (scripts/update-visual-baselines.sh), so fonts match exactly.
+  visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    container:
+      image: mcr.microsoft.com/playwright@sha256:eff16c30e6f3f4af0a03fa4b706120d5e9b0891c344a27d64559aff5900a4a27 # v1.63.0-noble
+      options: --ipc=host
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: npm ci
+      - run: npm run build
+      - name: Screenshots against committed baselines
+        run: npm run test:visual
+        env:
+          HOME: /root
+      - name: Keep the diff images when screenshots change
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: visual-diffs
           path: test-results/
           retention-days: 7

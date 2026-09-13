@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router';
 import Monitor from '../components/Monitor.jsx';
+import Architecture from '../components/Architecture.jsx';
 import Spark from '../components/Spark.jsx';
 import { projectStories } from '../data/stories.js';
 import { RACK_MODEL } from '../lib/rack.js';
@@ -91,6 +92,8 @@ export default function ProjectDetail() {
             )}
           </aside>
         </div>
+
+        <Architecture project={p} />
 
         {story && (
           <section className="cs-story" aria-labelledby="cs-story-title">

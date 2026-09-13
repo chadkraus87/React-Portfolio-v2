@@ -97,9 +97,13 @@ Rendered once by `ServerRoom.jsx`; driven by `src/lib/serverRoom.js`.
   opens a printable operator snapshot built from profile.js; printing shows only
   that sheet, black on white.
 - **Shareable units:** pulling a unit writes `?unit=<slug>` into the address with
-  replaceState (no navigation, no analytics event); loading that address pulls
-  the unit out. The sheet has "Copy link to this unit"; case studies link back
-  with "Show in the rack".
+  replaceState (no navigation); loading that address pulls the unit out. The
+  sheet has "Copy link to this unit"; case studies link back with "Show in the
+  rack". Shared links unfurl with the project's own card via `middleware.js`.
+- **First-visit tour:** a small card over the room's lower right offers a
+  20-second tour once per browser. Four steps (pull a unit, fire a port, the
+  `hire` command, done) advance every five seconds, or by Next under reduced
+  motion. It never moves focus and can be ended at any step.
 - **Sound:** off by default. When on, pulling a unit plays a rail slide and latch,
   a signal plays two short tones. Synthesised with Web Audio; no audio files.
 - **Build readout:** rack B01's base carries a VFD with the deployed commit and
@@ -120,7 +124,10 @@ Rendered once by `ServerRoom.jsx`; driven by `src/lib/serverRoom.js`.
 - **Case study (`/projects/<slug>`):** monitor (demo video when present),
   01 Input / 02 Process / 03 Output signal path with sparkline, sticky
   "Patched to" sidebar with peers, Field notes story when one exists, prev/next
-  unit pager.
+  unit pager. "How it fits together" draws the project's `architecture` layers
+  in order as surface cards joined by a 2px accent line (horizontal on desktop,
+  vertical on phones). It shows structure only; every item comes from the
+  project's own write-up.
 - **Resume, Contact:** same header pattern; resume PDF in a bezel with the
   phone hand-off below 700px.
 - **404:** "No route to host" with a curl transcript.
@@ -159,7 +166,8 @@ and heat buttons; one `aria-live` region narrates room actions; the sheet is
 real combobox and Tab never traps. `forced-colors` gets plain text for the
 gradient name. Touch targets are 44px on coarse pointers. One `h1` per page and
 an unbroken heading order. axe checks WCAG 2.2 AA on every route in both themes
-in CI, alongside Lighthouse budgets.
+in CI, alongside Lighthouse budgets, and screenshot comparisons against Linux
+baselines catch unintended visual changes.
 
 ## Do / Don't
 

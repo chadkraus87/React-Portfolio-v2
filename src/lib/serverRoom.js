@@ -19,7 +19,7 @@ const lerp = (a, b, t) => a + (b - a) * t;
 const DEFAULT_NOTE = 'This project isn’t publicly linked — it runs on private infrastructure.';
 const STATUS_COLOR = { Live: 'var(--live)', 'In progress': 'var(--accent)', Private: 'var(--private)' };
 
-export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, formatUpdated, snapshot }) {
+export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, formatUpdated, snapshot, onEvent = () => {} }) {
   const doc = root.ownerDocument;
   const win = doc.defaultView;
   const reduced = win.matchMedia('(prefers-reduced-motion: reduce)');
@@ -63,6 +63,9 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   const say = (text) => { liveEl.textContent = text; };
   const sound = createRackSound(win);
   const soundBtn = q('.sr-sound');
+  // Anonymous interaction counts (GoatCounter events): each name once per visit.
+  const counted = new Set();
+  const track = (name) => { if (!counted.has(name)) { counted.add(name); onEvent(name); } };
 
   const units = P.map((p) => q(`.unit[data-i="${p.i}"]`));
   const ports = {};
@@ -401,6 +404,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     const html = doc.documentElement;
     const done = () => { html.classList.remove('sr-printing'); win.removeEventListener('afterprint', done); };
     html.classList.add('sr-printing');
+    track('snapshot/print');
     win.addEventListener('afterprint', done);
     win.print();
   }
@@ -409,6 +413,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     let copied = false;
     try { await win.navigator.clipboard.writeText(url.href); copied = true; } catch { /* clipboard unavailable */ }
     button.textContent = copied ? 'Link copied' : 'Copy it from the address bar';
+    if (copied) track(`share/${url.searchParams.get('unit') || 'room'}`);
     say(copied ? 'Link to this unit copied' : `Clipboard unavailable. The link is ${url.href}`);
     later(() => { if (button.isConnected) button.textContent = 'Copy link to this unit'; }, 2400);
   }
@@ -467,6 +472,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     lastTrigger = units[i];
     setUnitParam(P[i].slug);
     sync(); showSheet(unitSheet(P[i]), keyboard); camGoals(); if (!running) snap(); if (!quiet) sound.pull();
+    track(`unit/${P[i].slug}`);
     if (motion()) { const now = win.performance.now(); cables.filter((c) => c.kind === 'unit' && c.p === i).forEach((c, j) => spawn(c, 1, now + 300 + j * 90, 0)); }
     say(`${P[i].title} pulled out of rack ${rackOf(P[i].rack).code}`);
   }
@@ -474,6 +480,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     Object.assign(state, { mode: 'tool', sel: -1, tool: t, preview: null });
     if (doc.activeElement && root.contains(doc.activeElement)) lastTrigger = doc.activeElement;
     setUnitParam(null);
+    track(`tool/${t}`);
     sync(); showSheet(toolSheet(t), keyboard); camGoals(); if (!running) snap(); sound.blip();
     if (motion()) {
       const now = win.performance.now();
@@ -493,6 +500,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     setUnitParam(null);
     sync(); showSheet(hireSheet(), false); camGoals(); if (!running) snap();
     say('Operator snapshot open');
+    track('console/hire');
   }
   const setLens = (l) => { state.lens = l; sync(); drawSoon(); };
   const setHeat = (onOff) => { state.heat = onOff; sync(); };
@@ -566,12 +574,12 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     state.preview = null; sync(); drawSoon();
     if (hadFocus) kvmToggle.focus();
   }
-  function openKvm() {
-    if (!kvmScreen.hidden) { kq.focus(); return; }
+  function openKvm(focus = true) {
+    if (!kvmScreen.hidden) { if (focus) kq.focus(); return; }
     kvmScreen.hidden = false; kvmToggle.setAttribute('aria-expanded', 'true');
     kq.value = ''; sActive = -1; renderSugs();
     if (!logEl.children.length) logLine('Type a tool or a project. Try: signal supabase');
-    kq.focus();
+    if (focus) kq.focus();
   }
   function run(text) {
     const r = resolve(text);
@@ -662,7 +670,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   });
   root.querySelectorAll('[data-lens-btn]').forEach((b) => on(b, 'click', () => setLens(b.dataset.lensBtn)));
   on(q('.sr-heat'), 'click', () => { setHeat(!state.heat); say(state.heat ? 'Commit heat on' : 'Commit heat off'); });
-  on(soundBtn, 'click', () => { sound.set(!sound.enabled); sync(); say(sound.enabled ? 'Rack sound on' : 'Rack sound off'); });
+  on(soundBtn, 'click', () => { sound.set(!sound.enabled); sync(); say(sound.enabled ? 'Rack sound on' : 'Rack sound off'); if (sound.enabled) track('sound/on'); });
   on(doc, 'keydown', (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); if (kvmScreen.hidden) openKvm(); else closeKvm(); return; }
     if (e.key === 'Escape') { if (!kvmScreen.hidden) closeKvm(); else if (state.mode !== 'overview') overview(); }
@@ -692,11 +700,51 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   if (sharedUnit) selectUnit(sharedUnit.i, false, true);
   else if (shared) setUnitParam(null);
 
+  // ---- First-visit tour: offered once per browser, optional, never takes focus ----
+  const tourEl = q('.sr-tour'); const tourText = q('.sr-tour-step');
+  const tourNext = q('[data-tour="next"]'); const tourEnd = q('[data-tour="end"]');
+  const tourUnit = Math.max(0, P.findIndex((p) => p.slug === 'petcenza'));
+  const tourTool = TOOLS.includes('React') ? 'React' : TOOLS[0];
+  const TOUR = [
+    { text: `Each unit is a project. Pulling one out opens its details: this is ${P[tourUnit].title}.`, run: () => selectUnit(tourUnit, false, true) },
+    { text: `Patch ports are shared tools. Firing ${tourTool} lights every project that uses it.`, run: () => selectTool(tourTool) },
+    { text: 'The console takes commands. Press Enter on hire for a printable snapshot.', run: () => { overview(); openKvm(false); kq.value = 'hire'; sActive = 0; renderSugs(); } },
+    { text: `That’s the room. Pull any unit, or press ${q('.sr-kbd').textContent} for the console.`, run: () => {} },
+  ];
+  let tourStep = -1; let tourTimer = 0;
+  const stopTourTimer = () => { win.clearTimeout(tourTimer); timers.delete(tourTimer); };
+  // Offered once per browser: starting it counts, as does saying no.
+  const markTourSeen = () => { try { win.localStorage.setItem('sr-tour', 'done'); } catch { /* offered again next visit */ } };
+  function endTour(reason) {
+    stopTourTimer();
+    tourEl.hidden = true; tourStep = -1;
+    markTourSeen();
+    track(`tour/${reason}`);
+  }
+  function tourGo(k) {
+    stopTourTimer();
+    if (k >= TOUR.length) { endTour('finish'); return; }
+    tourStep = k;
+    tourEl.dataset.step = String(k);
+    tourText.textContent = `${k + 1} of ${TOUR.length}. ${TOUR[k].text}`;
+    tourNext.textContent = k === TOUR.length - 1 ? 'Done' : 'Next';
+    tourEnd.textContent = 'End tour';
+    TOUR[k].run();
+    // Advances on its own every five seconds, except under reduced motion.
+    if (motion()) tourTimer = later(() => tourGo(k + 1), 5000);
+  }
+  on(tourNext, 'click', () => { if (tourStep === -1) { markTourSeen(); track('tour/start'); } tourGo(tourStep + 1); });
+  on(tourEnd, 'click', () => endTour(tourStep === -1 ? 'dismiss' : 'skip'));
+  let tourSeen = true;
+  try { tourSeen = win.localStorage.getItem('sr-tour') === 'done'; } catch { /* storage blocked: don't nag */ }
+  if (!tourSeen && !sharedUnit) later(() => { if (!state.sheetOpen && tourStep === -1) tourEl.hidden = false; }, motion() ? 2400 : 0);
+
   return () => {
     destroyed = true;
     stop();
     sound.close();
     stopCaptions();
+    stopTourTimer();
     doc.documentElement.classList.remove('sr-printing');
     cleanups.forEach((fn) => fn());
     timers.forEach((id) => win.clearTimeout(id));

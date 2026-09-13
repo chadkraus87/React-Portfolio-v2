@@ -15,6 +15,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: refresh-activity
@@ -44,3 +45,16 @@ jobs:
           git add src/data/activity.json
           git commit -m "chore: refresh public commit activity"
           git push origin HEAD:main
+      - name: Open, update or close the stale-evidence issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="Stale portfolio evidence"
+          report="$(node scripts/check-evidence.mjs)"
+          open="$(gh issue list --state open --search "in:title \"$title\"" --json number --jq '.[0].number // empty')"
+          if [ -n "$report" ]; then
+            printf '%s\n\n%s\n' "These case studies show a screenshot or demo captured before the project's last update. Refresh the capture and its imageDate/demoDate in src/data/projects.js." "$report" > body.md
+            if [ -n "$open" ]; then gh issue edit "$open" --body-file body.md; else gh issue create --title "$title" --body-file body.md; fi
+          elif [ -n "$open" ]; then
+            gh issue close "$open" --comment "All screenshots and demos are current again."
+          fi

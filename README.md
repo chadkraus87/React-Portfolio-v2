@@ -19,6 +19,8 @@ npm run dev       # http://localhost:5173
 npm run build     # vite build + prerender into dist/
 npm run preview   # serve dist/ locally
 npm run test:e2e  # accessibility + behaviour checks against dist/ (build first)
+npm run test:visual:update  # regenerate screenshot baselines in Docker
+sh scripts/update-visual-baselines.sh check  # compare against them without updating
 ```
 
 > `npm run preview` has SPA fallback, so an unmatched path returns `index.html`
@@ -93,6 +95,8 @@ scripts/
 └── make-og-images.py    run manually; regenerates social cards
 e2e/site.spec.js         Playwright + axe checks (npm run test:e2e)
 lighthouserc.json        Lighthouse budgets enforced in CI
+e2e/visual.spec.js       screenshot comparisons against Linux baselines
+middleware.js            Vercel Routing Middleware: share previews for ?unit= links
 ```
 
 - **Routing** — BrowserRouter with real paths. `basename` comes from
@@ -123,7 +127,18 @@ lighthouserc.json        Lighthouse budgets enforced in CI
 - **Light theme** — opt-in from the nav, saved per browser, applied before first
   paint by `public/theme.js`. The server room and other hardware stay dark.
 - **CI** — `.github/workflows/ci.yml` runs the build, the Playwright + axe suite
-  and Lighthouse budgets on every push and pull request.
+  and Lighthouse budgets (`quality`), and screenshot comparison in the pinned
+  Playwright image (`visual`), on every push and pull request.
+- **Share previews** — `middleware.js` serves `/?unit=<slug>` a prerendered copy
+  of the home page carrying that project's title and social card.
+- **Architecture** — each case study draws the project's layers from the
+  `architecture` field, taken from its own details and stack.
+- **First-visit tour** — a 20-second, skippable walk through pulling a unit,
+  firing a port and the `hire` command, offered once per browser.
+- **Analytics** — GoatCounter pageviews plus anonymous events for unit pulls,
+  port signals, `hire`, copied links, printing, sound and the tour. No cookies.
+- **Stale evidence** — the daily Action opens a GitHub issue when a screenshot or
+  demo predates its project's last update, and closes it when fixed.
 - **Analytics** — GoatCounter, with `no_onload` set so `src/components/
   Analytics.jsx` can record one pageview per client-side route.
 - **Contact** — posts to Formspree; `FORM_ENDPOINT` in `src/pages/Contact.jsx`

@@ -105,6 +105,14 @@ project stories now live on the PetCenza and CoachRhythm case studies.
   pulled out, and `hire` in the console opens a printable one-page snapshot.
 - A light theme is available for bright rooms and shared screens; dark remains
   the default and the brand.
+- Shared unit links unfurl with that project's own title and social card.
+- A 20-second first-visit tour is offered once per browser and can be skipped.
+- Each case study draws its architecture as ordered layers. Every item comes
+  from the project's own write-up; the diagram never adds a claim.
+- Analytics are GoatCounter pageviews plus anonymous interaction counts (unit
+  pulls, port signals, `hire`, copied links, printing, sound, tour). No cookies,
+  no personal data.
+- A daily job opens a GitHub issue when evidence falls behind a project update.
 - Project `status` is one of `Live`, `In progress`, or `Private`, paired with an
   `updated` month. Currency is part of the evidence.
 

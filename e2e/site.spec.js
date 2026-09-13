@@ -17,6 +17,11 @@ const watchErrors = (page) => {
   return errors;
 };
 
+// The first-visit tour would sit over the room in every other test.
+test.beforeEach(async ({ page }, testInfo) => {
+  if (!testInfo.title.includes('tour')) await page.addInitScript(() => localStorage.setItem('sr-tour', 'done'));
+});
+
 for (const theme of ['dark', 'light']) {
   test.describe(`axe, ${theme} theme`, () => {
     test.beforeEach(async ({ page }) => {
@@ -140,4 +145,55 @@ test('the theme toggle switches to light and remembers it', async ({ page }) => 
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   await expect(page.getByRole('button', { name: 'Switch to dark theme' })).toBeVisible();
   expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(244, 241, 234)');
+});
+
+test('first visit: the tour offers itself, walks each step and stays dismissed', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const tour = page.getByRole('region', { name: 'Guided tour' });
+  await expect(tour).toBeVisible();
+  const { violations } = await new AxeBuilder({ page }).include('.sr-tour').withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+  expect(violations).toEqual([]);
+  await tour.getByRole('button', { name: 'Take the tour' }).click();
+  await expect(page.locator('#sr-sheet-title')).toHaveText('PetCenza');
+  await tour.getByRole('button', { name: 'Next' }).click();
+  await expect(page.locator('.sr-live')).toHaveText(/Signal fired through/);
+  await tour.getByRole('button', { name: 'Next' }).click();
+  await expect(page.locator('#sr-kvm-q')).toHaveValue('hire');
+  await tour.getByRole('button', { name: 'Next' }).click();
+  await tour.getByRole('button', { name: 'Done' }).click();
+  await expect(tour).toBeHidden();
+  await page.reload();
+  await page.waitForTimeout(600);
+  await expect(page.getByRole('region', { name: 'Guided tour' })).toBeHidden();
+});
+
+test('room interactions send one anonymous analytics event each', async ({ page }) => {
+  await page.route(/gc\.zgo\.at/, (route) => route.abort());
+  await page.addInitScript(() => { window.__events = []; window.goatcounter = { count: (e) => window.__events.push(e) }; });
+  await page.goto('/');
+  const unit = page.locator('.unit[data-i="2"]');
+  await unit.click();
+  await page.keyboard.press('Escape');
+  await unit.click();
+  const paths = await page.evaluate(() => window.__events.filter((e) => e.event).map((e) => e.path));
+  expect(paths.filter((p) => p.startsWith('event/unit/'))).toHaveLength(1);
+});
+
+test('case studies show the architecture layers from the project data', async ({ page }) => {
+  await page.goto('/projects/petcenza');
+  await expect(page.getByRole('heading', { name: 'How it fits together' })).toBeVisible();
+  await expect(page.locator('.arch-layer')).toHaveCount(5);
+  await expect(page.locator('.arch-layer').first()).toContainText('IndexedDB outbox');
+});
+
+test('shared unit links unfurl with that project', async ({ request }) => {
+  const { default: middleware } = await import('../middleware.js');
+  const rewriteOf = (url) => middleware(new Request(url)).headers.get('x-middleware-rewrite');
+  expect(rewriteOf('https://site.test/?unit=petcenza')).toBe('https://site.test/units/petcenza/index.html');
+  expect(rewriteOf('https://site.test/?unit=../../secrets')).toBeNull();
+  expect(rewriteOf('https://site.test/')).toBeNull();
+  const html = await (await request.get('/units/petcenza/index.html')).text();
+  expect(html).toContain('og/petcenza.jpg');
+  expect(html).toContain('<link rel="canonical" href="https://chad-kraus-portfolio.vercel.app/"');
 });

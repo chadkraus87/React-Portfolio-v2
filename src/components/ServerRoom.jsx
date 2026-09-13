@@ -149,6 +149,8 @@ export default function ServerRoom() {
       skillGroups: profile.skillGroups,
       resumeUrl: resumePdf,
     },
+    // Anonymous GoatCounter events, no cookies. count.js ignores localhost.
+    onEvent: (name) => window.goatcounter?.count?.({ path: `event/${name}`, title: name, event: true }),
   }), []);
 
   return (
@@ -221,6 +223,15 @@ export default function ServerRoom() {
         </div>
 
         <p className="sr-cue" aria-hidden="true">Scroll to walk in</p>
+
+        <div className="sr-tour" role="region" aria-label="Guided tour" hidden>
+          <p className="sr-tour-step" aria-live="polite">New here? The room has a 20-second tour.</p>
+          <div className="sr-tour-actions">
+            <button type="button" className="btn btn-primary" data-tour="next">Take the tour</button>
+            <button type="button" className="btn" data-tour="end">No thanks</button>
+          </div>
+          <div className="sr-tour-dots" aria-hidden="true"><i /><i /><i /><i /></div>
+        </div>
 
         <aside className="sr-sheet" aria-labelledby="sr-sheet-title" aria-hidden="true" inert>
           <div className="sr-sheet-bar">
