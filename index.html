@@ -22,10 +22,10 @@
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- The site is light-only today. Declaring it stops the browser painting
-         scrollbars and native form controls in dark chrome for a visitor whose
-         OS is set to dark. This is a statement of what is, not a dark mode. -->
-    <meta name="color-scheme" content="light" />
+    <!-- The site is dark-only by design. Declaring it keeps scrollbars and native
+         form controls dark for every visitor, whatever their OS setting. -->
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#080605" />
     <!-- All three description tags below are stamped from HOME_DESCRIPTION in
          src/data/siteMeta.js at prerender time. They are authored here too so
          `npm run dev` matches production; the build fails if they drift. -->
@@ -73,7 +73,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;1,7..72,400&family=Martian+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600..900&family=Doto:wght@600..900&family=Geist+Mono:wght@400..600&family=Saira:wdth,wght@75..100,400..700&display=swap"
       rel="stylesheet"
     />
   </head>
@@ -83,8 +83,7 @@
 
     <!-- GoatCounter analytics. `no_onload` disables the script's own automatic
          pageview so it cannot double-count the landing page — src/components/
-         Analytics.jsx records every view instead, passing the hash route as an
-         explicit path so the four pages report separately. -->
+         Analytics.jsx records every view instead, one per client-side route. -->
     <script
       data-goatcounter="https://chadkraus.goatcounter.com/count"
       data-goatcounter-settings='{"no_onload": true}'

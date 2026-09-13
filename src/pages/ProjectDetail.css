@@ -1,103 +1,47 @@
-/* Project pages use the document/evidence language — not a fake incident
-   report. Reading measure is preserved. */
-.pdetail { max-width: 46rem; }
+.cs-back { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-bottom: 18px; color: var(--muted); text-decoration: none;
+  font: 500 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; }
+.cs-back:hover { color: var(--text); }
+.cs-head { display: grid; gap: 16px; margin-bottom: 36px; }
+.cs-tag { font: 500 14px/1.5 var(--f-mono); }
+.cs-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
 
-/* The prose keeps its 46rem measure; the screenshot breaks out of it and runs
-   wider, which is the whole point of the redesign. The negative margins centre
-   the breakout on the reading column — growing it only rightward pushed its
-   right edge 2px past the layout width at 1440, because 100vw counts the
-   scrollbar the grid does not. */
-.pdetail > picture {
-  display: block;
-  --break: min(64rem, calc(100vw - var(--gut) * 2));
-  width: var(--break);
-  margin-inline: calc((100% - var(--break)) / 2);
-}
+.cs-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: clamp(32px, 5vw, 80px); margin-top: 56px; }
+.cs-path { position: relative; list-style: none; }
+.cs-path::before { content: ''; position: absolute; left: 6px; top: 10px; bottom: 20px; width: 1px; background: linear-gradient(var(--accent), var(--line)); }
+.cs-path > li { position: relative; padding: 0 0 44px 38px; }
+.cs-path > li::before { content: ''; position: absolute; left: 0; top: 3px; width: 13px; height: 13px; border-radius: 50%; border: 2px solid var(--accent); background: var(--bg); }
+.cs-step { font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.cs-path h2 { margin: 10px 0 14px; font: 800 clamp(30px, 2.6vw, 40px)/.95 var(--f-display); text-transform: uppercase; }
+.cs-path p { max-width: 66ch; font-size: 17px; line-height: 1.72; color: var(--prose); }
+.cs-path p + p { margin-top: 14px; }
+.cs-stack { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+.cs-stack li { padding: 7px 9px; border: 1px solid var(--line-2); font: 500 11.5px/1 var(--f-mono); color: var(--muted); }
+.cs-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.cs-path .cs-note { font-style: italic; color: var(--muted); }
 
-.pdetail-back {
-  display: inline-block;
-  font-family: var(--font-id);
-  font-size: var(--t-13);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--graphite);
-  text-decoration: none;
-  margin-bottom: var(--s-6);
-}
-.pdetail-back:hover { color: var(--ink); }
+.cs-side { position: sticky; top: calc(var(--nav-h) + 24px); align-self: start; display: grid; gap: 14px; padding: 20px; border: 1px solid var(--line-2); background: linear-gradient(180deg, #120d0a, #0b0807); }
+.cs-side h2 { font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.cs-tools { list-style: none; }
+.cs-tools li { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line);
+  font: 600 13px/1 var(--f-ui); font-stretch: 85%; letter-spacing: .05em; text-transform: uppercase; }
+.cs-side p { font-size: 13.5px; line-height: 1.55; color: var(--muted); }
+.cs-peers { list-style: none; display: grid; }
+.cs-peers a { display: flex; align-items: center; min-height: 44px; color: var(--text); text-decoration: none; font: 700 17px/1 var(--f-display); letter-spacing: .02em; text-transform: uppercase; }
+.cs-peers a:hover { color: var(--accent); }
 
-.pdetail-head { margin-bottom: var(--s-6); }
-.pdetail-head .page-title { margin-bottom: var(--s-2); }
+.cs-story { max-width: 880px; margin-top: 40px; padding: clamp(24px, 4vw, 48px); border: 1px solid var(--line-2); background: linear-gradient(180deg, #110c09, #0a0706); }
+.cs-story h2 { margin: 12px 0 22px; font: 800 clamp(34px, 3.4vw, 52px)/.92 var(--f-display); text-transform: uppercase; }
+.cs-story p { max-width: 68ch; font-size: 17px; line-height: 1.75; color: var(--prose); }
+.cs-story p + p { margin-top: 16px; }
 
-.pdetail-tagline {
-  font-family: var(--font-id);
-  font-size: var(--t-13);
-  letter-spacing: 0.04em;
-  color: var(--graphite);
-}
+.cs-pager { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; margin-top: 72px; padding-top: 22px; border-top: 1px solid var(--line); }
+.cs-pager a { display: grid; gap: 6px; min-height: 44px; color: var(--text); text-decoration: none; }
+.cs-pager a:last-child { text-align: right; }
+.cs-pager span { font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.cs-pager strong { font: 800 24px/1 var(--f-display); text-transform: uppercase; }
+.cs-pager a:hover strong { color: var(--accent); }
 
-.pdetail-img {
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
-  object-position: left top;
-  width: 100%;
-  border: 1px solid var(--boundary);
-  background: #0b0b0d;
-  margin-bottom: var(--s-8);
-}
-
-.pdetail-body { margin-bottom: var(--s-8); }
-
-.pdetail-summary {
-  font-family: var(--font-prose);
-  font-size: var(--t-19);
-  line-height: 1.7;
-  color: var(--ink);
-  margin-bottom: var(--s-4);
-}
-
-.pdetail-details {
-  font-family: var(--font-prose);
-  font-size: var(--t-17);
-  color: var(--ink);
-  line-height: 1.75;
-  padding-left: var(--s-4);
-  border-left: 2px solid var(--rule);
-}
-
-.pdetail-section { margin-bottom: var(--s-8); }
-
-.pdetail-h2 {
-  font-family: var(--font-id);
-  font-size: var(--t-13);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--graphite);
-  margin-bottom: var(--s-3);
-}
-
-.pdetail-actions { margin-top: 0; }
-
-.pdetail-note {
-  font-family: var(--font-prose);
-  font-size: var(--t-15);
-  color: var(--graphite);
-  font-style: italic;
-}
-
-.pdetail-state {
-  display: flex;
-  align-items: baseline;
-  gap: var(--s-2);
-  margin-top: var(--s-3);
-}
-
-@media (max-width: 640px) {
-  .pdetail-summary { font-size: var(--t-17); }
-  .pdetail-details { padding-left: var(--s-3); }
-}
-
-@media (pointer: coarse) {
-  .pdetail-back { display: inline-flex; align-items: center; min-height: 44px; }
+@media (max-width: 1000px) {
+  .cs-grid { grid-template-columns: 1fr; }
+  .cs-side { position: static; }
 }

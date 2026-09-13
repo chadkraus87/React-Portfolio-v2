@@ -20,16 +20,18 @@ import {
   HOME_DESCRIPTION,
   detailTitle,
 } from '../src/data/siteMeta.js';
+// racks.js and rackModel.js import nothing either, so the build can check that
+// every project stands in a rack and self-test the model the server room uses.
+import { racks, lenses } from '../src/data/racks.js';
+import { toolsOf, buildRackModel } from '../src/lib/rackModel.js';
 
 const dist = join(dirname(fileURLToPath(import.meta.url)), '..', 'dist');
 const BASE = 'https://chad-kraus-portfolio.vercel.app';
 
-// Project and note pages are derived from the data files so there is one
-// source of truth. They are parsed rather than imported because those modules
-// import images, which Node cannot resolve outside Vite.
-// Comment lines are stripped first — notes.js documents its own shape with a
-// commented-out example entry, which would otherwise be parsed as a real post
-// and prerendered as a page that does not exist.
+// Project pages are derived from projects.js so there is one source of truth.
+// It is parsed rather than imported because it imports images, which Node
+// cannot resolve outside Vite. Comment lines are stripped first so a
+// commented-out example entry can never be prerendered as a real page.
 const src = (f) =>
   readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', 'src', 'data', f), 'utf8')
     .split('\n')
@@ -113,13 +115,38 @@ const projectRoutes = parseEntries(projectsSrc).map(({ slug, title }) => ({
   image: `${BASE}/og/${slug}.jpg`,
 }));
 
-const notesSrc = src('notes.js');
-// notes.js ships empty; entries only appear here once something is published.
-const noteRoutes = parseEntries(notesSrc).map(({ slug, title }) => ({
-  path: `notes/${slug}`,
-  title: detailTitle(title),
-  description: firstSentence(notesSrc, slug),
-}));
+// Every project must stand in exactly one rack, and every lens must name real
+// projects. The server room would otherwise throw on load.
+{
+  const projectSlugs = parseEntries(projectsSrc).map((e) => e.slug);
+  const racked = racks.flatMap((r) => r.slugs);
+  const problems = [
+    ...projectSlugs.filter((s) => !racked.includes(s)).map((s) => `${s} is in no rack`),
+    ...racked.filter((s) => !projectSlugs.includes(s)).map((s) => `racks.js lists unknown project ${s}`),
+    ...racked.filter((s, i) => racked.indexOf(s) !== i).map((s) => `${s} is in more than one rack`),
+    ...racks.filter((r) => r.slugs.length > 5).map((r) => `rack ${r.code} holds ${r.slugs.length} projects; the limit is 5`),
+    ...Object.values(lenses).flatMap((l) => l.slugs.filter((s) => !projectSlugs.includes(s)).map((s) => `lens ${l.name} lists unknown project ${s}`)),
+  ];
+  if (problems.length) throw new Error(`racks.js:\n  ${problems.join('\n  ')}`);
+}
+
+// Rack model self-test: stack matching, trunks across racks, and the refusal to
+// silently drop a project that is in no rack.
+{
+  const got = [...toolsOf(['Vitest + Playwright', 'React Flow', 'React 18 + TypeScript', 'Next.js 16', 'Deno Edge Functions'])].sort().join('|');
+  const want = ['Deno Edge Functions', 'Next.js', 'Playwright', 'React', 'React Flow', 'Vitest'].sort().join('|');
+  if (got !== want) throw new Error(`toolsOf: got ${got}, want ${want}`);
+  const m = buildRackModel({
+    projects: [{ slug: 'a', stack: ['Vite', 'Docker'] }, { slug: 'b', stack: ['Vite'] }, { slug: 'c', stack: ['Docker', 'Go'] }],
+    racks: [{ id: 'A', code: 'A01', slugs: ['a'] }, { id: 'B', code: 'B01', slugs: ['b', 'c'] }],
+    lenses: {},
+    activity: { repos: {} },
+  });
+  if (m.trunks.join('|') !== 'Docker|Vite') throw new Error(`rack model trunks: got ${m.trunks.join('|')}`);
+  let threw = false;
+  try { buildRackModel({ projects: [{ slug: 'x', stack: [] }], racks: [], lenses: {}, activity: { repos: {} } }); } catch { threw = true; }
+  if (!threw) throw new Error('buildRackModel accepted a project that is in no rack');
+}
 
 const routes = [
   {
@@ -139,17 +166,7 @@ const routes = [
     title: ROUTE_TITLES['/contact'],
     description: 'Get in touch with Chadwick (Chad) Kraus — email, LinkedIn, GitHub.',
   },
-  ...(noteRoutes.length
-    ? [
-        {
-          path: 'notes',
-          title: ROUTE_TITLES['/notes'],
-          description: 'Short pieces on what I learned building the projects on this site.',
-        },
-      ]
-    : []),
   ...projectRoutes,
-  ...noteRoutes,
 ];
 
 // Nothing that reaches a meta tag may still carry a source-code escape. This

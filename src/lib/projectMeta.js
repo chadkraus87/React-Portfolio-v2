@@ -14,3 +14,7 @@ export function formatUpdated(iso) {
 export function statusModifier(status) {
   return String(status).toLowerCase().replace(/\s+/g, '-');
 }
+
+// Front-panel readout text and status colour, shared by the rack and the pages.
+export const STATUS_VFD = { Live: 'LIVE', 'In progress': 'IN PROG', Private: 'PRIVATE' };
+export const STATUS_COLOR = { Live: 'var(--live)', 'In progress': 'var(--accent)', Private: 'var(--private)' };

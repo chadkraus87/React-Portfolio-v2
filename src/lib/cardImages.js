@@ -7,7 +7,7 @@
 // (which parses projects.js as text) to trip over.
 //
 // Keyed on the emitted URL rather than the filename, because Vite hashes asset
-// names at build time; the URL is the exact string ProjectCard receives.
+// names at build time; the URL is the exact string the page components receive.
 
 // png as well as jpg: a screenshot supplied as a lossless PNG stays the
 // canonical source, and still needs its AVIF card variants looked up.
@@ -47,80 +47,13 @@ for (const [path, url] of Object.entries(originals)) {
 export const cardSrcSet = (imageUrl) => srcSetByUrl.get(imageUrl);
 
 /* ---------------------------------------------------------------------------
-   `sizes` for the C2 layout.
-
-   Re-derived from scratch: the old values described a 1200px container with a
-   368px card, and none of those numbers survive the redesign. The container is
-   now `min(100vw, 1560px)` with a fluid gutter of `clamp(20px, 4vw, 72px)`, and
-   most images bleed past one or both gutters.
-
-   Gutter behaviour, which every value below depends on:
-     < 500px    gutter = 20px   (clamp floor)
-     500-1800px gutter = 4vw
-     > 1800px   gutter = 72px   (clamp ceiling)
-   The container stops growing at 1560px, so above 1704px viewport the content
-   box is a fixed 1560 - 2*72 = 1416px.
-
-   Upper bounds sit slightly above each layout threshold on purpose: media
-   conditions resolve against the viewport INCLUDING the classic scrollbar,
-   while the grid lays out against the content width that excludes it. Erring
-   one step large costs a few KB and stays sharp.
+   `sizes` for each image slot, derived from the layouts in the page CSS.
+   Upper bounds sit slightly above each threshold on purpose: media conditions
+   include the classic scrollbar, the grid lays out without it.
 --------------------------------------------------------------------------- */
 
-/**
- * Hero figure. Right column of a 0.82 / 1.18 grid, bleeding through the right
- * gutter, so it reaches the viewport edge:
- *   content = 100vw - 2*gut ; column = (content - gap) * 1.18/2 ; slot = column + gut
- * Collapses to full-bleed (100vw) below 980px.
- */
-export const HERO_SIZES = [
-  '(max-width: 980px) 100vw',
-  '(max-width: 1704px) calc((100vw - 8vw - 44px) * 0.59 + 4vw)',
-  '880px',
-].join(', ');
+/** /portfolio unit rows: one column under 900px, then ~40% of the container. */
+export const ROW_SIZES = '(max-width: 900px) calc(100vw - 32px), (max-width: 1440px) 40vw, 580px';
 
-/**
- * F1 featured band. Full-bleed both sides at every width.
- */
-export const BAND_SIZES = '100vw';
-
-/**
- * F2 / F3. Image column is 1.14 of a 2.0 split and bleeds through one gutter.
- * Single column, full-bleed, below 980px.
- */
-export const HALF_SIZES = [
-  '(max-width: 980px) 100vw',
-  '(max-width: 1704px) calc((100vw - 8vw - 64px) * 0.57 + 4vw)',
-  '850px',
-].join(', ');
-
-/**
- * F4 minor. Image column is 0.7 of a 2.0 split and does NOT bleed.
- */
-export const MINOR_SIZES = [
-  '(max-width: 980px) 100vw',
-  '(max-width: 1704px) calc((100vw - 8vw - 60px) * 0.35)',
-  '475px',
-].join(', ');
-
-/**
- * Homepage evidence entries keep the 55/45 split they had, but inside the
- * wider container.
- */
-export const EVIDENCE_SIZES = [
-  '(max-width: 980px) 100vw',
-  '(max-width: 1704px) calc((100vw - 8vw - 48px) * 0.55)',
-  '752px',
-].join(', ');
-
-/**
- * Project detail screenshot. ProjectDetail.css sets it to
- * `min(64rem, 100vw - 2*gut)`, so it is the content width until the viewport
- * reaches ~1113px (92vw = 1024) and a flat 1024px above that. Measured against
- * the layout at 390 / 768 / 1440: 350 / 706 / 1024.
- */
-export const DETAIL_SIZES = [
-  '(max-width: 500px) calc(100vw - 40px)',
-  '(max-width: 1120px) 92vw',
-  '1024px',
-].join(', ');
+/** Case study monitor: the reading column, capped at the container. */
+export const DETAIL_SIZES = '(max-width: 1100px) calc(100vw - 48px), 1100px';

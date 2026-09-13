@@ -57,8 +57,8 @@ that reduces one to a footnote breaks the positioning.
 
 - Visitors are mid-evaluation and often on a shared screen or a phone between
   meetings. Scanning precedes reading.
-- Many arrive on a deep link — a single project page or note — rather than the
-  home page, and may never see the About page.
+- Many arrive on a deep link — a single project case study — rather than the
+  home page, and may never see the racks or the Background section.
 - The resume PDF travels into applicant tracking systems and interview loops
   independently of the site.
 - Some visitors will click through to a live project and use it. Several
@@ -66,20 +66,22 @@ that reduces one to a footnote breaks the positioning.
 
 ## Capabilities and Constraints
 
-Current surfaces: About (`/`, the home route), Portfolio (`/portfolio`) with
-category filters, per-project pages (`/projects/<slug>`), Resume (`/resume`),
-Contact (`/contact`), and Writing (`/notes`, `/notes/<slug>`), which appears
-only once at least one note is published. Ten projects and four notes are
-published today. A 404 route exists.
+Current surfaces: Home (`/`) — the interactive server room (two 3D racks),
+then a projects index, Operations, Background, and a colophon; Projects
+(`/portfolio`) with lens filters; per-project case studies
+(`/projects/<slug>`); Resume (`/resume`); Contact (`/contact`); and a 404.
+Ten projects are published. The Notes section was removed in September 2026;
+every old `/notes` URL permanently redirects (see `vercel.json`), and the two
+project stories now live on the PetCenza and CoachRhythm case studies.
 
-- **Content is data, not markup.** Projects, notes, and profile facts live in
+- **Content is data, not markup.** Projects, racks, stories, and profile facts live in
   `src/data/*.js`. Content work edits data files; components change only for
   structural or design work.
 - **Every route is prerendered** by `scripts/prerender.mjs` into a real static
-  file with its own title, description, and OG tags. Project and note pages are
-  derived from the data files automatically — a new entry needs only a unique
-  `slug`. Only a brand-new top-level route requires touching the prerender
-  script.
+  file with its own title, description, and OG tags. Project pages are derived
+  from `projects.js` automatically — a new entry needs a unique `slug` and a
+  place in exactly one rack in `src/data/racks.js` (the build fails otherwise).
+  Only a brand-new top-level route requires touching the prerender script.
 - **Stack:** Vite + React 19 + react-router, no CSS framework and no UI
   library. Plain CSS with tokens in `src/index.css` and a stylesheet per
   component or page.
@@ -89,9 +91,13 @@ published today. A 404 route exists.
   per-route from `src/components/Analytics.jsx`.
 - **Absolute URLs** (og:url, og:image, sitemap, robots) are duplicated in
   `index.html` and `scripts/prerender.mjs` and must move together.
-- Project categories today are `AI & Claude Code`, `Infrastructure & Ops`, and
-  `Games & Simulation`; the filter row is generated from the data, so category
-  strings must be reused exactly rather than re-typed.
+- Projects are grouped by rack and lens in `src/data/racks.js`: rack A01
+  Software & AI (Builder lens) and rack B01 Networks & support (Operations
+  lens). TechOps sits in rack B01 and belongs to both lenses. Five units per
+  rack is the physical limit of the design.
+- Commit activity is public GitHub data only, fetched unauthenticated by
+  `scripts/fetch-activity.mjs` into `src/data/activity.json` — a private repo
+  can never appear, and a project with no public repo shows as such.
 - Project `status` is one of `Live`, `In progress`, or `Private`, paired with an
   `updated` month. Currency is part of the evidence.
 
@@ -121,9 +127,9 @@ The name and voice are established: first person, plain, specific, and
 unembellished; failures are described as readily as successes.
 
 **Not declared binding:** the visual identity was explicitly left off the
-non-negotiable list, and the forest-green system that held it when this was
-written has since been replaced by C2 — Editorial Spatial. DESIGN.md is the
-current design authority. The principle stands: the visual system is the
+non-negotiable list. The forest-green system, then C2 — Editorial Spatial,
+have both been replaced by the Server Room system (Thermal palette, September
+2026). DESIGN.md is the current design authority. The principle stands: the visual system is the
 current implementation, not a locked brand commitment, and a future redesign
 may replace it subject to the parity constraint above.
 
@@ -135,14 +141,20 @@ Real, in the repository:
   Meridian, PetCenza, TechOps Command Center, CoachRhythm, Greenline, HomeLab
   Commander, DeskDaemon, Stack City, Packet & Pine. Most are publicly reachable;
   status and last-updated month are recorded per project.
-- Four published notes in `src/data/notes.js` — first-person technical
-  write-ups of real bugs and real design decisions.
+- Four first-person stories in `src/data/stories.js`, rewritten from the old
+  notes in Chad's voice (directing Claude Code, owning the judgement calls):
+  two on case studies, two in the home page colophon. Marked draft until Chad
+  signs off on the wording.
+- Demo recordings in `public/demos/` for Meridian, PetCenza, HomeLab
+  Commander, and TechOps Command Center. Jarvis keeps its screenshot only.
 - The 2026 resume PDF (`src/assets/files/`), generated from
   `resume-src/resume.data.mjs`.
 - A headshot (`src/assets/images/headshot.jpg`) and an OG card in `public/`.
 - Certifications: Google IT Support Professional Certificate; Full-Stack Web
   Development, The University of Texas at Austin; NASM CPT + Certified
-  Nutrition Coach.
+  Nutrition Coach. NASM is shown on the site only, as "Current" with no date,
+  and deliberately left off the resume — the one sanctioned parity exception.
+  Training and nutrition are an identifier, never a section or rack of their own.
 - Named Rockbot work: a business case covering 2,000+ devices on end-of-life
   firmware and the customer upgrade program built around it; an AI voice model
   for call-center overflow; the escalation team's KPI dashboard; chairing weekly
@@ -162,7 +174,7 @@ ships a genuine screenshot; Meridian's is a capture of its Lodge view.
    dated status carry the argument. Superlatives do not.
 4. **Currency is a feature.** Status badges and updated months are part of the
    proof; stale content actively costs credibility with this audience.
-5. **Every entry point is a front door.** Deep-linked project and note pages are
+5. **Every entry point is a front door.** Deep-linked project case studies are
    judged alone and must stand alone.
 
 ## Accessibility & Inclusion

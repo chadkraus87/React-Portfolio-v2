@@ -23,6 +23,8 @@
 //               where the summary stopped.
 //   stack       array of short tech labels shown as tags
 //   image       import at the top, or null for a styled placeholder
+//   demo        optional path to a silent looping MP4 in public/demos/, shown in
+//               place of the screenshot on the case study and in the rack sheet
 //   projectLink live URL, or null (button hides itself)
 //   projectLinkLabel optional button text — defaults to 'View project'. Use
 //               'Watch demo' when the link goes to a walkthrough video rather
@@ -85,6 +87,7 @@ export const projects = [
       'Nineteen specialists each hold their own identity, expertise and memory, and they are allowed to disagree: if Security finds a critical flaw or QA finds a failing test, the Chief of Staff reports NOT READY rather than smoothing it over. Anything that reaches outside the machine, spends money, or cannot be undone stops in an Approval Inbox with the exact payload shown before it runs. Memory carries provenance — where a fact came from, when, and how confident it is — so speculation is never stored as fact. The audit trail is append-only and hash-chained, which means a modified or deleted record breaks the chain and is detectable rather than silent. Everything except model inference stays on the machine, running in Docker across an API, a worker, an MCP server and a web console.',
     stack: ['Next.js 16', 'TypeScript', 'Docker Compose', 'MCP', 'pnpm monorepo', 'Playwright'],
     image: Meridian,
+    demo: '/demos/meridian.mp4',
     projectLink: null, // local-first — runs on your own machine, no hosted instance
     repoLink: null, // repo is private
     linkNote:
@@ -112,6 +115,7 @@ export const projects = [
       'Vitest + Playwright',
     ],
     image: PetCenza,
+    demo: '/demos/petcenza.mp4',
     projectLink: 'https://pawchart-zeta.vercel.app/',
     repoLink: 'https://github.com/chadkraus87/petcenza',
   },
@@ -129,6 +133,7 @@ export const projects = [
       'Everything on screen comes from one underlying model, so the story always holds together — the charts, the logs, the dependency map and the customer complaints agree with each other because they are all computed from the same source rather than written separately. Failures spread the way they do in real systems: losing a cache makes things slow, losing a database makes them stop. One rule produces both, with no script per scenario. Nothing is random either, so an incident unfolds identically every time — which is also what lets an investigation survive a page refresh while storing almost nothing. Eight scenarios each teach a different shape of problem, and a wrong answer explains which evidence rules it out instead of just marking you incorrect. An optional guided mode walks newcomers through it, and any finished incident can be replayed second by second to watch the failure spread. Backed by 187 automated tests that run on every push.',
     stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS v4', 'Recharts', 'Vitest', 'Playwright'],
     image: TechOps,
+    demo: '/demos/techops-command-center.mp4',
     projectLink: 'https://techops-command-center.vercel.app/',
     repoLink: 'https://github.com/chadkraus87/techops-command-center',
   },
@@ -182,6 +187,7 @@ export const projects = [
       'The hosted demo is deliberately not the real thing, and says so: Vercel cannot reach a visitor\'s private network, so the public build runs a complete simulated lab on deterministic telemetry, keeps every edit inside that browser tab, and never writes to a shared database. Run it locally and it gains the parts that must touch your own network — discovery across approved ranges only, read-only Docker inventory, provider health, TLS expiry and Wake-on-LAN — each behind an explicit boundary rather than enabled by default. A guided outage scenario walks an incident across the command center and device views and can be replayed through to recovery, which makes it demonstrable without an audience needing a homelab of their own. Accessibility is checked in CI with axe rather than by eye.',
     stack: ['Next.js', 'TypeScript', 'React Flow', 'Recharts', 'Playwright + axe', 'Docker'],
     image: HomeLabCommander,
+    demo: '/demos/homelab-commander.mp4',
     projectLink: 'https://home-lab-commander.vercel.app/?scenario=outage&tour=1',
     projectLinkLabel: 'Open demo',
     repoLink: 'https://github.com/chadkraus87/home-lab-commander',

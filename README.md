@@ -1,7 +1,7 @@
 # Chad Kraus — Portfolio
 
-Personal portfolio: ten shipped projects across AI tooling, infrastructure
-consoles, and systems games.
+Personal portfolio: ten shipped projects, racked as units in an interactive
+server room — software and AI in one rack, networks and support in the other.
 
 **Live: https://chad-kraus-portfolio.vercel.app**
 
@@ -22,7 +22,7 @@ npm run preview   # serve dist/ locally
 
 > `npm run preview` has SPA fallback, so an unmatched path returns `index.html`
 > with a 200. Production does not behave that way. Don't use it to verify
-> routing or 404 behaviour — see `src/data/notes.js` for the write-up.
+> routing or 404 behaviour.
 
 ---
 
@@ -44,19 +44,22 @@ Almost everything is data, not components.
 
 | To change | Edit |
 | --- | --- |
-| Projects (cards, pages, filters, badges) | `src/data/projects.js` |
-| Bio, tagline, skills, contact | `src/data/profile.js` |
-| Writing / notes | `src/data/notes.js` |
+| Projects (rows, case studies, badges, demo video) | `src/data/projects.js` |
+| Which rack / lens a project belongs to | `src/data/racks.js` |
+| Case-study and colophon stories | `src/data/stories.js` |
+| Public commit activity | `node scripts/fetch-activity.mjs` → `src/data/activity.json` |
+| Bio, experience, skills, certifications, contact | `src/data/profile.js` |
 | Resume PDF | `src/assets/files/` |
 | Design tokens (colours, type) | `src/index.css` |
 
-**Adding a project** needs no code change beyond `projects.js`: give it a unique
-`slug` and its `/projects/<slug>` page, sitemap entry and metadata are generated
-at build time. Field documentation is at the top of that file.
+**Adding a project** needs a `projects.js` entry with a unique `slug` and a place
+in one rack in `racks.js` (five units per rack; the build fails if a project is
+unracked). Its `/projects/<slug>` page, sitemap entry and metadata are generated
+at build time. Field documentation is at the top of `projects.js`.
 
-**Adding a note** works the same way. The `/notes` route and its nav link only
-appear once `notes` has at least one entry, so the site never shows an empty
-writing section.
+**Demo videos** are silent H.264 MP4s in `public/demos/`, referenced by a
+project's `demo` field. They pause off-screen, never autoplay under reduced
+motion, and always show a pause control.
 
 **Social cards** are generated locally and committed:
 
@@ -75,22 +78,29 @@ project copy does.
 
 ```
 src/
-├── data/          projects.js · profile.js · notes.js  ← edit these
-├── components/    NavBar, Footer, ProjectCard, Analytics
-├── pages/         About · Portfolio · ProjectDetail · Notes · Resume · Contact · NotFound
-├── lib/           shared formatting helpers
+├── data/          projects · racks · stories · profile · activity.json  ← edit these
+├── components/    ServerRoom, Monitor, Spark, NavBar, Footer, Analytics
+├── pages/         Home · Portfolio · ProjectDetail · Resume · Contact · NotFound
+├── lib/           serverRoom.js (engine) · rackModel.js (pure model) · helpers
 ├── assets/        images/ and files/
-└── index.css      design tokens
+└── index.css      Server Room design tokens (Thermal palette)
+public/demos/      demo recordings
 scripts/
-├── prerender.mjs        runs after vite build; emits per-route HTML, sitemap, robots, 404
+├── prerender.mjs        runs after vite build; checks racks, self-tests the rack model, emits per-route HTML, sitemap, robots, 404
+├── fetch-activity.mjs   run manually; public GitHub commit counts
 └── make-og-images.py    run manually; regenerates social cards
 ```
 
 - **Routing** — BrowserRouter with real paths. `basename` comes from
   `import.meta.env.BASE_URL`, so the base path is defined once in
   `vite.config.js`.
-- **Prerendering** — `scripts/prerender.mjs` derives project and note pages from
-  the data files (parsed, not imported, since those modules import images).
+- **Prerendering** — `scripts/prerender.mjs` derives project pages from
+  `projects.js` (parsed, not imported, since it imports images).
+- **Server room** — `ServerRoom.jsx` renders the markup once; `serverRoom.js`
+  mounts an imperative engine (CSS 3D camera, canvas cables and dust, KVM
+  console, detail sheet) from one effect with full cleanup. Reduced motion
+  turns the scroll dive, signals and ambient animation off.
+- **Redirects** — the removed `/notes` URLs 301 to their new homes in `vercel.json`.
 - **Analytics** — GoatCounter, with `no_onload` set so `src/components/
   Analytics.jsx` can record one pageview per client-side route.
 - **Contact** — posts to Formspree; `FORM_ENDPOINT` in `src/pages/Contact.jsx`
@@ -102,6 +112,7 @@ scripts/
 
 ## History
 
+- **Sept 2026** — Server Room redesign; Notes removed with redirects; demo videos.
 - **Sept 2026** — moved from GitHub Pages to Vercel; React 19 + react-router 8.
 - **Aug 2026** — real paths and prerendering, replacing hash routing.
 - **July 2026** — rebuilt on Vite + React after Create React App was deprecated.

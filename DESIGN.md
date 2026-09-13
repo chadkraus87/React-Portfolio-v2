@@ -1,464 +1,139 @@
----
-name: Chad Kraus Portfolio
-description: An evidence-first hiring portfolio in an editorial-spatial language, where operational failure patterns, the mechanisms built against them, and full-bleed product screenshots share one page.
-colors:
-  paper: "#F2EEE6"
-  surface: "#FFFFFF"
-  inset: "#E8E2D6"
-  ink: "#14110D"
-  graphite: "#5C554A"
-  rule: "#CFC7B8"
-  boundary: "#7C7364"
-  accent: "#8A2B18"
-  verified: "#1F4B99"
-typography:
-  identity:
-    fontFamily: "Archivo, system-ui, sans-serif"
-    fontSize: "clamp(52px, 9.6vw, 138px)"
-    fontWeight: 700
-    lineHeight: 0.85
-    letterSpacing: "-0.042em"
-  displayMajor:
-    fontFamily: "Archivo, system-ui, sans-serif"
-    fontSize: "clamp(38px, 5.4vw, 82px)"
-    fontWeight: 700
-    lineHeight: 0.94
-    letterSpacing: "-0.035em"
-  displayMid:
-    fontFamily: "Archivo, system-ui, sans-serif"
-    fontSize: "clamp(34px, 4.6vw, 66px)"
-    fontWeight: 700
-    lineHeight: 0.94
-    letterSpacing: "-0.035em"
-  pageTitle:
-    fontFamily: "Archivo, system-ui, sans-serif"
-    fontSize: "clamp(38px, 5vw, 72px)"
-    fontWeight: 700
-    lineHeight: 0.95
-    letterSpacing: "-0.035em"
-  statement:
-    fontFamily: "Literata, Georgia, serif"
-    fontSize: "clamp(27px, 3.35vw, 56px)"
-    fontWeight: 400
-    lineHeight: 1.12
-    letterSpacing: "-0.022em"
-  lead:
-    fontFamily: "Literata, Georgia, serif"
-    fontSize: "clamp(20px, 1.85vw, 30px)"
-    fontWeight: 400
-    lineHeight: 1.36
-  body:
-    fontFamily: "Literata, Georgia, serif"
-    fontSize: "1.0625rem"
-    fontWeight: 400
-    lineHeight: 1.7
-  small:
-    fontFamily: "Literata, Georgia, serif"
-    fontSize: "0.9375rem"
-    fontWeight: 400
-    lineHeight: 1.6
-  label:
-    fontFamily: "Martian Mono, ui-monospace, monospace"
-    fontSize: "0.75rem"
-    fontWeight: 500
-    lineHeight: 1.4
-    letterSpacing: "0.1em"
-rounded:
-  none: "0"
-spacing:
-  xs: "4px"
-  sm: "8px"
-  md: "16px"
-  lg: "24px"
-  xl: "48px"
-  xxl: "96px"
-  gutter: "clamp(20px, 4vw, 72px)"
-  container: "1560px"
-components:
-  button-primary:
-    backgroundColor: "{colors.ink}"
-    textColor: "#ffffff"
-    rounded: "{rounded.none}"
-    padding: "12px 16px"
-  button-primary-hover:
-    backgroundColor: "{colors.accent}"
-    textColor: "#ffffff"
-  button-outline:
-    backgroundColor: "transparent"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.none}"
-    padding: "12px 16px"
-  filter-chip:
-    backgroundColor: "transparent"
-    textColor: "{colors.graphite}"
-    rounded: "{rounded.none}"
-    padding: "8px 12px"
-  filter-chip-active:
-    backgroundColor: "{colors.ink}"
-    textColor: "{colors.paper}"
-    rounded: "{rounded.none}"
-    padding: "8px 12px"
-  project-shot:
-    backgroundColor: "#0b0b0d"
-    rounded: "{rounded.none}"
-    padding: "0"
-  input:
-    backgroundColor: "{colors.inset}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.none}"
-    padding: "12px 12px 10px"
-  input-focus:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.ink}"
-  nav-link:
-    backgroundColor: "transparent"
-    textColor: "{colors.graphite}"
-    rounded: "{rounded.none}"
-    padding: "8px 12px"
-  nav-link-active:
-    backgroundColor: "transparent"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.none}"
-    padding: "8px 12px"
-  section-rule:
-    backgroundColor: "transparent"
-    textColor: "{colors.graphite}"
-    rounded: "{rounded.none}"
-    padding: "12px 0 0"
----
-# Design System: Chad Kraus Portfolio
+# Design System: Server Room
 
-> This records the system currently in production: **C2 — Editorial Spatial**,
-> shipped in `2c513e2`. It supersedes the flat paper/ink system documented here
-> before, which is preserved in git history and is not carried forward.
-> PRODUCT.md remains authoritative for positioning and product truth.
+The portfolio is a lit server room. Chad's ten projects are units in two 3D
+racks; a visitor pulls a unit out, patches into a tool, or types into the KVM
+console. Everything below the room is the same hardware vocabulary at rest:
+label tape, VFD readouts, patch-panel rows, monitors in bezels.
+
+Adopted September 2026. It replaces C2 — Editorial Spatial. PRODUCT.md still
+governs content: no fabricated claims, resume/site parity (NASM is the one
+site-only exception), and no project links Chad has not supplied.
 
 ## Design thesis
 
-The site is a hiring surface for a technical practitioner, and it argues in two
-registers at once. The first is structural: failure patterns from years of Tier
-2/3 escalations, each answered by the mechanism built so that pattern cannot
-recur. The second is evidential: real product screenshots, at real scale, so a
-visitor who reads nothing still sees shipped software.
+- **The hero is the proof.** A recruiter's first viewport shows the name, the
+  role, the headline ("Networks. Software. The body.") and all ten projects as
+  labelled, status-lit units. Nothing needs a click to be understood.
+- **Networks and software are one room.** Rack A01 is Software & AI (Builder
+  lens), rack B01 is Networks & support (Operations lens). Shared tools are
+  patch ports; a tool used in both racks gets a trunk cable through the
+  overhead tray. TechOps sits in B01 and belongs to both lenses.
+- **Training and nutrition are an identifier**, carried by "The body." and the
+  bio. They never get a rack, region, or lens.
+- **Real data or nothing.** Heat and sparklines are public GitHub commits over
+  twelve weeks. A project with no public repo is hatched and says so.
 
-Editorial Spatial is the language that carries both. It behaves like a printed
-publication rather than a web template — a wide measure, a fluid gutter that
-imagery is allowed to break through, display type that runs from 12px to 138px,
-and deliberate voids that give a statement room to land. Variance is high, but
-it is systematic: every asymmetry comes from a named footprint or a declared
-offset, never from hand-placement.
+## Palette: Thermal
 
-Two things it deliberately is not. It is not agency-portfolio styling — no
-rotated navigation, no scroll hijack, no marquee, no locale strip, no
-section-number eyebrows. And it is not a cockpit — no gauges, no KPI tiles, no
-pseudo-telemetry, no fake instrumentation. The register is a well-run
-engineering organisation's document that happens to be beautifully set.
+Single dark theme (`color-scheme: dark`). Tokens live in `src/index.css`.
 
-**Key characteristics**
-- Genuine product screenshots are a primary visual material, not decoration
-- Five compositional footprints over one invariant DOM order
-- A fluid gutter that imagery bleeds through; a 1560px container
-- Zero shadows and zero radii; depth comes from bleeds, scale and voids
-- One accent colour, held under roughly 5% of any viewport
-- Breakpoints derived from where the grid actually breaks
-- Touch targets keyed to pointer capability, not viewport width
+| Role | Token | Value |
+| --- | --- | --- |
+| Ground | `--bg` / `--bg2` | `#080605` / `#1E0E07` |
+| Text / prose / muted | `--text` / `--prose` / `--muted` | `#F5EDE6` / `#E4D9CF` / `#A9978B` |
+| Decorative rules | `--line` / `--line-2` | `#2C221D` / `#3B2F28` |
+| Control boundary (3.9:1) | `--edge` | `#7A6A5E` |
+| Accent / ink on accent | `--accent` / `--accent-ink` | `#FFB547` / `#1A0F03` |
+| Signal ramp | `--r-net` `--r-build` `--r-body` `--signal` | `#FF6A2B` `#FFB547` `#FF3B4E` `#FFF4DC` |
+| Status | `--live` `--private` `--danger` | `#7FD68A` `#E4DACF` `#FF8577` |
+| Heat bands 0–4 | `--heat-0..4` | `#4A1B0C` `#8A2E10` `#CC4B18` `#FF8A2E` `#FFD38C` |
+| Materials | `--steel-0..5`, `--tape`, `--vfd` | steel ramp, `#ECE4D3`, `#FFB547` |
+
+Rules: `--line` never identifies a control on its own; a control's edge is
+`--edge` or stronger. Status is always a word plus a colour. Heat is a vent
+strip plus a number, never a tint over text.
+
+**Patch panel** is the named alternate palette (swap values in the comment at
+the top of `index.css`): `#0B0C0D` ground, `#F4C430` accent, cyan build signal.
 
 ## Typography
 
-Three families, three jobs. Loaded from Google Fonts in `index.html`.
+| Face | Token | Use |
+| --- | --- | --- |
+| Big Shoulders Display 600–900 | `--f-display` | Name, page and section titles, unit and project titles. Uppercase. |
+| Saira (width 75–100) | `--f-ui` | Body, buttons (condensed 85%), label tape (78%). |
+| Geist Mono 400–600 | `--f-mono` | Kickers, metadata, stack tags, terminal. |
+| Doto 600–900 | `--f-vfd` | Front-panel readouts only (`.vfd`): status, U positions, counts. |
 
-| Family | Token | Job |
-|---|---|---|
-| **Archivo** | `--font-ui` | Structure and display. Every heading, every button, the identity. |
-| **Literata** | `--font-prose` | Reading. Body copy, summaries, field values, the thesis. |
-| **Martian Mono** | `--font-id` | Identifiers only. Eyebrows, labels, dates, status, category, nav. |
+Loaded from Google Fonts in `index.html` with system fallbacks on every stack.
+Body copy stays 15–17px at 1.6–1.75 line height and ~66ch measure.
 
-Nothing below 12px exists on the site. Mono is confined to identifiers so labels
-never compete with content. Emphasis inside a headline uses weight in the same
-family, never a second family.
+## Primitives (global, `index.css`)
 
-### Reading ramp (fixed)
+`.kicker` (mono eyebrow with a rule), `.page-title`, `.sec-title`, `.lede`,
+`.btn` / `.btn-primary` (44px min), `.seg` (pressed state = inverted),
+`.chip` + `.dot`, `.tape` (label-maker strip), `.vfd` (amber dot-matrix
+readout), `.monitor` (bezel + glass for screenshots and demos), `.spark`,
+`.nf-term`, `.skip-link`, `.visually-hidden`.
 
-| Token | Size |
-|---|---|
-| `--t-12` | 0.75rem / 12px |
-| `--t-13` | 0.8125rem / 13px |
-| `--t-15` | 0.9375rem / 15px |
-| `--t-17` | 1.0625rem / 17px — body default |
-| `--t-19` | 1.1875rem / 19px |
+## The room (home hero)
 
-### Display ramp (fluid)
+Rendered once by `ServerRoom.jsx`; driven by `src/lib/serverRoom.js`.
 
-The display ramp is what the previous system did not have at all, and it is what
-carries the redesign.
+- **Depth layers, back to front:** far hall (13 ghost racks, seeded LEDs),
+  near hall (9), ceiling strip lights, haze, floor plane with reflections, cable
+  tray, the two racks, canvas cables and signal pulses, dust motes in the light
+  falloff, vignette.
+- **Racks:** 14U. Units at U1–U10 (five per rack, a hard limit), patch panel at
+  U13–14. Each unit: vent/heat strip, label tape, status VFD, drive bays, NIC
+  LEDs keyed to tools, power LED, handle.
+- **Interactions:** click or Enter pulls a unit out and opens the detail sheet;
+  a patch port lights every unit that uses the tool; lens buttons dim the other
+  rack; Commit heat swaps vents for the heat ramp with numbers; ⌘K / Ctrl K opens
+  the KVM console (`signal`, `open`, `rack a|b|all`, `heat`, `clear`, `help`,
+  `exit`; unknown input answers "No route to host").
+- **Scroll dive:** the hero is sticky over 185vh and the camera eases in from
+  scroll progress. Pointer parallax is a few degrees at most.
+- **Mobile (≤999px):** racks flatten and stack, the sheet becomes a bottom
+  sheet, controls follow the racks.
 
-| Token | Value | Used by |
-|---|---|---|
-| `--d-name` | `clamp(52px, 9.6vw, 138px)` | The hero identity |
-| `--d-major` | `clamp(38px, 5.4vw, 82px)` | Featured band project titles |
-| `--d-mid` | `clamp(34px, 4.6vw, 66px)` | Standard project titles |
-| `--d-page` | `clamp(38px, 5vw, 72px)` | Page titles |
-| `--d-24` `--d-32` `--d-48` | 1.5 / 2 / 3rem | Fixed steps still in use |
+## Other surfaces
 
-Local display sizes are declared inline where a component owns its own scale:
-the PAIRS condition at `clamp(25px, 3.15vw, 52px)`, the thesis at
-`clamp(27px, 3.35vw, 56px)`, the operations figure at `clamp(58px, 8.4vw, 124px)`,
-the Contact title at `clamp(44px, 7vw, 104px)`, and Notes index titles at
-`clamp(32px, 4.3vw, 62px)`.
-
-Display type is tracked tight: `-0.035em` on headings, `-0.042em` on the
-identity, `-0.05em` on the operations figure.
-
-## Colour and surfaces
-
-Warm-neutral canvas. Every ratio below is measured against `--paper`, not
-assumed.
-
-| Token | Value | Contrast | Job |
-|---|---|---|---|
-| `--paper` | `#F2EEE6` | — | Warm page ground |
-| `--surface` | `#FFFFFF` | — | Raised surface; focused field body |
-| `--inset` | `#E8E2D6` | 1.11 vs paper | Recessed band; resting field body |
-| `--ink` | `#14110D` | **16.27** | Primary text, warm near-black |
-| `--graphite` | `#5C554A` | **6.36** | Secondary text |
-| `--rule` | `#CFC7B8` | 1.45 | **Decorative hairlines only** |
-| `--boundary` | `#7C7364` | **4.04** | The identifying edge of a control |
-| `--accent` | `#8A2B18` | **7.44** | Oxblood: numerals, Live, active nav, key rules |
-| `--verified` | `#1F4B99` | **7.19** | Links that leave the site |
-
-### Named rules
-
-- **Rule versus Boundary.** `--rule` is decorative and may never be a control's
-  only edge; `--boundary` is what identifies an interactive control and clears
-  the 3:1 non-text minimum on its own. Collapsing the two is what produced 1.12:1
-  control borders in the system before last.
-- **One accent, under ~5%.** Oxblood appears on index numerals, `Live`, the
-  active nav underline, the `↳` mechanism marker, skill-group labels, the drop
-  cap, the thesis rule and focus rings. Nowhere else. The 2,000+ operations
-  figure is deliberately **ink, not accent** — at 124px it would blow the budget
-  and read as a metric tile.
-- **Zero radius, zero shadow.** Enforced globally by
-  `*, *::before, *::after { border-radius: 0; box-shadow: none }`. This is a
-  policy, not a default, and it still holds with no exceptions in production.
-- **Colour never carries meaning alone.** Invalid fields change their rule
-  colour *and* gain a text message; status words are spelled out.
-
-## Layout
-
-- **Container** `--container: 1560px`, centred, padded by the gutter.
-- **Gutter** `--gut: clamp(20px, 4vw, 72px)` — fluid. Every bleed is measured
-  against it, so one token controls the whole edge behaviour of the site.
-- **Bleeds** `.bleed-l` / `.bleed-r` / `.bleed-x` apply `margin: calc(var(--gut) * -1)`
-  on the relevant side. This is the mechanism the entire project system is built
-  on. `html` and `body` carry `overflow-x: clip` so a deliberate edge-crop can
-  never produce a horizontal scrollbar.
-- **Hero structure** eyebrow → identity at display scale (line one cropped past
-  the left gutter) → a two-column band whose left column carries the role line
-  and a numbered index of the page's own sections, and whose right column
-  carries a real product screenshot tucked into the interline gap. A foot rule
-  closes it. Below 980px the band collapses to one column and the figure becomes
-  a full-bleed strip.
-- **Asymmetry** is systematic. Column splits are declared per footprint; the
-  PAIRS mechanism offset steps linearly by `--o`; the thesis is the only
-  right-aligned block on the homepage.
-- **Void** is a material. The PAIRS block leaves roughly half the width empty at
-  1920 on purpose, and the thesis balances it from the opposite side. Voids are
-  composed, not left over.
-- **Breakpoints** come from where the grid actually breaks: **980px** (project
-  footprints and the hero collapse), **1023px** (rail and background), **700px**
-  (Notes index), **640/620px** (typographic and rhythm adjustments). Touch
-  targets are keyed to `@media (pointer: coarse)`, never to width.
-
-## The project system
-
-Five footprints, defined in `ProjectCard.css`. They differ **only** in CSS grid
-placement.
-
-| Footprint | Composition |
-|---|---|
-| **F1 band** | Full-bleed image both sides, then a structural band beneath: title left, meta right, text and actions below a hairline |
-| **F2 right** | Text left, image right bleeding through the right gutter |
-| **F3 left** | Image left bleeding through the left gutter, text right, dropped |
-| **F4 minor** | Big type, smaller non-bleeding image offset low |
-| **Coda** | Used once, to close `/portfolio`: meta full width, title beside text, then a 24:9 full-bleed letterbox |
-
-### One DOM order, always
-
-Every footprint renders the same order:
-
-```
-meta  →  title  →  screenshot  →  tagline + summary + stack  →  actions
-```
-
-Art direction on the outside, one predictable skeleton inside. Keyboard and
-screen-reader order can therefore never diverge from reading order, however
-unusual the composition looks. Each footprint carries a trailing `1fr` row so
-slack collects there instead of spreading the text column against a taller
-image.
-
-`/portfolio` runs a nine-step rhythm — `right · minor · band · left · right ·
-minor · left · minor · band` — and appends the coda when the list holds more
-than four projects, so a filtered view never ends on a one-off treatment.
-
-Below 980px every footprint collapses to the identical single column and the
-rhythm is carried by aspect ratio alone (16:10, 5:4, 3:2, 1:1, 16:9).
-
-Actions hide themselves when a link is null. That is how the private-project
-policy is enforced in code rather than by convention.
-
-## Homepage
-
-| Block | Treatment |
-|---|---|
-| **Hero** | Identity at `--d-name`, edge-cropped left, with a real Packet & Pine screenshot in the interline gap. Roughly half the first viewport is evidence. |
-| **Section index** | The page's own sections as a numbered `<dl>` (01 Selected work, 02 Background, 03 Writing). Structure used as composition, and as in-page navigation. |
-| **PAIRS** | Three editorial units, not a table. Condition at `clamp(25px, 3.15vw, 52px)` on a 21ch measure; mechanism dropped, offset by `--o × clamp(18px, 6vw, 158px)`, behind a boundary rule and an accent `↳`. Serif answer against sans condition is the typographic contrast. |
-| **RAIL** | `2,000+` as ink display type at `clamp(58px, 8.4vw, 124px)` carrying its own sentence, beside a hairline `<dl>`. No cells, no dividers, no tiles. |
-| **Thesis** | Its own band: accent rule, `clamp(27px, 3.35vw, 56px)` Literata on a 26ch measure, right-aligned against the void the pairs leave. |
-| **Evidence** | The three named projects rendered in the *same* footprints `/portfolio` uses — F1, F3, F2 — with Condition/Action/Verify in the text area. F4 is deliberately unused: nothing in the selected evidence should read as de-emphasised. |
-| **Background** | Portrait at full column scale bleeding through the left gutter, a lead paragraph at `clamp(20px, 1.85vw, 30px)` on 34ch, then certifications and toolbox as full-width hairline structure rather than a sidebar appendix. |
-
-## Other routes
-
-- **`/portfolio`** — page title, filter chips, then the nine-step footprint
-  rhythm and the coda.
-- **`/projects/:slug`** — a 46rem reading column; the screenshot breaks out of it
-  to `min(64rem, 100vw − 2·gut)`, centred on the column by negative margins.
-- **Notes index** — an editorial publication index: a mono date rail
-  (`clamp(92px, 13vw, 210px)`), titles at `clamp(32px, 4.3vw, 62px)` on a 20ch
-  measure, and the excerpt dropped and indented under its own hairline. Not
-  project cards: no image, no status, no stack.
-- **Note detail** — deliberately unchanged reading: a 44rem measure, 17px
-  Literata at 1.8, and an accent drop cap on the first paragraph.
-- **`/contact`** — no form panel and no contact tiles. An oversized title, the
-  fields sitting directly on the page, and the four channels as a hairline `<dl>`
-  in a column offset down from the form.
-- **`/resume`** — an embedded PDF viewer. Intentionally the plainest surface.
-- **404** — page title, one prose line, two buttons.
+- **Home below the room:** Projects index (two rack columns, U position VFDs),
+  Operations (2,000+ figure, evidence rail, failure → mechanism log, thesis),
+  Background (headshot, bio, experience, credentials, toolbox), colophon
+  stories, next-step CTA.
+- **Projects (`/portfolio`):** lens filter, then unit rows grouped under rack
+  headers: faceplate, screenshot, title, summary, meta, stack, actions.
+- **Case study (`/projects/<slug>`):** monitor (demo video when present),
+  01 Input / 02 Process / 03 Output signal path with sparkline, sticky
+  "Patched to" sidebar with peers, Field notes story when one exists, prev/next
+  unit pager.
+- **Resume, Contact:** same header pattern; resume PDF in a bezel with the
+  phone hand-off below 700px.
+- **404:** "No route to host" with a curl transcript.
 
 ## Motion
 
-`MOTION_INTENSITY 5`. Plain CSS plus one IntersectionObserver
-(`src/lib/reveal.js`). No animation library, no GSAP, no scroll hijack, no
-parallax, no infinite loops, no scroll listeners.
+All animation sits inside `prefers-reduced-motion: no-preference`. Reduced
+motion removes the scroll dive, boot sequence, blinking LEDs, signal travel,
+motes, and demo autoplay (demos show their poster and a Play button). Demo
+videos pause when scrolled out of view and always expose a visible
+Pause/Play control. Canvas work runs on one rAF loop that stops when the room
+is off-screen.
 
-- Scroll reveal: 20px rise plus fade, 0.7s on `--ease`
-  (`cubic-bezier(0.22, 1, 0.36, 1)`), staggered by `calc(var(--i) * 70ms)`.
-  Each element is unobserved the moment it lands.
-- Hover: a 1.8% image scale over 0.7s, colour and border transitions at
-  0.2–0.25s, and a 1px press translate on buttons.
+## Images and video
 
-**Positive gating is the rule.** Every transition and the reveal's hidden start
-state are declared *only* inside
-`@media (prefers-reduced-motion: no-preference)`. A reduced-motion visitor is
-never sent a rule that then has to be cancelled, and nothing is ever hidden that
-JavaScript has to rescue — the page is fully composed with scripting off. The
-`reduce` block that also zeroes transitions is belt-and-braces; nothing depends
-on it. Verified in production: the deployed stylesheet contains exactly one
-`opacity: 0` declaration, and it is inside the positive guard.
-
-## Images
-
-Real screenshots of real software. No AI-generated imagery, no stock, no
-div-built fake product UI. Every tracked asset is scanned for C2PA / `caBX` /
-`gpt-image` provenance markers before it ships.
-
-### The responsive ladder
-
-**352 · 704 · 896 · 1216**, generated by `scripts/gen-card-images.py` (Pillow)
-into `src/assets/images/cards/` and committed. Not part of `npm run build` —
-Vercel's build image has no Pillow, and these only change when a screenshot
-changes.
-
-- **896 exists for DPR2 on small slots and DPR1 on the 750–880px slots.** Without
-  it a 390px phone at 2× jumps to 1216 (25.6 KB avg) where 896 (16.7 KB) serves;
-  that is −35% per image, about −89 KB on `/portfolio`.
-- **1216 is the maximum** and covers full-bleed bands and the hero.
-
-### The grid-box guard
-
-The previous generator shelled out to macOS `sips`, which above roughly 1024px
-silently emits a **tiled** AVIF: a `grid` derived-image box plus an `irot`
-transform instead of a single coded image. Chrome parses the header — correct
-intrinsic size, `naturalWidth` reports fine, no load error, nothing in the
-console — and then paints a blank rectangle. That shipped, and it was invisible
-to a 1× check.
-
-`naturalWidth > 0` cannot detect this. The generator now fails the run if any
-output contains a `grid` box, and image verification must probe **painted
-pixels** (draw onto a canvas primed with a known colour and read it back), never
-intrinsic dimensions.
-
-### Sizes logic
-
-Each slot has its own `sizes` expression in `src/lib/cardImages.js`, derived from
-the real layout rather than estimated:
-
-| Export | Slot |
-|---|---|
-| `HERO_SIZES` | right column of a 0.82/1.18 split plus one gutter; 100vw below 980px |
-| `BAND_SIZES` | `100vw` |
-| `HALF_SIZES` | F2/F3 image column plus one gutter |
-| `MINOR_SIZES` | F4 column, no bleed |
-| `DETAIL_SIZES` | `min(64rem, 100vw − 2·gut)`, exact at 350 / 706 / 1024 |
-
-Upper bounds sit slightly above each layout threshold on purpose: media
-conditions resolve against the viewport *including* the classic scrollbar, while
-the grid lays out against the content width that excludes it.
+- Screenshots use the AVIF ladder (352/704/896/1216) from
+  `scripts/gen-card-images.py`; sizes are `ROW_SIZES` and `DETAIL_SIZES` in
+  `src/lib/cardImages.js`. Verify painted pixels, never `naturalWidth`.
+- Demos: silent H.264 MP4, 1120px wide, 24fps, CRF 30, faststart, under
+  ~500KB, in `public/demos/`. Every frame is privacy-reviewed; no browser chrome,
+  extension banners, personal contact data, or credentials may appear.
 
 ## Accessibility
 
-The semantics are load-bearing and are preserved through every visual change.
+Roving tabindex across units and ports; `aria-pressed` on units, ports, lens
+and heat buttons; one `aria-live` region narrates room actions; the sheet is
+`inert` when closed and returns focus to its trigger; console suggestions are a
+real combobox and Tab never traps. `forced-colors` gets plain text for the
+gradient name. Touch targets are 44px on coarse pointers. One `h1` per page and
+an unbroken heading order.
 
-- **One DOM order per component**, so composition never reorders content for
-  keyboard or screen-reader users.
-- **Status and date** are separated by a visually-hidden `", "` so they are not
-  announced as `LiveAug 2026`.
-- **Filters** are `aria-pressed` buttons with an `aria-live="polite"` count.
-- **Contact** keeps `aria-invalid`, `aria-describedby`, focus-to-first-error
-  deferred to a commit-safe effect, and `role="status"` on the result.
-- **Mobile nav** keeps `aria-expanded`, `aria-controls`, Escape-to-close with
-  focus return, and outside-pointerdown close. `NavBar.jsx` was not touched by
-  the redesign.
-- **Skip link** is `position: fixed` so it works at any scroll position.
-- **Contrast floors**: 4.5:1 for text, 3:1 for control boundaries. Current values
-  are in the colour table; `--rule` at 1.45 is decorative-only by policy.
-- **Touch targets** are 44px minimum under `@media (pointer: coarse)`.
+## Do / Don't
 
-## Do's and Don'ts
-
-### Do
-- Reach for an existing footprint before inventing a composition
-- Let imagery bleed through the gutter; that is the system, not an exception
-- Keep the accent under ~5% of any viewport
-- Declare motion inside the positive `no-preference` guard
-- Re-derive a `sizes` hint whenever a slot's column split changes
-- Verify images by painted pixels
-
-### Don't
-- Add a radius, a shadow, or a second accent
-- Put `--rule` on a control
-- Introduce a sixth footprint, or hand-place an asymmetry
-- Add cards, tiles, gauges, KPI styling or fake instrumentation
-- Set a metric in accent at display scale
-- Use `sips` for AVIF, or trust `naturalWidth` as proof an image rendered
-
-## Unresolved
-
-Nothing outstanding in the design system itself. The four items listed here
-while C2 was landing were all closed by later commits, and are recorded below so
-this section is not mistaken for open work:
-
-- **`.impeccable/design.json`** was regenerated against the C2 palette and
-  motion values in `c36f84f`. It is current; this document remains the prose
-  authority, the sidecar the machine-readable one.
-- **OG/social cards** were rebuilt in the C2 language in `ee3d11f` and are
-  regenerated from `scripts/make-og-images.py` whenever project copy or a
-  screenshot changes.
-- **`rel=canonical`** was added in `e1df125`. Every indexable route carries one
-  absolute self-referencing canonical matching its `og:url`; `scripts/
-  prerender.mjs` fails the build if the shell canonical and `BASE` disagree.
-  The 404 is `noindex` and deliberately carries none.
-- **The homepage's three description variants** were unified in `cb7753f`. All
-  three are stamped from `HOME_DESCRIPTION` in `src/data/siteMeta.js`, including
-  `/`, which the prerenderer now rewrites rather than serving verbatim.
+- Do keep every number real and sourced (profile.js, projects.js, activity.json).
+- Do put new tools through `toolsOf()` in `rackModel.js` so ports stay normalised.
+- Don't add a third rack or a sixth unit; restructure `racks.js` instead.
+- Don't tint text with heat colours, or signal status by colour alone.
+- Don't link a project Chad has not supplied a link for.

@@ -1,50 +1,51 @@
-import { BrowserRouter, Routes, Route } from 'react-router';
+import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router';
 import NavBar from './components/NavBar.jsx';
 import Footer from './components/Footer.jsx';
 import Analytics from './components/Analytics.jsx';
 import DocumentTitle from './components/DocumentTitle.jsx';
-import About from './pages/About.jsx';
+import Home from './pages/Home.jsx';
 import Portfolio from './pages/Portfolio.jsx';
 import ProjectDetail from './pages/ProjectDetail.jsx';
 import Resume from './pages/Resume.jsx';
 import Contact from './pages/Contact.jsx';
 import NotFound from './pages/NotFound.jsx';
-import { NotesIndex, NoteDetail } from './pages/Notes.jsx';
-import { notes } from './data/notes.js';
 
-// Real paths (/portfolio, not /#/portfolio) so pages are indexable and links
-// are shareable. Every route is prerendered to its own static file by
-// scripts/prerender.mjs, and Vercel serves dist/404.html — with a real 404
-// status — for anything unmatched. The old GitHub Pages redirect hack that
-// used to live here is gone.
-//
-// basename comes from Vite's base so it can't drift from vite.config.js.
+// A new route starts at the top of the page; a #fragment (including the one the
+// old /notes redirects land on) scrolls to its target instead.
+function ScrollManager() {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (!hash) {
+      window.scrollTo(0, 0);
+      return undefined;
+    }
+    const id = requestAnimationFrame(() => document.getElementById(decodeURIComponent(hash.slice(1)))?.scrollIntoView());
+    return () => cancelAnimationFrame(id);
+  }, [pathname, hash]);
+  return null;
+}
+
+// Real paths (/portfolio, not /#/portfolio). Every route is prerendered to its
+// own static file by scripts/prerender.mjs, and Vercel serves dist/404.html,
+// with a real 404 status, for anything unmatched.
 export default function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <div className="app-shell">
-        {/* Must live inside the router — they read the active route */}
+        {/* Must live inside the router: they read the active route */}
         <Analytics />
         <DocumentTitle />
-        {/* First focusable element on every page, so a keyboard user can jump
-            the six nav links instead of tabbing them on each navigation.
-            Off-screen until focused — see .skip-link in index.css. */}
+        <ScrollManager />
         <a className="skip-link" href="#main">Skip to content</a>
         <NavBar />
         <main id="main" tabIndex={-1}>
           <Routes>
-            <Route path="/" element={<About />} />
+            <Route path="/" element={<Home />} />
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/projects/:slug" element={<ProjectDetail />} />
             <Route path="/resume" element={<Resume />} />
             <Route path="/contact" element={<Contact />} />
-            {/* Notes only exist once something is published — see data/notes.js */}
-            {notes.length > 0 && (
-              <>
-                <Route path="/notes" element={<NotesIndex />} />
-                <Route path="/notes/:slug" element={<NoteDetail />} />
-              </>
-            )}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

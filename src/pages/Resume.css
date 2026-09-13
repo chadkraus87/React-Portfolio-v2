@@ -1,49 +1,12 @@
-/* Resume stays easy to scan as professional evidence. */
-.resume-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--s-4);
-  flex-wrap: wrap;
-}
-.resume-head .page-title { margin-bottom: var(--s-6); }
-
-.resume-frame {
-  width: 100%;
-  height: 82vh;
-  min-height: 560px;
-  border: 1px solid var(--rule);
-  background: var(--surface);
-}
-
-.resume-fallback {
-  margin-top: var(--s-3);
-  font-family: var(--font-prose);
-  font-size: var(--t-15);
-  color: var(--graphite);
-}
-
-/* Mobile: swap the unreliable inline viewer for a direct hand-off. */
+.rs-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 36px; }
+.rs-title { display: grid; gap: 16px; }
+.rs-frame { padding: 12px; border: 1px solid var(--steel-4); background: linear-gradient(180deg, #231b17, #110d0b); }
+.resume-frame { display: block; width: 100%; height: 82vh; min-height: 560px; border: 0; background: #fff; }
+.resume-fallback { margin-top: 14px; font: 500 12px/1.5 var(--f-mono); color: var(--muted); }
 .resume-mobile { display: none; }
 
 @media (max-width: 700px) {
-  .resume-frame,
-  .resume-fallback { display: none; }
-
-  .resume-mobile {
-    display: block;
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-left: 2px solid var(--ink);
-    padding: var(--s-6) var(--s-4);
-  }
-  .resume-mobile-note {
-    font-family: var(--font-prose);
-    font-size: var(--t-17);
-    color: var(--ink);
-    margin-bottom: var(--s-4);
-  }
-  .resume-mobile-actions { display: flex; gap: var(--s-2); flex-wrap: wrap; }
-  /* The header's Download button would be a third copy of the same action */
-  .resume-head .btn { display: none; }
+  .rs-frame, .resume-fallback, .rs-head .btn { display: none; }
+  .resume-mobile { display: grid; gap: 16px; padding: 22px; border: 1px solid var(--line-2); background: #0d0907; color: var(--prose); }
+  .resume-mobile-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 }

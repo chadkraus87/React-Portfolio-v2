@@ -1,21 +1,16 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router';
 
-// Per-page analytics for a hash-routed SPA.
+// Per-page analytics for a client-side routed site.
 //
-// GoatCounter's count.js normally records one pageview when it loads. That is
-// wrong here twice over: routing is client-side (later navigations never
-// trigger a load) and hash routing means every route shares the same path, so
-// all four pages would collapse into a single entry.
-//
-// index.html therefore sets `no_onload`, and this component owns every count —
-// including the first — passing the hash route as an explicit path.
+// GoatCounter's count.js normally records one pageview when it loads, but later
+// client-side navigations never trigger a load. index.html therefore sets
+// `no_onload`, and this component owns every count, including the first.
 const TITLES = {
-  '/': 'About',
-  '/portfolio': 'Portfolio',
+  '/': 'Home',
+  '/portfolio': 'Projects',
   '/resume': 'Resume',
   '/contact': 'Contact',
-  '/notes': 'Writing',
 };
 
 // /projects/petcenza -> "Project: petcenza" so per-project traffic groups
@@ -24,8 +19,6 @@ const titleFor = (pathname) => {
   if (TITLES[pathname]) return TITLES[pathname];
   const project = pathname.match(/^\/projects\/([^/]+)$/);
   if (project) return `Project: ${project[1]}`;
-  const note = pathname.match(/^\/notes\/([^/]+)$/);
-  if (note) return `Note: ${note[1]}`;
   return pathname;
 };
 

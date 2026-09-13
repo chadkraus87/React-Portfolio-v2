@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { profile } from '../data/profile.js';
 import './Contact.css';
 
-// GitHub Pages is static hosting — there's no server to receive a form post.
+// The site is static on Vercel, with no server of its own to receive a form post.
 //
 // TO TURN ON REAL DELIVERY (recommended — see note below):
 //   1. Create a free form at https://formspree.io (or https://web3forms.com)
@@ -102,8 +102,11 @@ export default function Contact() {
   return (
     <section className="page">
       <div className="container">
-        <span className="label">contact</span>
-        <h1 className="page-title contact-title">Get in touch</h1>
+        <header className="ct-head">
+          <p className="kicker">Contact</p>
+          <h1 className="page-title">Get in touch</h1>
+          <p className="lede">Send a message here, or use any of the channels beside the form.</p>
+        </header>
 
         <div className="contact-grid">
           <form className="contact-form" onSubmit={submit} noValidate>

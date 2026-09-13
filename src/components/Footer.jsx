@@ -4,9 +4,9 @@ import './Footer.css';
 export default function Footer() {
   return (
     <footer className="footer">
-      <div className="container footer-inner">
+      <div className="footer-inner">
         <span className="footer-mono">
-          {profile.name.toLowerCase().replace(/[()]/g, '').replace(/\s+/g, '-')} · built with react + claude code
+          chad kraus · built with react + claude code
         </span>
         <div className="footer-links">
           <a href={profile.github} target="_blank" rel="noopener noreferrer">GitHub</a>

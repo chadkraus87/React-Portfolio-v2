@@ -7,11 +7,21 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
 - Owner: Chadwick (Chad) Kraus
 
 ## Architecture (edit data, not components)
-- `src/data/profile.js` — name, title, tagline, bio, skills, certifications, contact.
-- `src/data/projects.js` — all portfolio project cards. Each project imports its
-  image at the top of the file and references it by variable. Categories drive the
-  filter buttons automatically; reuse exact existing category strings
-  (e.g. 'AI & Claude Code') so projects group instead of spawning new filters.
+- `src/data/profile.js` — name, title, tagline, bio, experience, skills, certifications
+  (objects: `{ name, meta }`; NASM is site-only and shows "Current"), contact.
+- `src/data/racks.js` — which rack each project stands in (A01 Software & AI,
+  B01 Networks & support; max 5 units each) and the Builder/Operations lenses.
+  Every project must be in exactly one rack or the build fails.
+- `src/data/stories.js` — first-person case-study and colophon stories (drafts
+  until Chad approves the wording).
+- `src/data/activity.json` — generated. Refresh with `node scripts/fetch-activity.mjs`
+  (unauthenticated GitHub API, so only public repos are ever counted).
+- `src/data/projects.js` — all portfolio projects. Each project imports its
+  image at the top of the file and references it by variable. Optional `demo` is a
+  path to a silent MP4 in `public/demos/` (privacy-review every frame first).
+- Home is the server room: `src/components/ServerRoom.jsx` renders the racks once,
+  `src/lib/serverRoom.js` is the imperative engine (camera, cables, console,
+  detail sheet), and `src/lib/rackModel.js` is the pure model the build self-tests.
 - `src/assets/images/` — screenshots/headshot. `src/assets/files/` — resume PDF.
 - `src/pages/` and `src/components/` — layout/design. Only touch when I ask for a
   design or structural change, not for content updates.
@@ -28,11 +38,11 @@ real `dist/<route>/index.html` for each route plus `sitemap.xml` and
 prerendered files make each route answer 200 and carry its own `<title>`,
 description and OG tags — which one shared `index.html` cannot do.
 
-Project and note pages are derived automatically from `src/data/projects.js`
-and `src/data/notes.js` (parsed, not imported, because those files import
-images). **Adding a project or note needs no prerender change** — just give it
-a unique `slug`. Only a brand-new top-level route needs adding to the `routes`
-array by hand.
+Project pages are derived automatically from `src/data/projects.js` (parsed,
+not imported, because it imports images). **Adding a project needs no prerender
+change** — give it a unique `slug` and add it to a rack in `racks.js`. Only a
+brand-new top-level route needs adding to the `routes` array by hand. The Notes
+section was removed; old `/notes` URLs redirect permanently in `vercel.json`.
 
 ## Deployment
 - **Vercel, git-connected.** Any push to `main` auto-deploys to production
@@ -88,9 +98,8 @@ array by hand.
   optional `details` (the write-up on its own page), `stack`, `image`,
   `projectLink` / `projectLinkLabel` / `repoLink`, `status`
   ('Live' | 'In progress' | 'Private') and `updated` ('YYYY-MM').
-- **Change bio / title / tagline / skills / certifications / contact** →
-  `src/data/profile.js`. Edit the text between quotes; skills and certifications are
-  simple arrays.
+- **Change bio / title / tagline / experience / skills / certifications / contact** →
+  `src/data/profile.js`. Certifications are `{ name, meta }` objects.
 - **Swap the resume** → replace the PDF in `src/assets/files/` and update the import
   in `src/pages/Resume.jsx` if the filename changed.
 - **Swap the headshot** → replace `src/assets/images/headshot.jpg` (square crop,
@@ -121,7 +130,5 @@ them.
   `google-site-verification` token from `index.html`, and optionally disabling
   Pages entirely. None of that happens before de-indexing is confirmed; the
   redirect stays indefinitely for now.
-- Nothing else outstanding. Meridian now ships a real screenshot of its Lodge
-  view (`src/assets/images/MeridianLodge.jpg`) and the social cards were
-  rebuilt in the current design system — both were open items and both are
-  closed.
+- The social cards in `public/og*` still use the previous (C2) design and
+  should be regenerated in the Server Room style.

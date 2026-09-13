@@ -1,111 +1,109 @@
 import { useParams, Link } from 'react-router';
-import { projects } from '../data/projects.js';
-import { formatUpdated, statusModifier } from '../lib/projectMeta.js';
-import { cardSrcSet, DETAIL_SIZES } from '../lib/cardImages.js';
-import { useReveal } from '../lib/reveal.js';
+import Monitor from '../components/Monitor.jsx';
+import Spark from '../components/Spark.jsx';
+import { projectStories } from '../data/stories.js';
+import { RACK_MODEL } from '../lib/rack.js';
+import { activityRange } from '../lib/rackModel.js';
+import { DETAIL_SIZES } from '../lib/cardImages.js';
+import { formatUpdated, STATUS_COLOR } from '../lib/projectMeta.js';
 import NotFound from './NotFound.jsx';
 import './ProjectDetail.css';
 
-// One project's own page at /projects/<slug>. Holds the long-form `details`
-// that used to sit in an inline toggle on the card, so each write-up gets a
-// real URL that can be linked and indexed on its own.
-//
-// Routes are prerendered — when you add a project, add its slug to the
-// `projects` array in scripts/prerender.mjs too.
+const RANGE = activityRange(RACK_MODEL.activity);
+const ALL = RACK_MODEL.projects;
+
+// One project's case study at /projects/<slug>, laid out as the same signal path
+// the rack's detail sheet uses: what it answers, how it's built, and the proof.
 export default function ProjectDetail() {
   const { slug } = useParams();
-  const project = projects.find((p) => p.slug === slug);
-  useReveal([slug]);
+  const p = ALL.find((x) => x.slug === slug);
+  if (!p) return <NotFound />;
 
-  // Unknown slug falls through to the same 404 as any other bad path.
-  if (!project) return <NotFound />;
-
-  const {
-    title,
-    tagline,
-    summary,
-    details,
-    stack,
-    image,
-    projectLink,
-    projectLinkLabel,
-    repoLink,
-    linkNote,
-    status,
-    updated,
-    category,
-  } = project;
+  const rack = RACK_MODEL.racks.find((r) => r.id === p.rack);
+  const story = projectStories[slug];
+  const peers = ALL.filter((o) => o !== p && o.ports.some((t) => p.tools.has(t)));
+  const prev = ALL[(p.i - 1 + ALL.length) % ALL.length];
+  const next = ALL[(p.i + 1) % ALL.length];
 
   return (
-    <section className="page">
-      <div className="container pdetail">
-        <Link to="/portfolio" className="pdetail-back">
-          <span aria-hidden="true">&larr;</span> All projects
-        </Link>
+    <article className="page cs">
+      <div className="container">
+        <Link to="/portfolio" className="cs-back"><span aria-hidden="true">←</span> All projects</Link>
 
-        <div className="pdetail-head">
-          <span className="label">{category.toLowerCase()}</span>
-          <h1 className="page-title">{title}</h1>
-          {tagline && <p className="pdetail-tagline">{tagline}</p>}
-          <p className="pdetail-state">
-            {status && (
-              <span className={`pcard-status pcard-status--${statusModifier(status)}`}>
-                {status}
-              </span>
-            )}
-            {/* Reads as "LiveUpdated Aug 2026" without this — the flex gap is
-                visual only. Absolutely positioned, so it adds no gap. */}
-            {status && updated && <span className="visually-hidden">{', '}</span>}
-            {updated && <span className="pcard-updated">Updated {formatUpdated(updated)}</span>}
-          </p>
-        </div>
+        <header className="cs-head">
+          <p className="kicker">Rack {rack.code} · {p.u} · {rack.name}</p>
+          <h1 className="page-title">{p.title}</h1>
+          <p className="cs-tag">{p.tagline}</p>
+          <ul className="cs-chips">
+            <li className="chip"><span className="dot" style={{ color: STATUS_COLOR[p.status] }} />{p.status}</li>
+            <li className="chip">Updated {formatUpdated(p.updated)}</li>
+            <li className="chip">{p.act ? `${p.act.total} public commits · 12 wk` : 'No public repo'}</li>
+            <li className="chip">{p.lensNames.join(' + ')} lens</li>
+          </ul>
+        </header>
 
-        {image && (
-          /* Full-bleed on this page too, and now served from the AVIF ladder
-             rather than shipping the full-size original to every visitor. */
-          <picture>
-            <source type="image/avif" srcSet={cardSrcSet(image)} sizes={DETAIL_SIZES} />
-            <img src={image} alt={`${title} screenshot`} className="pdetail-img" />
-          </picture>
-        )}
+        <Monitor project={p} sizes={DETAIL_SIZES} />
 
-        <div className="pdetail-body">
-          <p className="pdetail-summary">{summary}</p>
-          {details && <p className="pdetail-details">{details}</p>}
-        </div>
+        <div className="cs-grid">
+          <ol className="cs-path">
+            <li>
+              <span className="cs-step">01 · Input</span>
+              <h2>What it answers</h2>
+              <p>{p.summary}</p>
+            </li>
+            <li>
+              <span className="cs-step">02 · Process</span>
+              <h2>How it’s built</h2>
+              {p.details && <p>{p.details}</p>}
+              <ul className="cs-stack">{p.stack.map((tech) => <li key={tech}>{tech}</li>)}</ul>
+            </li>
+            <li>
+              <span className="cs-step">03 · Output</span>
+              <h2>Proof</h2>
+              {p.projectLink || p.repoLink ? (
+                <div className="cs-actions">
+                  {p.projectLink && <a href={p.projectLink} target="_blank" rel="noopener noreferrer" className="btn btn-primary">{p.projectLinkLabel || 'View project'} ↗</a>}
+                  {p.repoLink && <a href={p.repoLink} target="_blank" rel="noopener noreferrer" className="btn">GitHub repo ↗</a>}
+                </div>
+              ) : (
+                <p className="cs-note">{p.linkNote || 'This project isn’t publicly linked — it runs on private infrastructure.'}</p>
+              )}
+              <Spark act={p.act} maxWeek={RACK_MODEL.maxWeek} range={RANGE} />
+            </li>
+          </ol>
 
-        {stack?.length > 0 && (
-          <div className="pdetail-section">
-            <h2 className="pdetail-h2">Built with</h2>
-            <ul className="pcard-stack">
-              {stack.map((tech) => (
-                <li key={tech}>{tech}</li>
+          <aside className="cs-side" aria-labelledby="cs-patched">
+            <h2 id="cs-patched">Patched to</h2>
+            <ul className="cs-tools">
+              {p.ports.map((t) => (
+                <li key={t}><span>{t}</span><span className="vfd" aria-label={`shared by ${RACK_MODEL.counts.get(t)} projects`}>{RACK_MODEL.counts.get(t)}</span></li>
               ))}
             </ul>
-          </div>
+            <p>Tools this project shares with others on the site. The number is how many projects use it.</p>
+            {peers.length > 0 && (
+              <>
+                <h2>Shares a tool with</h2>
+                <ul className="cs-peers">
+                  {peers.map((o) => <li key={o.slug}><Link to={`/projects/${o.slug}`}>{o.title}</Link></li>)}
+                </ul>
+              </>
+            )}
+          </aside>
+        </div>
+
+        {story && (
+          <section className="cs-story" aria-labelledby="cs-story-title">
+            <p className="kicker">Field notes</p>
+            <h2 id="cs-story-title">{story.title}</h2>
+            {story.body.map((para) => <p key={para.slice(0, 40)}>{para}</p>)}
+          </section>
         )}
 
-        {(projectLink || repoLink) && (
-          <div className="pcard-actions pdetail-actions">
-            {projectLink && (
-              <a href={projectLink} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-                {projectLinkLabel || 'View project'}
-              </a>
-            )}
-            {repoLink && (
-              <a href={repoLink} target="_blank" rel="noopener noreferrer" className="btn btn-outline">
-                GitHub repo
-              </a>
-            )}
-          </div>
-        )}
-
-        {!projectLink && !repoLink && (
-          <p className="pdetail-note">
-            {linkNote || 'This project isn\u2019t publicly linked \u2014 it runs on private infrastructure.'}
-          </p>
-        )}
+        <nav className="cs-pager" aria-label="More projects">
+          <Link to={`/projects/${prev.slug}`}><span>← Previous unit</span><strong>{prev.title}</strong></Link>
+          <Link to={`/projects/${next.slug}`}><span>Next unit →</span><strong>{next.title}</strong></Link>
+        </nav>
       </div>
-    </section>
+    </article>
   );
 }

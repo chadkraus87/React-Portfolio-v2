@@ -25,7 +25,7 @@ export const profile = {
     'Next.js + Supabase',
   ],
 
-  // About page paragraphs — add/remove strings to change the bio.
+  // Home page Background paragraphs — add/remove strings to change the bio.
   about: [
     'The projects span more ground than a single stack: a permission-gated AI assistant running entirely on my own hardware, a pet health record whose sharing rules live in Postgres rather than in the interface, an incident-response simulator built on a single deterministic model, an operations console for a homelab, and two games that teach networking and systems architecture by making you operate them.',
     'I came to building through operations, and that is the part that shapes how I build. Years of Tier 2/3 escalations teach you exactly how software fails in the field: the permission that was too broad, the check that lived in the client instead of the database, the retry that made an outage worse. So my projects tend to enforce access in Postgres row-level security rather than the UI, keep audit trails that detect tampering, run destructive actions behind explicit confirmation, and carry real test suites — because I have been the person paged when none of that was true.',
@@ -34,14 +34,22 @@ export const profile = {
     "Outside of work you'll usually find me hiking with my three rescue dogs, coaching fitness clients, or building the next side project that teaches me something new.",
   ],
 
-  // Selected certifications — shown on the About page.
-  certifications: [
-    'Google IT Support Professional Certificate',
-    'Full-Stack Web Development – The University of Texas at Austin',
-    'NASM Certified Personal Trainer + Certified Nutrition Coach',
+  // Experience, mirrored from resume-src/resume.data.mjs. Change both together.
+  experience: [
+    { title: 'Network IT Specialist', org: 'Rockbot', dates: 'April 2026 – Present' },
+    { title: 'Senior Technical Support & Escalation Specialist', org: 'Rockbot', dates: 'September 2022 – April 2026' },
+    { title: 'Technical Support Specialist', org: '8am (formerly AffiniPay)', dates: 'April 2021 – January 2022' },
   ],
 
-  // Skills shown on the About page, grouped like the resume.
+  // Certifications, with the line shown under each. Google and UT Austin match
+  // the resume. NASM is on the site only, by choice, and carries no date.
+  certifications: [
+    { name: 'Google IT Support Professional Certificate', meta: 'Google · October 2023' },
+    { name: 'Full-Stack Web Development Certificate', meta: 'The University of Texas at Austin · August 2023' },
+    { name: 'NASM Certified Personal Trainer + Certified Nutrition Coach', meta: 'Current' },
+  ],
+
+  // Skills shown in the Background section of the home page, grouped like the resume.
   skillGroups: [
     {
       label: 'AI Tooling & Ops',

@@ -5,6 +5,38 @@
       "gh-pages": false
     }
   },
+  "redirects": [
+    {
+      "source": "/notes/a-rate-limiter-that-limited-nothing",
+      "destination": "/projects/petcenza",
+      "permanent": true
+    },
+    {
+      "source": "/notes/safety-that-does-not-depend-on-the-model",
+      "destination": "/projects/coachrhythm",
+      "permanent": true
+    },
+    {
+      "source": "/notes/the-404-that-only-existed-in-production",
+      "destination": "/#built",
+      "permanent": true
+    },
+    {
+      "source": "/notes/the-image-that-decoded-but-never-painted",
+      "destination": "/#built",
+      "permanent": true
+    },
+    {
+      "source": "/notes/:path*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/notes",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
