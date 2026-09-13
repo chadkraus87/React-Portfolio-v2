@@ -47,7 +47,7 @@ export default function Home() {
                         <span className="vfd">{p.u}</span>
                       </Link>
                       <span className="ix-meta">
-                        {p.status} · Updated {formatUpdated(p.updated)} · {p.act ? `${p.act.total} public commits` : 'No public repo'} · {p.lensNames.join(' + ')}
+                        {p.status} · Updated {formatUpdated(p.updated)} · {p.act ? `${p.act.total} public commits` : 'No public repo'} · {p.lensNames.join(' + ')}{p.demoDown ? ' · Live demo not answering' : ''}
                       </span>
                     </li>
                   ))}
@@ -55,7 +55,7 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <p className="home-more"><Link viewTransition to="/portfolio" className="btn">Browse every project</Link></p>
+          <p className="home-more"><Link viewTransition to="/portfolio" className="btn">Browse every project</Link><Link viewTransition to="/changes" className="btn">What changed this month</Link></p>
         </div>
       </section>
 

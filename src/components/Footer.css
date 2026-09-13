@@ -1,7 +1,8 @@
 .footer { position: relative; z-index: 1; border-top: 1px solid var(--line); background: var(--bg); }
 .footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px 24px; padding: 24px var(--gut); }
 .footer-mono { font: 500 11px/1.5 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-.footer-links { display: flex; gap: 14px; }
-.footer-links a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; justify-content: center; padding: 0 6px; color: var(--muted); text-decoration: none;
+.footer-links { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.footer-keys { border: 0; background: none; cursor: pointer; }
+.footer-links a, .footer-keys { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; justify-content: center; padding: 0 6px; color: var(--muted); text-decoration: none;
   font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; }
-.footer-links a:hover { color: var(--accent); }
+.footer-links a:hover, .footer-keys:hover { color: var(--accent); }

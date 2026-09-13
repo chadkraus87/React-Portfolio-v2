@@ -11,6 +11,7 @@ const TITLES = {
   '/portfolio': 'Projects',
   '/resume': 'Resume',
   '/contact': 'Contact',
+  '/changes': 'What changed',
 };
 
 // /projects/petcenza -> "Project: petcenza" so per-project traffic groups

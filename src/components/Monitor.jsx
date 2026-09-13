@@ -59,6 +59,7 @@ export default function Monitor({ project, sizes }) {
             <img src={image} alt={`${title} screenshot`} width="1400" height="875" />
           </picture>
         ) : null}
+        {demo && image && <img className="monitor-print" src={image} alt={`${title} screenshot`} width="1400" height="875" loading="lazy" />}
         {chapters && <p ref={ccRef} className="monitor-cc" aria-hidden="true" hidden={!captions} />}
         {demo && (
           <div className="monitor-controls">

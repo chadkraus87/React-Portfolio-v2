@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 const SLUGS = [...readFileSync('src/data/projects.js', 'utf8')
   .split('\n').filter((line) => !/^\s*\/\//.test(line)).join('\n')
   .matchAll(/slug: '([^']+)'/g)].map((m) => m[1]);
-const ROUTES = ['/', '/portfolio', '/resume', '/contact', '/no-such-page', ...SLUGS.map((s) => `/projects/${s}`)];
+const ROUTES = ['/', '/portfolio', '/resume', '/contact', '/changes', '/no-such-page', ...SLUGS.map((s) => `/projects/${s}`)];
 
 const watchErrors = (page) => {
   const errors = [];
@@ -194,6 +194,40 @@ test('shared unit links unfurl with that project', async ({ request }) => {
   expect(rewriteOf('https://site.test/?unit=../../secrets')).toBeNull();
   expect(rewriteOf('https://site.test/')).toBeNull();
   const html = await (await request.get('/units/petcenza/index.html')).text();
-  expect(html).toContain('og/petcenza.jpg');
+  expect(html).toContain('og/units/petcenza.jpg');
+  expect((await request.get('/og/units/petcenza.jpg')).status()).toBe(200);
   expect(html).toContain('<link rel="canonical" href="https://chad-kraus-portfolio.vercel.app/"');
+});
+
+test('? opens the keyboard shortcuts; Escape closes them and focus comes back', async ({ page }) => {
+  await page.goto('/portfolio');
+  const trigger = page.getByRole('button', { name: 'Keyboard shortcuts' });
+  await trigger.focus();
+  await page.keyboard.press('?');
+  const dialog = page.getByRole('dialog', { name: 'Keyboard shortcuts' });
+  await expect(dialog).toBeVisible();
+  const { violations } = await new AxeBuilder({ page }).include('.keys').withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+  expect(violations).toEqual([]);
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  await expect(trigger).toBeFocused();
+  await trigger.click();
+  await expect(dialog).toBeVisible();
+});
+
+test('case studies print as one clean column with the demo as a still', async ({ page }) => {
+  await page.goto('/projects/greenline');
+  await page.emulateMedia({ media: 'print' });
+  await expect(page.locator('.nav-wrap')).toBeHidden();
+  await expect(page.locator('.cs-pager')).toBeHidden();
+  await expect(page.locator('.monitor video')).toBeHidden();
+  await expect(page.locator('.monitor-print')).toBeVisible();
+  expect(await page.locator('.cs-grid').evaluate((el) => getComputedStyle(el).display)).toBe('block');
+});
+
+test('the change log lists real months and links back to projects', async ({ page }) => {
+  await page.goto('/changes');
+  await expect(page.getByRole('heading', { level: 1, name: 'What changed' })).toBeVisible();
+  await expect(page.locator('.ch-month').first()).toBeVisible();
+  await expect(page.getByRole('link', { name: 'PetCenza' }).first()).toHaveAttribute('href', '/projects/petcenza');
 });

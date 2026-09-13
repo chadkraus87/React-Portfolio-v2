@@ -31,7 +31,7 @@ export function toolsOf(stack = []) {
 export const RACK_U = 14;
 const MAX_UNITS = 5;
 
-export function buildRackModel({ projects, racks, lenses, activity }) {
+export function buildRackModel({ projects, racks, lenses, activity, uptime = { sites: {} } }) {
   const seen = new Set();
   const racked = racks.flatMap((rack) => rack.slugs.map((slug) => {
     const project = projects.find((p) => p.slug === slug);
@@ -47,6 +47,8 @@ export function buildRackModel({ projects, racks, lenses, activity }) {
     p.i = i;
     p.tools = toolsOf(p.stack);
     p.act = activity.repos[p.slug] ?? null;
+    // The day a live demo link stopped answering (scripts/check-uptime.mjs), or null.
+    p.demoDown = uptime.sites?.[p.slug]?.ok === false ? uptime.sites[p.slug].since : null;
     p.lensNames = Object.values(lenses).filter((l) => l.slugs.includes(p.slug)).map((l) => l.name);
   });
 

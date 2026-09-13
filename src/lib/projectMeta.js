@@ -29,3 +29,10 @@ export function evidenceOf(p) {
     stale: Boolean(p.updated && when < p.updated),
   };
 }
+
+// '2026-09-14' -> 'Sep 14'.
+export function formatDay(iso) {
+  if (!iso) return '';
+  const [year, month, day] = iso.split('-').map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}

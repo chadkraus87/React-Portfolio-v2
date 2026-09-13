@@ -112,7 +112,12 @@ project stories now live on the PetCenza and CoachRhythm case studies.
 - Analytics are GoatCounter pageviews plus anonymous interaction counts (unit
   pulls, port signals, `hire`, copied links, printing, sound, tour). No cookies,
   no personal data.
-- A daily job opens a GitHub issue when evidence falls behind a project update.
+- A daily job opens a GitHub issue when evidence falls behind a project update,
+  and checks every live demo link: one that stops answering is flagged on the
+  rack and case study, and in a GitHub issue, until it answers again.
+- `/changes` lists what changed each month, generated from public commits only.
+  Commit subjects appear as written in the public repositories.
+- Case studies print cleanly for interview packets; `?` shows keyboard shortcuts.
 - Project `status` is one of `Live`, `In progress`, or `Private`, paired with an
   `updated` month. Currency is part of the evidence.
 

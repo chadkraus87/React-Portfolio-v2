@@ -106,6 +106,10 @@ Rendered once by `ServerRoom.jsx`; driven by `src/lib/serverRoom.js`.
   motion. It never moves focus and can be ended at any step.
 - **Sound:** off by default. When on, pulling a unit plays a rail slide and latch,
   a signal plays two short tones. Synthesised with Web Audio; no audio files.
+- **Demo uptime:** a unit whose live demo stopped answering the daily check gets
+  an amber, slowly blinking power light (steady under reduced motion), and its
+  panel and case study show a danger-coloured "Live demo not answering since …"
+  chip. Status words never change: uptime is a separate signal.
 - **Build readout:** rack B01's base carries a VFD with the deployed commit and
   build date, injected at build time. The footer repeats it as text.
 - **Scroll dive:** the hero is sticky over 185vh and the camera eases in from
@@ -131,6 +135,16 @@ Rendered once by `ServerRoom.jsx`; driven by `src/lib/serverRoom.js`.
 - **Resume, Contact:** same header pattern; resume PDF in a bezel with the
   phone hand-off below 700px.
 - **404:** "No route to host" with a curl transcript.
+- **What changed (`/changes`):** month headings with the same 2px rule as other
+  sections; one row per project with a VFD commit count and up to four commit
+  highlights, each tagged with its type (feat, fix) in the accent mono.
+- **Keyboard shortcuts:** a native `<dialog>` on `--surface`, keys in bordered
+  `kbd`, console commands in mono. Opens with `?` or from the footer.
+- **Print:** case studies print as one black-on-white column: nav, footer, pager
+  and demo controls hidden; the demo becomes its screenshot; link targets print
+  after the link text.
+- **Share cards:** `public/og/units/<slug>.jpg` draws the project's rack with its
+  unit slid out 64px, outlined and lit in the accent, the other units dimmed.
 
 ## Motion
 

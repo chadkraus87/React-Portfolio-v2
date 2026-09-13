@@ -1,0 +1,218 @@
+{
+  "months": [
+    {
+      "month": "2026-09",
+      "through": "2026-09-13",
+      "projects": [
+        {
+          "slug": null,
+          "title": "This portfolio",
+          "commits": 47,
+          "highlights": [
+            {
+              "type": "feat",
+              "text": "Visual checks, share previews, tour and architecture"
+            },
+            {
+              "type": "feat",
+              "text": "CI quality gate, demo captions, shareable units and light theme"
+            },
+            {
+              "type": "feat",
+              "text": "Rack polish, new demos and social cards"
+            },
+            {
+              "type": "feat",
+              "text": "Server room redesign"
+            }
+          ]
+        },
+        {
+          "slug": "stack-city",
+          "title": "Stack City",
+          "commits": 3,
+          "highlights": [
+            {
+              "type": null,
+              "text": "Add reliability operations and legal launch readiness"
+            },
+            {
+              "type": null,
+              "text": "Add seeded challenges and operations reports"
+            },
+            {
+              "type": null,
+              "text": "Add operations scenarios and harden game saves"
+            }
+          ]
+        },
+        {
+          "slug": "homelab-commander",
+          "title": "HomeLab Commander",
+          "commits": 1,
+          "highlights": [
+            {
+              "type": null,
+              "text": "Secure dependencies and add maintenance windows"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "month": "2026-08",
+      "through": null,
+      "projects": [
+        {
+          "slug": null,
+          "title": "This portfolio",
+          "commits": 23,
+          "highlights": [
+            {
+              "type": null,
+              "text": "Pin nanoid to ^3.3.18 for GHSA-2v37-7h3g-55p8"
+            },
+            {
+              "type": null,
+              "text": "Update TechOps Command Center description"
+            },
+            {
+              "type": null,
+              "text": "Shorten TechOps card description"
+            },
+            {
+              "type": null,
+              "text": "Update TechOps card"
+            }
+          ]
+        },
+        {
+          "slug": "coachrhythm",
+          "title": "CoachRhythm",
+          "commits": 21,
+          "highlights": [
+            {
+              "type": null,
+              "text": "Clear two critical Next.js CVEs, upgrade to 16.3.1"
+            },
+            {
+              "type": null,
+              "text": "Implement Turnstile so CAPTCHA can actually be enabled"
+            },
+            {
+              "type": null,
+              "text": "Keep the legal analysis out of the public repo"
+            },
+            {
+              "type": null,
+              "text": "Restructure the plan PDF footer into distinct lines"
+            }
+          ]
+        },
+        {
+          "slug": "petcenza",
+          "title": "PetCenza",
+          "commits": 20,
+          "highlights": [
+            {
+              "type": "feat",
+              "text": "Account deletion, data export, legal pages, disclaimers, discoverability"
+            },
+            {
+              "type": "feat",
+              "text": "Pet photos on cards, invite emails, rate limiting, med rounds"
+            },
+            {
+              "type": "feat",
+              "text": "Memorial state, delete pet, co-ownership, drag-to-reschedule"
+            },
+            {
+              "type": "feat",
+              "text": "Notification settings, tags, shared badge, ownership transfer"
+            }
+          ]
+        },
+        {
+          "slug": "greenline",
+          "title": "Greenline",
+          "commits": 20,
+          "highlights": [
+            {
+              "type": "feat",
+              "text": "Per-year mileage rates, filed-year locks, receipt matching, offline capture"
+            },
+            {
+              "type": "feat",
+              "text": "Refresh button in the header"
+            },
+            {
+              "type": "feat",
+              "text": "Statement PDF scanning, batch receipts, bulk categorize, readiness + comparison"
+            },
+            {
+              "type": "feat",
+              "text": "Auto-categorization + CPA-ready tax package + unfiled receipts"
+            }
+          ]
+        },
+        {
+          "slug": "homelab-commander",
+          "title": "HomeLab Commander",
+          "commits": 10,
+          "highlights": [
+            {
+              "type": null,
+              "text": "Finalize public release audit documentation"
+            },
+            {
+              "type": null,
+              "text": "Resolve CodeQL security findings"
+            },
+            {
+              "type": null,
+              "text": "Add safe live operations and public demo platform"
+            },
+            {
+              "type": null,
+              "text": "Fix private repository CI badge"
+            }
+          ]
+        },
+        {
+          "slug": "techops-command-center",
+          "title": "TechOps Command Center",
+          "commits": 8,
+          "highlights": [
+            {
+              "type": null,
+              "text": "Dismiss topbar tooltips after a click"
+            },
+            {
+              "type": null,
+              "text": "Fix topbar tooltips escaping the viewport"
+            },
+            {
+              "type": null,
+              "text": "Add incident replay and light theme"
+            },
+            {
+              "type": null,
+              "text": "Fix CI typecheck, add guided mode and demo GIF"
+            }
+          ]
+        },
+        {
+          "slug": "stack-city",
+          "title": "Stack City",
+          "commits": 1,
+          "highlights": [
+            {
+              "type": null,
+              "text": "Launch Stack City"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

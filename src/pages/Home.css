@@ -12,7 +12,7 @@
 .ix-link:hover { color: var(--text); }
 .ix-link:hover .ix-title { color: var(--accent); }
 .ix-meta { font: 500 11px/1.5 var(--f-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
-.home-more { margin-top: 40px; }
+.home-more { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 40px; }
 
 /* Operations */
 .ops-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); align-items: end; margin-bottom: 72px; }

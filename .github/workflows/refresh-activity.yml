@@ -1,11 +1,12 @@
-# Refreshes src/data/activity.json (public GitHub commits per project) once a
-# day and commits it only when the numbers changed. The push to main is what
-# redeploys the site on Vercel.
+# Once a day: whether each live demo still answers (src/data/uptime.json) and public
+# commit activity (src/data/activity.json). Commits only when something changed;
+# that push is what redeploys the site on Vercel. Also keeps two GitHub issues in
+# step with reality: "Stale portfolio evidence" and "Live demo not answering".
 #
-# The script runs WITHOUT a token on purpose: the unauthenticated API can only
-# ever see public repositories, so a private repo cannot leak into the heat map.
-# Runners share an IP, so the 60-requests-an-hour anonymous limit is sometimes
-# hit; the script then exits before writing anything and tomorrow's run retries.
+# fetch-activity.mjs runs WITHOUT a token on purpose: the unauthenticated API can
+# only see public repositories, so a private repo cannot leak into the heat map.
+# Runners share an IP, so the anonymous rate limit is sometimes hit; that step then
+# writes nothing and the rest of the job still runs.
 name: Refresh activity
 
 on:
@@ -18,13 +19,13 @@ permissions:
   issues: write
 
 concurrency:
-  group: refresh-activity
+  group: data-refresh
   cancel-in-progress: false
 
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -32,29 +33,35 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
+      - name: Check that each live demo answers
+        run: node scripts/check-uptime.mjs
       - name: Fetch public commit activity
+        continue-on-error: true
         run: node scripts/fetch-activity.mjs
       - name: Commit if changed
         run: |
-          if git diff --quiet -- src/data/activity.json; then
-            echo "Activity unchanged."
+          if git diff --quiet -- src/data/activity.json src/data/uptime.json; then
+            echo "Nothing changed."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/data/activity.json
-          git commit -m "chore: refresh public commit activity"
+          git add src/data/activity.json src/data/uptime.json
+          git commit -m "chore: refresh public activity and demo uptime"
           git push origin HEAD:main
-      - name: Open, update or close the stale-evidence issue
+      - name: Sync the stale-evidence issue
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          title="Stale portfolio evidence"
-          report="$(node scripts/check-evidence.mjs)"
-          open="$(gh issue list --state open --search "in:title \"$title\"" --json number --jq '.[0].number // empty')"
-          if [ -n "$report" ]; then
-            printf '%s\n\n%s\n' "These case studies show a screenshot or demo captured before the project's last update. Refresh the capture and its imageDate/demoDate in src/data/projects.js." "$report" > body.md
-            if [ -n "$open" ]; then gh issue edit "$open" --body-file body.md; else gh issue create --title "$title" --body-file body.md; fi
-          elif [ -n "$open" ]; then
-            gh issue close "$open" --comment "All screenshots and demos are current again."
-          fi
+          sh scripts/sync-issue.sh "Stale portfolio evidence" \
+            "These case studies show a screenshot or demo captured before the project's last update. Refresh the capture and its imageDate or demoDate in src/data/projects.js." \
+            "$(node scripts/check-evidence.mjs)" \
+            "All screenshots and demos are current again."
+      - name: Sync the live-demo issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sh scripts/sync-issue.sh "Live demo not answering" \
+            "These live demo links did not answer the daily check (two tries, five seconds apart). The rack shows their power light in amber until they answer again." \
+            "$(node scripts/check-uptime.mjs --report)" \
+            "Every live demo answers again."

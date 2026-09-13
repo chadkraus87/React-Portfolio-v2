@@ -164,3 +164,24 @@ main:focus { outline: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
+
+/* ---- Warnings, the shortcuts dialog, print ---- */
+.chip-warn { color: var(--danger); border-color: currentColor; }
+
+.keys { width: min(560px, calc(100% - 32px)); max-height: calc(100dvh - 48px); margin: auto; padding: 0; border: 1px solid var(--edge); background: var(--surface); color: var(--text); }
+.keys::backdrop { background: rgba(0, 0, 0, .6); }
+.keys-inner { padding: 22px 24px 24px; }
+.keys-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.keys h2 { font: 800 30px/1 var(--f-display); text-transform: uppercase; }
+.keys h3 { margin: 22px 0 8px; font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.keys-close { width: 44px; height: 44px; border: 1px solid var(--edge); background: none; color: var(--text); font-size: 20px; }
+.keys-list div { display: grid; grid-template-columns: minmax(120px, 40%) 1fr; gap: 12px; padding: 9px 0; border-top: 1px solid var(--line); }
+.keys-list dd { font-size: 14.5px; line-height: 1.45; color: var(--prose); }
+.keys kbd, .keys code { font: 500 12.5px/1.5 var(--f-mono); color: var(--text); }
+.keys kbd { padding: 1px 6px; border: 1px solid var(--edge); border-bottom-width: 2px; }
+
+.monitor-print { display: none; }
+@media print {
+  .nav-wrap, .footer, .skip-link, .route-trace, .keys { display: none !important; }
+  html, body { background: #fff !important; }
+}

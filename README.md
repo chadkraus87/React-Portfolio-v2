@@ -128,7 +128,8 @@ middleware.js            Vercel Routing Middleware: share previews for ?unit= li
   paint by `public/theme.js`. The server room and other hardware stay dark.
 - **CI** — `.github/workflows/ci.yml` runs the build, the Playwright + axe suite
   and Lighthouse budgets (`quality`), and screenshot comparison in the pinned
-  Playwright image (`visual`), on every push and pull request.
+  Playwright image (`visual`), on pull requests and on every Vercel deployment,
+  reporting both to Vercel Deployment Checks (`deployment-checks.yml`).
 - **Share previews** — `middleware.js` serves `/?unit=<slug>` a prerendered copy
   of the home page carrying that project's title and social card.
 - **Architecture** — each case study draws the project's layers from the
@@ -139,6 +140,14 @@ middleware.js            Vercel Routing Middleware: share previews for ?unit= li
   port signals, `hire`, copied links, printing, sound and the tour. No cookies.
 - **Stale evidence** — the daily Action opens a GitHub issue when a screenshot or
   demo predates its project's last update, and closes it when fixed.
+- **Demo uptime** — the same daily Action checks every live demo link
+  (`scripts/check-uptime.mjs`); one that stops answering turns its rack power
+  light amber, shows a warning chip, and opens an issue until it answers again.
+- **What changed** — `/changes`, rebuilt from public commits on the first of each
+  month by `.github/workflows/changelog.yml`.
+- **Keyboard shortcuts** — press `?` anywhere, or use the footer button.
+- **Print case study** — a clean single-column print of any case study, with the
+  demo's screenshot and its "What's on screen" list.
 - **Analytics** — GoatCounter, with `no_onload` set so `src/components/
   Analytics.jsx` can record one pageview per client-side route.
 - **Contact** — posts to Formspree; `FORM_ENDPOINT` in `src/pages/Contact.jsx`

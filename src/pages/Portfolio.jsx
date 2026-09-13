@@ -30,7 +30,7 @@ function UnitRow({ p }) {
         <p className="urow-tag">{p.tagline}</p>
         <p className="urow-sum">{p.summary}</p>
         <p className="urow-meta">
-          {p.status} · Updated {formatUpdated(p.updated)} · {p.act ? `${p.act.total} public commits` : 'No public repo'} · {p.lensNames.join(' + ')}
+          {p.status} · Updated {formatUpdated(p.updated)} · {p.act ? `${p.act.total} public commits` : 'No public repo'} · {p.lensNames.join(' + ')}{p.demoDown ? ' · Live demo not answering' : ''}
         </p>
         <ul className="urow-stack">{p.stack.map((tech) => <li key={tech}>{tech}</li>)}</ul>
         <div className="urow-actions">

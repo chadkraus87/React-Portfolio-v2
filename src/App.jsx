@@ -10,6 +10,8 @@ import ProjectDetail from './pages/ProjectDetail.jsx';
 import Resume from './pages/Resume.jsx';
 import Contact from './pages/Contact.jsx';
 import NotFound from './pages/NotFound.jsx';
+import Changes from './pages/Changes.jsx';
+import Shortcuts from './components/Shortcuts.jsx';
 
 // A new route starts at the top of the page; a #fragment (including the one the
 // old /notes redirects land on) scrolls to its target instead.
@@ -46,6 +48,7 @@ export default function App() {
         <DocumentTitle />
         <ScrollManager />
         <RouteTrace />
+        <Shortcuts />
         <a className="skip-link" href="#main">Skip to content</a>
         <NavBar />
         <main id="main" tabIndex={-1}>
@@ -55,6 +58,7 @@ export default function App() {
             <Route path="/projects/:slug" element={<ProjectDetail />} />
             <Route path="/resume" element={<Resume />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/changes" element={<Changes />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

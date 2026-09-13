@@ -19,7 +19,13 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   `.github/workflows/refresh-activity.yml` runs it daily and commits to `main`
   only when the numbers change, which redeploys the site. The same job opens,
   updates or closes a "Stale portfolio evidence" GitHub issue
-  (`scripts/check-evidence.mjs`).
+  (`scripts/check-evidence.mjs`). It also runs `scripts/check-uptime.mjs`, which
+  records in `src/data/uptime.json` whether each live demo link still answers:
+  a demo that stops answering gets an amber power light on the rack, a "Live
+  demo not answering since …" chip, and a "Live demo not answering" issue.
+- `src/data/changelog.json` — generated on the first of each month by
+  `.github/workflows/changelog.yml` (`node scripts/build-changelog.mjs [YYYY-MM …]`)
+  from public commits; it is the `/changes` page. Never edit it by hand.
 - `src/data/projects.js` — all portfolio projects. Each project imports its
   image at the top of the file and references it by variable. Optional `demo` is a
   path to a silent MP4 in `public/demos/` (privacy-review every frame first);
@@ -35,7 +41,10 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   `src/lib/rackModel.js` is the pure model the build self-tests.
 - `middleware.js` (Vercel Routing Middleware) serves `/?unit=<slug>` the
   prerendered `dist/units/<slug>/index.html` copy of the home page, so a shared
-  unit link unfurls with that project's card. Only known slugs are rewritten.
+  unit link unfurls with that project's card (`public/og/units/<slug>.jpg`, the
+  unit pulled out of its rack). Only known slugs are rewritten.
+- `src/components/Shortcuts.jsx` — the `?` keyboard shortcuts dialog, also opened
+  from the footer. Case studies have "Print case study" with print styles.
 - `src/assets/images/` — screenshots/headshot. `src/assets/files/` — resume PDF.
 - `src/pages/` and `src/components/` — layout/design. Only touch when I ask for a
   design or structural change, not for content updates.
@@ -88,8 +97,12 @@ section was removed; old `/notes` URLs redirect permanently in `vercel.json`.
   intentional design change run `npm run test:visual:update` (Docker), look at
   every PNG, and commit them with the change. `sh scripts/update-visual-baselines.sh
   check` runs the same comparison locally without touching the baselines.
-Vercel Deployment Checks should require both jobs so a red build never reaches
-production; that is set in the Vercel project settings, not in this repo.
+CI runs for every Vercel deployment: Vercel sends a `repository_dispatch` event,
+`.github/workflows/deployment-checks.yml` calls `ci.yml` against that commit, and
+each job reports "Vercel - chad-kraus-portfolio: quality" / ": visual" as a commit
+status through `vercel/repository-dispatch/actions/status` (it must stay the first
+step of each job). Vercel Deployment Checks must require those two statuses so a
+red build never reaches production. Plain GitHub check runs do not count.
 
 ## Non-negotiable working rules
 1. **Always `git pull origin main` before making any changes.** I sometimes edit

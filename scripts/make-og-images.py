@@ -348,7 +348,7 @@ def build(p, where):
     return dest
 
 
-def draw_rack(img, x, y, w, rack, by_slug):
+def draw_rack(img, x, y, w, rack, by_slug, pulled=None):
     """A flat, front-on rack: cap with the stencilled code, a patch row, and one
     2U unit per project with its label tape, status readout and power LED."""
     d = ImageDraw.Draw(img)
@@ -385,17 +385,28 @@ def draw_rack(img, x, y, w, rack, by_slug):
         d.rectangle([jx, py + 14, jx + 18, py + 30], fill=STEEL[0], outline=STEEL[5], width=2)
         d.ellipse([jx + 6, py + 36, jx + 12, py + 42], fill=ACCENT if j % 3 == 0 else STEEL[4])
 
+    # The frame outline goes down before the units, so a pulled unit sits over it.
+    ImageDraw.Draw(img).rectangle([x, y, x + w - 1, y + h - 1], outline=STEEL[4], width=2)
     uy = body_y + patch + blank
     for k, slug in enumerate(rack["slugs"]):
         p = by_slug.get(slug)
         if not p:
             continue
-        fx0, fx1 = x + rail + 4, x + w - rail - 4
+        # A pulled unit slides out on its rails, lit; the rest of the rack dims.
+        shift = 64 if slug == pulled else 0
+        fx0, fx1 = x + rail + 4 + shift, x + w - rail - 4 + shift
+        if shift:
+            shadow(img, (fx0, uy + 14, fx1, uy + unit), 22, 220)
+            glow = Image.new("RGBA", (fx1 - fx0 + 80, unit + 70), (0, 0, 0, 0))
+            ImageDraw.Draw(glow).rectangle([40, 35, 40 + fx1 - fx0, 35 + unit - 10], outline=ACCENT + (210,), width=10)
+            img.alpha_composite(glow.filter(ImageFilter.GaussianBlur(16)), (fx0 - 40, uy - 30))
         fy0, fy1 = uy + 5, uy + unit - 5
         img.paste(vgrad(fx1 - fx0, fy1 - fy0, (0x2A, 0x21, 0x1C), (0x14, 0x10, 0x0D)), (fx0, fy0))
         d = ImageDraw.Draw(img)
         d.rectangle([fx0, fy0, fx1, fy1], outline=STEEL[4], width=2)
         d.line([fx0 + 2, fy0 + 2, fx1 - 2, fy0 + 2], fill=(0x4A, 0x3C, 0x33), width=2)
+        if shift:
+            d.rectangle([fx0, fy0, fx1, fy1], outline=ACCENT, width=4)
         for vx in range(fx0 + 16, fx0 + 40, 7):
             d.rectangle([vx, fy0 + 18, vx + 3, fy1 - 18], fill=STEEL[0])
         readout = STATUS_VFD.get(p["status"], "")
@@ -414,11 +425,12 @@ def draw_rack(img, x, y, w, rack, by_slug):
         d = ImageDraw.Draw(img)
         d.ellipse([lx - 1, ly - 1, lx + 21, ly + 21], outline=STEEL[0], width=3)
         d.ellipse([lx + 3, ly + 3, lx + 17, ly + 17], fill=led)
+        if pulled and not shift:
+            img.alpha_composite(Image.new("RGBA", (fx1 - fx0 + 1, fy1 - fy0 + 1), (0, 0, 0, 120)), (fx0, fy0))
         uy += unit
 
     fy = y + h - foot
     img.paste(vgrad(w, foot, STEEL[2], STEEL[0]), (x, fy))
-    ImageDraw.Draw(img).rectangle([x, y, x + w - 1, y + h - 1], outline=STEEL[4], width=2)
     return h
 
 
@@ -461,6 +473,45 @@ def build_cover(projects, racks):
     return dest
 
 
+def build_unit(p, rack, k, by_slug):
+    """The share card for /?unit=<slug>: the project's rack with its unit pulled
+    out and lit, beside the project's title, tagline and status."""
+    img = ground(cx=0.74, cy=0.45)
+    d = ImageDraw.Draw(img)
+    pad = 60 * S
+    col = round(W * 0.5)
+    text_w = col - pad - 30 * S
+
+    brand(d, pad, pad)
+    y = pad + 76 * S
+    kicker(d, pad, y, f"Rack {rack['code']} \u00b7 {unit_label(k)} \u00b7 {rack['name']}")
+    y += 40 * S
+    f_title, lines, pt = fit_title(d, p["title"], text_w, [96, 88, 80, 72, 64, 56], 2)
+    for line in lines:
+        d.text((pad, y), line, font=f_title, fill=TEXT)
+        y += round(pt * 0.9) * S
+    y += 30 * S
+    if p["tagline"]:
+        for line in wrap(d, p["tagline"], font(MONO, 15, 500), text_w)[:2]:
+            d.text((pad, y), line, font=font(MONO, 15, 500), fill=PROSE)
+            y += 26 * S
+
+    foot_y = H - pad - 30 * S
+    x = pad
+    if p["status"]:
+        box = vfd(img, x, foot_y - 2 * S, STATUS_VFD.get(p["status"], p["status"].upper()))
+        x = box[2] + 16 * S
+    tracked(ImageDraw.Draw(img), (x, foot_y + 5 * S), site_domain().upper(), font(MONO, 13, 500), MUTED, 0.08)
+
+    rack_w = 520
+    draw_rack(img, W - pad - rack_w - 64, (H - 880) // 2, rack_w, rack, by_slug, pulled=p["slug"])
+
+    dest = os.path.join(OUT, "units", p["slug"] + ".jpg")
+    os.makedirs(os.path.dirname(dest), exist_ok=True)
+    img.convert("RGB").save(dest, quality=86, optimize=True)
+    return dest
+
+
 if __name__ == "__main__":
     projects = parse_projects()
     racks = parse_racks()
@@ -474,4 +525,12 @@ if __name__ == "__main__":
     build_cover(projects, racks)
     for p in projects:
         print(f"  {os.path.basename(build(p, where.get(p['slug']))):<28} {p['title']}")
-    print(f"generated {len(projects) + 1} og images")
+    by_slug = {p["slug"]: p for p in projects}
+    units = 0
+    for r in racks:
+        for k, slug in enumerate(r["slugs"]):
+            if slug in by_slug:
+                build_unit(by_slug[slug], r, k, by_slug)
+                print(f"  {'units/' + slug + '.jpg':<28} {by_slug[slug]['title']}, pulled out")
+                units += 1
+    print(f"generated {len(projects) + 1 + units} og images")

@@ -1,7 +1,7 @@
 import { activityRange } from './rackModel.js';
 import { createRackSound } from './rackSound.js';
 import { followCaptions, clock } from './demoCaptions.js';
-import { evidenceOf } from './projectMeta.js';
+import { evidenceOf, formatDay } from './projectMeta.js';
 
 // ---------------------------------------------------------------------------
 // Server room behaviour: camera, cables, signals, console and detail sheet.
@@ -344,7 +344,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
         <p class="kicker">${esc(r.name)} · ${esc(p.lensNames.join(' + '))}</p>
         <h2 id="sr-sheet-title" tabindex="-1">${esc(p.title)}</h2>
         <p class="s-tag">${esc(p.tagline)}</p>
-        <ul class="s-chips"><li class="chip"><span class="dot" style="color:${STATUS_COLOR[p.status]}"></span>${esc(p.status)}</li><li class="chip">Updated ${esc(formatUpdated(p.updated))}</li><li class="chip">${p.act ? `${p.act.total} public commits` : 'No public repo'}</li></ul>
+        <ul class="s-chips"><li class="chip"><span class="dot" style="color:${STATUS_COLOR[p.status]}"></span>${esc(p.status)}</li><li class="chip">Updated ${esc(formatUpdated(p.updated))}</li><li class="chip">${p.act ? `${p.act.total} public commits` : 'No public repo'}</li>${p.demoDown ? `<li class="chip chip-warn">Live demo not answering since ${esc(formatDay(p.demoDown))}</li>` : ''}</ul>
         <div class="s-open-row"><a class="btn btn-primary s-open" href="/projects/${esc(p.slug)}" data-nav>Open the case study →</a><button type="button" class="btn s-copy" data-copy-link>Copy link to this unit</button></div>
         <div class="s-monitor"><div class="s-glass">${media}${cc}</div>${toggle}</div>${notes.length ? `<p class="s-note s-demo-note">${notes.join(' · ')}</p>` : ''}${transcript}
         <ol class="s-path">
@@ -672,6 +672,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   on(q('.sr-heat'), 'click', () => { setHeat(!state.heat); say(state.heat ? 'Commit heat on' : 'Commit heat off'); });
   on(soundBtn, 'click', () => { sound.set(!sound.enabled); sync(); say(sound.enabled ? 'Rack sound on' : 'Rack sound off'); if (sound.enabled) track('sound/on'); });
   on(doc, 'keydown', (e) => {
+    if (doc.querySelector('dialog[open]')) return; // the shortcuts dialog owns the keyboard while open
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); if (kvmScreen.hidden) openKvm(); else closeKvm(); return; }
     if (e.key === 'Escape') { if (!kvmScreen.hidden) closeKvm(); else if (state.mode !== 'overview') overview(); }
   });

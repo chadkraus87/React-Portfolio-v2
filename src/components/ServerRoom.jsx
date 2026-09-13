@@ -50,12 +50,12 @@ function Unit({ p, first, rack }) {
   return (
     <button
       type="button"
-      className={`unit${p.act ? '' : ' nodata'}${blink ? ' active' : ''}`}
+      className={`unit${p.act ? '' : ' nodata'}${blink ? ' active' : ''}${p.demoDown ? ' down' : ''}`}
       data-i={p.i}
       aria-pressed="false"
       tabIndex={first ? 0 : -1}
       style={style}
-      aria-label={`${p.title}, ${p.status}, updated ${formatUpdated(p.updated)}, rack ${rack.code} ${p.u}`}
+      aria-label={`${p.title}, ${p.status}, updated ${formatUpdated(p.updated)}, rack ${rack.code} ${p.u}${p.demoDown ? ', live demo not answering' : ''}`}
     >
       <span className="lid" aria-hidden="true" />
       <span className="face" aria-hidden="true">

@@ -4,7 +4,7 @@
 .cs-head { display: grid; gap: 16px; margin-bottom: 36px; }
 .cs-tag { font: 500 14px/1.5 var(--f-mono); }
 .cs-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
-.cs-rack-link { justify-self: start; }
+.cs-rack-link { justify-self: start; display: flex; flex-wrap: wrap; gap: 8px; }
 
 .cs-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: clamp(32px, 5vw, 80px); margin-top: 56px; }
 .cs-path { position: relative; list-style: none; }
@@ -61,4 +61,24 @@
 @media (min-width: 1000px) {
   .arch-flow { grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
   .arch-layer + .arch-layer::before { left: -21px; top: 28px; width: 20px; height: 2px; }
+}
+
+/* Printing a case study: one clean black-on-white column for an interview packet. */
+@media print {
+  .cs { padding: 0 !important; }
+  .cs, .cs * { color: #000 !important; text-shadow: none !important; box-shadow: none !important; }
+  .cs-back, .cs-rack-link, .cs-pager, .monitor-controls, .monitor-cc, .cs-peers, .cs-side h2:nth-of-type(2) { display: none !important; }
+  .cs-grid { display: block !important; margin-top: 24px !important; }
+  .cs-side, .arch-layer, .cs-story { position: static !important; margin-top: 16px; background: #fff !important; border-color: #bbb !important; }
+  .cs-path::before, .cs-path > li::before, .arch-layer + .arch-layer::before { display: none !important; }
+  .cs-path > li { padding-left: 0 !important; }
+  .arch-flow { grid-template-columns: 1fr 1fr !important; }
+  .monitor { padding: 0 !important; background: none !important; border: 0 !important; }
+  .monitor-glass { aspect-ratio: auto !important; background: none !important; }
+  .monitor-glass video { display: none !important; }
+  .monitor-print { display: block !important; width: 100%; height: auto; }
+  .cs-actions a::after { content: " " attr(href); font: 400 10px/1 var(--f-mono); }
+  .cs .vfd, .cs .chip { background: none !important; border-color: #bbb !important; }
+  .page-title { font-size: 48px !important; }
+  .cs-path > li, .arch-layer, .cs-story, .monitor { break-inside: avoid; }
 }

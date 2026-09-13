@@ -1,0 +1,30 @@
+# Vercel Deployment Checks. When Vercel finishes building a deployment it sends a
+# repository_dispatch event; this runs the quality and visual jobs from ci.yml
+# against that exact commit, and each job reports its result to Vercel as a commit
+# status ("Vercel - chad-kraus-portfolio: quality" and ": visual"). Vercel promotes
+# a production deployment only after both pass, once they are added under Project
+# Settings > Build and Deployment > Deployment Checks.
+#
+# Both event types on purpose: until checks are required, Vercel promotes on its own
+# and sends "success" rather than "ready", and the statuses still need to exist so
+# they can be selected in the Vercel settings.
+name: Deployment checks
+
+on:
+  repository_dispatch:
+    types:
+      - 'vercel.deployment.ready'
+      - 'vercel.deployment.success'
+
+run-name: Deployment checks - ${{ github.event.client_payload.git.shortSha }} (${{ github.event.client_payload.environment }})
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
+      actions: read
+      statuses: write

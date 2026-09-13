@@ -6,11 +6,21 @@ import { projectStories } from '../data/stories.js';
 import { RACK_MODEL } from '../lib/rack.js';
 import { activityRange } from '../lib/rackModel.js';
 import { DETAIL_SIZES } from '../lib/cardImages.js';
-import { formatUpdated, STATUS_COLOR } from '../lib/projectMeta.js';
+import { formatUpdated, formatDay, STATUS_COLOR } from '../lib/projectMeta.js';
 import NotFound from './NotFound.jsx';
 import './ProjectDetail.css';
 
 const RANGE = activityRange(RACK_MODEL.activity);
+
+// Opens every collapsed section and loads the print copy of a demo's screenshot
+// first, so the printed case study carries everything on the page.
+const printCaseStudy = async () => {
+  document.querySelectorAll('.cs details').forEach((d) => { d.open = true; });
+  const shots = [...document.querySelectorAll('.cs .monitor-print')];
+  shots.forEach((img) => { img.loading = 'eager'; });
+  await Promise.all(shots.map((img) => (img.complete ? null : new Promise((done) => { img.onload = done; img.onerror = done; }))));
+  window.print();
+};
 const ALL = RACK_MODEL.projects;
 
 // One project's case study at /projects/<slug>, laid out as the same signal path
@@ -40,8 +50,12 @@ export default function ProjectDetail() {
             <li className="chip">Updated {formatUpdated(p.updated)}</li>
             <li className="chip">{p.act ? `${p.act.total} public commits · 12 wk` : 'No public repo'}</li>
             <li className="chip">{p.lensNames.join(' + ')} lens</li>
+            {p.demoDown && <li className="chip chip-warn">Live demo not answering since {formatDay(p.demoDown)}</li>}
           </ul>
-          <p className="cs-rack-link"><Link viewTransition to={`/?unit=${p.slug}`} className="btn">Show in the rack</Link></p>
+          <p className="cs-rack-link">
+            <Link viewTransition to={`/?unit=${p.slug}`} className="btn">Show in the rack</Link>
+            <button type="button" className="btn" onClick={printCaseStudy}>Print case study</button>
+          </p>
         </header>
 
         <Monitor project={p} sizes={DETAIL_SIZES} />

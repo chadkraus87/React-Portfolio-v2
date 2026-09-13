@@ -1,0 +1,49 @@
+# On the first of every month, rebuilds src/data/changelog.json (the /changes page)
+# from the previous month's public commits and commits it. Unauthenticated, like
+# the activity refresh, so a private repository can never appear.
+name: Monthly changelog
+
+on:
+  schedule:
+    - cron: '41 10 1 * *'
+  workflow_dispatch:
+    inputs:
+      months:
+        description: 'Months to rebuild, space-separated YYYY-MM (blank means last month)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+# Shares a queue with the daily refresh so their pushes to main never race.
+concurrency:
+  group: data-refresh
+  cancel-in-progress: false
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      - name: Build the changelog
+        env:
+          MONTHS: ${{ inputs.months }}
+        run: node scripts/build-changelog.mjs $MONTHS
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- src/data/changelog.json; then
+            echo "No change."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/changelog.json
+          git commit -m "chore: refresh public changelog"
+          git push origin HEAD:main

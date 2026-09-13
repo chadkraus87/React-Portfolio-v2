@@ -1,0 +1,44 @@
+{
+  "sites": {
+    "petcenza": {
+      "ok": true,
+      "since": "2026-09-13",
+      "status": 200
+    },
+    "techops-command-center": {
+      "ok": true,
+      "since": "2026-09-13",
+      "status": 200
+    },
+    "coachrhythm": {
+      "ok": true,
+      "since": "2026-09-13",
+      "status": 200
+    },
+    "greenline": {
+      "ok": true,
+      "since": "2026-09-13",
+      "status": 200
+    },
+    "homelab-commander": {
+      "ok": true,
+      "since": "2026-09-13",
+      "status": 200
+    },
+    "deskdaemon": {
+      "ok": true,
+      "since": "2026-09-13",
+      "status": 200
+    },
+    "stack-city": {
+      "ok": true,
+      "since": "2026-09-13",
+      "status": 200
+    },
+    "packet-and-pine": {
+      "ok": true,
+      "since": "2026-09-13",
+      "status": 200
+    }
+  }
+}

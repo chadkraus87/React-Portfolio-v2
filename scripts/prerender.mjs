@@ -157,6 +157,11 @@ const projectRoutes = parseEntries(projectsSrc).map(({ slug, title }) => ({
   let threw = false;
   try { buildRackModel({ projects: [{ slug: 'x', stack: [] }], racks: [], lenses: {}, activity: { repos: {} } }); } catch { threw = true; }
   if (!threw) throw new Error('buildRackModel accepted a project that is in no rack');
+  const down = buildRackModel({
+    projects: [{ slug: 'a', stack: [] }], racks: [{ id: 'A', code: 'A01', slugs: ['a'] }], lenses: {},
+    activity: { repos: {} }, uptime: { sites: { a: { ok: false, since: '2026-09-14' } } },
+  });
+  if (down.projects[0].demoDown !== '2026-09-14') throw new Error('rack model ignored a live demo that stopped answering');
 }
 
 const routes = [
@@ -176,6 +181,11 @@ const routes = [
     path: 'contact',
     title: ROUTE_TITLES['/contact'],
     description: 'Get in touch with Chadwick (Chad) Kraus — email, LinkedIn, GitHub.',
+  },
+  {
+    path: 'changes',
+    title: ROUTE_TITLES['/changes'],
+    description: 'What changed in each public project and this site, month by month, from the commits.',
   },
   ...projectRoutes,
 ];
@@ -322,7 +332,7 @@ for (const rack of racks) {
         title: detailTitle(`${entry.title} in rack ${rack.code}`),
         description: firstSentence(projectsSrc, slug),
         url: `${BASE}/?unit=${slug}`,
-        image: `${BASE}/og/${slug}.jpg`,
+        image: `${BASE}/og/units/${slug}.jpg`,
       }).replace(/(<link\s+rel="canonical"\s+href=")[^"]*(")/, `$1${BASE}/$2`),
       'utf8'
     );

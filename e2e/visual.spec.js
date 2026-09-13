@@ -31,9 +31,10 @@ for (const shot of SHOTS) {
     await page.goto(shot.path);
     await page.evaluate(() => document.fonts.ready);
     if (shot.scrollTo) await page.locator(shot.scrollTo).scrollIntoViewIfNeeded();
-    // Every image on screen decoded, so a slow load never reads as a design change.
+    // Every rendered image on screen decoded, so a slow load never reads as a design
+    // change. Hidden images (the print-only demo still) are skipped: they never load.
     await page.waitForFunction(() => [...document.images]
-      .filter((img) => img.getBoundingClientRect().top < window.innerHeight)
+      .filter((img) => img.checkVisibility() && img.getBoundingClientRect().top < window.innerHeight)
       .every((img) => img.complete && img.naturalWidth > 0));
     await page.waitForTimeout(800);
     await expect(page).toHaveScreenshot(`${shot.name}.png`, {
