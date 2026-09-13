@@ -121,7 +121,7 @@ export const resume = {
       date: 'August 2023',
     },
     {
-      title: 'Google IT Support Specialist Professional Certificate',
+      title: 'Google IT Support Professional Certificate',
       org: '',
       detail: 'Network Engineering · System Administration (Windows, Linux, Mac) · Network Security',
       date: 'October 2023',
