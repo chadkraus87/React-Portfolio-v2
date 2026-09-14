@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 const SLUGS = [...readFileSync('src/data/projects.js', 'utf8')
   .split('\n').filter((line) => !/^\s*\/\//.test(line)).join('\n')
   .matchAll(/slug: '([^']+)'/g)].map((m) => m[1]);
-const ROUTES = ['/', '/portfolio', '/resume', '/contact', '/changes', '/no-such-page', ...SLUGS.map((s) => `/projects/${s}`)];
+const ROUTES = ['/', '/portfolio', '/resume', '/contact', '/changes', '/status', '/accessibility', '/no-such-page', ...SLUGS.map((s) => `/projects/${s}`)];
 
 const watchErrors = (page) => {
   const errors = [];
@@ -272,4 +272,37 @@ test('saving data: demos show the screenshot until the video is asked for', asyn
   await page.getByRole('button', { name: 'Load demo video' }).click();
   await expect(page.locator('.monitor video')).toHaveCount(1);
   await expect(page.locator('.monitor-note')).toContainText('Recorded');
+});
+
+test('the status page lists every live demo with its uptime record', async ({ page }) => {
+  await page.goto('/status');
+  await expect(page.getByRole('heading', { level: 1, name: 'Demo status' })).toBeVisible();
+  await expect(page.locator('.st-row')).toHaveCount(8);
+  await expect(page.locator('.st-row .uptime')).toHaveCount(8);
+  await expect(page.locator('.st-note')).toContainText('Jarvis');
+});
+
+test('project filters live in the address, ignore unknown values and can be cleared', async ({ page }) => {
+  await page.goto('/portfolio?tool=supabase');
+  await expect(page.locator('.urow')).toHaveCount(3);
+  await expect(page.locator('#pf-tool')).toHaveValue('supabase');
+  await page.getByRole('group', { name: 'Filter projects by lens' }).getByRole('button', { name: 'Operations' }).click();
+  await expect(page).toHaveURL(/lens=operations/);
+  await expect(page.locator('.pf-empty')).toBeVisible();
+  await page.locator('.pf-empty').getByRole('button', { name: 'Clear filters' }).click();
+  await expect(page).toHaveURL(/\/portfolio$/);
+  await expect(page.locator('.urow')).toHaveCount(10);
+  for (const junk of ['tool=%3Cscript%3E&lens=__proto__', 'tool=__proto__', 'tool=constructor&lens=toString']) {
+    await page.goto(`/portfolio?${junk}`);
+    await expect(page.locator('.urow')).toHaveCount(10);
+  }
+  await page.goto('/projects/petcenza');
+  await expect(page.locator('.cs-tools').getByRole('link', { name: 'Supabase' })).toHaveAttribute('href', '/portfolio?tool=supabase');
+});
+
+test('the accessibility statement names the standard and the known limitations', async ({ page }) => {
+  await page.goto('/accessibility');
+  await expect(page.getByRole('heading', { level: 1, name: 'Accessibility' })).toBeVisible();
+  await expect(page.locator('main')).toContainText('WCAG 2.2 level AA');
+  await expect(page.getByRole('heading', { level: 2, name: 'Known limitations' })).toBeVisible();
 });

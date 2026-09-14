@@ -1,6 +1,7 @@
 import { uptimeStrip } from '../lib/rackModel.js';
 import { BUILD_TIME } from '../lib/build.js';
 import { formatDay } from '../lib/projectMeta.js';
+import './UptimeStrip.css';
 
 const STATE = { up: 'no outage recorded', down: 'not answering', unchecked: 'not checked yet' };
 

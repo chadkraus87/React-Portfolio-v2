@@ -14,6 +14,8 @@ export default function Footer() {
         </span>
         <div className="footer-links">
           <Link viewTransition to="/changes">What changed</Link>
+          <Link viewTransition to="/status">Status</Link>
+          <Link viewTransition to="/accessibility">Accessibility</Link>
           <button type="button" className="footer-keys" onClick={openShortcuts}>Keyboard shortcuts</button>
           <a href={profile.github} target="_blank" rel="noopener noreferrer">GitHub</a>
           <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>

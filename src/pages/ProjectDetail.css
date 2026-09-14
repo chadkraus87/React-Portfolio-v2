@@ -82,13 +82,5 @@
   .page-title { font-size: 48px !important; }
   .cs-path > li, .arch-layer, .cs-story, .monitor { break-inside: avoid; }
 }
-
-/* 30-day uptime strip for a live demo. The caption carries the numbers; colour and
-   the hatch for unchecked days only repeat them. */
-.uptime { margin-top: 18px; }
-.uptime-cells { display: grid; grid-template-columns: repeat(30, minmax(0, 1fr)); gap: 3px; max-width: 420px; }
-.uptime-cells i { height: 18px; background: var(--live); }
-.uptime-cells i.u-down { background: var(--danger); }
-.uptime-cells i.u-unchecked { background: repeating-linear-gradient(135deg, var(--line-2) 0 2px, transparent 2px 5px); }
-.uptime figcaption { margin-top: 8px; font: 500 11.5px/1.5 var(--f-mono); color: var(--muted); }
-@media print { .uptime-cells { display: none; } }
+.cs-tools a { display: inline-flex; align-items: center; min-height: 32px; color: var(--text); text-decoration: none; }
+.cs-tools a:hover { color: var(--accent); }

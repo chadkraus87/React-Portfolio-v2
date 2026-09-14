@@ -191,6 +191,16 @@ const routes = [
     title: ROUTE_TITLES['/changes'],
     description: 'What changed in each public project and this site, month by month, from the commits.',
   },
+  {
+    path: 'status',
+    title: ROUTE_TITLES['/status'],
+    description: 'Whether each live project demo answered its daily check, with 30 days of history.',
+  },
+  {
+    path: 'accessibility',
+    title: ROUTE_TITLES['/accessibility'],
+    description: 'How this site is checked for accessibility on every deployment, what is built in, and its known limitations.',
+  },
   ...projectRoutes,
 ];
 

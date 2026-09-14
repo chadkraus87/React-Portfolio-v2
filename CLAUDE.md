@@ -108,6 +108,17 @@ status through `vercel/repository-dispatch/actions/status` (it must stay the fir
 step of each job). Vercel Deployment Checks must require those two statuses so a
 red build never reaches production. Plain GitHub check runs do not count.
 
+The `quality` job also keeps Lighthouse scores over time: `scripts/lighthouse-history.mjs`
+appends each run to a `lighthouse-history` artifact (downloaded from the latest
+successful production check, one entry per commit, nothing committed) and writes a
+trend table to the job summary.
+
+After Vercel promotes a production deployment, `.github/workflows/smoke.yml` runs
+`scripts/smoke.mjs` against the live site (every route, the 404, share previews,
+RSS, the `/notes` redirect, security headers) and opens or closes a "Production
+smoke check failed" issue. It also runs daily. A new top-level route needs adding
+to `scripts/smoke.mjs` as well as to `routes` in `scripts/prerender.mjs`.
+
 ## Non-negotiable working rules
 1. **Always `git pull origin main` before making any changes.** I sometimes edit
    on github.com directly, so the local copy is often behind. Start every session

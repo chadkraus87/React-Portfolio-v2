@@ -36,3 +36,6 @@ export function formatDay(iso) {
   const [year, month, day] = iso.split('-').map(Number);
   return new Date(year, month - 1, day).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
+
+// 'React Flow' -> 'react-flow', for shareable filter addresses (/portfolio?tool=react-flow).
+export const toolSlug = (tool) => tool.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');

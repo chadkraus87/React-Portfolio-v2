@@ -146,6 +146,14 @@ Rendered once by `ServerRoom.jsx`; driven by `src/lib/serverRoom.js`.
 - **Uptime strip:** 30 cells, one per day to the build date: `--live` for no
   outage recorded, `--danger` for not answering, a hatch before the first check.
   The caption states the counts, so colour is never the only signal.
+- **Demo status (`/status`):** one row per live demo under a 2px rule: title
+  link, an Answering / Not answering chip, the uptime strip, then the demo link. A
+  bordered summary line in mono (`--live`, or `--danger` when any demo is down).
+- **Project filters:** the lens segmented control plus a "Uses" tool `<select>` on
+  `--field` with an `--edge` border, and "Clear filters" once anything is set. An
+  empty result says which lens and tool, with its own clear button.
+- **Accessibility (`/accessibility`):** a single 880px reading column; section
+  headings in the display face over the 2px rule; plain bulleted lists.
 - **Data saver:** when the browser asks to save data, a demo shows its
   screenshot, the note says the video wasn't loaded, and "Load demo video" swaps
   it in on request.

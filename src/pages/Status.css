@@ -1,0 +1,12 @@
+.st-head { margin-bottom: 40px; }
+.st-summary { justify-self: start; padding: 9px 12px; border: 1px solid var(--live); font: 500 12px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; }
+.st-summary.is-down { border-color: var(--danger); color: var(--danger); }
+.st-list { list-style: none; border-top: 2px solid var(--text); }
+.st-row { display: grid; gap: 10px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+.st-row-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
+.st-row h2 { font: 800 clamp(24px, 2.2vw, 32px)/1 var(--f-display); text-transform: uppercase; }
+.st-row h2 a { display: inline-flex; align-items: center; min-height: 44px; color: var(--text); text-decoration: none; }
+.st-row h2 a:hover { color: var(--accent); }
+.st-row .uptime { margin-top: 0; }
+.st-link { justify-self: start; display: inline-flex; align-items: center; min-height: 44px; font: 500 12px/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; }
+.st-note { margin-top: 24px; font-size: 14px; color: var(--muted); }

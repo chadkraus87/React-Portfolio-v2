@@ -7,7 +7,7 @@ import { projectStories } from '../data/stories.js';
 import { RACK_MODEL } from '../lib/rack.js';
 import { activityRange } from '../lib/rackModel.js';
 import { DETAIL_SIZES } from '../lib/cardImages.js';
-import { formatUpdated, formatDay, STATUS_COLOR } from '../lib/projectMeta.js';
+import { formatUpdated, formatDay, STATUS_COLOR, toolSlug } from '../lib/projectMeta.js';
 import NotFound from './NotFound.jsx';
 import './ProjectDetail.css';
 
@@ -95,7 +95,7 @@ export default function ProjectDetail() {
             <h2 id="cs-patched">Patched to</h2>
             <ul className="cs-tools">
               {p.ports.map((t) => (
-                <li key={t}><span>{t}</span><span className="vfd" aria-label={`shared by ${RACK_MODEL.counts.get(t)} projects`}>{RACK_MODEL.counts.get(t)}</span></li>
+                <li key={t}><Link viewTransition to={`/portfolio?tool=${toolSlug(t)}`}>{t}</Link><span className="vfd" aria-label={`shared by ${RACK_MODEL.counts.get(t)} projects`}>{RACK_MODEL.counts.get(t)}</span></li>
               ))}
             </ul>
             <p>Tools this project shares with others on the site. The number is how many projects use it.</p>

@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import { lenses } from '../data/racks.js';
 import { RACK_MODEL } from '../lib/rack.js';
 import { cardSrcSet, ROW_SIZES } from '../lib/cardImages.js';
-import { formatUpdated, STATUS_VFD } from '../lib/projectMeta.js';
+import { formatUpdated, STATUS_VFD, toolSlug } from '../lib/projectMeta.js';
 import './Portfolio.css';
 
 const FILTERS = [['all', 'All'], ...Object.entries(lenses).map(([key, lens]) => [key, lens.name])];
+const TOOL_BY_SLUG = new Map(RACK_MODEL.tools.map((t) => [toolSlug(t), t]));
 
 function UnitRow({ p }) {
   return (
@@ -44,8 +44,18 @@ function UnitRow({ p }) {
 }
 
 export default function Portfolio() {
-  const [lens, setLens] = useState('all');
-  const shown = (p) => lens === 'all' || lenses[lens].slugs.includes(p.slug);
+  // The filters live in the address (/portfolio?lens=operations&tool=docker), so a
+  // filtered list can be shared. Unknown values are ignored rather than trusted.
+  const [params, setParams] = useSearchParams();
+  const lens = Object.hasOwn(lenses, params.get('lens') ?? '') ? params.get('lens') : 'all';
+  const tool = TOOL_BY_SLUG.get(params.get('tool')) ?? null;
+  const setFilter = (key, value) => {
+    const next = new URLSearchParams(params);
+    if (value) next.set(key, value); else next.delete(key);
+    setParams(next, { replace: true, preventScrollReset: true });
+  };
+  const clear = () => setParams({}, { replace: true, preventScrollReset: true });
+  const shown = (p) => (lens === 'all' || lenses[lens].slugs.includes(p.slug)) && (!tool || p.tools.has(tool));
   const count = RACK_MODEL.projects.filter(shown).length;
 
   return (
@@ -58,15 +68,31 @@ export default function Portfolio() {
             Software and AI in rack A01, networks and support in rack B01. Every unit opens a case study. Status is current, and
             activity is public GitHub commits over the last twelve weeks.
           </p>
-          <div className="seg" role="group" aria-label="Filter projects by lens">
-            {FILTERS.map(([key, label]) => (
-              <button type="button" key={key} aria-pressed={lens === key} onClick={() => setLens(key)}>{label}</button>
-            ))}
+          <div className="pf-filters">
+            <div className="seg" role="group" aria-label="Filter projects by lens">
+              {FILTERS.map(([key, label]) => (
+                <button type="button" key={key} aria-pressed={lens === key} onClick={() => setFilter('lens', key === 'all' ? null : key)}>{label}</button>
+              ))}
+            </div>
+            <label className="pf-tool" htmlFor="pf-tool">
+              <span>Uses</span>
+              <select id="pf-tool" value={tool ? toolSlug(tool) : ''} onChange={(e) => setFilter('tool', e.target.value || null)}>
+                <option value="">Any tool</option>
+                {RACK_MODEL.tools.map((t) => <option key={t} value={toolSlug(t)}>{t} ({RACK_MODEL.counts.get(t)})</option>)}
+              </select>
+            </label>
+            {(tool || lens !== 'all') && <button type="button" className="btn pf-clear" onClick={clear}>Clear filters</button>}
           </div>
           <p className="visually-hidden" role="status" aria-live="polite">
-            {`${count} ${count === 1 ? 'project' : 'projects'} shown`}
+            {`${count} ${count === 1 ? 'project' : 'projects'} shown${tool ? ` using ${tool}` : ''}`}
           </p>
         </header>
+
+        {count === 0 && (
+          <p className="pf-empty">
+            No project in the {lenses[lens]?.name} lens uses {tool}. <button type="button" className="btn" onClick={clear}>Clear filters</button>
+          </p>
+        )}
 
         {RACK_MODEL.racks.map((rack) => {
           const units = rack.units.filter(shown);

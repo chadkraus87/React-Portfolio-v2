@@ -6,9 +6,9 @@
 # .github/workflows/deployment-checks.yml. In that case each job reports itself to
 # Vercel as a commit status on the deployment's commit, and Vercel Deployment
 # Checks hold a production deployment until both statuses pass.
-# A failure here marks the commit red. Vercel still deploys pushes to main on its
-# own; to hold a failing build back from production, enable Deployment Checks for
-# this workflow in the Vercel project settings.
+#
+# Lighthouse scores are kept across runs as a `lighthouse-history` artifact on each
+# production check, and every run writes a trend table to its job summary.
 name: CI
 
 on:
@@ -54,6 +54,25 @@ jobs:
         run: npm run test:e2e
       - name: Lighthouse budgets
         run: npx --yes @lhci/cli@0.15.1 autorun
+      - name: Fetch the Lighthouse history from the latest production check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for id in $(gh run list --repo "$GITHUB_REPOSITORY" --workflow deployment-checks.yml --status success --limit 15 --json databaseId --jq '.[].databaseId'); do
+            gh run download "$id" --repo "$GITHUB_REPOSITORY" --name lighthouse-history --dir previous 2>/dev/null && break
+          done
+          true
+      - name: Update the Lighthouse history and trend
+        env:
+          COMMIT_SHA: ${{ github.event.client_payload.git.sha || github.sha }}
+        run: node scripts/lighthouse-history.mjs previous/lighthouse-history.json lighthouse-history.json
+      - name: Keep the Lighthouse history
+        if: github.event_name == 'repository_dispatch' && github.event.client_payload.environment == 'production'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lighthouse-history
+          path: lighthouse-history.json
+          retention-days: 90
       - name: Keep the Playwright report when something fails
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

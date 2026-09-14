@@ -1,0 +1,9 @@
+.a11y { max-width: 880px; }
+.a11y-head { margin-bottom: 48px; }
+.a11y section + section { margin-top: 44px; }
+.a11y h2 { padding-bottom: 10px; margin-bottom: 16px; border-bottom: 2px solid var(--text); font: 800 clamp(28px, 2.6vw, 40px)/.95 var(--f-display); text-transform: uppercase; }
+.a11y ul { display: grid; gap: 10px; padding-left: 20px; }
+.a11y li, .a11y p { font-size: 17px; line-height: 1.7; color: var(--prose); }
+.a11y p + p, .a11y ul + p { margin-top: 14px; }
+.a11y kbd { padding: 1px 6px; border: 1px solid var(--edge); border-bottom-width: 2px; font: 500 14px/1.4 var(--f-mono); }
+.a11y-updated { font: 500 12px/1.5 var(--f-mono) !important; color: var(--muted) !important; }

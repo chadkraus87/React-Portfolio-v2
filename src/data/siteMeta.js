@@ -18,6 +18,8 @@ export const ROUTE_TITLES = {
   '/resume': `Resume · ${SITE_NAME}`,
   '/contact': `Contact · ${SITE_NAME}`,
   '/changes': `What changed · ${SITE_NAME}`,
+  '/status': `Demo status · ${SITE_NAME}`,
+  '/accessibility': `Accessibility · ${SITE_NAME}`,
 };
 
 // The homepage's one description. It used to be authored three times in

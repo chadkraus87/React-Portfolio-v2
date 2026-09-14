@@ -1,0 +1,52 @@
+# After Vercel promotes a deployment to production, checks the live site with
+# scripts/smoke.mjs: every route answers, share previews and the RSS feed are there,
+# and the redirects and security headers are in place. Problems mark the run red and
+# open (or update) a "Production smoke check failed" issue; the next clean run
+# closes it. Also runs once a day, in case a promotion event is ever missed.
+#
+# The check list is read from main. After a rollback to an older deployment, a route
+# added since then can report as missing; that is the check being strict, not flaky.
+name: Production smoke check
+
+on:
+  repository_dispatch:
+    types: ['vercel.deployment.promoted']
+  schedule:
+    - cron: '47 12 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: smoke
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      - name: Check the live site
+        id: smoke
+        run: |
+          set +e
+          node scripts/smoke.mjs > smoke-report.md
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          cat smoke-report.md
+      - name: Sync the smoke-check issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sh scripts/sync-issue.sh "Production smoke check failed" \
+            "The production smoke check found problems on the live site." \
+            "$(cat smoke-report.md)" \
+            "The live site passes the smoke check again."
+      - name: Fail when the live site has problems
+        if: steps.smoke.outputs.code != '0'
+        run: exit 1

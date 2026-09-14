@@ -11,6 +11,8 @@ import Resume from './pages/Resume.jsx';
 import Contact from './pages/Contact.jsx';
 import NotFound from './pages/NotFound.jsx';
 import Changes from './pages/Changes.jsx';
+import Status from './pages/Status.jsx';
+import Accessibility from './pages/Accessibility.jsx';
 import Shortcuts from './components/Shortcuts.jsx';
 
 // A new route starts at the top of the page; a #fragment (including the one the
@@ -59,6 +61,8 @@ export default function App() {
             <Route path="/resume" element={<Resume />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/changes" element={<Changes />} />
+            <Route path="/status" element={<Status />} />
+            <Route path="/accessibility" element={<Accessibility />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
