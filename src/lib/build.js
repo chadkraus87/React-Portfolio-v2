@@ -5,5 +5,6 @@ const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', '
 const at = b.time ? new Date(b.time) : null;
 
 export const BUILD_SHA = b.sha || '';
+export const BUILD_TIME = b.time || '';
 export const BUILD_DATE = at ? `${at.getUTCDate()} ${MONTHS[at.getUTCMonth()]} ${at.getUTCFullYear()}` : '';
 export const BUILD_STAMP = at ? ['BUILD', BUILD_SHA.toUpperCase(), BUILD_DATE].filter(Boolean).join(' · ').replace('BUILD · ', 'BUILD ') : '';

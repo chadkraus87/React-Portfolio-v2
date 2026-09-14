@@ -14,5 +14,5 @@ docker run --rm --ipc=host -e MODE="$MODE" \
     cd /src && tar --exclude=./node_modules --exclude=./dist --exclude=./.git --exclude=./resume-src/node_modules -cf - . | tar -xf - -C /work
     cd /work && npm ci --no-audit --no-fund && npm run build
     if [ "$MODE" = check ]; then CI=1 npx playwright test e2e/visual.spec.js; exit; fi
-    CI=1 npx playwright test e2e/visual.spec.js --update-snapshots
+    CI=1 npx playwright test e2e/visual.spec.js --update-snapshots=all
     rm -rf /out/visual.spec.js-snapshots && cp -r e2e/visual.spec.js-snapshots /out/'

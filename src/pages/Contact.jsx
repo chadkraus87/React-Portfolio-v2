@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link, useSearchParams } from 'react-router';
+import { projects } from '../data/projects.js';
 import { profile } from '../data/profile.js';
 import './Contact.css';
 
@@ -15,7 +17,11 @@ import './Contact.css';
 const FORM_ENDPOINT = 'https://formspree.io/f/xnpaqdnq';
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', message: '' });
+  // /contact?project=<slug> from a case study starts the message about that project.
+  // Only a real slug counts, and the title comes from projects.js, never the URL.
+  const [params] = useSearchParams();
+  const about = projects.find((p) => p.slug === params.get('project')) ?? null;
+  const [form, setForm] = useState(() => ({ name: '', email: '', message: about ? `Hi Chad, I have a question about ${about.title}: ` : '' }));
   const [state, setState] = useState({ status: 'idle', error: '' });
 
   const [errors, setErrors] = useState({});
@@ -87,7 +93,7 @@ export default function Contact() {
       const res = await fetch(FORM_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify(about ? { ...form, project: about.title } : form),
       });
       if (!res.ok) throw new Error(`Server responded ${res.status}`);
       setState({ status: 'sent', error: '' });
@@ -106,6 +112,7 @@ export default function Contact() {
           <p className="kicker">Contact</p>
           <h1 className="page-title">Get in touch</h1>
           <p className="lede">Send a message here, or use any of the channels beside the form.</p>
+          {about && <p className="ct-about">About <Link viewTransition to={`/projects/${about.slug}`}>{about.title}</Link></p>}
         </header>
 
         <div className="contact-grid">

@@ -13,6 +13,12 @@ const SITE = { slug: null, title: 'This portfolio', repo: 'https://github.com/ch
 const SKIP = /^(Merge |chore: refresh public)/i;
 const RANK = ['feat', 'fix', 'content', 'perf', 'security'];
 
+// Chad's edits: subjects to leave out of the highlights, or reword
+// (scripts/changelog-curation.json). Counts always include every commit.
+const curation = JSON.parse(readFileSync(new URL('./changelog-curation.json', import.meta.url), 'utf8'));
+const HIDE = new Set(curation.hide ?? []);
+const RENAME = curation.rename ?? {};
+
 // "feat(ui): add a thing" -> { type: 'feat', text: 'Add a thing' }
 export const tidy = (subject) => {
   const m = subject.match(/^(\w+)(?:\([^)]*\))?!?:\s*(.+)$/);
@@ -71,6 +77,8 @@ for (const month of months) {
     if (!subjects.length) continue;
     const seen = new Set();
     const highlights = subjects.map(tidy)
+      .filter((h) => !HIDE.has(h.text))
+      .map((h) => (RENAME[h.text] ? { ...h, text: RENAME[h.text] } : h))
       .filter((h) => h.type !== 'chore' && !seen.has(h.text) && seen.add(h.text))
       .sort((a, b) => (RANK.indexOf(a.type) + 1 || 99) - (RANK.indexOf(b.type) + 1 || 99))
       .slice(0, 4);

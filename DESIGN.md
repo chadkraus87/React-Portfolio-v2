@@ -143,6 +143,12 @@ Rendered once by `ServerRoom.jsx`; driven by `src/lib/serverRoom.js`.
 - **Print:** case studies print as one black-on-white column: nav, footer, pager
   and demo controls hidden; the demo becomes its screenshot; link targets print
   after the link text.
+- **Uptime strip:** 30 cells, one per day to the build date: `--live` for no
+  outage recorded, `--danger` for not answering, a hatch before the first check.
+  The caption states the counts, so colour is never the only signal.
+- **Data saver:** when the browser asks to save data, a demo shows its
+  screenshot, the note says the video wasn't loaded, and "Load demo video" swaps
+  it in on request.
 - **Share cards:** `public/og/units/<slug>.jpg` draws the project's rack with its
   unit slid out 64px, outlined and lit in the accent, the other units dimmed.
 

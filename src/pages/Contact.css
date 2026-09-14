@@ -16,3 +16,5 @@
 .direct dd a:hover { color: var(--accent); }
 
 @media (max-width: 900px) { .contact-grid { grid-template-columns: 1fr; } }
+.ct-about { font: 500 12px/1.5 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.ct-about a { display: inline-flex; align-items: center; min-height: 44px; }

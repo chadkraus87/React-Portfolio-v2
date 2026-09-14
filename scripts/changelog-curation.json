@@ -1,0 +1,7 @@
+{
+  "_about": "Edits to the /changes page. 'hide' leaves a commit subject out of a project's highlights; 'rename' shows it in different words. Keys are the tidied subject exactly as it appears on the page. Commit counts always include every commit. After editing, rebuild: node scripts/build-changelog.mjs 2026-08 2026-09",
+  "hide": [
+    "Keep the legal analysis out of the public repo"
+  ],
+  "rename": {}
+}

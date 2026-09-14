@@ -26,6 +26,7 @@ export default function Changes() {
             Month by month, from the public commits behind each project and this site. Rebuilt on the first of
             every month. Private projects don’t appear here.
           </p>
+          <p className="ch-feed"><a href="/changes.xml">Follow with RSS</a></p>
         </header>
 
         {changelog.months.map(({ month, through, projects }) => (

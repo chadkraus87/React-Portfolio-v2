@@ -2,13 +2,17 @@
   "months": [
     {
       "month": "2026-09",
-      "through": "2026-09-13",
+      "through": "2026-09-14",
       "projects": [
         {
           "slug": null,
           "title": "This portfolio",
-          "commits": 47,
+          "commits": 48,
           "highlights": [
+            {
+              "type": "feat",
+              "text": "Demo uptime, change log, shortcuts, print and unit share cards"
+            },
             {
               "type": "feat",
               "text": "Visual checks, share previews, tour and architecture"
@@ -20,10 +24,6 @@
             {
               "type": "feat",
               "text": "Rack polish, new demos and social cards"
-            },
-            {
-              "type": "feat",
-              "text": "Server room redesign"
             }
           ]
         },
@@ -101,11 +101,11 @@
             },
             {
               "type": null,
-              "text": "Keep the legal analysis out of the public repo"
+              "text": "Restructure the plan PDF footer into distinct lines"
             },
             {
               "type": null,
-              "text": "Restructure the plan PDF footer into distinct lines"
+              "text": "De-medicalize free text; strengthen the liability posture"
             }
           ]
         },

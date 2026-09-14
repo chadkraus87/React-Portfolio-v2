@@ -146,6 +146,14 @@ middleware.js            Vercel Routing Middleware: share previews for ?unit= li
 - **What changed** — `/changes`, rebuilt from public commits on the first of each
   month by `.github/workflows/changelog.yml`.
 - **Keyboard shortcuts** — press `?` anywhere, or use the footer button.
+- **Change log curation and RSS** — `scripts/changelog-curation.json` hides or
+  rewords commit lines; `/changes.xml` is an RSS feed of the log.
+- **Uptime strip** — case studies with a live demo show 30 days of its uptime
+  record, derived from recorded outages.
+- **Ask about this project** — links to `/contact?project=<slug>`, which starts the
+  message about that project (only real slugs count).
+- **Data saver** — with Save-Data on, demos show their screenshot until the
+  visitor chooses "Load demo video".
 - **Print case study** — a clean single-column print of any case study, with the
   demo's screenshot and its "What's on screen" list.
 - **Analytics** — GoatCounter, with `no_onload` set so `src/components/

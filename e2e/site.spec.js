@@ -231,3 +231,45 @@ test('the change log lists real months and links back to projects', async ({ pag
   await expect(page.locator('.ch-month').first()).toBeVisible();
   await expect(page.getByRole('link', { name: 'PetCenza' }).first()).toHaveAttribute('href', '/projects/petcenza');
 });
+
+test('the change log honours curation and has an RSS feed', async ({ page, request }) => {
+  await page.goto('/changes');
+  await expect(page.locator('main')).not.toContainText('Keep the legal analysis out of the public repo');
+  await expect(page.getByRole('link', { name: 'Follow with RSS' })).toHaveAttribute('href', '/changes.xml');
+  const feed = await request.get('/changes.xml');
+  expect(feed.status()).toBe(200);
+  const xml = await feed.text();
+  expect(xml).toContain('<rss version="2.0">');
+  expect(xml).toMatch(/<item>[\s\S]*<link>https:\/\/chad-kraus-portfolio\.vercel\.app\/changes#ch-\d{4}-\d{2}<\/link>/);
+  expect(xml).not.toContain('legal analysis');
+});
+
+test('live demos show their uptime strip; private projects do not', async ({ page }) => {
+  await page.goto('/projects/petcenza');
+  await expect(page.locator('.uptime figcaption')).toContainText(/Live demo/);
+  await expect(page.locator('.uptime-cells i')).toHaveCount(30);
+  await page.goto('/projects/jarvis');
+  await expect(page.locator('.uptime')).toHaveCount(0);
+});
+
+test('Ask about this project starts a message about it; a made-up slug does nothing', async ({ page }) => {
+  await page.goto('/projects/petcenza');
+  await page.getByRole('link', { name: 'Ask about this project' }).click();
+  await expect(page).toHaveURL(/\/contact\?project=petcenza$/);
+  await expect(page.locator('#message')).toHaveValue(/PetCenza/);
+  await expect(page.locator('.ct-about')).toContainText('PetCenza');
+  await page.goto('/contact?project=%3Cscript%3Ealert(1)%3C%2Fscript%3E');
+  await expect(page.locator('#message')).toHaveValue('');
+  await expect(page.locator('.ct-about')).toHaveCount(0);
+});
+
+test('saving data: demos show the screenshot until the video is asked for', async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(Navigator.prototype, 'connection', { get: () => ({ saveData: true }) }));
+  await page.goto('/projects/greenline');
+  await expect(page.locator('.monitor video')).toHaveCount(0);
+  await expect(page.locator('.monitor-glass img')).toBeVisible();
+  await expect(page.locator('.monitor-note')).toContainText('Screenshot from');
+  await page.getByRole('button', { name: 'Load demo video' }).click();
+  await expect(page.locator('.monitor video')).toHaveCount(1);
+  await expect(page.locator('.monitor-note')).toContainText('Recorded');
+});

@@ -49,6 +49,7 @@ export function buildRackModel({ projects, racks, lenses, activity, uptime = { s
     p.act = activity.repos[p.slug] ?? null;
     // The day a live demo link stopped answering (scripts/check-uptime.mjs), or null.
     p.demoDown = uptime.sites?.[p.slug]?.ok === false ? uptime.sites[p.slug].since : null;
+    p.uptime = uptime.sites?.[p.slug] ?? null;
     p.lensNames = Object.values(lenses).filter((l) => l.slugs.includes(p.slug)).map((l) => l.name);
   });
 
@@ -101,3 +102,20 @@ export const activityRange = ({ from, to }) => {
   const day = (iso) => { const [, m, d] = iso.split('-'); return `${+d} ${MONTHS[+m - 1]}`; };
   return `${day(from)} – ${day(to)} ${to.slice(0, 4)}`;
 };
+
+// The last `n` days ending at `end` (YYYY-MM-DD) of a live demo's uptime record:
+// 'unchecked' before its first check, 'down' inside a recorded outage (an outage's
+// `to` day counts as answering again), otherwise 'up'.
+export function uptimeStrip(site, end, n = 30) {
+  const DAY = 86_400_000;
+  const endMs = Date.parse(`${end}T00:00:00Z`);
+  const first = site.firstChecked ?? site.since;
+  const days = Array.from({ length: n }, (_, k) => {
+    const date = new Date(endMs - (n - 1 - k) * DAY).toISOString().slice(0, 10);
+    if (date < first) return { date, state: 'unchecked' };
+    const down = (site.outages ?? []).some((o) => date >= o.from && (o.to === null || date < o.to));
+    return { date, state: down ? 'down' : 'up' };
+  });
+  const checked = days.filter((d) => d.state !== 'unchecked');
+  return { days, checked: checked.length, down: checked.filter((d) => d.state === 'down').length, from: checked[0]?.date ?? null };
+}

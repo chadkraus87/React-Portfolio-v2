@@ -1,13 +1,16 @@
 // Checks each project's live link and records whether it answered. Drives the
-// rack's power lights and the daily "Live demo unreachable" issue.
+// rack's power lights, the 30-day uptime strip on each case study, and the daily
+// "Live demo not answering" issue.
 //
 //   node scripts/check-uptime.mjs            probe every live link, update src/data/uptime.json
 //   node scripts/check-uptime.mjs --report   print a Markdown list of unreachable demos (no network)
 //
-// uptime.json only changes when a site flips between answering and not, so a
-// quiet day makes no commit and no redeploy. "Answered" means the server replied
-// with anything below 500 other than 404/410: a login wall or a bot challenge
-// (401/403) still counts, because the demo is up behind it.
+// uptime.json only changes when a site flips between answering and not, so a quiet
+// day makes no commit and no redeploy. Each site keeps the day it was first checked
+// and a list of outages ({ from, to }, `to` null while it lasts); the strip is
+// derived from those. "Answered" means the server replied with anything below 500
+// other than 404/410: a login wall or a bot challenge (401/403) still counts,
+// because the demo is up behind it.
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const file = new URL('../src/data/uptime.json', import.meta.url);
@@ -56,8 +59,28 @@ for (const { slug, url } of sites) {
   const status = await probe(url);
   const ok = answered(status);
   const prev = current.sites[slug];
-  if (!prev || prev.ok !== ok) changed = true;
-  next.sites[slug] = prev && prev.ok === ok ? prev : { ok, since: today, status };
+  // Older records predate the outage history; they start it from their `since` day.
+  const record = prev
+    ? { ...prev, firstChecked: prev.firstChecked ?? prev.since, outages: prev.outages ?? [] }
+    : { ok, since: today, status, firstChecked: today, outages: [] };
+  if (!prev || !prev.firstChecked || !prev.outages) changed = true;
+  if (prev && prev.ok !== ok) {
+    changed = true;
+    record.ok = ok;
+    record.since = today;
+    record.status = status;
+    if (ok) {
+      const open = record.outages.findLast((o) => o.to === null);
+      if (open) open.to = today;
+    } else {
+      record.outages = [...record.outages, { from: today, to: null }];
+    }
+  } else if (!prev && !ok) {
+    record.outages = [{ from: today, to: null }];
+  }
+  // Keep a year of outages at most.
+  record.outages = record.outages.slice(-50);
+  next.sites[slug] = record;
   console.log(`${slug.padEnd(24)} ${ok ? 'answered' : 'NO ANSWER'} (${status || 'timeout'})`);
 }
 if (changed) {

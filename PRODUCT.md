@@ -118,6 +118,10 @@ project stories now live on the PetCenza and CoachRhythm case studies.
 - `/changes` lists what changed each month, generated from public commits only.
   Commit subjects appear as written in the public repositories.
 - Case studies print cleanly for interview packets; `?` shows keyboard shortcuts.
+- Chad curates the change log (`scripts/changelog-curation.json`), and it has an RSS
+  feed. Commit counts always include every commit.
+- Each case study offers "Ask about this project", which starts a contact message
+  about it. Demos respect the visitor's Save-Data setting.
 - Project `status` is one of `Live`, `In progress`, or `Private`, paired with an
   `updated` month. Currency is part of the evidence.
 

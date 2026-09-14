@@ -10,3 +10,4 @@
 .ch-row h3 a:hover { color: var(--accent); }
 .ch-highlights { list-style: none; display: grid; gap: 7px; max-width: 82ch; margin-top: 8px; color: var(--prose); line-height: 1.55; }
 .ch-type { display: inline-block; min-width: 72px; margin-right: 10px; font: 500 11px/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.ch-feed a { display: inline-flex; align-items: center; min-height: 44px; font: 500 12px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; }

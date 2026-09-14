@@ -22,10 +22,14 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   (`scripts/check-evidence.mjs`). It also runs `scripts/check-uptime.mjs`, which
   records in `src/data/uptime.json` whether each live demo link still answers:
   a demo that stops answering gets an amber power light on the rack, a "Live
-  demo not answering since …" chip, and a "Live demo not answering" issue.
+  demo not answering since …" chip, and a "Live demo not answering" issue. Each
+  site keeps `firstChecked` and its `outages`, which draw the 30-day uptime strip
+  on the case study (as of the build date).
 - `src/data/changelog.json` — generated on the first of each month by
   `.github/workflows/changelog.yml` (`node scripts/build-changelog.mjs [YYYY-MM …]`)
-  from public commits; it is the `/changes` page. Never edit it by hand.
+  from public commits; it is the `/changes` page and the `changes.xml` RSS feed.
+  Never edit it by hand: to hide or reword a commit line, edit
+  `scripts/changelog-curation.json` and rebuild those months.
 - `src/data/projects.js` — all portfolio projects. Each project imports its
   image at the top of the file and references it by variable. Optional `demo` is a
   path to a silent MP4 in `public/demos/` (privacy-review every frame first);

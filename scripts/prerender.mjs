@@ -23,7 +23,7 @@ import {
 // racks.js and rackModel.js import nothing either, so the build can check that
 // every project stands in a rack and self-test the model the server room uses.
 import { racks, lenses } from '../src/data/racks.js';
-import { toolsOf, buildRackModel } from '../src/lib/rackModel.js';
+import { toolsOf, buildRackModel, uptimeStrip } from '../src/lib/rackModel.js';
 import { evidenceReport } from './evidence.mjs';
 
 const dist = join(dirname(fileURLToPath(import.meta.url)), '..', 'dist');
@@ -162,6 +162,10 @@ const projectRoutes = parseEntries(projectsSrc).map(({ slug, title }) => ({
     activity: { repos: {} }, uptime: { sites: { a: { ok: false, since: '2026-09-14' } } },
   });
   if (down.projects[0].demoDown !== '2026-09-14') throw new Error('rack model ignored a live demo that stopped answering');
+  const strip = uptimeStrip({ firstChecked: '2026-09-10', outages: [{ from: '2026-09-12', to: '2026-09-13' }] }, '2026-09-14', 7);
+  if (strip.days.map((d) => d.state).join(',') !== 'unchecked,unchecked,up,up,down,up,up' || strip.checked !== 5 || strip.down !== 1 || strip.from !== '2026-09-10') {
+    throw new Error(`uptimeStrip: got ${strip.days.map((d) => d.state).join(',')} checked=${strip.checked} down=${strip.down}`);
+  }
 }
 
 const routes = [
@@ -373,3 +377,33 @@ writeFileSync(
   'utf8'
 );
 console.log('wrote sitemap.xml + robots.txt');
+
+// changes.xml — an RSS feed of the monthly change log, so /changes can be followed.
+// One item per month, with a stable guid so a month rebuilt later updates in place.
+{
+  const log = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', 'src', 'data', 'changelog.json'), 'utf8'));
+  const xml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' }[c]));
+  const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const items = log.months.map(({ month, through, projects }) => {
+    const [y, m] = month.split('-').map(Number);
+    const date = through ? new Date(`${through}T12:00:00Z`) : new Date(Date.UTC(y, m, 0, 12));
+    const body = projects
+      .map((p) => `${p.title}: ${p.commits} commit${p.commits === 1 ? '' : 's'}${p.highlights.length ? `. ${p.highlights.map((h) => h.text).join('; ')}` : ''}`)
+      .join('\n');
+    return [
+      '    <item>',
+      `      <title>${xml(`What changed in ${MONTH_NAMES[m - 1]} ${y}${through ? ', so far' : ''}`)}</title>`,
+      `      <link>${BASE}/changes#ch-${month}</link>`,
+      `      <guid isPermaLink="false">chad-kraus-portfolio-changes-${month}</guid>`,
+      `      <pubDate>${date.toUTCString()}</pubDate>`,
+      `      <description>${xml(body)}</description>`,
+      '    </item>',
+    ].join('\n');
+  });
+  writeFileSync(
+    join(dist, 'changes.xml'),
+    `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n  <channel>\n    <title>${xml(ROUTE_TITLES['/changes'])}</title>\n    <link>${BASE}/changes</link>\n    <description>What changed in each public project and this site, month by month, from the commits.</description>\n    <language>en-us</language>\n${items.join('\n')}\n  </channel>\n</rss>\n`,
+    'utf8'
+  );
+  console.log('wrote changes.xml');
+}

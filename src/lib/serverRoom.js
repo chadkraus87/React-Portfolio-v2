@@ -2,6 +2,7 @@ import { activityRange } from './rackModel.js';
 import { createRackSound } from './rackSound.js';
 import { followCaptions, clock } from './demoCaptions.js';
 import { evidenceOf, formatDay } from './projectMeta.js';
+import { savesData } from './dataSaver.js';
 
 // ---------------------------------------------------------------------------
 // Server room behaviour: camera, cables, signals, console and detail sheet.
@@ -320,12 +321,14 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     const r = rackOf(p.rack); const links = [];
     if (p.projectLink) links.push(`<a class="btn" href="${esc(p.projectLink)}" target="_blank" rel="noopener noreferrer">${esc(p.projectLinkLabel || 'View project')} ↗</a>`);
     if (p.repoLink) links.push(`<a class="btn" href="${esc(p.repoLink)}" target="_blank" rel="noopener noreferrer">GitHub repo ↗</a>`);
-    const media = p.demo && motion()
+    // Visitors saving data get the screenshot here; the case study offers the video.
+    const playsDemo = Boolean(p.demo && motion() && !savesData());
+    const media = playsDemo
       ? `<video src="${esc(p.demo)}" poster="${esc(p.image)}" muted loop playsinline autoplay aria-label="${esc(p.title)} demo recording"></video>`
       : `<img src="${esc(p.image)}" srcset="${esc(srcSetFor(p.image) || '')}" sizes="(max-width: 999px) calc(100vw - 48px), 420px" alt="${esc(p.title)} screenshot" width="1400" height="875">`;
-    const toggle = p.demo && motion() ? '<button type="button" class="s-demo" data-demo-toggle>Pause demo</button>' : '';
+    const toggle = playsDemo ? '<button type="button" class="s-demo" data-demo-toggle>Pause demo</button>' : '';
     // Under reduced motion the sheet shows the screenshot, so the notes describe that instead.
-    const showsDemo = Boolean(p.demo && motion());
+    const showsDemo = playsDemo;
     const chapters = showsDemo && p.demoChapters?.length ? p.demoChapters : null;
     const ev = evidenceOf(showsDemo ? p : { ...p, demo: null });
     const notes = [

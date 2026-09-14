@@ -3,42 +3,58 @@
     "petcenza": {
       "ok": true,
       "since": "2026-09-13",
-      "status": 200
+      "status": 200,
+      "firstChecked": "2026-09-13",
+      "outages": []
     },
     "techops-command-center": {
       "ok": true,
       "since": "2026-09-13",
-      "status": 200
+      "status": 200,
+      "firstChecked": "2026-09-13",
+      "outages": []
     },
     "coachrhythm": {
       "ok": true,
       "since": "2026-09-13",
-      "status": 200
+      "status": 200,
+      "firstChecked": "2026-09-13",
+      "outages": []
     },
     "greenline": {
       "ok": true,
       "since": "2026-09-13",
-      "status": 200
+      "status": 200,
+      "firstChecked": "2026-09-13",
+      "outages": []
     },
     "homelab-commander": {
       "ok": true,
       "since": "2026-09-13",
-      "status": 200
+      "status": 200,
+      "firstChecked": "2026-09-13",
+      "outages": []
     },
     "deskdaemon": {
       "ok": true,
       "since": "2026-09-13",
-      "status": 200
+      "status": 200,
+      "firstChecked": "2026-09-13",
+      "outages": []
     },
     "stack-city": {
       "ok": true,
       "since": "2026-09-13",
-      "status": 200
+      "status": 200,
+      "firstChecked": "2026-09-13",
+      "outages": []
     },
     "packet-and-pine": {
       "ok": true,
       "since": "2026-09-13",
-      "status": 200
+      "status": 200,
+      "firstChecked": "2026-09-13",
+      "outages": []
     }
   }
 }

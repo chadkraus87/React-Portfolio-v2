@@ -9,7 +9,7 @@ test.skip(process.platform !== 'linux', 'Visual baselines are Linux renders from
 // Only the small things that change without a design change: live commit counts,
 // the build stamp, sparkline bars and demo video frames. Under reduced motion the
 // room, its cables and every screenshot render the same way on every run.
-const MASK = ['.cap-build', '.footer-mono', '.v-heat', '.spark', 'video'];
+const MASK = ['.cap-build', '.footer-mono', '.v-heat', '.spark', '.uptime', 'video'];
 
 const SHOTS = [
   { name: 'home-dark', path: '/', theme: 'dark', viewport: { width: 1440, height: 900 } },
@@ -39,7 +39,9 @@ for (const shot of SHOTS) {
     await page.waitForTimeout(800);
     await expect(page).toHaveScreenshot(`${shot.name}.png`, {
       mask: MASK.map((selector) => page.locator(selector)),
-      maxDiffPixelRatio: 0.01,
+      // Renders in the pinned image are identical run to run, so the tolerance is tight:
+      // a single added button (about 0.7% of a desktop frame) must fail.
+      maxDiffPixelRatio: 0.002,
       animations: 'disabled',
     });
   });

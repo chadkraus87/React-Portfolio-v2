@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router';
 import Monitor from '../components/Monitor.jsx';
 import Architecture from '../components/Architecture.jsx';
 import Spark from '../components/Spark.jsx';
+import UptimeStrip from '../components/UptimeStrip.jsx';
 import { projectStories } from '../data/stories.js';
 import { RACK_MODEL } from '../lib/rack.js';
 import { activityRange } from '../lib/rackModel.js';
@@ -54,6 +55,7 @@ export default function ProjectDetail() {
           </ul>
           <p className="cs-rack-link">
             <Link viewTransition to={`/?unit=${p.slug}`} className="btn">Show in the rack</Link>
+            <Link viewTransition to={`/contact?project=${p.slug}`} className="btn">Ask about this project</Link>
             <button type="button" className="btn" onClick={printCaseStudy}>Print case study</button>
           </p>
         </header>
@@ -85,6 +87,7 @@ export default function ProjectDetail() {
                 <p className="cs-note">{p.linkNote || 'This project isn’t publicly linked — it runs on private infrastructure.'}</p>
               )}
               <Spark act={p.act} maxWeek={RACK_MODEL.maxWeek} range={RANGE} />
+              {p.projectLink && <UptimeStrip site={p.uptime} />}
             </li>
           </ol>
 
