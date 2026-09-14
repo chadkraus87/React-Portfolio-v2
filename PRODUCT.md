@@ -123,6 +123,7 @@ project stories now live on the PetCenza and CoachRhythm case studies.
 - Project filters live in the address, so a recruiter can share "everything Chad
   built with Supabase", and the shared link previews as exactly that.
 - `/accessibility` claims only checks that actually run, and lists what they miss.
+- An outage on `/status` can carry a short, true note about what happened.
 - Production is smoke-checked after each release; failures open a GitHub issue.
 - Chad curates the change log (`scripts/changelog-curation.json`), and it has an RSS
   feed. Commit counts always include every commit.

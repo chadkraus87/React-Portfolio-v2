@@ -257,10 +257,10 @@ export const projects = [
     demoChapters: [
       [0, "Monthly overview with simulated data: cash runway, income, spending and a calendar of bills."],
       [9, "Bills for the month, ticked off as they are paid."],
-      [12, "Category budgets, with a warning when spending runs ahead of the month."],
+      [11.5, "Category budgets, with a warning when spending runs ahead of the month."],
       [14, "Savings goals and their monthly contributions."],
-      [16, "Debts, with a payoff plan comparing avalanche and snowball."],
-      [18, "Reports: net worth, savings rate, emergency fund and projected balance."],
+      [16.6, "Debts, with a payoff plan comparing avalanche and snowball."],
+      [19.2, "Reports: net worth, savings rate, emergency fund and projected balance."],
       [22, "Back to the monthly overview."],
     ],
     projectLink: 'https://greenline-chadwick-kraus-projects.vercel.app/',

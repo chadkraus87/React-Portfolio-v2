@@ -17,6 +17,7 @@ status, a date or a description.
 Fonts are vendored under scripts/fonts/ so this renders identically anywhere
 with no network access — see scripts/fonts/README.md.
 """
+import json
 import os, re, sys
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
 
@@ -350,7 +351,8 @@ def build(p, where):
 
 def draw_rack(img, x, y, w, rack, by_slug, pulled=None):
     """A flat, front-on rack: cap with the stencilled code, a patch row, and one
-    2U unit per project with its label tape, status readout and power LED."""
+    2U unit per project with its label tape, status readout and power LED.
+    `pulled` is one slug, or a set of slugs, to slide out and light."""
     d = ImageDraw.Draw(img)
     cap, patch, unit, blank, foot = 44, 72, 138, 22, 30
     rail = 22
@@ -393,7 +395,8 @@ def draw_rack(img, x, y, w, rack, by_slug, pulled=None):
         if not p:
             continue
         # A pulled unit slides out on its rails, lit; the rest of the rack dims.
-        shift = 64 if slug == pulled else 0
+        lit = slug in pulled if isinstance(pulled, (set, frozenset)) else slug == pulled
+        shift = 64 if lit else 0
         fx0, fx1 = x + rail + 4 + shift, x + w - rail - 4 + shift
         if shift:
             shadow(img, (fx0, uy + 14, fx1, uy + unit), 22, 220)
@@ -512,6 +515,56 @@ def build_unit(p, rack, k, by_slug):
     return dest
 
 
+def parse_tools():
+    """Tools shared by more than one project, from the generated src/data/toolSlugs.js."""
+    path = os.path.join(DATA, "toolSlugs.js")
+    if not os.path.exists(path):
+        return []
+    m = re.search(r"export const TOOLS = (\[.*\]);", open(path).read())
+    return json.loads(m.group(1)) if m else []
+
+
+def build_tool(tool, racks, by_slug):
+    """The share card for /portfolio?tool=<slug>: both racks with every unit that
+    uses the tool slid out and lit, beside the tool name and those projects."""
+    img = ground(cx=0.76, cy=0.45)
+    d = ImageDraw.Draw(img)
+    pad = 60 * S
+    text_w = round(W * 0.5) - pad - 40 * S
+    users = [by_slug[s] for s in tool["projects"] if s in by_slug]
+
+    brand(d, pad, pad)
+    y = pad + 76 * S
+    kicker(d, pad, y, f"Shared by {len(users)} projects")
+    y += 44 * S
+    tracked(d, (pad, y), "PROJECTS USING", font(DISPLAY, 34, 700), MUTED, 0.04)
+    y += 46 * S
+    f_title, lines, pt = fit_title(d, tool["name"], text_w, [112, 100, 88, 76, 64, 56], 2)
+    for line in lines:
+        d.text((pad, y), line, font=f_title, fill=TEXT)
+        y += round(pt * 0.9) * S
+    y += 30 * S
+    fm = font(MONO, 16, 500)
+    for p in users[:6]:
+        d.rectangle([pad, y + 9 * S, pad + 8 * S, y + 17 * S], fill=ACCENT)
+        d.text((pad + 22 * S, y), p["title"], font=fm, fill=PROSE)
+        y += 30 * S
+
+    tracked(ImageDraw.Draw(img), (pad, H - pad - 16 * S), site_domain().upper(), font(MONO, 13, 500), MUTED, 0.1)
+
+    rack_w, gap = 460, 100
+    shown = racks[:2]
+    x0 = W - pad - rack_w * len(shown) - gap * (len(shown) - 1) - 64
+    lit = {p["slug"] for p in users}
+    for k, rack in enumerate(shown):
+        draw_rack(img, x0 + k * (rack_w + gap), 150 + k * 34, rack_w, rack, by_slug, pulled=lit)
+
+    dest = os.path.join(OUT, "tools", tool["slug"] + ".jpg")
+    os.makedirs(os.path.dirname(dest), exist_ok=True)
+    img.convert("RGB").save(dest, quality=80, optimize=True)
+    return dest
+
+
 if __name__ == "__main__":
     projects = parse_projects()
     racks = parse_racks()
@@ -533,4 +586,8 @@ if __name__ == "__main__":
                 build_unit(by_slug[slug], r, k, by_slug)
                 print(f"  {'units/' + slug + '.jpg':<28} {by_slug[slug]['title']}, pulled out")
                 units += 1
-    print(f"generated {len(projects) + 1 + units} og images")
+    tools = parse_tools()
+    for t in tools:
+        build_tool(t, racks, by_slug)
+        print(f"  {'tools/' + t['slug'] + '.jpg':<28} projects using {t['name']}")
+    print(f"generated {len(projects) + 1 + units + len(tools)} og images")

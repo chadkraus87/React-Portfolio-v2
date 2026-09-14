@@ -61,5 +61,6 @@ if (drops.length) {
   lines.push('', `**Performance fell by more than ${MAX_DROP.toFixed(2)}:**`, ...drops.map((d) => `- ${d}`));
   process.exitCode = 1;
 }
+if (process.env.LH_REPORT) writeFileSync(process.env.LH_REPORT, `${lines.join('\n')}\n`);
 if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join('\n')}\n`);
 else console.log(lines.join('\n'));

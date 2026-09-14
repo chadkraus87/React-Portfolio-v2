@@ -119,3 +119,10 @@ export function uptimeStrip(site, end, n = 30) {
   const checked = days.filter((d) => d.state !== 'unchecked');
   return { days, checked: checked.length, down: checked.filter((d) => d.state === 'down').length, from: checked[0]?.date ?? null };
 }
+
+// Incident notes (src/data/incidents.js) for one site whose outage began inside the
+// n days ending on `end`, oldest first.
+export function incidentsFor(incidents, slug, end, n = 30) {
+  const start = new Date(Date.parse(`${end}T00:00:00Z`) - (n - 1) * 86_400_000).toISOString().slice(0, 10);
+  return incidents.filter((i) => i.slug === slug && i.from >= start && i.from <= end).sort((a, b) => a.from.localeCompare(b.from));
+}

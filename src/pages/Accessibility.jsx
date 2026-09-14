@@ -22,7 +22,7 @@ export default function Accessibility() {
           <ul>
             <li>axe accessibility rules for WCAG 2.0, 2.1 and 2.2 at levels A and AA, on every page, in both the dark and the light theme.</li>
             <li>Keyboard behaviour: the rack console, unit panels closing with Escape and returning focus, the first-visit tour, and the keyboard shortcuts dialog.</li>
-            <li>A keyboard-only walk of the text pages: pressing Tab reaches the footer, and every stop is visible with a focus ring.</li>
+            <li>A keyboard-only walk of the home page and the text pages: pressing Tab reaches the footer, and every stop is visible with a focus ring.</li>
             <li>No sideways scrolling on any page at a 375px phone width.</li>
             <li>Reduced motion: demo videos wait for Play, and page transitions are skipped.</li>
             <li>A Lighthouse accessibility score of at least 0.98 on the home, projects, case study, status and accessibility pages.</li>
@@ -36,7 +36,7 @@ export default function Accessibility() {
           <ul>
             <li>A skip link, visible focus on every control, and touch targets of at least 44px on touch screens.</li>
             <li>Press <kbd>?</kbd> anywhere for a list of keyboard shortcuts.</li>
-            <li>Demo recordings are silent, with timed captions and a written list of what is on screen.</li>
+            <li>Demo recordings are silent, with timed captions and a written list of what is on screen. A skip link jumps from each recording to that list.</li>
             <li>Motion respects the reduced-motion setting, and demos respect Save-Data.</li>
             <li>A light theme for bright rooms, and case studies that print as a single clean column.</li>
           </ul>

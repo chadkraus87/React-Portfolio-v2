@@ -49,8 +49,13 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   unit pulled out of its rack). Only known slugs are rewritten. It also serves
   `/portfolio?tool=<slug>` the prerendered `dist/portfolio/tools/<slug>/index.html`
   ("Projects using Supabase"). The known tool slugs live in the generated
-  `src/data/toolSlugs.js`: a local `npm run build` rewrites it when the shared tools
-  change (commit it); CI and Vercel fail the build if it is stale.
+  `src/data/toolSlugs.js` (names, slugs and projects): a local `npm run build`
+  rewrites it when the shared tools change (commit it, then rerun
+  `/usr/bin/python3 scripts/make-og-images.py` for `public/og/tools/<slug>.jpg`);
+  CI and Vercel fail the build if it is stale.
+- `src/data/incidents.js` — optional notes on recorded demo outages, shown on
+  `/status`. Each must match an outage in `uptime.json` or the build fails; write
+  only what actually happened.
 - `src/components/Shortcuts.jsx` — the `?` keyboard shortcuts dialog, also opened
   from the footer. Case studies have "Print case study" with print styles.
 - `src/assets/images/` — screenshots/headshot. `src/assets/files/` — resume PDF.
@@ -131,7 +136,10 @@ Authentication, so it stays a no-op notice until the project's Protection Bypass
 for Automation secret is saved as the GitHub secret
 `VERCEL_AUTOMATION_BYPASS_SECRET`; then it reports "Vercel - chad-kraus-portfolio:
 smoke", which can be added as a third required Deployment Check. `smoke.mjs` only
-sends the secret to `*.vercel.app` addresses.
+sends the secret to `*.vercel.app` addresses. On a preview deployment the job
+also posts its result on the commit's pull request, and the `quality` job posts the
+Lighthouse trend on same-repo pull requests (`scripts/pr-comment.sh` keeps one
+updated comment each).
 
 ## Non-negotiable working rules
 1. **Always `git pull origin main` before making any changes.** I sometimes edit

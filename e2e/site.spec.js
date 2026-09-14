@@ -108,12 +108,12 @@ test.describe('case studies', () => {
     await page.locator('.monitor video').evaluate(async (v) => {
       if (v.readyState < 1) await new Promise((r) => v.addEventListener('loadedmetadata', r, { once: true }));
       v.pause();
-      v.currentTime = 16.5;
+      v.currentTime = 17.5;
     });
     await expect(page.locator('.monitor-cc')).toHaveText(/Debts/);
     await page.getByRole('button', { name: 'Captions' }).click();
     await expect(page.locator('.monitor-cc')).toBeHidden();
-    await page.getByText('What’s on screen').click();
+    await page.locator('.monitor-transcript summary').click();
     await expect(page.locator('.monitor-transcript li')).toHaveCount(7);
     await expect(page.locator('.monitor-note')).toContainText('Recorded Sep 2026');
     await expect(page.locator('.monitor-note')).toContainText(/simulated budget data/i);
@@ -311,6 +311,7 @@ test('a filtered project list unfurls as projects using that tool', async ({ req
   const { default: middleware } = await import('../middleware.js');
   const rewriteOf = (url) => middleware(new Request(url)).headers.get('x-middleware-rewrite');
   expect(rewriteOf('https://site.test/portfolio?tool=supabase')).toBe('https://site.test/portfolio/tools/supabase/index.html');
+  expect(rewriteOf('https://site.test/portfolio/?tool=supabase')).toBe('https://site.test/portfolio/tools/supabase/index.html');
   for (const junk of ['constructor', '__proto__', '../../units/petcenza', '']) {
     expect(rewriteOf(`https://site.test/portfolio?tool=${junk}`)).toBeNull();
   }
@@ -332,7 +333,7 @@ test('the status page switches to 90 days and keeps it in the address', async ({
 });
 
 test.describe('keyboard only', () => {
-  for (const path of ['/portfolio', '/status', '/accessibility', '/changes', '/contact', '/resume', '/projects/petcenza']) {
+  for (const path of ['/', '/portfolio', '/status', '/accessibility', '/changes', '/contact', '/resume', '/projects/petcenza']) {
     test(`Tab walks ${path} to the footer with a visible focus ring on every stop`, async ({ page }) => {
       await page.goto(path);
       await page.waitForLoadState('load');
@@ -346,11 +347,16 @@ test.describe('keyboard only', () => {
           const el = document.activeElement;
           if (!el || el === document.body) return null;
           const r = el.getBoundingClientRect();
-          const cs = getComputedStyle(el);
+          // The ring may be drawn on the control itself or, for a rack unit, on its face.
+          const ringed = (node) => {
+            if (!node) return false;
+            const cs = getComputedStyle(node);
+            return (cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0) || cs.boxShadow !== 'none';
+          };
           return {
             name: `${el.tagName.toLowerCase()} "${(el.getAttribute('aria-label') || el.textContent || '').trim().slice(0, 40)}"`,
             shown: r.width > 0 && r.height > 0,
-            ring: (cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0) || cs.boxShadow !== 'none',
+            ring: ringed(el) || ringed(el.querySelector(':scope > .face')),
             last: !!el.closest('footer') && el.textContent.trim() === 'Email',
           };
         });
@@ -363,4 +369,15 @@ test.describe('keyboard only', () => {
       expect(reached).toBe(true);
     });
   }
+});
+
+test('keyboard users can skip a demo recording to its written version', async ({ page }) => {
+  await page.goto('/projects/greenline');
+  const skip = page.getByRole('link', { name: 'Skip the demo: read what’s on screen' });
+  await skip.focus();
+  await expect(skip).toBeInViewport();
+  await page.keyboard.press('Enter');
+  const transcript = page.locator('.monitor-transcript');
+  await expect(transcript).toHaveAttribute('open', '');
+  await expect(transcript.locator('summary')).toBeFocused();
 });

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { cardSrcSet } from '../lib/cardImages.js';
 import { followCaptions, clock } from '../lib/demoCaptions.js';
 import { evidenceOf, formatUpdated } from '../lib/projectMeta.js';
@@ -22,6 +22,16 @@ export default function Monitor({ project, sizes }) {
   const wantedRef = useRef(true);
   const [playing, setPlaying] = useState(false);
   const [captions, setCaptions] = useState(true);
+  const transcriptRef = useRef(null);
+  const transcriptId = useId();
+  // Keyboard users can jump past the recording to its written version.
+  const skipDemo = (event) => {
+    event.preventDefault();
+    const details = transcriptRef.current;
+    if (!details) return;
+    details.open = true;
+    details.querySelector('summary')?.focus();
+  };
 
   useEffect(() => {
     const video = videoRef.current;
@@ -56,6 +66,7 @@ export default function Monitor({ project, sizes }) {
   return (
     <figure className="monitor">
       <div className="monitor-glass">
+        {chapters && <a className="skip-demo" href={`#${transcriptId}`} onClick={skipDemo}>Skip the demo: read what’s on screen</a>}
         {showVideo ? (
           <video ref={videoRef} src={demo} poster={image} muted loop playsInline preload="metadata" aria-label={`${title} demo recording, silent`} />
         ) : image ? (
@@ -86,7 +97,7 @@ export default function Monitor({ project, sizes }) {
         )}
       </div>
       {chapters && (
-        <details className="monitor-transcript">
+        <details className="monitor-transcript" id={transcriptId} ref={transcriptRef}>
           <summary>What’s on screen</summary>
           <ol>
             {chapters.map(([at, text]) => (

@@ -2,6 +2,9 @@ import { Link, useSearchParams } from 'react-router';
 import UptimeStrip from '../components/UptimeStrip.jsx';
 import { RACK_MODEL } from '../lib/rack.js';
 import { formatDay } from '../lib/projectMeta.js';
+import { incidentsFor } from '../lib/rackModel.js';
+import { BUILD_TIME } from '../lib/build.js';
+import { incidents } from '../data/incidents.js';
 import './Status.css';
 
 const LIVE = RACK_MODEL.projects.filter((p) => p.projectLink);
@@ -22,7 +25,7 @@ export default function Status() {
           <h1 className="page-title">Demo status</h1>
           <p className="lede">
             Whether each live demo answered the daily check, as of this build. A demo behind a sign-in still counts as
-            answering, because the app is up behind it.
+            answering, because the app is up behind it. When a demo was down, a note under its strip says why.
           </p>
           <p className={`st-summary${down.length ? ' is-down' : ''}`}>
             {down.length ? `${down.length} of ${LIVE.length} live demos not answering` : `All ${LIVE.length} live demos answering`}
@@ -46,6 +49,9 @@ export default function Status() {
                 </span>
               </div>
               <UptimeStrip site={p.uptime} days={days} />
+              {BUILD_TIME && incidentsFor(incidents, p.slug, BUILD_TIME.slice(0, 10), days).map((i) => (
+                <p key={i.from} className="st-incident"><span>{formatDay(i.from)}</span>{i.note}</p>
+              ))}
               <a className="st-link" href={p.projectLink} target="_blank" rel="noopener noreferrer">
                 {p.projectLinkLabel || 'Open the live demo'} ↗
               </a>

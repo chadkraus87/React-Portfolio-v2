@@ -13,7 +13,8 @@
 # promotion. Deployment URLs are behind Vercel Authentication, so it needs the
 # project's Protection Bypass for Automation secret stored in this repo as
 # VERCEL_AUTOMATION_BYPASS_SECRET. Until that secret exists the job only leaves a
-# notice and reports nothing to Vercel, so it can't be required by mistake.
+# notice and reports nothing to Vercel, so it can't be required by mistake. On a
+# preview deployment it also posts the result on the commit's pull request.
 name: Deployment checks
 
 on:
@@ -34,6 +35,7 @@ jobs:
       contents: read
       actions: read
       statuses: write
+      pull-requests: write
 
   smoke:
     runs-on: ubuntu-latest
@@ -41,6 +43,7 @@ jobs:
     permissions:
       contents: read
       statuses: write
+      pull-requests: write
     env:
       # Only whether the secret exists; the value reaches the smoke step alone.
       HAS_BYPASS: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET != '' }}
@@ -62,8 +65,32 @@ jobs:
         with:
           node-version: 24
       - name: Smoke-check this deployment
+        id: smoke
         if: env.HAS_BYPASS == 'true'
         env:
           DEPLOYMENT_URL: ${{ github.event.client_payload.url }}
           SMOKE_BYPASS: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
-        run: node scripts/smoke.mjs "$DEPLOYMENT_URL"
+        run: |
+          set +e
+          node scripts/smoke.mjs "$DEPLOYMENT_URL" > smoke-report.md
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          cat smoke-report.md
+      - name: Post the smoke result on the pull request
+        if: always() && steps.smoke.outcome == 'success' && github.event.client_payload.environment != 'production'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.event.client_payload.git.sha }}
+          CODE: ${{ steps.smoke.outputs.code }}
+        run: |
+          pr="$(gh api "repos/$GITHUB_REPOSITORY/commits/$SHA/pulls" --jq '.[0].number // empty')"
+          short="$(printf '%s' "$SHA" | cut -c1-7)"
+          if [ "$CODE" = 0 ]; then
+            printf '**Smoke check passed** on the preview deployment of `%s`.\n' "$short" > smoke-comment.md
+          else
+            { printf '**Smoke check failed** on the preview deployment of `%s`:\n\n' "$short"; cat smoke-report.md; } > smoke-comment.md
+          fi
+          sh scripts/pr-comment.sh "$pr" smoke-check smoke-comment.md
+      - name: Fail when the deployment has problems
+        if: env.HAS_BYPASS == 'true' && steps.smoke.outputs.code != '0'
+        run: exit 1

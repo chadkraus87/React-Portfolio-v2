@@ -150,7 +150,13 @@ Rendered once by `ServerRoom.jsx`; driven by `src/lib/serverRoom.js`.
   link, an Answering / Not answering chip, the uptime strip, then the demo link. A
   bordered summary line in mono (`--live`, or `--danger` when any demo is down).
   A "30 days / 90 days" segmented control above the list; at 90 days the cells
-  close to a 1px gap and fill the column width.
+  close to a 1px gap and fill the column width. An incident note sits under its
+  strip: the day in `--danger` mono caps, then the note in `--prose`.
+- **Skip the demo:** hidden until focused, then an accent chip in the monitor's top
+  left, like the page skip link.
+- **Tool share cards:** "Projects using" in muted display caps over the tool name,
+  the projects as accent-bulleted mono lines, and both racks with those units slid
+  out and outlined in the accent.
 - **Project filters:** the lens segmented control plus a "Uses" tool `<select>` on
   `--field` with an `--edge` border, and "Clear filters" once anything is set. An
   empty result says which lens and tool, with its own clear button.

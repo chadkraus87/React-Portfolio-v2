@@ -165,8 +165,16 @@ middleware.js            Vercel Routing Middleware: share previews for ?unit= li
   `.github/workflows/smoke.yml` checks the live site and opens an issue on failure.
 - **Lighthouse trend** — CI keeps scores across runs as an artifact, shows the
   change since the previous production run, and fails on a performance drop over 0.10.
-- **Keyboard walk** — CI tabs through every text page to the footer and fails on any
-  stop without a visible focus ring.
+- **Keyboard walk** — CI tabs through the home page and every text page to the
+  footer and fails on any stop without a visible focus ring.
+- **Skip the demo** — keyboard users can jump from a recording to its written
+  "What's on screen" version.
+- **Tool share cards** — `public/og/tools/<slug>.jpg` lights every unit that uses the
+  tool in both racks.
+- **Incident notes** — `src/data/incidents.js` explains an outage under its strip on
+  `/status`.
+- **Pull request reports** — preview smoke results and the Lighthouse trend are
+  posted as one updated comment each.
 - **Data saver** — with Save-Data on, demos show their screenshot until the
   visitor chooses "Load demo video".
 - **Print case study** — a clean single-column print of any case study, with the

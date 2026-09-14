@@ -11,11 +11,11 @@ import { TOOL_SLUGS } from './src/data/toolSlugs.js';
 const SLUGS = new Set(racks.flatMap((r) => r.slugs));
 const TOOLS = new Set(TOOL_SLUGS);
 
-export const config = { matcher: ['/', '/portfolio'] };
+export const config = { matcher: ['/', '/portfolio', '/portfolio/'] };
 
 export default function middleware(request) {
   const url = new URL(request.url);
-  if (url.pathname === '/portfolio') {
+  if (url.pathname === '/portfolio' || url.pathname === '/portfolio/') {
     const tool = url.searchParams.get('tool');
     return tool && TOOLS.has(tool) ? rewrite(new URL(`/portfolio/tools/${tool}/index.html`, request.url)) : next();
   }
