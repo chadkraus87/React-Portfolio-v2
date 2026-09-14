@@ -31,6 +31,7 @@ function makeHall(count, seed) {
 const HALLS = [['far', makeHall(13, 1337)], ['near', makeHall(9, 42)]];
 const RAIL = Array.from({ length: RACK_U }, (_, k) => RACK_U - k);
 const RANGE = activityRange(RACK_MODEL.activity);
+const WEEK_COUNT = Math.max(1, ...Object.values(RACK_MODEL.activity.repos).map((r) => r.weeks.length));
 
 function Rail() {
   return (
@@ -196,6 +197,12 @@ export default function ServerRoom() {
             </div>
             <button type="button" className="sr-heat" aria-pressed="false"><span className="sw" aria-hidden="true" />Commit heat</button>
             <button type="button" className="sr-sound" aria-pressed="false"><span className="spk" aria-hidden="true" />Sound</button>
+          </div>
+          <div className="sr-row sr-timeline">
+            <label className="sr-week" htmlFor="sr-week">Week</label>
+            <input id="sr-week" className="sr-week-range" type="range" min="0" max={WEEK_COUNT - 1} step="1" defaultValue={WEEK_COUNT - 1} />
+            <output className="sr-week-out" htmlFor="sr-week">Latest week</output>
+            <button type="button" className="sr-replay" aria-pressed="false">Replay</button>
           </div>
           <div className="sr-legend" hidden>
             <span>Public commits · {RANGE}</span>

@@ -35,7 +35,7 @@ export default function Accessibility() {
           <h2 id="a11y-built">Built in</h2>
           <ul>
             <li>A skip link, visible focus on every control, and touch targets of at least 44px on touch screens.</li>
-            <li>Press <kbd>?</kbd> anywhere for a list of keyboard shortcuts.</li>
+            <li>Press <kbd>?</kbd> anywhere for a list of keyboard shortcuts, or <kbd>/</kbd> to search the site.</li>
             <li>Demo recordings are silent, with timed captions and a written list of what is on screen. A skip link jumps from each recording to that list.</li>
             <li>Motion respects the reduced-motion setting, and demos respect Save-Data.</li>
             <li>A light theme for bright rooms, and case studies that print as a single clean column.</li>

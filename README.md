@@ -181,6 +181,11 @@ middleware.js            Vercel Routing Middleware: share previews for ?unit= li
   experience and credentials on one printable page; interview mode links to it.
 - **Now** — `/now`: this week's public commits, work in progress and demo health, with an
   optional note from Chad.
+- **Search** — press `/` (or ⌘K away from the home page) to find projects, tools, field
+  notes, changes and pages.
+- **Rack timeline** — scrub the Week slider or press Replay to watch twelve weeks of commits,
+  with any recorded demo outage replayed as an amber power light.
+- **Uptime API** — `/api/status` returns the uptime record as JSON (CORS open).
 - **Night shift** — after 7pm local time the room dims and only units with commits this
   week stay lit.
 - **Cable tracer** — on a case study, hovering or focusing a shared tool draws its cables to

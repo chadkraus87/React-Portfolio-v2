@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import { profile } from '../data/profile.js';
 import { openShortcuts } from './Shortcuts.jsx';
+import { openSearch } from './Search.jsx';
 import { BUILD_SHA, BUILD_DATE } from '../lib/build.js';
 import './Footer.css';
 
@@ -17,6 +18,7 @@ export default function Footer() {
           <Link viewTransition to="/changes">What changed</Link>
           <Link viewTransition to="/status">Status</Link>
           <Link viewTransition to="/accessibility">Accessibility</Link>
+          <button type="button" className="footer-keys" onClick={openSearch}>Search</button>
           <button type="button" className="footer-keys" onClick={openShortcuts}>Keyboard shortcuts</button>
           <a href={profile.github} target="_blank" rel="noopener noreferrer">GitHub</a>
           <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>

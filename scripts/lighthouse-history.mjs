@@ -19,10 +19,17 @@ const reports = readdirSync('.lighthouseci')
 if (!reports.length) throw new Error('no Lighthouse reports in .lighthouseci/');
 
 const score = (r, id) => r.categories[id]?.score ?? 0;
+// lhci runs each page several times; keep the median run by performance score.
+const byPage = new Map();
+for (const r of reports) {
+  const page = new URL(r.requestedUrl).pathname;
+  byPage.set(page, [...(byPage.get(page) ?? []), r]);
+}
+const medianRun = (runs) => [...runs].sort((a, b) => score(a, 'performance') - score(b, 'performance'))[Math.floor((runs.length - 1) / 2)];
 const current = {
   at: new Date().toISOString(),
   sha: (process.env.COMMIT_SHA || '').slice(0, 7),
-  pages: Object.fromEntries(reports.map((r) => [new URL(r.requestedUrl).pathname, {
+  pages: Object.fromEntries([...byPage].map(([page, runs]) => [page, medianRun(runs)]).map(([page, r]) => [page, {
     performance: score(r, 'performance'),
     accessibility: score(r, 'accessibility'),
     lcp: Math.round(r.audits['largest-contentful-paint'].numericValue),

@@ -48,11 +48,6 @@ jobs:
       # Only whether the secret exists; the value reaches the smoke step alone.
       HAS_BYPASS: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET != '' }}
     steps:
-      - name: Report to Vercel
-        if: env.HAS_BYPASS == 'true'
-        uses: vercel/repository-dispatch/actions/status@30f760c6640485cd92f8c785ef361382555fb712 # v1
-        with:
-          name: 'Vercel - chad-kraus-portfolio: smoke'
       - name: Waiting for the bypass secret
         if: env.HAS_BYPASS != 'true'
         run: echo "::notice::VERCEL_AUTOMATION_BYPASS_SECRET is not set, so this deployment was not smoke-checked."
@@ -64,6 +59,12 @@ jobs:
         if: env.HAS_BYPASS == 'true'
         with:
           node-version: 24
+      - name: Report pending to Vercel Deployment Checks
+        if: env.HAS_BYPASS == 'true'
+        uses: ./.github/actions/vercel-status
+        with:
+          context: 'Vercel - chad-kraus-portfolio: smoke'
+          state: pending
       - name: Smoke-check this deployment
         id: smoke
         if: env.HAS_BYPASS == 'true'
@@ -94,3 +95,9 @@ jobs:
       - name: Fail when the deployment has problems
         if: env.HAS_BYPASS == 'true' && steps.smoke.outputs.code != '0'
         run: exit 1
+      - name: Report the result to Vercel Deployment Checks
+        if: always() && env.HAS_BYPASS == 'true'
+        uses: ./.github/actions/vercel-status
+        with:
+          context: 'Vercel - chad-kraus-portfolio: smoke'
+          state: ${{ job.status == 'success' && 'success' || 'failure' }}

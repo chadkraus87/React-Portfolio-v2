@@ -1,4 +1,4 @@
-import { activityRange } from './rackModel.js';
+import { activityRange, weekSnapshot } from './rackModel.js';
 import { createRackSound } from './rackSound.js';
 import { followCaptions, clock } from './demoCaptions.js';
 import { evidenceOf, formatDay, toolSlug, interviewPicks, proofOf } from './projectMeta.js';
@@ -744,8 +744,16 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   const stopTourTimer = () => { win.clearTimeout(tourTimer); timers.delete(tourTimer); };
   // Offered once per browser: starting it counts, as does saying no.
   const markTourSeen = () => { try { win.localStorage.setItem('sr-tour', 'done'); } catch { /* offered again next visit */ } };
+  // Interview mode keeps its place in the address (?tour=hiring&stop=2), so a paused walk
+  // can be shared or reloaded; ending the tour removes both.
+  const setStopParam = (k) => {
+    const url = new win.URL(win.location.href);
+    if (k === null) { url.searchParams.delete('tour'); url.searchParams.delete('stop'); } else { url.searchParams.set('tour', 'hiring'); url.searchParams.set('stop', String(k + 1)); }
+    if (url.href !== win.location.href) win.history.replaceState(win.history.state, '', url);
+  };
   function endTour(reason) {
     stopTourTimer();
+    if (TOUR === HIRING) setStopParam(null);
     tourEl.hidden = true; tourStep = -1; tourProof.hidden = true;
     markTourSeen();
     track(`tour/${reason}`);
@@ -761,6 +769,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     tourProof.innerHTML = (TOUR[k].links ?? []).join('<span aria-hidden="true"> · </span>');
     tourProof.hidden = !TOUR[k].links;
     TOUR[k].run();
+    if (TOUR === HIRING) setStopParam(k);
     // Advances on its own every five seconds, except under reduced motion.
     if (motion()) tourTimer = later(() => tourGo(k + 1), TOUR === HIRING ? 9000 : 5000);
   }
@@ -768,13 +777,54 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   on(tourEnd, 'click', () => endTour(tourStep === -1 ? 'dismiss' : 'skip'));
   let tourSeen = true;
   try { tourSeen = win.localStorage.getItem('sr-tour') === 'done'; } catch { /* storage blocked: don't nag */ }
-  if (TOUR === HIRING) {
+  const stopParam = Number(new win.URLSearchParams(win.location.search).get('stop'));
+  if (TOUR === HIRING && Number.isInteger(stopParam) && stopParam >= 1 && stopParam <= HIRING.length) {
+    tourEl.hidden = false;
+    markTourSeen();
+    later(() => tourGo(stopParam - 1), 0);
+  } else if (TOUR === HIRING) {
     tourText.textContent = 'Interview mode: three live projects and the hire snapshot, in four stops.';
     tourEl.hidden = false;
     track('tour/hiring');
   } else if (!tourSeen && !sharedUnit && !sharedTool) {
     later(() => { if (!state.sheetOpen && tourStep === -1) tourEl.hidden = false; }, motion() ? 2400 : 0);
   }
+
+  // Rack timeline: scrub back through the weeks of public commits. Units with commits
+  // that week light up; a live demo that was not answering that week shows an amber
+  // power light, replaying its recorded outages. Replay steps through every week. The
+  // latest week puts the room back to normal.
+  const weekRange = q('.sr-week-range'); const weekOut = q('.sr-week-out'); const replayBtn = q('.sr-replay');
+  const lastWeek = Number(weekRange.max);
+  let replayTimer = 0;
+  function showWeek(k) {
+    const w = weekSnapshot(model.activity, P, k);
+    P.forEach((p) => {
+      units[p.i].classList.toggle('wk-on', w.commits.has(p.slug));
+      units[p.i].classList.toggle('wk-down', w.down.has(p.slug));
+    });
+    root.classList.toggle('is-timeline', k !== lastWeek);
+    const downNames = P.filter((p) => w.down.has(p.slug)).map((p) => p.title);
+    const text = `Week of ${formatDay(w.start)}${k === lastWeek ? ' (latest)' : ''} · ${w.total} public commit${w.total === 1 ? '' : 's'}${downNames.length ? ` · demo down: ${downNames.join(', ')}` : ''}`;
+    weekOut.textContent = text;
+    weekRange.setAttribute('aria-valuetext', text);
+    return text;
+  }
+  const stopReplay = () => { win.clearTimeout(replayTimer); timers.delete(replayTimer); replayBtn.setAttribute('aria-pressed', 'false'); };
+  function replayFrom(k) {
+    weekRange.value = String(k);
+    say(showWeek(k));
+    if (k >= lastWeek) { stopReplay(); return; }
+    replayTimer = later(() => replayFrom(k + 1), 1400);
+  }
+  on(weekRange, 'input', () => { stopReplay(); showWeek(Number(weekRange.value)); });
+  on(replayBtn, 'click', () => {
+    if (replayBtn.getAttribute('aria-pressed') === 'true') { stopReplay(); return; }
+    replayBtn.setAttribute('aria-pressed', 'true');
+    track('timeline/replay');
+    replayFrom(0);
+  });
+  showWeek(lastWeek);
 
   // Night shift: from 7pm to 6am local time the hall dims and only the units with public
   // commits this week keep their lights on (ServerRoom.css). Only the visitor's clock is
@@ -793,6 +843,6 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     doc.documentElement.classList.remove('sr-printing');
     cleanups.forEach((fn) => fn());
     timers.forEach((id) => win.clearTimeout(id));
-    root.classList.remove('is-dive', 'is-booting', 'heat-on', 'sheet-open', 'is-night');
+    root.classList.remove('is-dive', 'is-booting', 'heat-on', 'sheet-open', 'is-night', 'is-timeline');
   };
 }

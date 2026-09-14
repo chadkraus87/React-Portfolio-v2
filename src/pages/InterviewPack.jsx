@@ -8,6 +8,14 @@ const PICKS = interviewPicks(RACK_MODEL.projects);
 const BASE = 'https://chad-kraus-portfolio.vercel.app';
 const bare = (url) => url.replace(/^https?:\/\/(www\.)?/, '');
 
+// Screenshots and QR codes load lazily on screen; print waits for all of them first.
+const printPack = async () => {
+  const imgs = [...document.querySelectorAll('.ip img')];
+  imgs.forEach((img) => { img.loading = 'eager'; });
+  await Promise.all(imgs.map((img) => (img.complete ? null : new Promise((done) => { img.onload = done; img.onerror = done; }))));
+  window.print();
+};
+
 // The interview pack: the operator snapshot plus the three projects interview mode
 // walks through, on one printable page. Every line comes from profile.js and the
 // project data; the proof line is the same one the tour shows.
@@ -21,13 +29,12 @@ export default function InterviewPack() {
           <p className="lede">{profile.title}</p>
           <ul className="ip-contact">
             <li><a href={`mailto:${profile.email}`}>{profile.email}</a></li>
-            <li><a href={`tel:${profile.phone.replace(/[^0-9+]/g, '')}`}>{profile.phone}</a></li>
             <li>{profile.location}</li>
             <li><a href={profile.linkedin} target="_blank" rel="noopener noreferrer">{bare(profile.linkedin)}</a></li>
             <li><a href={profile.github} target="_blank" rel="noopener noreferrer">{bare(profile.github)}</a></li>
           </ul>
           <p className="ip-actions">
-            <button type="button" className="btn btn-primary" onClick={() => window.print()}>Print the pack</button>
+            <button type="button" className="btn btn-primary" onClick={printPack}>Print the pack</button>
             <Link viewTransition to="/?tour=hiring" className="btn">Take the interview tour</Link>
           </p>
         </header>
@@ -40,15 +47,22 @@ export default function InterviewPack() {
               {p.tagline && <p className="ip-tag">{p.tagline}</p>}
               <p>{p.summary}</p>
               <p className="ip-proof">{proofOf(p).join(' · ')}</p>
+              {p.image && <img className="ip-shot" src={p.image} alt={`${p.title} screenshot`} width="1400" height="875" loading="lazy" />}
               {p.architecture?.length > 0 && (
                 <ul className="ip-arch">
                   {p.architecture.map(({ layer, items }) => <li key={layer}><strong>{layer}</strong>{items.join(' · ')}</li>)}
                 </ul>
               )}
-              <p className="ip-links">
-                <a href={`${BASE}/projects/${p.slug}`}>Case study</a>
-                <a href={p.projectLink} target="_blank" rel="noopener noreferrer">Live demo</a>
-              </p>
+              <div className="ip-foot">
+                <p className="ip-links">
+                  <a href={`${BASE}/projects/${p.slug}`}>Case study</a>
+                  <a href={p.projectLink} target="_blank" rel="noopener noreferrer">Live demo</a>
+                </p>
+                <figure className="ip-qr">
+                  <img src={`/qr/${p.slug}.svg`} alt={`QR code for the ${p.title} case study`} width="96" height="96" loading="lazy" />
+                  <figcaption>Scan for the case study</figcaption>
+                </figure>
+              </div>
             </article>
           ))}
         </section>

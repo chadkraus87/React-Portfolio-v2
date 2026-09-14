@@ -1,0 +1,27 @@
+# Posts the commit status that Vercel Deployment Checks read, for the deployment's
+# commit. Replaces vercel/repository-dispatch/actions/status: its post step looked up
+# the first job in the workflow run rather than its own job, so a failing job could
+# report success (seen on 57c7b51, where a failed Lighthouse budget reported
+# "quality: success"). Here each job passes its own result explicitly.
+name: Vercel deployment check status
+description: Set a commit status for the Vercel deployment commit.
+inputs:
+  context:
+    description: The status name Vercel requires, e.g. "Vercel - chad-kraus-portfolio: quality"
+    required: true
+  state:
+    description: pending, success or failure
+    required: true
+  token:
+    description: Token with statuses:write
+    default: ${{ github.token }}
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        SHA: ${{ github.event.client_payload.git.sha }}
+        STATUS_CONTEXT: ${{ inputs.context }}
+        STATE: ${{ inputs.state }}
+      run: node "$GITHUB_ACTION_PATH/report.mjs"

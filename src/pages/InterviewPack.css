@@ -20,3 +20,13 @@
   .ip, .ip * { color: #000 !important; background: transparent !important; border-color: #bbb !important; }
   .ip-links a::after { content: " (" attr(href) ")"; }
 }
+.ip-shot { width: 100%; height: auto; border: 1px solid var(--line-2); }
+.ip-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 12px; }
+.ip-qr { display: none; }
+@media print {
+  .ip-project { break-before: page; }
+  .ip-shot { max-height: 45vh; object-fit: contain; object-position: left top; }
+  .ip-qr { display: grid; justify-items: center; gap: 4px; }
+  .ip-qr img { width: 96px; height: 96px; }
+  .ip-qr figcaption { font: 500 9pt/1.2 var(--f-mono); }
+}

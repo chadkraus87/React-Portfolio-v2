@@ -33,16 +33,16 @@ jobs:
       statuses: write
       pull-requests: write
     steps:
-      # First step on purpose: it reports pending now and the job's result when it ends.
-      - name: Report to Vercel Deployment Checks
-        if: github.event_name == 'repository_dispatch'
-        uses: vercel/repository-dispatch/actions/status@30f760c6640485cd92f8c785ef361382555fb712 # v1
-        with:
-          name: 'Vercel - chad-kraus-portfolio: quality'
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # The deployment's commit; empty outside a Vercel event, which means the default.
           ref: ${{ github.event.client_payload.git.sha }}
+      - name: Report pending to Vercel Deployment Checks
+        if: github.event_name == 'repository_dispatch'
+        uses: ./.github/actions/vercel-status
+        with:
+          context: 'Vercel - chad-kraus-portfolio: quality'
+          state: pending
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
@@ -91,6 +91,13 @@ jobs:
           name: playwright-report
           path: test-results/
           retention-days: 7
+      # Last step on purpose: reports this job's own result, pass or fail.
+      - name: Report the result to Vercel Deployment Checks
+        if: always() && github.event_name == 'repository_dispatch'
+        uses: ./.github/actions/vercel-status
+        with:
+          context: 'Vercel - chad-kraus-portfolio: quality'
+          state: ${{ job.status == 'success' && 'success' || 'failure' }}
 
   # Screenshot comparison, inside the pinned Playwright image the baselines were
   # rendered in (scripts/update-visual-baselines.sh), so fonts match exactly.
@@ -105,16 +112,16 @@ jobs:
       image: mcr.microsoft.com/playwright@sha256:eff16c30e6f3f4af0a03fa4b706120d5e9b0891c344a27d64559aff5900a4a27 # v1.63.0-noble
       options: --ipc=host
     steps:
-      # First step on purpose: it reports pending now and the job's result when it ends.
-      - name: Report to Vercel Deployment Checks
-        if: github.event_name == 'repository_dispatch'
-        uses: vercel/repository-dispatch/actions/status@30f760c6640485cd92f8c785ef361382555fb712 # v1
-        with:
-          name: 'Vercel - chad-kraus-portfolio: visual'
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # The deployment's commit; empty outside a Vercel event, which means the default.
           ref: ${{ github.event.client_payload.git.sha }}
+      - name: Report pending to Vercel Deployment Checks
+        if: github.event_name == 'repository_dispatch'
+        uses: ./.github/actions/vercel-status
+        with:
+          context: 'Vercel - chad-kraus-portfolio: visual'
+          state: pending
       - run: npm ci
       - run: npm run build
       - name: Screenshots against committed baselines
@@ -128,3 +135,10 @@ jobs:
           name: visual-diffs
           path: test-results/
           retention-days: 7
+      # Last step on purpose: reports this job's own result, pass or fail.
+      - name: Report the result to Vercel Deployment Checks
+        if: always() && github.event_name == 'repository_dispatch'
+        uses: ./.github/actions/vercel-status
+        with:
+          context: 'Vercel - chad-kraus-portfolio: visual'
+          state: ${{ job.status == 'success' && 'success' || 'failure' }}

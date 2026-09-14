@@ -23,8 +23,9 @@ import { SITE_NAME,
 // racks.js and rackModel.js import nothing either, so the build can check that
 // every project stands in a rack and self-test the model the server room uses.
 import { racks, lenses } from '../src/data/racks.js';
-import { toolsOf, buildRackModel, uptimeStrip, incidentsFor, latestFullWeeks } from '../src/lib/rackModel.js';
+import { toolsOf, buildRackModel, uptimeStrip, incidentsFor, latestFullWeeks, weekSnapshot } from '../src/lib/rackModel.js';
 import { incidents } from '../src/data/incidents.js';
+import QRCode from 'qrcode';
 import { toolSlug, interviewPicks, proofOf } from '../src/lib/projectMeta.js';
 import { evidenceReport } from './evidence.mjs';
 
@@ -182,6 +183,11 @@ const projectRoutes = parseEntries(projectsSrc).map(({ slug, title }) => ({
   if (picks !== 'b,a,d') throw new Error(`interviewPicks: got ${picks}`);
   const proof = proofOf(fake[0]).join(' · ');
   if (!proof.startsWith('Live · recorded demo · live demo answering') || !proof.endsWith('tested with Vitest + Playwright · 5 public commits in twelve weeks')) throw new Error(`proofOf: got ${proof}`);
+  const fakeActivity = { from: '2026-06-22', to: '2026-09-14', repos: {} };
+  const fakeProjects = [{ slug: 'x', act: { weeks: [0, 2] }, uptime: { firstChecked: '2026-06-22', outages: [{ from: '2026-07-01', to: '2026-07-02' }] } }, { slug: 'y', act: null, uptime: null }];
+  const w1 = weekSnapshot(fakeActivity, fakeProjects, 1);
+  const w0 = weekSnapshot(fakeActivity, fakeProjects, 0);
+  if (w1.start !== '2026-06-29' || w1.total !== 2 || !w1.down.has('x') || w0.down.size || w0.total) throw new Error(`weekSnapshot: ${JSON.stringify({ w0, w1, d1: [...w1.down] })}`);
   const weeks = latestFullWeeks({ from: '2026-06-22', to: '2026-09-14', repos: { a: { weeks: Array(12).fill(0) } } }, 2);
   if (weeks.map((w) => `${w.k}:${w.start}..${w.end}`).join() !== '11:2026-09-07..2026-09-13,10:2026-08-31..2026-09-06') throw new Error(`latestFullWeeks: got ${JSON.stringify(weeks)}`);
 }
@@ -506,6 +512,39 @@ console.log('wrote sitemap.xml + robots.txt');
     'utf8'
   );
   console.log('wrote changes.xml');
+}
+
+// QR codes for the interview pack: /qr/<slug>.svg points at each live case study.
+{
+  mkdirSync(join(dist, 'qr'), { recursive: true });
+  for (const { slug } of parseEntries(projectsSrc)) {
+    const svg = await QRCode.toString(`${BASE}/projects/${slug}`, { type: 'svg', margin: 1, errorCorrectionLevel: 'M', color: { dark: '#000000', light: '#ffffff' } });
+    if (!svg.startsWith('<svg')) throw new Error(`qr for ${slug} is not an SVG`);
+    writeFileSync(join(dist, 'qr', `${slug}.svg`), svg, 'utf8');
+  }
+  console.log('wrote qr codes');
+}
+
+// status.json — the uptime record /status draws, as JSON. vercel.json serves it at
+// /api/status with open CORS, so other pages and dashboards can read it.
+{
+  const here = dirname(fileURLToPath(import.meta.url));
+  const sites = JSON.parse(readFileSync(join(here, '..', 'src', 'data', 'uptime.json'), 'utf8')).sites;
+  const titles = Object.fromEntries(parseEntries(projectsSrc).map((e) => [e.slug, e.title]));
+  const body = {
+    source: `${BASE}/status`,
+    about: 'Whether each live demo answered its daily check. Records change only when a demo starts or stops answering.',
+    sites: Object.fromEntries(Object.entries(sites).map(([slug, s]) => [slug, {
+      title: titles[slug] ?? slug,
+      url: `${BASE}/projects/${slug}`,
+      ok: s.ok,
+      since: s.since,
+      firstChecked: s.firstChecked ?? s.since,
+      outages: (s.outages ?? []).map((o) => ({ ...o, note: incidents.find((i) => i.slug === slug && i.from === o.from)?.note ?? null })),
+    }])),
+  };
+  writeFileSync(join(dist, 'status.json'), `${JSON.stringify(body, null, 2)}\n`, 'utf8');
+  console.log('wrote status.json');
 }
 
 // digest.xml — a weekly digest from data the site already has: public commits per week

@@ -16,6 +16,7 @@ import Accessibility from './pages/Accessibility.jsx';
 import Now from './pages/Now.jsx';
 import InterviewPack from './pages/InterviewPack.jsx';
 import Shortcuts from './components/Shortcuts.jsx';
+import Search from './components/Search.jsx';
 
 // A new route starts at the top of the page; a #fragment (including the one the
 // old /notes redirects land on) scrolls to its target instead.
@@ -53,6 +54,7 @@ export default function App() {
         <ScrollManager />
         <RouteTrace />
         <Shortcuts />
+        <Search />
         <a className="skip-link" href="#main">Skip to content</a>
         <NavBar />
         <main id="main" tabIndex={-1}>

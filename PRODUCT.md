@@ -124,6 +124,8 @@ project stories now live on the PetCenza and CoachRhythm case studies.
   built with Supabase", and the shared link previews as exactly that.
 - `/accessibility` claims only checks that actually run, and lists what they miss.
 - An outage on `/status` can carry a short, true note about what happened.
+- Search, the rack timeline and `/api/status` expose data the site already had; nothing new
+  is collected. The public pack leaves out the phone number.
 - The interview pack puts that same proof on paper; `/now` shows what's moving without
   anyone writing status updates, and only Chad writes its note.
 - Interview mode gives a recruiter a guided, 4-stop walk whose every claim comes from

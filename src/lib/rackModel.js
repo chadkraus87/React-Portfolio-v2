@@ -141,3 +141,20 @@ export function latestFullWeeks(activity, n = 4) {
   }
   return out;
 }
+
+// One week of the rack timeline (k indexes activity weeks): public commits per project,
+// and which live demos were not answering on any checked day that week.
+export function weekSnapshot(activity, projects, k) {
+  const DAY = 86_400_000;
+  const startMs = Date.parse(`${activity.from}T00:00:00Z`) + k * 7 * DAY;
+  const start = new Date(startMs).toISOString().slice(0, 10);
+  const end = new Date(startMs + 6 * DAY).toISOString().slice(0, 10);
+  const commits = new Map();
+  const down = new Set();
+  for (const p of projects) {
+    const n = p.act?.weeks?.[k] ?? 0;
+    if (n) commits.set(p.slug, n);
+    if (p.uptime && uptimeStrip(p.uptime, end, 7).down) down.add(p.slug);
+  }
+  return { start, end, total: [...commits.values()].reduce((a, b) => a + b, 0), commits, down };
+}

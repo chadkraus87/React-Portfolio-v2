@@ -140,14 +140,14 @@
 .sr-row { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; }
 .sr .seg button { min-height: 38px; }
 .sr .seg button:not([aria-pressed="true"]) { background: rgba(8, 6, 5, .78); }
-.sr-heat, .sr-sound { display: inline-flex; align-items: center; gap: 8px; min-height: 38px; padding: 10px 13px; border: 1px solid var(--edge); background: rgba(8, 6, 5, .78); color: var(--muted);
+.sr-heat, .sr-sound, .sr-replay { display: inline-flex; align-items: center; gap: 8px; min-height: 38px; padding: 10px 13px; border: 1px solid var(--edge); background: rgba(8, 6, 5, .78); color: var(--muted);
   font: 600 12px/1 var(--f-ui); font-stretch: 85%; letter-spacing: .06em; text-transform: uppercase; }
-.sr-heat:hover, .sr-sound:hover { color: var(--text); }
+.sr-heat:hover, .sr-sound:hover, .sr-replay:hover { color: var(--text); }
 .sr-sound .spk { width: 11px; height: 11px; background: currentColor; clip-path: polygon(0 32%, 36% 32%, 78% 0, 78% 100%, 36% 68%, 0 68%); }
 .sr .cap-build { position: absolute; right: 48px; top: 50%; transform: translateY(-50%); padding: 2px 5px; font-size: 9px; }
 .sr-sheet .s-demo-note { margin: -18px 0 22px; }
 .sr-heat .sw { width: 22px; height: 8px; background: linear-gradient(90deg, var(--heat-0), var(--heat-2), var(--heat-4)); }
-.sr-heat[aria-pressed="true"], .sr-sound[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.sr-heat[aria-pressed="true"], .sr-sound[aria-pressed="true"], .sr-replay[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .sr-legend { display: grid; justify-items: end; gap: 6px; padding: 10px 12px; background: rgba(8, 6, 5, .85); border: 1px solid var(--line-2); font: 500 10.5px/1.2 var(--f-mono); color: var(--muted); }
 .sr .ramp { display: grid; grid-template-columns: repeat(5, 34px); gap: 2px; }
 .sr .ramp span { display: grid; gap: 4px; text-align: center; font: 600 10px/1 var(--f-mono); color: var(--text); }
@@ -342,3 +342,12 @@
 .sr-tour-proof { display: flex; flex-wrap: wrap; align-items: center; gap: 0 8px; font: 500 12px/1.6 var(--f-mono); }
 .sr-tour-proof[hidden] { display: none; }
 .sr-tour-proof a { display: inline-flex; align-items: center; min-height: 32px; }
+
+/* Rack timeline: pick a week; units with commits that week keep their lights, and a
+   demo that was down that week shows an amber power light. Text never dims. */
+.sr-week { font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.sr-week-range { width: 150px; min-height: 38px; accent-color: var(--accent); }
+.sr-week-out { padding: 8px 10px; border: 1px solid var(--edge); background: rgba(8, 6, 5, .78); font: 500 11.5px/1.3 var(--f-mono); color: var(--text); }
+.sr.is-timeline .unit:not(.wk-on) .bays i::after, .sr.is-timeline .unit:not(.wk-on) .pwr { opacity: .2; box-shadow: none; animation: none; }
+.sr.is-timeline .unit.wk-on .face { box-shadow: 0 0 0 1px var(--accent), 0 0 24px rgba(255, 181, 71, .22); }
+.sr.is-timeline .unit.wk-down .pwr { opacity: 1; background: var(--accent) !important; box-shadow: 0 0 8px var(--accent) !important; }

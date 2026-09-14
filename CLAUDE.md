@@ -73,6 +73,18 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
 - Night shift: from 7pm to 6am local time the room adds `is-night`; only units with
   public commits in the latest week (`on-shift`) keep their lights. Visual baselines
   pin the clock to midday.
+- Interview mode keeps its place in the address (`?tour=hiring&stop=1..4`); ending the
+  tour removes both parameters. The interview pack prints one page per project with its
+  screenshot and a QR code (`dist/qr/<slug>.svg`, generated at prerender by the pinned
+  `qrcode` devDependency). The pack shows email and LinkedIn but no phone number.
+- `dist/status.json` (prerender) is the uptime record with project titles and incident
+  notes; `vercel.json` rewrites `/api/status` to it with open CORS and a 5-minute cache.
+- Site search (`src/components/Search.jsx`, index in `src/lib/searchIndex.js`, loaded on
+  first open): `/` anywhere, ⌘K / Ctrl K on pages other than home (where ⌘K is the
+  console), or the footer button.
+- Rack timeline: the Week slider and Replay in the room's controls light units by
+  commits that week, and show an amber power light for a demo that was down that week
+  (`weekSnapshot()` in `rackModel.js`, self-tested at build).
 - `src/components/ToolTrace.jsx` draws a case study's shared-tool cables across a small
   two-rack view on hover or focus, with a live caption naming the projects.
 - `src/components/Shortcuts.jsx` — the `?` keyboard shortcuts dialog, also opened
@@ -131,10 +143,18 @@ section was removed; old `/notes` URLs redirect permanently in `vercel.json`.
   check` runs the same comparison locally without touching the baselines.
 CI runs for every Vercel deployment: Vercel sends a `repository_dispatch` event,
 `.github/workflows/deployment-checks.yml` calls `ci.yml` against that commit, and
-each job reports "Vercel - chad-kraus-portfolio: quality" / ": visual" as a commit
-status through `vercel/repository-dispatch/actions/status` (it must stay the first
-step of each job). Vercel Deployment Checks must require those two statuses so a
-red build never reaches production. Plain GitHub check runs do not count.
+each job reports "Vercel - chad-kraus-portfolio: quality" / ": visual" (and the
+`smoke` job ": smoke") as a commit status through the local composite action
+`.github/actions/vercel-status`: pending right after checkout, then a final
+`if: always()` step that passes the job's own `job.status`. Keep that final step
+last in every job. Do not go back to `vercel/repository-dispatch/actions/status`:
+its post step graded the first job in the run instead of its own, and on 57c7b51 a
+failed Lighthouse budget reported "quality: success". If a status can't be posted,
+Vercel stays pending and blocks promotion. Vercel Deployment Checks require all
+three statuses. Plain GitHub check runs do not count.
+
+Lighthouse runs each page three times and asserts on the median run, because a
+single run on a shared CI runner once scored the home page 0.74.
 
 The `quality` job also keeps Lighthouse scores over time: `scripts/lighthouse-history.mjs`
 appends each run to a `lighthouse-history` artifact (downloaded from the latest

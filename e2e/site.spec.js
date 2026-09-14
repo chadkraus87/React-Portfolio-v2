@@ -402,6 +402,7 @@ test('interview mode tour walks three live projects from real data, then the hir
   await expect(tour).toContainText('Interview mode');
   await tour.getByRole('button', { name: 'Take the tour' }).click();
   await expect(tour).toContainText('1 of 4.');
+  await expect(page).toHaveURL(/stop=1/);
   await expect(tour).toContainText('recorded demo');
   await expect(tour.getByRole('link', { name: 'Case study' })).toHaveAttribute('href', /^\/projects\//);
   const first = (await page.locator('#sr-sheet-title').textContent()).trim();
@@ -471,4 +472,70 @@ test('case study tools trace their cables to every project that shares them', as
   await expect(trace.locator('.trace-cable')).toHaveCount(0);
   await page.locator('.cs-tools').getByRole('link', { name: 'Supabase' }).focus();
   await expect(trace.locator('.trace-cable')).toHaveCount(2);
+});
+
+test('interview tour resumes from the stop in the address, and ending it clears the address', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/?tour=hiring&stop=3');
+  const tour = page.getByRole('region', { name: 'Guided tour' });
+  await expect(tour).toContainText('3 of 4.');
+  await tour.getByRole('button', { name: 'Next' }).click();
+  await expect(tour).toContainText('4 of 4.');
+  await expect(page).toHaveURL(/stop=4/);
+  await tour.getByRole('button', { name: 'End tour' }).click();
+  await expect(page).not.toHaveURL(/tour=|stop=/);
+  await page.goto('/?tour=hiring&stop=99');
+  await expect(tour).toContainText('Interview mode');
+});
+
+test('rack timeline lights the units with commits in the chosen week, and replay can be stopped', async ({ page }) => {
+  const activity = JSON.parse(readFileSync('src/data/activity.json', 'utf8'));
+  const lit = Object.values(activity.repos).filter((r) => r.weeks[6] > 0).length;
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const range = page.locator('#sr-week');
+  await expect(page.locator('.sr-week-out')).toContainText('(latest)');
+  await range.fill('6');
+  await expect(page.locator('.sr')).toHaveClass(/is-timeline/);
+  await expect(page.locator('.unit.wk-on')).toHaveCount(lit);
+  await expect(range).toHaveAttribute('aria-valuetext', /^Week of .* public commit/);
+  await range.fill('11');
+  await expect(page.locator('.sr')).not.toHaveClass(/is-timeline/);
+  const replay = page.getByRole('button', { name: 'Replay' });
+  await replay.click();
+  await expect(replay).toHaveAttribute('aria-pressed', 'true');
+  await replay.click();
+  await expect(replay).toHaveAttribute('aria-pressed', 'false');
+});
+
+test('site search finds projects, tools and pages, and opens the chosen result', async ({ page }) => {
+  await page.goto('/status');
+  await page.keyboard.press('/');
+  const dialog = page.getByRole('dialog', { name: 'Search' });
+  await expect(dialog).toBeVisible();
+  const input = dialog.getByRole('combobox');
+  await input.fill('supabase');
+  await expect(dialog.getByRole('option', { name: /Tool\s*Supabase/ })).toBeVisible();
+  const { violations } = await new AxeBuilder({ page }).include('.search').withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+  expect(violations).toEqual([]);
+  await input.fill('greenline');
+  await expect(dialog.getByRole('option').first()).toContainText('Greenline');
+  await input.press('Enter');
+  await expect(page).toHaveURL(/\/projects\/greenline$/);
+  await page.keyboard.press('Control+k');
+  await expect(dialog).toBeVisible();
+  await input.fill('zzzz-no-such-thing');
+  await expect(dialog.getByRole('status')).toHaveText('0 results');
+});
+
+test('the uptime record is published as JSON, QR codes exist, and the pack has no phone number', async ({ page, request }) => {
+  const status = await (await request.get('/status.json')).json();
+  expect(Object.keys(status.sites).length).toBeGreaterThan(0);
+  expect(status.sites.petcenza).toMatchObject({ title: 'PetCenza', ok: expect.any(Boolean) });
+  const qr = await request.get('/qr/petcenza.svg');
+  expect(qr.status()).toBe(200);
+  expect(await qr.text()).toMatch(/^<svg/);
+  await page.goto('/interview-pack');
+  await expect(page.locator('.ip-contact')).not.toContainText('(512)');
+  await expect(page.locator('.ip-shot')).toHaveCount(3);
 });
