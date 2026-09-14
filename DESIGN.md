@@ -152,6 +152,10 @@ Rendered once by `ServerRoom.jsx`; driven by `src/lib/serverRoom.js`.
   A "30 days / 90 days" segmented control above the list; at 90 days the cells
   close to a 1px gap and fill the column width. An incident note sits under its
   strip: the day in `--danger` mono caps, then the note in `--prose`.
+- **Noted outage days:** a red uptime cell inside an incident gets a 4px `--text` bar
+  along its bottom edge; the note itself is in the tooltip and listed below.
+- **Interview mode:** reuses the tour panel and its four progress dots; the resume
+  header gains a secondary "Walk through three projects" button.
 - **Skip the demo:** hidden until focused, then an accent chip in the monitor's top
   left, like the page skip link.
 - **Tool share cards:** "Projects using" in muted display caps over the tool name,

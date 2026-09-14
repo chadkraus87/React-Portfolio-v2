@@ -3,6 +3,8 @@
 // uptime strip. Each entry must match an outage in src/data/uptime.json (same
 // slug and `from` day) or the build fails. Write only what actually happened.
 //
-//   { slug: 'petcenza', from: '2026-10-02', note: 'The database was paused for inactivity; restarted it.' },
+//   { slug: 'petcenza', from: '2026-10-02', note: 'The database was paused for inactivity; restarted it.', issue: 12 },
+//
+// `issue` (optional) is the number of the GitHub issue the daily check opened.
 // ---------------------------------------------------------------------------
 export const incidents = [];

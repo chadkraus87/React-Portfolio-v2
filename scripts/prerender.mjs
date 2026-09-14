@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url';
 // Titles are shared with the running app (src/components/DocumentTitle.jsx) so
 // a prerendered title and a client-side one cannot drift. siteMeta.js imports
 // nothing, which is why plain Node can import it here.
-import {
+import { SITE_NAME,
   ROUTE_TITLES,
   NOT_FOUND_TITLE,
   HOME_DESCRIPTION,
@@ -176,6 +176,7 @@ const projectRoutes = parseEntries(projectsSrc).map(({ slug, title }) => ({
   const problems = incidents.flatMap((i) => {
     if (!i.note || typeof i.note !== 'string') return [`${i.slug} ${i.from}: needs a note`];
     if (!sites[i.slug]?.outages?.some((o) => o.from === i.from)) return [`${i.slug} ${i.from}: no outage recorded on that day in uptime.json`];
+    if (i.issue !== undefined && !(Number.isInteger(i.issue) && i.issue > 0)) return [`${i.slug} ${i.from}: issue must be a GitHub issue number`];
     return [];
   });
   if (problems.length) throw new Error(`incidents.js:\n  ${problems.join('\n  ')}`);
@@ -479,4 +480,55 @@ console.log('wrote sitemap.xml + robots.txt');
     'utf8'
   );
   console.log('wrote changes.xml');
+}
+
+// digest.xml — a weekly digest from data the site already has: public commits per week
+// (activity.json) and whether each live demo answered its daily check that week
+// (uptime.json). The four most recent full weeks, newest first; a quiet week says so.
+{
+  const here = dirname(fileURLToPath(import.meta.url));
+  const activity = JSON.parse(readFileSync(join(here, '..', 'src', 'data', 'activity.json'), 'utf8'));
+  const sites = JSON.parse(readFileSync(join(here, '..', 'src', 'data', 'uptime.json'), 'utf8')).sites;
+  const titles = Object.fromEntries(parseEntries(projectsSrc).map((e) => [e.slug, e.title]));
+  const xml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' }[c]));
+  const DAY = 86_400_000;
+  const day = (ms) => new Date(ms).toISOString().slice(0, 10);
+  const label = (iso) => new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+  const fromMs = Date.parse(`${activity.from}T00:00:00Z`);
+  const weekCount = Math.max(0, ...Object.values(activity.repos).map((r) => r.weeks.length));
+  const items = [];
+  for (let k = weekCount - 1; k >= 0 && items.length < 4; k--) {
+    const start = day(fromMs + k * 7 * DAY);
+    const end = day(fromMs + (k * 7 + 6) * DAY);
+    if (end > activity.to) continue;
+    const commits = Object.entries(activity.repos)
+      .map(([slug, r]) => [titles[slug] ?? slug, r.weeks[k] ?? 0])
+      .filter(([, n]) => n > 0)
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+    const total = commits.reduce((sum, [, n]) => sum + n, 0);
+    const checks = Object.entries(sites).map(([slug, site]) => [titles[slug] ?? slug, uptimeStrip(site, end, 7)]).filter(([, s]) => s.checked > 0);
+    const down = checks.filter(([, s]) => s.down > 0);
+    const lines = [
+      total ? `${total} public commit${total === 1 ? '' : 's'}: ${commits.map(([t, n]) => `${t} ${n}`).join(', ')}.` : 'No public commits.',
+      !checks.length ? 'Live demos were not being checked yet.'
+        : down.length ? `Live demos not answering: ${down.map(([t, s]) => `${t} on ${s.down} of ${s.checked} days checked`).join('; ')}. The others answered every check.`
+        : `All ${checks.length} live demos answered every daily check.`,
+    ];
+    items.push([
+      '    <item>',
+      `      <title>${xml(`Week of ${label(start)}`)}</title>`,
+      `      <link>${BASE}/changes</link>`,
+      `      <guid isPermaLink="false">chad-kraus-portfolio-digest-${start}</guid>`,
+      `      <pubDate>${new Date(`${end}T23:00:00Z`).toUTCString()}</pubDate>`,
+      `      <description>${xml(lines.join('\n'))}</description>`,
+      '    </item>',
+    ].join('\n'));
+  }
+  if (!items.length) throw new Error('digest.xml: activity.json has no full week to report');
+  writeFileSync(
+    join(dist, 'digest.xml'),
+    `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n  <channel>\n    <title>${xml(`Weekly digest · ${SITE_NAME}`)}</title>\n    <link>${BASE}/changes</link>\n    <description>Public commits and live demo uptime, week by week.</description>\n${items.join('\n')}\n  </channel>\n</rss>\n`,
+    'utf8'
+  );
+  console.log(`wrote digest.xml (${items.length} weeks)`);
 }

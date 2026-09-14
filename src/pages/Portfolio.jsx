@@ -81,6 +81,7 @@ export default function Portfolio() {
                 {RACK_MODEL.tools.map((t) => <option key={t} value={toolSlug(t)}>{t} ({RACK_MODEL.counts.get(t)})</option>)}
               </select>
             </label>
+            {tool && <Link viewTransition className="btn" to={`/?tool=${toolSlug(tool)}`}>Show in the rack</Link>}
             {(tool || lens !== 'all') && <button type="button" className="btn pf-clear" onClick={clear}>Clear filters</button>}
           </div>
           <p className="visually-hidden" role="status" aria-live="polite">

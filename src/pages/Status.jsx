@@ -39,7 +39,9 @@ export default function Status() {
         </div>
 
         <ul className="st-list">
-          {LIVE.map((p) => (
+          {LIVE.map((p) => {
+            const notes = BUILD_TIME ? incidentsFor(incidents, p.slug, BUILD_TIME.slice(0, 10), days) : [];
+            return (
             <li key={p.slug} className="st-row">
               <div className="st-row-head">
                 <h2><Link viewTransition to={`/projects/${p.slug}`}>{p.title}</Link></h2>
@@ -48,15 +50,19 @@ export default function Status() {
                   {p.demoDown ? `Not answering since ${formatDay(p.demoDown)}` : 'Answering'}
                 </span>
               </div>
-              <UptimeStrip site={p.uptime} days={days} />
-              {BUILD_TIME && incidentsFor(incidents, p.slug, BUILD_TIME.slice(0, 10), days).map((i) => (
-                <p key={i.from} className="st-incident"><span>{formatDay(i.from)}</span>{i.note}</p>
+              <UptimeStrip site={p.uptime} days={days} notes={notes} />
+              {notes.map((i) => (
+                <p key={i.from} className="st-incident">
+                  <span>{formatDay(i.from)}</span>{i.note}
+                  {i.issue && <a href={`https://github.com/chadkraus87/React-Portfolio-v2/issues/${i.issue}`} target="_blank" rel="noopener noreferrer">Issue #{i.issue}</a>}
+                </p>
               ))}
               <a className="st-link" href={p.projectLink} target="_blank" rel="noopener noreferrer">
                 {p.projectLinkLabel || 'Open the live demo'} ↗
               </a>
             </li>
-          ))}
+            );
+          })}
         </ul>
 
         <p className="st-note">No public demo to check: {UNLINKED.map((p) => p.title).join(', ')}.</p>

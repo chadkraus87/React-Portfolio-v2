@@ -30,6 +30,7 @@ const pages = [
   ['/status', 200, '<title>Demo status'],
   ['/accessibility', 200, '<title>Accessibility'],
   ['/changes.xml', 200, '<rss version="2.0">'],
+  ['/digest.xml', 200, '<rss version="2.0">'],
   ['/sitemap.xml', 200, '<urlset'],
   ['/robots.txt', 200, 'Sitemap:'],
   ['/no-such-page', 404, null],

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router';
 import resumePdf from '../assets/files/Chadwick_Kraus_Resume_2026.pdf';
 import { profile } from '../data/profile.js';
 import './Resume.css';
@@ -29,7 +30,10 @@ export default function Resume() {
             <p className="kicker">Resume</p>
             <h1 className="page-title">Resume</h1>
           </div>
-          <a href={resumePdf} download="Chadwick_Kraus_Resume.pdf" className="btn btn-primary">Download PDF</a>
+          <div className="rs-actions">
+            <Link viewTransition to="/?tour=hiring" className="btn">Walk through three projects</Link>
+            <a href={resumePdf} download="Chadwick_Kraus_Resume.pdf" className="btn btn-primary">Download PDF</a>
+          </div>
         </header>
 
         {/* Inline PDF viewers are unreliable on phones (iOS Safari draws a dead

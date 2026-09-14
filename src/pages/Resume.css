@@ -13,3 +13,4 @@
 /* Focus inside the PDF viewer: .is-focused is set by Resume.jsx for browsers where
    neither pseudo-class matches the iframe. */
 .resume-frame:focus, .resume-frame:focus-within, .resume-frame.is-focused { outline: 2px solid var(--accent); outline-offset: 3px; }
+.rs-actions { display: flex; flex-wrap: wrap; gap: 10px; }

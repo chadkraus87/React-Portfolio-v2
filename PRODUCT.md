@@ -124,6 +124,8 @@ project stories now live on the PetCenza and CoachRhythm case studies.
   built with Supabase", and the shared link previews as exactly that.
 - `/accessibility` claims only checks that actually run, and lists what they miss.
 - An outage on `/status` can carry a short, true note about what happened.
+- Interview mode gives a recruiter a guided, 4-stop walk whose every claim comes from
+  the project data; the weekly digest summarises commits and uptime without new data.
 - Production is smoke-checked after each release; failures open a GitHub issue.
 - Chad curates the change log (`scripts/changelog-curation.json`), and it has an RSS
   feed. Commit counts always include every commit.

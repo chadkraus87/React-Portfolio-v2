@@ -311,6 +311,8 @@ test('a filtered project list unfurls as projects using that tool', async ({ req
   const { default: middleware } = await import('../middleware.js');
   const rewriteOf = (url) => middleware(new Request(url)).headers.get('x-middleware-rewrite');
   expect(rewriteOf('https://site.test/portfolio?tool=supabase')).toBe('https://site.test/portfolio/tools/supabase/index.html');
+  expect(rewriteOf('https://site.test/?tool=supabase')).toBe('https://site.test/portfolio/tools/supabase/index.html');
+  expect(rewriteOf('https://site.test/?tool=constructor')).toBeNull();
   expect(rewriteOf('https://site.test/portfolio/?tool=supabase')).toBe('https://site.test/portfolio/tools/supabase/index.html');
   for (const junk of ['constructor', '__proto__', '../../units/petcenza', '']) {
     expect(rewriteOf(`https://site.test/portfolio?tool=${junk}`)).toBeNull();
@@ -380,4 +382,40 @@ test('keyboard users can skip a demo recording to its written version', async ({
   const transcript = page.locator('.monitor-transcript');
   await expect(transcript).toHaveAttribute('open', '');
   await expect(transcript.locator('summary')).toBeFocused();
+});
+
+test('a shared tool link fires that tool in the room, and the filtered list links to it', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/portfolio?tool=supabase');
+  await expect(page.getByRole('link', { name: 'Show in the rack' })).toHaveAttribute('href', '/?tool=supabase');
+  await page.goto('/?tool=supabase');
+  await expect(page.locator('#sr-sheet-title')).toHaveText('Supabase');
+  await page.goto('/?tool=constructor');
+  await expect(page.locator('.sr-sheet')).not.toHaveClass(/is-open/);
+});
+
+test('interview mode tour walks three live projects from real data, then the hire snapshot', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/resume');
+  await page.getByRole('link', { name: 'Walk through three projects' }).click();
+  const tour = page.getByRole('region', { name: 'Guided tour' });
+  await expect(tour).toContainText('Interview mode');
+  await tour.getByRole('button', { name: 'Take the tour' }).click();
+  await expect(tour).toContainText('1 of 4.');
+  await expect(tour).toContainText('recorded demo in its sheet');
+  const first = (await page.locator('#sr-sheet-title').textContent()).trim();
+  await expect(tour).toContainText(`${first}:`);
+  for (const n of [2, 3, 4]) {
+    await tour.getByRole('button', { name: 'Next' }).click();
+    await expect(tour).toContainText(`${n} of 4.`);
+  }
+  await expect(tour).toContainText('hire');
+});
+
+test('the weekly digest reports the four latest full weeks from real data', async ({ request }) => {
+  const xml = await (await request.get('/digest.xml')).text();
+  expect(xml).toContain('<rss version="2.0">');
+  expect(xml.match(/<item>/g)).toHaveLength(4);
+  expect(xml).toMatch(/<guid isPermaLink="false">chad-kraus-portfolio-digest-\d{4}-\d{2}-\d{2}<\/guid>/);
+  expect(xml).toMatch(/public commit|No public commits/);
 });

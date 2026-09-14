@@ -55,7 +55,15 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   CI and Vercel fail the build if it is stale.
 - `src/data/incidents.js` — optional notes on recorded demo outages, shown on
   `/status`. Each must match an outage in `uptime.json` or the build fails; write
-  only what actually happened.
+  only what actually happened. An optional `issue` number links the GitHub issue, and
+  the red days of a noted outage carry the note.
+- Share links into the room: `/?unit=<slug>` pulls a unit, `/?tool=<slug>` fires a
+  shared tool (the same slugs as `/portfolio?tool=`), and `/?tour=hiring` opens
+  interview mode, which walks the three most active live projects with a recorded
+  demo using only project data, then the `hire` snapshot. The resume page links it.
+- `dist/digest.xml` is a weekly RSS digest built at prerender time from
+  `activity.json` (public commits per week) and `uptime.json`; it covers the four
+  latest full weeks and is linked from `/changes`.
 - `src/components/Shortcuts.jsx` — the `?` keyboard shortcuts dialog, also opened
   from the footer. Case studies have "Print case study" with print styles.
 - `src/assets/images/` — screenshots/headshot. `src/assets/files/` — resume PDF.

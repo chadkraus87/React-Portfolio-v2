@@ -1,7 +1,7 @@
 import { activityRange } from './rackModel.js';
 import { createRackSound } from './rackSound.js';
 import { followCaptions, clock } from './demoCaptions.js';
-import { evidenceOf, formatDay } from './projectMeta.js';
+import { evidenceOf, formatDay, toolSlug } from './projectMeta.js';
 import { savesData } from './dataSaver.js';
 
 // ---------------------------------------------------------------------------
@@ -703,18 +703,42 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   const sharedUnit = shared && P.find((p) => p.slug === shared);
   if (sharedUnit) selectUnit(sharedUnit.i, false, true);
   else if (shared) setUnitParam(null);
+  // A shared tool link (/?tool=supabase, the same slugs as /portfolio?tool=) fires that
+  // tool's signal through the racks. Unknown slugs are ignored.
+  const toolParam = new win.URLSearchParams(win.location.search).get('tool');
+  const sharedTool = !sharedUnit && toolParam ? TOOLS.find((t) => toolSlug(t) === toolParam) : null;
+  if (sharedTool) later(() => selectTool(sharedTool), motion() ? 900 : 0);
 
   // ---- First-visit tour: offered once per browser, optional, never takes focus ----
   const tourEl = q('.sr-tour'); const tourText = q('.sr-tour-step');
   const tourNext = q('[data-tour="next"]'); const tourEnd = q('[data-tour="end"]');
   const tourUnit = Math.max(0, P.findIndex((p) => p.slug === 'petcenza'));
   const tourTool = TOOLS.includes('React') ? 'React' : TOOLS[0];
-  const TOUR = [
+  const FIRST_VISIT = [
     { text: `Each unit is a project. Pulling one out opens its details: this is ${P[tourUnit].title}.`, run: () => selectUnit(tourUnit, false, true) },
     { text: `Patch ports are shared tools. Firing ${tourTool} lights every project that uses it.`, run: () => selectTool(tourTool) },
     { text: 'The console takes commands. Press Enter on hire for a printable snapshot.', run: () => { overview(); openKvm(false); kq.value = 'hire'; sActive = 0; renderSugs(); } },
     { text: `That’s the room. Pull any unit, or press ${q('.sr-kbd').textContent} for the console.`, run: () => {} },
   ];
+  // Interview mode (/?tour=hiring): the same panel walks the three most active live
+  // projects that have a recorded demo, each step saying only what the data shows,
+  // then points at the hire snapshot.
+  const hiring = new win.URLSearchParams(win.location.search).get('tour') === 'hiring';
+  const TEST_TOOLS = /playwright|vitest|jest|axe/i;
+  const proofOf = (p) => {
+    const bits = [p.status, 'recorded demo in its sheet'];
+    if (p.uptime?.ok) bits.push(`live demo answering the daily check since ${formatDay(p.uptime.firstChecked ?? p.uptime.since)}`);
+    const tests = (p.stack ?? []).filter((s) => TEST_TOOLS.test(s));
+    if (tests.length) bits.push(`tested with ${tests.join(', ')}`);
+    if (p.act?.total) bits.push(`${p.act.total} public commits in twelve weeks`);
+    return bits.join(' · ');
+  };
+  const picks = P.filter((p) => p.demo && p.projectLink).sort((a, b) => (b.act?.total ?? 0) - (a.act?.total ?? 0)).slice(0, 3);
+  const HIRING = [
+    ...picks.map((p) => ({ text: `${p.title}: ${proofOf(p)}.`, run: () => selectUnit(p.i, false, true) })),
+    { text: 'For a one-page snapshot you can print, press Enter on hire in the console.', run: () => { overview(); openKvm(false); kq.value = 'hire'; sActive = 0; renderSugs(); } },
+  ];
+  const TOUR = hiring && picks.length === 3 ? HIRING : FIRST_VISIT;
   let tourStep = -1; let tourTimer = 0;
   const stopTourTimer = () => { win.clearTimeout(tourTimer); timers.delete(tourTimer); };
   // Offered once per browser: starting it counts, as does saying no.
@@ -735,13 +759,19 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     tourEnd.textContent = 'End tour';
     TOUR[k].run();
     // Advances on its own every five seconds, except under reduced motion.
-    if (motion()) tourTimer = later(() => tourGo(k + 1), 5000);
+    if (motion()) tourTimer = later(() => tourGo(k + 1), TOUR === HIRING ? 9000 : 5000);
   }
   on(tourNext, 'click', () => { if (tourStep === -1) { markTourSeen(); track('tour/start'); } tourGo(tourStep + 1); });
   on(tourEnd, 'click', () => endTour(tourStep === -1 ? 'dismiss' : 'skip'));
   let tourSeen = true;
   try { tourSeen = win.localStorage.getItem('sr-tour') === 'done'; } catch { /* storage blocked: don't nag */ }
-  if (!tourSeen && !sharedUnit) later(() => { if (!state.sheetOpen && tourStep === -1) tourEl.hidden = false; }, motion() ? 2400 : 0);
+  if (TOUR === HIRING) {
+    tourText.textContent = 'Interview mode: three live projects and the hire snapshot, in four stops.';
+    tourEl.hidden = false;
+    track('tour/hiring');
+  } else if (!tourSeen && !sharedUnit && !sharedTool) {
+    later(() => { if (!state.sheetOpen && tourStep === -1) tourEl.hidden = false; }, motion() ? 2400 : 0);
+  }
 
   return () => {
     destroyed = true;

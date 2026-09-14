@@ -173,6 +173,12 @@ middleware.js            Vercel Routing Middleware: share previews for ?unit= li
   tool in both racks.
 - **Incident notes** — `src/data/incidents.js` explains an outage under its strip on
   `/status`.
+- **Room links** — `/?tool=supabase` fires that tool's signal in the room; the filtered
+  project list links to it as "Show in the rack".
+- **Interview mode** — `/?tour=hiring` walks three live projects with their proof
+  (demo, uptime, tests, commits), all taken from the project data.
+- **Weekly digest** — `/digest.xml`: public commits and demo uptime for the last four
+  full weeks.
 - **Pull request reports** — preview smoke results and the Lighthouse trend are
   posted as one updated comment each.
 - **Data saver** — with Save-Data on, demos show their screenshot until the
