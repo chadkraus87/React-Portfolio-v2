@@ -177,6 +177,14 @@ middleware.js            Vercel Routing Middleware: share previews for ?unit= li
   project list links to it as "Show in the rack".
 - **Interview mode** — `/?tour=hiring` walks three live projects with their proof
   (demo, uptime, tests, commits), all taken from the project data.
+- **Interview pack** — `/interview-pack`: contact, three live projects with their proof,
+  experience and credentials on one printable page; interview mode links to it.
+- **Now** — `/now`: this week's public commits, work in progress and demo health, with an
+  optional note from Chad.
+- **Night shift** — after 7pm local time the room dims and only units with commits this
+  week stay lit.
+- **Cable tracer** — on a case study, hovering or focusing a shared tool draws its cables to
+  every project that uses it.
 - **Weekly digest** — `/digest.xml`: public commits and demo uptime for the last four
   full weeks.
 - **Pull request reports** — preview smoke results and the Lighthouse trend are

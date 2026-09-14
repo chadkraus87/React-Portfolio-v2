@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 const SLUGS = [...readFileSync('src/data/projects.js', 'utf8')
   .split('\n').filter((line) => !/^\s*\/\//.test(line)).join('\n')
   .matchAll(/slug: '([^']+)'/g)].map((m) => m[1]);
-const ROUTES = ['/', '/portfolio', '/resume', '/contact', '/changes', '/status', '/accessibility', '/no-such-page', ...SLUGS.map((s) => `/projects/${s}`)];
+const ROUTES = ['/', '/portfolio', '/resume', '/contact', '/changes', '/status', '/accessibility', '/now', '/interview-pack', '/no-such-page', ...SLUGS.map((s) => `/projects/${s}`)];
 
 const watchErrors = (page) => {
   const errors = [];
@@ -335,7 +335,7 @@ test('the status page switches to 90 days and keeps it in the address', async ({
 });
 
 test.describe('keyboard only', () => {
-  for (const path of ['/', '/portfolio', '/status', '/accessibility', '/changes', '/contact', '/resume', '/projects/petcenza']) {
+  for (const path of ['/', '/portfolio', '/status', '/accessibility', '/now', '/interview-pack', '/changes', '/contact', '/resume', '/projects/petcenza']) {
     test(`Tab walks ${path} to the footer with a visible focus ring on every stop`, async ({ page }) => {
       await page.goto(path);
       await page.waitForLoadState('load');
@@ -402,7 +402,8 @@ test('interview mode tour walks three live projects from real data, then the hir
   await expect(tour).toContainText('Interview mode');
   await tour.getByRole('button', { name: 'Take the tour' }).click();
   await expect(tour).toContainText('1 of 4.');
-  await expect(tour).toContainText('recorded demo in its sheet');
+  await expect(tour).toContainText('recorded demo');
+  await expect(tour.getByRole('link', { name: 'Case study' })).toHaveAttribute('href', /^\/projects\//);
   const first = (await page.locator('#sr-sheet-title').textContent()).trim();
   await expect(tour).toContainText(`${first}:`);
   for (const n of [2, 3, 4]) {
@@ -410,6 +411,9 @@ test('interview mode tour walks three live projects from real data, then the hir
     await expect(tour).toContainText(`${n} of 4.`);
   }
   await expect(tour).toContainText('hire');
+  await tour.getByRole('link', { name: 'Interview pack to print' }).click();
+  await expect(page).toHaveURL(/\/interview-pack$/);
+  await expect(page.locator('.ip-project')).toHaveCount(3);
 });
 
 test('the weekly digest reports the four latest full weeks from real data', async ({ request }) => {
@@ -418,4 +422,53 @@ test('the weekly digest reports the four latest full weeks from real data', asyn
   expect(xml.match(/<item>/g)).toHaveLength(4);
   expect(xml).toMatch(/<guid isPermaLink="false">chad-kraus-portfolio-digest-\d{4}-\d{2}-\d{2}<\/guid>/);
   expect(xml).toMatch(/public commit|No public commits/);
+});
+
+test('the interview pack lists the three interview projects with proof, and the snapshot', async ({ page }) => {
+  await page.goto('/interview-pack');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Chadwick (Chad) Kraus');
+  await expect(page.locator('.ip-project')).toHaveCount(3);
+  await expect(page.locator('.ip-proof').first()).toContainText('recorded demo');
+  await expect(page.getByRole('button', { name: 'Print the pack' })).toBeVisible();
+  for (const name of ['Experience', 'Credentials', 'Toolbox']) await expect(page.getByRole('heading', { level: 2, name })).toBeVisible();
+});
+
+test('now shows the latest week, work in progress and demo health from site data', async ({ page }) => {
+  await page.goto('/now');
+  await expect(page.getByRole('heading', { level: 1, name: 'Now' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: /^Week of / })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'In progress' })).toBeVisible();
+  await expect(page.locator('.now-note')).toHaveCount(0);
+  await expect(page.locator('main')).toContainText('live demos');
+});
+
+test('night shift: after 7pm only units with commits this week stay lit, and axe still passes', async ({ page }) => {
+  const activity = JSON.parse(readFileSync('src/data/activity.json', 'utf8'));
+  const onShift = Object.values(activity.repos).filter((r) => r.weeks.at(-1) > 0).length;
+  await page.clock.setFixedTime(new Date('2026-09-14T22:00:00'));
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  await expect(page.locator('.sr')).toHaveClass(/is-night/);
+  await expect(page.locator('.sr-shift')).toBeVisible();
+  await expect(page.locator('.unit.on-shift')).toHaveCount(onShift);
+  const { violations } = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+  expect(violations.map((v) => v.id)).toEqual([]);
+  await page.clock.setFixedTime(new Date('2026-09-14T12:00:00'));
+  await page.reload();
+  await expect(page.locator('.sr')).not.toHaveClass(/is-night/);
+  await expect(page.locator('.sr-shift')).toBeHidden();
+});
+
+test('case study tools trace their cables to every project that shares them', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/projects/petcenza');
+  const trace = page.locator('.trace');
+  await expect(trace.locator('.trace-cable')).toHaveCount(0);
+  await page.locator('.cs-tools').getByRole('link', { name: 'Supabase' }).hover();
+  await expect(trace.locator('.trace-cable')).toHaveCount(2);
+  await expect(trace.locator('figcaption')).toHaveText('Supabase runs from PetCenza to CoachRhythm, Greenline.');
+  await page.mouse.move(0, 0);
+  await expect(trace.locator('.trace-cable')).toHaveCount(0);
+  await page.locator('.cs-tools').getByRole('link', { name: 'Supabase' }).focus();
+  await expect(trace.locator('.trace-cable')).toHaveCount(2);
 });

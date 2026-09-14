@@ -39,6 +39,7 @@ export default function Accessibility() {
             <li>Demo recordings are silent, with timed captions and a written list of what is on screen. A skip link jumps from each recording to that list.</li>
             <li>Motion respects the reduced-motion setting, and demos respect Save-Data.</li>
             <li>A light theme for bright rooms, and case studies that print as a single clean column.</li>
+            <li>Night shift and the cable tracer change only lights and lines, never text contrast, and the tracer says in words what it draws.</li>
           </ul>
         </section>
 

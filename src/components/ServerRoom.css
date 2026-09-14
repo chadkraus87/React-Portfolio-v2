@@ -329,3 +329,16 @@
 /* A live demo that stopped answering the daily check: the power light turns amber. */
 .sr .unit.down .pwr { background: var(--accent) !important; box-shadow: 0 0 8px var(--accent) !important; }
 @media (prefers-reduced-motion: no-preference) { .sr .unit.down .pwr { animation: sr-blink 1.1s steps(2, end) infinite; } }
+
+/* Night shift (7pm to 6am local time, set by serverRoom.js): the hall dims and only
+   units with public commits this week keep their lights on. Labels and text are never
+   dimmed, so contrast holds. */
+.sr-shift { display: none; margin-top: 10px; font: 500 11px/1.5 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.sr.is-night .sr-shift { display: block; }
+.sr.is-night .sr-hall, .sr.is-night .sr-ceiling, .sr.is-night .sr-haze { filter: brightness(.5); }
+.sr.is-night .unit:not(.on-shift) .bays i::after, .sr.is-night .unit:not(.on-shift) .pwr { opacity: .2; box-shadow: none; animation: none; }
+.sr.is-night .unit.on-shift .face { box-shadow: 0 0 0 1px var(--accent), 0 0 24px rgba(255, 181, 71, .22); }
+/* Interview mode: links to check each stop's claims. */
+.sr-tour-proof { display: flex; flex-wrap: wrap; align-items: center; gap: 0 8px; font: 500 12px/1.6 var(--f-mono); }
+.sr-tour-proof[hidden] { display: none; }
+.sr-tour-proof a { display: inline-flex; align-items: center; min-height: 32px; }

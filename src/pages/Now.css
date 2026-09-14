@@ -1,0 +1,12 @@
+.now { max-width: 880px; }
+.now-head { margin-bottom: 44px; }
+.now section + section { margin-top: 40px; }
+.now h2 { padding-bottom: 10px; margin-bottom: 14px; border-bottom: 2px solid var(--text); font: 800 clamp(26px, 2.4vw, 36px)/.95 var(--f-display); text-transform: uppercase; }
+.now p { font-size: 17px; line-height: 1.7; color: var(--prose); }
+.now-list { list-style: none; }
+.now-list li { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 4px 16px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.now-list a { display: inline-flex; align-items: center; min-height: 32px; font-weight: 600; }
+.now-list span { font: 500 12.5px/1.5 var(--f-mono); color: var(--muted); }
+.now-more { margin-top: 12px; font-size: 14px !important; }
+.now-note p + p { margin-top: 8px; }
+.now-date { font: 500 12px/1.5 var(--f-mono) !important; color: var(--muted) !important; }

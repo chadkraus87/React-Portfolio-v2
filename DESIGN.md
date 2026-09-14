@@ -156,6 +156,15 @@ Rendered once by `ServerRoom.jsx`; driven by `src/lib/serverRoom.js`.
   along its bottom edge; the note itself is in the tooltip and listed below.
 - **Interview mode:** reuses the tour panel and its four progress dots; the resume
   header gains a secondary "Walk through three projects" button.
+- **Night shift:** hall surfaces at half brightness; units off shift lose their bay and
+  power lights; on-shift units get a 1px accent edge and a soft amber glow. Text and
+  labels never dim. A mono caps line under the lede names the mode.
+- **Cable tracer:** two columns of outlined units in mono labels; this project and the
+  lit ones take a 1.5px accent edge; cables are 2px accent curves that draw in over
+  .45s (static under reduced motion). Hidden in print.
+- **Interview pack and Now:** reading-column pages in the Accessibility layout: display
+  caps section heads over the 2px rule, mono metadata, 32px link targets. The pack
+  prints black on white with link targets spelled out.
 - **Skip the demo:** hidden until focused, then an accent chip in the monitor's top
   left, like the page skip link.
 - **Tool share cards:** "Projects using" in muted display caps over the tool name,

@@ -29,6 +29,8 @@ const pages = [
   ['/changes', 200, '<title>What changed'],
   ['/status', 200, '<title>Demo status'],
   ['/accessibility', 200, '<title>Accessibility'],
+  ['/now', 200, '<title>Now'],
+  ['/interview-pack', 200, '<title>Interview pack'],
   ['/changes.xml', 200, '<rss version="2.0">'],
   ['/digest.xml', 200, '<rss version="2.0">'],
   ['/sitemap.xml', 200, '<urlset'],

@@ -64,6 +64,17 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
 - `dist/digest.xml` is a weekly RSS digest built at prerender time from
   `activity.json` (public commits per week) and `uptime.json`; it covers the four
   latest full weeks and is linked from `/changes`.
+- `/now` is built from the same data (latest full week of commits, projects marked
+  In progress, recently updated, demo health) plus an optional note in
+  `src/data/now.js`. Never write that note for Chad.
+- `/interview-pack` is a printable page: profile.js contact and history plus the three
+  interview-mode projects. `interviewPicks()` and `proofOf()` in `src/lib/projectMeta.js`
+  are shared by the pack and the room's tour, so both say the same thing.
+- Night shift: from 7pm to 6am local time the room adds `is-night`; only units with
+  public commits in the latest week (`on-shift`) keep their lights. Visual baselines
+  pin the clock to midday.
+- `src/components/ToolTrace.jsx` draws a case study's shared-tool cables across a small
+  two-rack view on hover or focus, with a live caption naming the projects.
 - `src/components/Shortcuts.jsx` — the `?` keyboard shortcuts dialog, also opened
   from the footer. Case studies have "Print case study" with print styles.
 - `src/assets/images/` — screenshots/headshot. `src/assets/files/` — resume PDF.

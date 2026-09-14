@@ -84,3 +84,19 @@
 }
 .cs-tools a { display: inline-flex; align-items: center; min-height: 32px; color: var(--text); text-decoration: none; }
 .cs-tools a:hover { color: var(--accent); }
+
+/* Cable tracer in "Patched to" (ToolTrace.jsx). */
+.trace { display: grid; gap: 8px; }
+.trace svg { width: 100%; height: auto; }
+.trace-code { font: 700 10px var(--f-mono); letter-spacing: .1em; fill: var(--muted); }
+.trace-unit rect { fill: var(--surface-2); stroke: var(--line-2); stroke-width: 1; }
+.trace-unit text { font: 500 10.5px var(--f-mono); fill: var(--muted); }
+.trace-unit.is-self rect, .trace-unit.is-lit rect { stroke: var(--accent); stroke-width: 1.5; }
+.trace-unit.is-self text, .trace-unit.is-lit text { fill: var(--text); }
+.trace-cable { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; }
+.trace figcaption { font-size: 12.5px; line-height: 1.5; color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) {
+  .trace-cable { stroke-dasharray: 400; stroke-dashoffset: 400; animation: trace-draw .45s ease-out forwards; }
+  @keyframes trace-draw { to { stroke-dashoffset: 0; } }
+}
+@media print { .trace { display: none !important; } }

@@ -23,6 +23,8 @@ const SHOTS = [
 for (const shot of SHOTS) {
   test(shot.name, async ({ page }) => {
     await page.setViewportSize(shot.viewport);
+    // Midday, so the room is never on its night shift in a baseline.
+    await page.clock.setFixedTime(new Date('2026-09-14T12:00:00'));
     await page.addInitScript((theme) => {
       localStorage.setItem('sr-tour', 'done');
       if (theme === 'light') localStorage.setItem('theme', 'light');

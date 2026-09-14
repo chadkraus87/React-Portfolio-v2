@@ -13,6 +13,7 @@ export default function Footer() {
           {BUILD_DATE && ` · build ${[BUILD_SHA, BUILD_DATE].filter(Boolean).join(', ')}`}
         </span>
         <div className="footer-links">
+          <Link viewTransition to="/now">Now</Link>
           <Link viewTransition to="/changes">What changed</Link>
           <Link viewTransition to="/status">Status</Link>
           <Link viewTransition to="/accessibility">Accessibility</Link>

@@ -1,7 +1,7 @@
 import { activityRange } from './rackModel.js';
 import { createRackSound } from './rackSound.js';
 import { followCaptions, clock } from './demoCaptions.js';
-import { evidenceOf, formatDay, toolSlug } from './projectMeta.js';
+import { evidenceOf, formatDay, toolSlug, interviewPicks, proofOf } from './projectMeta.js';
 import { savesData } from './dataSaver.js';
 
 // ---------------------------------------------------------------------------
@@ -710,7 +710,12 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   if (sharedTool) later(() => selectTool(sharedTool), motion() ? 900 : 0);
 
   // ---- First-visit tour: offered once per browser, optional, never takes focus ----
-  const tourEl = q('.sr-tour'); const tourText = q('.sr-tour-step');
+  const tourEl = q('.sr-tour'); const tourText = q('.sr-tour-step'); const tourProof = q('.sr-tour-proof');
+  on(tourProof, 'click', (e) => {
+    const a = e.target.closest('a[data-nav]');
+    if (!a) return;
+    e.preventDefault(); e.stopPropagation(); navigate(a.getAttribute('href'));
+  });
   const tourNext = q('[data-tour="next"]'); const tourEnd = q('[data-tour="end"]');
   const tourUnit = Math.max(0, P.findIndex((p) => p.slug === 'petcenza'));
   const tourTool = TOOLS.includes('React') ? 'React' : TOOLS[0];
@@ -724,19 +729,15 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   // projects that have a recorded demo, each step saying only what the data shows,
   // then points at the hire snapshot.
   const hiring = new win.URLSearchParams(win.location.search).get('tour') === 'hiring';
-  const TEST_TOOLS = /playwright|vitest|jest|axe/i;
-  const proofOf = (p) => {
-    const bits = [p.status, 'recorded demo in its sheet'];
-    if (p.uptime?.ok) bits.push(`live demo answering the daily check since ${formatDay(p.uptime.firstChecked ?? p.uptime.since)}`);
-    const tests = (p.stack ?? []).filter((s) => TEST_TOOLS.test(s));
-    if (tests.length) bits.push(`tested with ${tests.join(', ')}`);
-    if (p.act?.total) bits.push(`${p.act.total} public commits in twelve weeks`);
-    return bits.join(' · ');
-  };
-  const picks = P.filter((p) => p.demo && p.projectLink).sort((a, b) => (b.act?.total ?? 0) - (a.act?.total ?? 0)).slice(0, 3);
+  const picks = interviewPicks(P);
+  const proofLinks = (p) => [
+    `<a href="/projects/${esc(p.slug)}" data-nav>Case study</a>`,
+    p.uptime ? '<a href="/status" data-nav>Uptime record</a>' : '',
+    `<a href="${esc(p.projectLink)}" target="_blank" rel="noopener noreferrer">Live demo ↗</a>`,
+  ].filter(Boolean);
   const HIRING = [
-    ...picks.map((p) => ({ text: `${p.title}: ${proofOf(p)}.`, run: () => selectUnit(p.i, false, true) })),
-    { text: 'For a one-page snapshot you can print, press Enter on hire in the console.', run: () => { overview(); openKvm(false); kq.value = 'hire'; sActive = 0; renderSugs(); } },
+    ...picks.map((p) => ({ text: `${p.title}: ${proofOf(p).join(' · ')}.`, links: proofLinks(p), run: () => selectUnit(p.i, false, true) })),
+    { text: 'For a one-page snapshot you can print, press Enter on hire in the console.', links: ['<a href="/interview-pack" data-nav>Interview pack to print</a>'], run: () => { overview(); openKvm(false); kq.value = 'hire'; sActive = 0; renderSugs(); } },
   ];
   const TOUR = hiring && picks.length === 3 ? HIRING : FIRST_VISIT;
   let tourStep = -1; let tourTimer = 0;
@@ -745,7 +746,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   const markTourSeen = () => { try { win.localStorage.setItem('sr-tour', 'done'); } catch { /* offered again next visit */ } };
   function endTour(reason) {
     stopTourTimer();
-    tourEl.hidden = true; tourStep = -1;
+    tourEl.hidden = true; tourStep = -1; tourProof.hidden = true;
     markTourSeen();
     track(`tour/${reason}`);
   }
@@ -757,6 +758,8 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     tourText.textContent = `${k + 1} of ${TOUR.length}. ${TOUR[k].text}`;
     tourNext.textContent = k === TOUR.length - 1 ? 'Done' : 'Next';
     tourEnd.textContent = 'End tour';
+    tourProof.innerHTML = (TOUR[k].links ?? []).join('<span aria-hidden="true"> · </span>');
+    tourProof.hidden = !TOUR[k].links;
     TOUR[k].run();
     // Advances on its own every five seconds, except under reduced motion.
     if (motion()) tourTimer = later(() => tourGo(k + 1), TOUR === HIRING ? 9000 : 5000);
@@ -773,15 +776,23 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     later(() => { if (!state.sheetOpen && tourStep === -1) tourEl.hidden = false; }, motion() ? 2400 : 0);
   }
 
+  // Night shift: from 7pm to 6am local time the hall dims and only the units with public
+  // commits this week keep their lights on (ServerRoom.css). Only the visitor's clock is
+  // read, once a minute.
+  const setNight = () => { const h = new Date().getHours(); root.classList.toggle('is-night', h >= 19 || h < 6); };
+  setNight();
+  const nightTimer = win.setInterval(setNight, 60_000);
+
   return () => {
     destroyed = true;
     stop();
     sound.close();
     stopCaptions();
     stopTourTimer();
+    win.clearInterval(nightTimer);
     doc.documentElement.classList.remove('sr-printing');
     cleanups.forEach((fn) => fn());
     timers.forEach((id) => win.clearTimeout(id));
-    root.classList.remove('is-dive', 'is-booting', 'heat-on', 'sheet-open');
+    root.classList.remove('is-dive', 'is-booting', 'heat-on', 'sheet-open', 'is-night');
   };
 }

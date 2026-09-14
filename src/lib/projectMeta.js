@@ -39,3 +39,18 @@ export function formatDay(iso) {
 
 // 'React Flow' -> 'react-flow', for shareable filter addresses (/portfolio?tool=react-flow).
 export const toolSlug = (tool) => tool.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+// Interview mode and the interview pack: the three most active live projects with a
+// recorded demo, and what the project data says about each. Nothing is written by hand.
+const TEST_TOOLS = /playwright|vitest|jest|axe/i;
+export function interviewPicks(projects) {
+  return projects.filter((p) => p.demo && p.projectLink).sort((a, b) => (b.act?.total ?? 0) - (a.act?.total ?? 0)).slice(0, 3);
+}
+export function proofOf(p) {
+  const bits = [p.status, 'recorded demo'];
+  if (p.uptime?.ok) bits.push(`live demo answering the daily check since ${formatDay(p.uptime.firstChecked ?? p.uptime.since)}`);
+  const tests = (p.stack ?? []).filter((s) => TEST_TOOLS.test(s));
+  if (tests.length) bits.push(`tested with ${tests.join(', ')}`);
+  if (p.act?.total) bits.push(`${p.act.total} public commits in twelve weeks`);
+  return bits;
+}

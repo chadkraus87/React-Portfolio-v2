@@ -126,3 +126,18 @@ export function incidentsFor(incidents, slug, end, n = 30) {
   const start = new Date(Date.parse(`${end}T00:00:00Z`) - (n - 1) * 86_400_000).toISOString().slice(0, 10);
   return incidents.filter((i) => i.slug === slug && i.from >= start && i.from <= end).sort((a, b) => a.from.localeCompare(b.from));
 }
+
+// The most recent full weeks in activity.json, newest first: { k, start, end } where k
+// indexes each repo's `weeks`. Used by /now and the weekly digest.
+export function latestFullWeeks(activity, n = 4) {
+  const DAY = 86_400_000;
+  const fromMs = Date.parse(`${activity.from}T00:00:00Z`);
+  const count = Math.max(0, ...Object.values(activity.repos).map((r) => r.weeks.length));
+  const out = [];
+  for (let k = count - 1; k >= 0 && out.length < n; k--) {
+    const start = new Date(fromMs + k * 7 * DAY).toISOString().slice(0, 10);
+    const end = new Date(fromMs + (k * 7 + 6) * DAY).toISOString().slice(0, 10);
+    if (end <= activity.to) out.push({ k, start, end });
+  }
+  return out;
+}

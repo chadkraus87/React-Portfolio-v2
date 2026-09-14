@@ -50,7 +50,7 @@ function Unit({ p, first, rack }) {
   return (
     <button
       type="button"
-      className={`unit${p.act ? '' : ' nodata'}${blink ? ' active' : ''}${p.demoDown ? ' down' : ''}`}
+      className={`unit${p.act ? '' : ' nodata'}${blink ? ' active' : ''}${p.demoDown ? ' down' : ''}${p.act?.weeks.at(-1) > 0 ? ' on-shift' : ''}`}
       data-i={p.i}
       aria-pressed="false"
       tabIndex={first ? 0 : -1}
@@ -164,6 +164,7 @@ export default function ServerRoom() {
           </h1>
           <p className="sr-headline">Networks. Software. The body.</p>
           <p className="sr-lede">{profile.tagline}</p>
+          <p className="sr-shift">Night shift: only units with public commits this week are lit.</p>
         </div>
 
         <canvas className="sr-motes" aria-hidden="true" />
@@ -226,6 +227,7 @@ export default function ServerRoom() {
 
         <div className="sr-tour" role="region" aria-label="Guided tour" hidden>
           <p className="sr-tour-step" aria-live="polite">New here? The room has a 20-second tour.</p>
+          <p className="sr-tour-proof" hidden />
           <div className="sr-tour-actions">
             <button type="button" className="btn btn-primary" data-tour="next">Take the tour</button>
             <button type="button" className="btn" data-tour="end">No thanks</button>

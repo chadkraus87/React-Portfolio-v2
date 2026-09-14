@@ -23,9 +23,9 @@ import { SITE_NAME,
 // racks.js and rackModel.js import nothing either, so the build can check that
 // every project stands in a rack and self-test the model the server room uses.
 import { racks, lenses } from '../src/data/racks.js';
-import { toolsOf, buildRackModel, uptimeStrip, incidentsFor } from '../src/lib/rackModel.js';
+import { toolsOf, buildRackModel, uptimeStrip, incidentsFor, latestFullWeeks } from '../src/lib/rackModel.js';
 import { incidents } from '../src/data/incidents.js';
-import { toolSlug } from '../src/lib/projectMeta.js';
+import { toolSlug, interviewPicks, proofOf } from '../src/lib/projectMeta.js';
 import { evidenceReport } from './evidence.mjs';
 
 const dist = join(dirname(fileURLToPath(import.meta.url)), '..', 'dist');
@@ -170,6 +170,22 @@ const projectRoutes = parseEntries(projectsSrc).map(({ slug, title }) => ({
   }
 }
 
+// Interview picks and the weekly windows: small self-tests for the shared helpers.
+{
+  const fake = [
+    { slug: 'a', demo: 'x', projectLink: 'y', status: 'Live', stack: ['Vitest + Playwright'], act: { total: 5 }, uptime: { ok: true, firstChecked: '2026-09-13' } },
+    { slug: 'b', demo: 'x', projectLink: 'y', status: 'Live', stack: [], act: { total: 9 } },
+    { slug: 'c', demo: null, projectLink: 'y', status: 'Live', stack: [], act: { total: 99 } },
+    { slug: 'd', demo: 'x', projectLink: 'y', status: 'Live', stack: [], act: null },
+  ];
+  const picks = interviewPicks(fake).map((p) => p.slug).join();
+  if (picks !== 'b,a,d') throw new Error(`interviewPicks: got ${picks}`);
+  const proof = proofOf(fake[0]).join(' · ');
+  if (!proof.startsWith('Live · recorded demo · live demo answering') || !proof.endsWith('tested with Vitest + Playwright · 5 public commits in twelve weeks')) throw new Error(`proofOf: got ${proof}`);
+  const weeks = latestFullWeeks({ from: '2026-06-22', to: '2026-09-14', repos: { a: { weeks: Array(12).fill(0) } } }, 2);
+  if (weeks.map((w) => `${w.k}:${w.start}..${w.end}`).join() !== '11:2026-09-07..2026-09-13,10:2026-08-31..2026-09-06') throw new Error(`latestFullWeeks: got ${JSON.stringify(weeks)}`);
+}
+
 // Incident notes must describe an outage that was actually recorded.
 {
   const sites = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', 'src', 'data', 'uptime.json'), 'utf8')).sites;
@@ -217,6 +233,16 @@ const routes = [
     path: 'accessibility',
     title: ROUTE_TITLES['/accessibility'],
     description: 'How this site is checked for accessibility on every deployment, what is built in, and its known limitations.',
+  },
+  {
+    path: 'now',
+    title: ROUTE_TITLES['/now'],
+    description: 'What Chad Kraus is working on now: this week’s public commits, projects in progress and live demo health.',
+  },
+  {
+    path: 'interview-pack',
+    title: ROUTE_TITLES['/interview-pack'],
+    description: 'A printable interview pack: contact details, three live projects with their proof, experience and credentials.',
   },
   ...projectRoutes,
 ];
@@ -491,16 +517,9 @@ console.log('wrote sitemap.xml + robots.txt');
   const sites = JSON.parse(readFileSync(join(here, '..', 'src', 'data', 'uptime.json'), 'utf8')).sites;
   const titles = Object.fromEntries(parseEntries(projectsSrc).map((e) => [e.slug, e.title]));
   const xml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' }[c]));
-  const DAY = 86_400_000;
-  const day = (ms) => new Date(ms).toISOString().slice(0, 10);
   const label = (iso) => new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
-  const fromMs = Date.parse(`${activity.from}T00:00:00Z`);
-  const weekCount = Math.max(0, ...Object.values(activity.repos).map((r) => r.weeks.length));
   const items = [];
-  for (let k = weekCount - 1; k >= 0 && items.length < 4; k--) {
-    const start = day(fromMs + k * 7 * DAY);
-    const end = day(fromMs + (k * 7 + 6) * DAY);
-    if (end > activity.to) continue;
+  for (const { k, start, end } of latestFullWeeks(activity, 4)) {
     const commits = Object.entries(activity.repos)
       .map(([slug, r]) => [titles[slug] ?? slug, r.weeks[k] ?? 0])
       .filter(([, n]) => n > 0)

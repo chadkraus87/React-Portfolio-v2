@@ -13,6 +13,8 @@ import NotFound from './pages/NotFound.jsx';
 import Changes from './pages/Changes.jsx';
 import Status from './pages/Status.jsx';
 import Accessibility from './pages/Accessibility.jsx';
+import Now from './pages/Now.jsx';
+import InterviewPack from './pages/InterviewPack.jsx';
 import Shortcuts from './components/Shortcuts.jsx';
 
 // A new route starts at the top of the page; a #fragment (including the one the
@@ -63,6 +65,8 @@ export default function App() {
             <Route path="/changes" element={<Changes />} />
             <Route path="/status" element={<Status />} />
             <Route path="/accessibility" element={<Accessibility />} />
+            <Route path="/now" element={<Now />} />
+            <Route path="/interview-pack" element={<InterviewPack />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

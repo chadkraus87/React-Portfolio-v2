@@ -14,6 +14,8 @@ const TITLES = {
   '/changes': 'What changed',
   '/status': 'Demo status',
   '/accessibility': 'Accessibility',
+  '/now': 'Now',
+  '/interview-pack': 'Interview pack',
 };
 
 // /projects/petcenza -> "Project: petcenza" so per-project traffic groups
