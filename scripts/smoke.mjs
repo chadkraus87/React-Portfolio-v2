@@ -4,11 +4,18 @@
 //
 //   node scripts/smoke.mjs [base-url]
 //
+// A protected deployment URL (preview, or a production deployment before promotion)
+// needs Vercel's automation bypass secret in SMOKE_BYPASS. It is only ever sent to a
+// *.vercel.app address.
+//
 // Prints a Markdown list of failures to stdout (nothing when all is well) and exits 1
 // on any, so the workflow can both open an issue and mark the run red.
 import { readFileSync } from 'node:fs';
 
-const BASE = (process.argv[2] || 'https://chad-kraus-portfolio.vercel.app').replace(/\/$/, '');
+let BASE = (process.argv[2] || 'https://chad-kraus-portfolio.vercel.app').replace(/\/$/, '');
+if (!/^https?:\/\//.test(BASE)) BASE = `https://${BASE}`;
+const BYPASS = process.env.SMOKE_BYPASS || '';
+if (BYPASS && !/^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(BASE)) throw new Error(`refusing to send the bypass secret to ${BASE}`);
 const text = readFileSync(new URL('../src/data/projects.js', import.meta.url), 'utf8')
   .split('\n').filter((line) => !/^\s*(\/\/|\*|\/\*)/.test(line)).join('\n');
 const slugs = [...text.matchAll(/slug:\s*'([^']+)'/g)].map((m) => m[1]);
@@ -27,11 +34,12 @@ const pages = [
   ['/robots.txt', 200, 'Sitemap:'],
   ['/no-such-page', 404, null],
   ['/?unit=petcenza', 200, 'og/units/petcenza.jpg'],
+  ['/portfolio?tool=supabase', 200, '<title>Projects using Supabase'],
   ...slugs.map((slug) => [`/projects/${slug}`, 200, '<title>']),
 ];
 
 const get = (path, redirect = 'follow') =>
-  fetch(BASE + path, { redirect, signal: AbortSignal.timeout(20000), headers: { 'User-Agent': 'chad-kraus-portfolio smoke check' } });
+  fetch(BASE + path, { redirect, signal: AbortSignal.timeout(20000), headers: { 'User-Agent': 'chad-kraus-portfolio smoke check', ...(BYPASS && { 'x-vercel-protection-bypass': BYPASS }) } });
 
 const failures = [];
 for (const [path, status, needle] of pages) {

@@ -5,7 +5,9 @@
       "url": [
         "http://localhost/",
         "http://localhost/portfolio/",
-        "http://localhost/projects/petcenza/"
+        "http://localhost/projects/petcenza/",
+        "http://localhost/status/",
+        "http://localhost/accessibility/"
       ],
       "numberOfRuns": 1,
       "settings": { "preset": "desktop" }

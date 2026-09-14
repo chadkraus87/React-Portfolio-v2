@@ -10,3 +10,6 @@
   .resume-mobile { display: grid; gap: 16px; padding: 22px; border: 1px solid var(--line-2); background: var(--surface); color: var(--prose); }
   .resume-mobile-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 }
+/* Focus inside the PDF viewer: .is-focused is set by Resume.jsx for browsers where
+   neither pseudo-class matches the iframe. */
+.resume-frame:focus, .resume-frame:focus-within, .resume-frame.is-focused { outline: 2px solid var(--accent); outline-offset: 3px; }

@@ -306,3 +306,61 @@ test('the accessibility statement names the standard and the known limitations',
   await expect(page.locator('main')).toContainText('WCAG 2.2 level AA');
   await expect(page.getByRole('heading', { level: 2, name: 'Known limitations' })).toBeVisible();
 });
+
+test('a filtered project list unfurls as projects using that tool', async ({ request }) => {
+  const { default: middleware } = await import('../middleware.js');
+  const rewriteOf = (url) => middleware(new Request(url)).headers.get('x-middleware-rewrite');
+  expect(rewriteOf('https://site.test/portfolio?tool=supabase')).toBe('https://site.test/portfolio/tools/supabase/index.html');
+  for (const junk of ['constructor', '__proto__', '../../units/petcenza', '']) {
+    expect(rewriteOf(`https://site.test/portfolio?tool=${junk}`)).toBeNull();
+  }
+  expect(rewriteOf('https://site.test/portfolio')).toBeNull();
+  const html = await (await request.get('/portfolio/tools/supabase/index.html')).text();
+  expect(html).toContain('<title>Projects using Supabase');
+  expect(html).toContain('PetCenza');
+  expect(html).toContain('<link rel="canonical" href="https://chad-kraus-portfolio.vercel.app/portfolio"');
+});
+
+test('the status page switches to 90 days and keeps it in the address', async ({ page }) => {
+  await page.goto('/status');
+  await expect(page.locator('.st-row').first().locator('.uptime-cells i')).toHaveCount(30);
+  await page.getByRole('group', { name: 'Uptime history length' }).getByRole('button', { name: '90 days' }).click();
+  await expect(page).toHaveURL(/days=90/);
+  await expect(page.locator('.st-row').first().locator('.uptime-cells i')).toHaveCount(90);
+  await page.goto('/status?days=7');
+  await expect(page.locator('.st-row').first().locator('.uptime-cells i')).toHaveCount(30);
+});
+
+test.describe('keyboard only', () => {
+  for (const path of ['/portfolio', '/status', '/accessibility', '/changes', '/contact', '/resume', '/projects/petcenza']) {
+    test(`Tab walks ${path} to the footer with a visible focus ring on every stop`, async ({ page }) => {
+      await page.goto(path);
+      await page.waitForLoadState('load');
+      const problems = [];
+      let reached = false;
+      for (let i = 0; i < 250 && !reached; i++) {
+        await page.keyboard.press('Tab');
+        const f = await page.evaluate(async () => {
+          // One frame for focus handlers (the resume frame's ring is set from focus events).
+          await new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 20)));
+          const el = document.activeElement;
+          if (!el || el === document.body) return null;
+          const r = el.getBoundingClientRect();
+          const cs = getComputedStyle(el);
+          return {
+            name: `${el.tagName.toLowerCase()} "${(el.getAttribute('aria-label') || el.textContent || '').trim().slice(0, 40)}"`,
+            shown: r.width > 0 && r.height > 0,
+            ring: (cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0) || cs.boxShadow !== 'none',
+            last: !!el.closest('footer') && el.textContent.trim() === 'Email',
+          };
+        });
+        if (!f) break;
+        if (!f.shown) problems.push(`${f.name} is focused but not visible`);
+        else if (!f.ring) problems.push(`${f.name} has no focus ring`);
+        reached = f.last;
+      }
+      expect(problems).toEqual([]);
+      expect(reached).toBe(true);
+    });
+  }
+});

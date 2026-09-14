@@ -6,6 +6,10 @@
 //
 // Reads the reports lhci left in .lighthouseci/. A missing or unreadable previous
 // history just starts a new one.
+//
+// Exits 1 when a page's performance score fell by more than LH_MAX_DROP (default
+// 0.10) since the previous run in the history. CI still saves the new entry, so the
+// next commit compares against it: a drop is flagged once, not blocked forever.
 import { readFileSync, writeFileSync, readdirSync, existsSync, appendFileSync } from 'node:fs';
 
 const [previousPath = '', outPath = 'lighthouse-history.json'] = process.argv.slice(2);
@@ -49,5 +53,13 @@ const lines = [
   '',
   `${history.length} run${history.length === 1 ? '' : 's'} in the history${previous ? `, compared with ${previous.sha || 'the previous run'} from ${previous.at.slice(0, 10)}` : ''}.`,
 ];
+const MAX_DROP = Number(process.env.LH_MAX_DROP ?? 0.1);
+const drops = Object.entries(current.pages)
+  .filter(([page, s]) => previous?.pages?.[page] && previous.pages[page].performance - s.performance > MAX_DROP + 1e-9)
+  .map(([page, s]) => `\`${page}\` performance fell from ${previous.pages[page].performance.toFixed(2)} to ${s.performance.toFixed(2)}`);
+if (drops.length) {
+  lines.push('', `**Performance fell by more than ${MAX_DROP.toFixed(2)}:**`, ...drops.map((d) => `- ${d}`));
+  process.exitCode = 1;
+}
 if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join('\n')}\n`);
 else console.log(lines.join('\n'));

@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import UptimeStrip from '../components/UptimeStrip.jsx';
 import { RACK_MODEL } from '../lib/rack.js';
 import { formatDay } from '../lib/projectMeta.js';
@@ -11,6 +11,9 @@ const UNLINKED = RACK_MODEL.projects.filter((p) => !p.projectLink);
 // (scripts/check-uptime.mjs), as of this build.
 export default function Status() {
   const down = LIVE.filter((p) => p.demoDown);
+  const [params, setParams] = useSearchParams();
+  const days = params.get('days') === '90' ? 90 : 30;
+  const setDays = (n) => setParams(n === 90 ? { days: '90' } : {}, { replace: true, preventScrollReset: true });
   return (
     <section className="page">
       <div className="container">
@@ -26,6 +29,12 @@ export default function Status() {
           </p>
         </header>
 
+        <div className="seg st-range" role="group" aria-label="Uptime history length">
+          {[30, 90].map((n) => (
+            <button type="button" key={n} aria-pressed={days === n} onClick={() => setDays(n)}>{n} days</button>
+          ))}
+        </div>
+
         <ul className="st-list">
           {LIVE.map((p) => (
             <li key={p.slug} className="st-row">
@@ -36,7 +45,7 @@ export default function Status() {
                   {p.demoDown ? `Not answering since ${formatDay(p.demoDown)}` : 'Answering'}
                 </span>
               </div>
-              <UptimeStrip site={p.uptime} />
+              <UptimeStrip site={p.uptime} days={days} />
               <a className="st-link" href={p.projectLink} target="_blank" rel="noopener noreferrer">
                 {p.projectLinkLabel || 'Open the live demo'} ↗
               </a>

@@ -121,7 +121,7 @@ project stories now live on the PetCenza and CoachRhythm case studies.
 - `/status` shows every live demo's recorded uptime; private projects are named as
   not checked rather than shown as up.
 - Project filters live in the address, so a recruiter can share "everything Chad
-  built with Supabase".
+  built with Supabase", and the shared link previews as exactly that.
 - `/accessibility` claims only checks that actually run, and lists what they miss.
 - Production is smoke-checked after each release; failures open a GitHub issue.
 - Chad curates the change log (`scripts/changelog-curation.json`), and it has an RSS

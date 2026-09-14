@@ -22,9 +22,10 @@ export default function Accessibility() {
           <ul>
             <li>axe accessibility rules for WCAG 2.0, 2.1 and 2.2 at levels A and AA, on every page, in both the dark and the light theme.</li>
             <li>Keyboard behaviour: the rack console, unit panels closing with Escape and returning focus, the first-visit tour, and the keyboard shortcuts dialog.</li>
+            <li>A keyboard-only walk of the text pages: pressing Tab reaches the footer, and every stop is visible with a focus ring.</li>
             <li>No sideways scrolling on any page at a 375px phone width.</li>
             <li>Reduced motion: demo videos wait for Play, and page transitions are skipped.</li>
-            <li>A Lighthouse accessibility score of at least 0.98 on the home, projects and case study pages.</li>
+            <li>A Lighthouse accessibility score of at least 0.98 on the home, projects, case study, status and accessibility pages.</li>
             <li>Screenshot comparison, so an unintended visual change is caught before release.</li>
           </ul>
           <p>Production deployments wait for these checks to pass.</p>

@@ -46,7 +46,11 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
 - `middleware.js` (Vercel Routing Middleware) serves `/?unit=<slug>` the
   prerendered `dist/units/<slug>/index.html` copy of the home page, so a shared
   unit link unfurls with that project's card (`public/og/units/<slug>.jpg`, the
-  unit pulled out of its rack). Only known slugs are rewritten.
+  unit pulled out of its rack). Only known slugs are rewritten. It also serves
+  `/portfolio?tool=<slug>` the prerendered `dist/portfolio/tools/<slug>/index.html`
+  ("Projects using Supabase"). The known tool slugs live in the generated
+  `src/data/toolSlugs.js`: a local `npm run build` rewrites it when the shared tools
+  change (commit it); CI and Vercel fail the build if it is stale.
 - `src/components/Shortcuts.jsx` — the `?` keyboard shortcuts dialog, also opened
   from the footer. Case studies have "Print case study" with print styles.
 - `src/assets/images/` — screenshots/headshot. `src/assets/files/` — resume PDF.
@@ -111,13 +115,23 @@ red build never reaches production. Plain GitHub check runs do not count.
 The `quality` job also keeps Lighthouse scores over time: `scripts/lighthouse-history.mjs`
 appends each run to a `lighthouse-history` artifact (downloaded from the latest
 successful production check, one entry per commit, nothing committed) and writes a
-trend table to the job summary.
+trend table to the job summary. It fails when a page's performance score falls more
+than 0.10 since the previous production run; the new entry is still saved, so the
+next commit compares against it (a drop is flagged once, not blocked forever).
 
 After Vercel promotes a production deployment, `.github/workflows/smoke.yml` runs
 `scripts/smoke.mjs` against the live site (every route, the 404, share previews,
 RSS, the `/notes` redirect, security headers) and opens or closes a "Production
 smoke check failed" issue. It also runs daily. A new top-level route needs adding
 to `scripts/smoke.mjs` as well as to `routes` in `scripts/prerender.mjs`.
+
+`deployment-checks.yml` also has a `smoke` job that runs the same script against
+the deployment's own URL before promotion. Deployment URLs are behind Vercel
+Authentication, so it stays a no-op notice until the project's Protection Bypass
+for Automation secret is saved as the GitHub secret
+`VERCEL_AUTOMATION_BYPASS_SECRET`; then it reports "Vercel - chad-kraus-portfolio:
+smoke", which can be added as a third required Deployment Check. `smoke.mjs` only
+sends the secret to `*.vercel.app` addresses.
 
 ## Non-negotiable working rules
 1. **Always `git pull origin main` before making any changes.** I sometimes edit

@@ -1,7 +1,8 @@
 /* 30-day uptime strip for a live demo. The caption carries the numbers; colour and
    the hatch for unchecked days only repeat them. */
 .uptime { margin-top: 18px; }
-.uptime-cells { display: grid; grid-template-columns: repeat(30, minmax(0, 1fr)); gap: 3px; max-width: 420px; }
+.uptime-cells { display: grid; grid-template-columns: repeat(var(--n, 30), minmax(0, 1fr)); gap: 3px; max-width: calc(var(--n, 30) * 14px); }
+.uptime-cells.is-long { gap: 1px; max-width: 100%; }
 .uptime-cells i { height: 18px; background: var(--live); }
 .uptime-cells i.u-down { background: var(--danger); }
 .uptime-cells i.u-unchecked { background: repeating-linear-gradient(135deg, var(--line-2) 0 2px, transparent 2px 5px); }

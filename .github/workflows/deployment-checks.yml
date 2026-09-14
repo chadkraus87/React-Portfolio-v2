@@ -8,6 +8,12 @@
 # Both event types on purpose: until checks are required, Vercel promotes on its own
 # and sends "success" rather than "ready", and the statuses still need to exist so
 # they can be selected in the Vercel settings.
+#
+# The `smoke` job runs scripts/smoke.mjs against the deployment's own URL, before
+# promotion. Deployment URLs are behind Vercel Authentication, so it needs the
+# project's Protection Bypass for Automation secret stored in this repo as
+# VERCEL_AUTOMATION_BYPASS_SECRET. Until that secret exists the job only leaves a
+# notice and reports nothing to Vercel, so it can't be required by mistake.
 name: Deployment checks
 
 on:
@@ -28,3 +34,36 @@ jobs:
       contents: read
       actions: read
       statuses: write
+
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      statuses: write
+    env:
+      # Only whether the secret exists; the value reaches the smoke step alone.
+      HAS_BYPASS: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET != '' }}
+    steps:
+      - name: Report to Vercel
+        if: env.HAS_BYPASS == 'true'
+        uses: vercel/repository-dispatch/actions/status@30f760c6640485cd92f8c785ef361382555fb712 # v1
+        with:
+          name: 'Vercel - chad-kraus-portfolio: smoke'
+      - name: Waiting for the bypass secret
+        if: env.HAS_BYPASS != 'true'
+        run: echo "::notice::VERCEL_AUTOMATION_BYPASS_SECRET is not set, so this deployment was not smoke-checked."
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: env.HAS_BYPASS == 'true'
+        with:
+          ref: ${{ github.event.client_payload.git.sha }}
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        if: env.HAS_BYPASS == 'true'
+        with:
+          node-version: 24
+      - name: Smoke-check this deployment
+        if: env.HAS_BYPASS == 'true'
+        env:
+          DEPLOYMENT_URL: ${{ github.event.client_payload.url }}
+          SMOKE_BYPASS: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: node scripts/smoke.mjs "$DEPLOYMENT_URL"

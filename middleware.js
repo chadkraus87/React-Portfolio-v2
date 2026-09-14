@@ -1,17 +1,25 @@
 import { next, rewrite } from '@vercel/functions';
 import { racks } from './src/data/racks.js';
+import { TOOL_SLUGS } from './src/data/toolSlugs.js';
 
-// Vercel Routing Middleware. A shared unit link (/?unit=petcenza) is served the
-// prerendered copy of the home page that carries that project's share preview:
-// scripts/prerender.mjs writes it to dist/units/<slug>/index.html. The address
-// stays /?unit=<slug>, so the app still opens the room with the unit pulled out.
-// Only known slugs are rewritten; anything else gets the normal home page.
+// Vercel Routing Middleware. A shared link is served a prerendered copy of the page
+// that carries its own share preview (scripts/prerender.mjs writes them):
+//   /?unit=petcenza           -> dist/units/petcenza/index.html
+//   /portfolio?tool=supabase  -> dist/portfolio/tools/supabase/index.html
+// The address stays the same, so the app still opens the unit or applies the filter.
+// Only known slugs are rewritten; anything else gets the normal page.
 const SLUGS = new Set(racks.flatMap((r) => r.slugs));
+const TOOLS = new Set(TOOL_SLUGS);
 
-export const config = { matcher: '/' };
+export const config = { matcher: ['/', '/portfolio'] };
 
 export default function middleware(request) {
-  const slug = new URL(request.url).searchParams.get('unit');
+  const url = new URL(request.url);
+  if (url.pathname === '/portfolio') {
+    const tool = url.searchParams.get('tool');
+    return tool && TOOLS.has(tool) ? rewrite(new URL(`/portfolio/tools/${tool}/index.html`, request.url)) : next();
+  }
+  const slug = url.searchParams.get('unit');
   if (!slug || !SLUGS.has(slug)) return next();
   return rewrite(new URL(`/units/${slug}/index.html`, request.url));
 }

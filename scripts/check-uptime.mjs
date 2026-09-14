@@ -11,7 +11,7 @@
 // derived from those. "Answered" means the server replied with anything below 500
 // other than 404/410: a login wall or a bot challenge (401/403) still counts,
 // because the demo is up behind it.
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, appendFileSync } from 'node:fs';
 
 const file = new URL('../src/data/uptime.json', import.meta.url);
 
@@ -35,10 +35,12 @@ if (process.argv.includes('--report')) {
   process.exit(0);
 }
 
-// Two tries, five seconds apart, so one slow cold start is not an outage.
+// Two tries, five seconds apart, so one slow cold start is not an outage. Response
+// times go to the job summary only: committing them would redeploy the site daily.
 const probe = async (url) => {
   let status = 0;
   for (let attempt = 0; attempt < 2; attempt++) {
+    const started = performance.now();
     try {
       const res = await fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(20000), headers: { 'User-Agent': 'chad-kraus-portfolio uptime check' } });
       status = res.status;
@@ -46,17 +48,19 @@ const probe = async (url) => {
     } catch {
       status = 0;
     }
-    if (answered(status)) return status;
+    if (answered(status)) return { status, ms: Math.round(performance.now() - started) };
     if (attempt === 0) await new Promise((resolve) => setTimeout(resolve, 5000));
   }
-  return status;
+  return { status, ms: null };
 };
 
 const today = new Date().toISOString().slice(0, 10);
 const next = { sites: {} };
+const timings = [];
 let changed = Object.keys(current.sites).sort().join() !== sites.map((s) => s.slug).sort().join();
 for (const { slug, url } of sites) {
-  const status = await probe(url);
+  const { status, ms } = await probe(url);
+  timings.push(`| ${slug} | ${answered(status) ? 'answered' : 'no answer'} | ${status || 'timeout'} | ${ms ?? '—'} |`);
   const ok = answered(status);
   const prev = current.sites[slug];
   // Older records predate the outage history; they start it from their `since` day.
@@ -81,7 +85,10 @@ for (const { slug, url } of sites) {
   // Keep a year of outages at most.
   record.outages = record.outages.slice(-50);
   next.sites[slug] = record;
-  console.log(`${slug.padEnd(24)} ${ok ? 'answered' : 'NO ANSWER'} (${status || 'timeout'})`);
+  console.log(`${slug.padEnd(24)} ${ok ? 'answered' : 'NO ANSWER'} (${status || 'timeout'}${ms ? `, ${ms} ms` : ''})`);
+}
+if (process.env.GITHUB_STEP_SUMMARY) {
+  appendFileSync(process.env.GITHUB_STEP_SUMMARY, ['### Live demos', '', '| Demo | Result | Status | Response (ms) |', '| --- | --- | --- | --- |', ...timings, ''].join('\n'));
 }
 if (changed) {
   writeFileSync(file, `${JSON.stringify(next, null, 2)}\n`);

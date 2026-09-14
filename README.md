@@ -154,13 +154,19 @@ middleware.js            Vercel Routing Middleware: share previews for ?unit= li
   message about that project (only real slugs count).
 - **Demo status** — `/status` shows every live demo's uptime strip in one place.
 - **Shareable filters** — `/portfolio?lens=builder&tool=supabase` keeps the lens and
-  tool filters in the address; case study tools link to their filtered list.
+  tool filters in the address; case study tools link to their filtered list, and a
+  shared `?tool=` link unfurls as "Projects using …" (`middleware.js`).
+- **90-day uptime** — `/status?days=90` shows three months of each demo's record; the
+  daily job's summary lists each demo's response time (not committed, so no daily
+  redeploy).
 - **Accessibility statement** — `/accessibility` lists the checks CI actually runs,
   what is built in, and the known limitations.
 - **Smoke check** — after each production promotion (and daily)
   `.github/workflows/smoke.yml` checks the live site and opens an issue on failure.
-- **Lighthouse trend** — CI keeps scores across runs as an artifact and shows the
-  change since the previous production run in the job summary.
+- **Lighthouse trend** — CI keeps scores across runs as an artifact, shows the
+  change since the previous production run, and fails on a performance drop over 0.10.
+- **Keyboard walk** — CI tabs through every text page to the footer and fails on any
+  stop without a visible focus ring.
 - **Data saver** — with Save-Data on, demos show their screenshot until the
   visitor chooses "Load demo video".
 - **Print case study** — a clean single-column print of any case study, with the

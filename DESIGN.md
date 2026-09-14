@@ -149,6 +149,8 @@ Rendered once by `ServerRoom.jsx`; driven by `src/lib/serverRoom.js`.
 - **Demo status (`/status`):** one row per live demo under a 2px rule: title
   link, an Answering / Not answering chip, the uptime strip, then the demo link. A
   bordered summary line in mono (`--live`, or `--danger` when any demo is down).
+  A "30 days / 90 days" segmented control above the list; at 90 days the cells
+  close to a 1px gap and fill the column width.
 - **Project filters:** the lens segmented control plus a "Uses" tool `<select>` on
   `--field` with an `--edge` border, and "Clear filters" once anything is set. An
   empty result says which lens and tool, with its own clear button.
