@@ -56,6 +56,19 @@ for (const context of CONTEXTS) {
   }
 }
 
+// vercel.json route sources are path-to-regexp patterns, not regular expressions.
+// A nested alternation like /(api/(status|digest)|(status|digest)\.json) is rejected
+// outright: Vercel then refuses to build at all, with no deployment and no checks, so
+// nothing reaches the gate. Keep sources literal; /(.*) is the one pattern in use.
+{
+  const vercel = JSON.parse(readFileSync('vercel.json', 'utf8'));
+  const sources = [...(vercel.headers ?? []), ...(vercel.redirects ?? []), ...(vercel.rewrites ?? [])].map((r) => r.source);
+  for (const source of sources) {
+    if (source === '/(.*)' || !source.includes('(')) continue;
+    problems.push(`vercel.json: route source "${source}" uses a pattern Vercel may reject; use literal paths`);
+  }
+}
+
 if (problems.length) {
   console.error(`deployment gate wiring:\n  ${problems.join('\n  ')}`);
   process.exit(1);
