@@ -25,6 +25,7 @@ import { SITE_NAME,
 import { racks, lenses } from '../src/data/racks.js';
 import { toolsOf, buildRackModel, uptimeStrip, incidentsFor, latestFullWeeks, weekSnapshot } from '../src/lib/rackModel.js';
 import { incidents } from '../src/data/incidents.js';
+import { hostedServices } from '../src/data/services.js';
 import QRCode from 'qrcode';
 import { toolSlug, interviewPicks, proofOf } from '../src/lib/projectMeta.js';
 import { evidenceReport } from './evidence.mjs';
@@ -190,6 +191,18 @@ const projectRoutes = parseEntries(projectsSrc).map(({ slug, title }) => ({
   if (w1.start !== '2026-06-29' || w1.total !== 2 || !w1.down.has('x') || w0.down.size || w0.total) throw new Error(`weekSnapshot: ${JSON.stringify({ w0, w1, d1: [...w1.down] })}`);
   const weeks = latestFullWeeks({ from: '2026-06-22', to: '2026-09-14', repos: { a: { weeks: Array(12).fill(0) } } }, 2);
   if (weeks.map((w) => `${w.k}:${w.start}..${w.end}`).join() !== '11:2026-09-07..2026-09-13,10:2026-08-31..2026-09-06') throw new Error(`latestFullWeeks: got ${JSON.stringify(weeks)}`);
+}
+
+// Every hosted service named in services.js must be a tool some project actually uses,
+// so /status can never claim a dependency the stacks don't show.
+{
+  const stackOf = (slug) => {
+    const block = (projectsSrc.split(`slug: '${slug}'`)[1] ?? '').match(/stack:\s*\[([\s\S]*?)\]/)?.[1] ?? '';
+    return [...block.matchAll(/'((?:[^'\\]|\\.)*)'/g)].map((m) => decodeJsStringEscapes(m[1]));
+  };
+  const known = new Set(parseEntries(projectsSrc).flatMap((e) => [...toolsOf(stackOf(e.slug))]));
+  const unknown = hostedServices.filter((name) => !known.has(name));
+  if (unknown.length) throw new Error(`services.js names tools no project uses: ${unknown.join(', ')}`);
 }
 
 // Incident notes must describe an outage that was actually recorded.

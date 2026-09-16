@@ -5,12 +5,14 @@ import { formatDay, toolSlug } from '../lib/projectMeta.js';
 import { incidentsFor } from '../lib/rackModel.js';
 import { BUILD_TIME } from '../lib/build.js';
 import { incidents } from '../data/incidents.js';
+import { hostedServices } from '../data/services.js';
 import './Status.css';
 
 const LIVE = RACK_MODEL.projects.filter((p) => p.projectLink);
-// Shared services: tools more than one live demo is built on. If one of these had an
-// outage of its own, these are the demos that would feel it.
-const SHARED = RACK_MODEL.tools
+// Hosted services (src/data/services.js) that more than one live demo calls at
+// runtime: an outage at their end would take those demos with it. Build and test
+// tools are deliberately not here.
+const SHARED = hostedServices
   .map((tool) => [tool, LIVE.filter((p) => p.tools.has(tool))])
   .filter(([, users]) => users.length > 1)
   .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
@@ -73,7 +75,7 @@ export default function Status() {
 
         <section className="st-blast" aria-labelledby="st-blast-title">
           <h2 id="st-blast-title">If a shared service went down</h2>
-          <p>Each of these is used by more than one live demo, so an outage at their end would take all of them with it. Read from the stack listed on each case study.</p>
+          <p>These hosted services run under more than one live demo, so an outage at their end would take all of them with it. Read from the stack on each case study; build and test tools are not counted.</p>
           <ul>
             {SHARED.map(([tool, users]) => (
               <li key={tool}>

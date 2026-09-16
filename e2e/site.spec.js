@@ -588,6 +588,9 @@ test('status names the shared services a demo outage would take down together', 
   expect(await rows.count()).toBeGreaterThan(0);
   await expect(rows.first()).toContainText('live demos:');
   await expect(rows.first().getByRole('link')).toHaveAttribute('href', /\/portfolio\?tool=/);
+  // Hosted services only: a build or test tool going offline doesn't stop a live demo.
+  await expect(blast).toContainText('Supabase');
+  for (const tool of ['Playwright', 'Vitest', 'Vite', 'Recharts']) await expect(blast).not.toContainText(tool);
 });
 
 test('the weekly digest and uptime record are published as JSON', async ({ request }) => {

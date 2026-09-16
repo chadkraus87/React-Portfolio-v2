@@ -77,6 +77,10 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   tour removes both parameters. The interview pack prints one page per project with its
   screenshot and a QR code (`dist/qr/<slug>.svg`, generated at prerender by the pinned
   `qrcode` devDependency). The pack shows email and LinkedIn but no phone number.
+- `src/data/services.js` lists the hosted services a live demo calls at runtime
+  (Supabase, Vercel, Claude API). Only these appear in "If a shared service went down"
+  on `/status`; build and test tools never do. The build fails if a name there isn't a
+  tool on some project's stack.
 - `dist/digest.json` is the weekly digest as JSON, rewritten to `/api/digest`.
 - `dist/status.json` (prerender) is the uptime record with project titles and incident
   notes; `vercel.json` rewrites `/api/status` to it with open CORS and a 5-minute cache.
