@@ -7,7 +7,7 @@ name: Vercel deployment check status
 description: Set a commit status for the Vercel deployment commit.
 inputs:
   context:
-    description: The status name Vercel requires, e.g. "Vercel - chad-kraus-portfolio: quality"
+    description: 'The status name Vercel requires, such as the quality check'
     required: true
   state:
     description: pending, success or failure

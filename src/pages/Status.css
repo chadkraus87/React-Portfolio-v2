@@ -14,3 +14,10 @@
 .st-incident a { font: 500 12px/1.9 var(--f-mono); }
 .st-link { justify-self: start; display: inline-flex; align-items: center; min-height: 44px; font: 500 12px/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; }
 .st-note { margin-top: 24px; font-size: 14px; color: var(--muted); }
+.st-blast { margin-top: 44px; }
+.st-blast h2 { padding-bottom: 10px; margin-bottom: 12px; border-bottom: 2px solid var(--text); font: 800 clamp(24px, 2.2vw, 32px)/1 var(--f-display); text-transform: uppercase; }
+.st-blast > p { max-width: 62ch; font-size: 15px; line-height: 1.65; color: var(--prose); }
+.st-blast ul { list-style: none; margin-top: 14px; }
+.st-blast li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 16px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.st-blast a { display: inline-flex; align-items: center; min-height: 32px; font-weight: 600; }
+.st-blast span { font: 500 12.5px/2.4 var(--f-mono); color: var(--muted); }

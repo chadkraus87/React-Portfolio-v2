@@ -34,6 +34,7 @@ const pages = [
   ['/changes.xml', 200, '<rss version="2.0">'],
   ['/digest.xml', 200, '<rss version="2.0">'],
   ['/api/status', 200, '"sites"'],
+  ['/api/digest', 200, '"weeks"'],
   ['/qr/petcenza.svg', 200, '<svg'],
   ['/sitemap.xml', 200, '<urlset'],
   ['/robots.txt', 200, 'Sitemap:'],

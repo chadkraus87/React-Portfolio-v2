@@ -77,6 +77,7 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   tour removes both parameters. The interview pack prints one page per project with its
   screenshot and a QR code (`dist/qr/<slug>.svg`, generated at prerender by the pinned
   `qrcode` devDependency). The pack shows email and LinkedIn but no phone number.
+- `dist/digest.json` is the weekly digest as JSON, rewritten to `/api/digest`.
 - `dist/status.json` (prerender) is the uptime record with project titles and incident
   notes; `vercel.json` rewrites `/api/status` to it with open CORS and a 5-minute cache.
 - Site search (`src/components/Search.jsx`, index in `src/lib/searchIndex.js`, loaded on
@@ -152,6 +153,14 @@ its post step graded the first job in the run instead of its own, and on 57c7b51
 failed Lighthouse budget reported "quality: success". If a status can't be posted,
 Vercel stays pending and blocks promotion. Vercel Deployment Checks require all
 three statuses. Plain GitHub check runs do not count.
+
+`scripts/check-gate.mjs` guards that wiring on every CI run: it parses every YAML
+under `.github` (workflows and local actions) and fails if one doesn't load, if a
+workflow brings back the upstream action, or if a status is missing its pending step,
+its `if: always()` result step, or that step's place as the job's last. The YAML check
+exists because an unquoted `description:` containing ": " stopped the local action
+loading on fcbac4d, so no status was posted at all — Vercel then held the deployment
+instead of promoting it. Quote any YAML value with a colon in it.
 
 Lighthouse runs each page three times and asserts on the median run, because a
 single run on a shared CI runner once scored the home page 0.74.

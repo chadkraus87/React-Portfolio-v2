@@ -159,11 +159,16 @@ Rendered once by `ServerRoom.jsx`; driven by `src/lib/serverRoom.js`.
 - **Night shift:** hall surfaces at half brightness; units off shift lose their bay and
   power lights; on-shift units get a 1px accent edge and a soft amber glow. Text and
   labels never dim. A mono caps line under the lede names the mode.
+- **Room controls on small screens:** one "ROOM CONTROLS" button in the control style,
+  with a ▾/▴ marker, folds the lens, heat, sound and timeline rows away so the racks come
+  first.
 - **Rack timeline:** a mono "WEEK" label, a native range with `accent-color`, a bordered
   mono readout on the translucent control ground, and Replay styled like Commit heat.
   Off-week units lose their lights; on-week units get the night-shift accent edge; a
   down week turns the power light amber.
-- **Search:** the shortcuts dialog with a 48px field; results in rows with a mono kind
+- **Search:** matched words are marked in the accent with `--accent-ink` text, and a
+  result whose title doesn't show the match gets an elided snippet. Recent searches sit
+  under the field as bordered mono chips. The shortcuts dialog with a 48px field; results in rows with a mono kind
   label, the title in `--text` and detail in `--prose`; the active row takes
   `--surface-2` and a 3px accent bar on its left edge.
 - **Cable tracer:** two columns of outlined units in mono labels; this project and the

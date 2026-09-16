@@ -17,7 +17,7 @@ const PAGES = [
   ['Accessibility', '/accessibility', 'accessibility wcag keyboard'],
 ];
 
-const entry = (kind, title, detail, href, extra = '') => ({ kind, title, detail, href, text: `${title} ${detail} ${extra}`.toLowerCase() });
+const entry = (kind, title, detail, href, extra = '') => ({ kind, title, detail, href, body: extra, text: `${title} ${detail} ${extra}`.toLowerCase() });
 
 export const searchIndex = [
   ...RACK_MODEL.projects.map((p) => entry('Project', p.title, p.tagline || p.category || '', `/projects/${p.slug}`, `${p.summary} ${p.stack.join(' ')} ${p.status}`)),
@@ -29,6 +29,33 @@ export const searchIndex = [
 
 const WEIGHT = { Project: 4, Tool: 3, Page: 3, 'Field note': 2, Change: 1 };
 
+// A few words either side of the first match, for results whose title doesn't show why
+// they matched. Returns '' when the word isn't in the body.
+export function snippet(body = '', word = '', around = 60) {
+  const at = body.toLowerCase().indexOf(word);
+  if (at === -1) return '';
+  const start = Math.max(0, at - around);
+  const end = Math.min(body.length, at + word.length + around);
+  return `${start ? '…' : ''}${body.slice(start, end).trim()}${end < body.length ? '…' : ''}`;
+}
+
+// Splits text into matched and unmatched pieces, so the UI can mark the matches.
+export function highlight(text = '', words = []) {
+  const found = words.filter(Boolean).map((w) => w.toLowerCase());
+  if (!found.length) return [{ text, hit: false }];
+  const out = [];
+  let rest = text;
+  while (rest) {
+    const hits = found.map((w) => ({ w, at: rest.toLowerCase().indexOf(w) })).filter((h) => h.at !== -1).sort((a, b) => a.at - b.at || b.w.length - a.w.length);
+    if (!hits.length) { out.push({ text: rest, hit: false }); break; }
+    const { w, at } = hits[0];
+    if (at) out.push({ text: rest.slice(0, at), hit: false });
+    out.push({ text: rest.slice(at, at + w.length), hit: true });
+    rest = rest.slice(at + w.length);
+  }
+  return out;
+}
+
 // Every word of the query must appear somewhere in an entry; title hits rank first.
 export function search(query, index = searchIndex, limit = 8) {
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
@@ -38,7 +65,7 @@ export function search(query, index = searchIndex, limit = 8) {
     .map((e) => {
       const title = e.title.toLowerCase();
       const score = WEIGHT[e.kind] + (title.startsWith(words[0]) ? 6 : 0) + words.filter((w) => title.includes(w)).length * 3;
-      return { ...e, score };
+      return { ...e, score, snippet: title.includes(words[0]) ? '' : snippet(e.body, words[0]) };
     })
     .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title))
     .slice(0, limit);

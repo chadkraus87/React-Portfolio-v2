@@ -197,3 +197,9 @@ main:focus { outline: none; }
 .search-title { font-weight: 600; color: var(--text); }
 .search-detail { font-size: 13.5px; color: var(--prose); }
 .search-count { min-height: 1.5em; margin-top: 8px; font: 500 11.5px/1.5 var(--f-mono); color: var(--muted); }
+.search-detail mark, .search-title mark { padding: 0 1px; background: var(--accent); color: var(--accent-ink); }
+.search-recent { margin-top: 12px; }
+.search-recent p { font: 500 10.5px/1.6 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.search-recent ul { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; list-style: none; }
+.search-recent button { min-height: 32px; padding: 6px 10px; border: 1px solid var(--edge); background: none; color: var(--prose); font: 500 12.5px/1 var(--f-mono); }
+.search-recent button:hover { color: var(--text); border-color: var(--accent); }

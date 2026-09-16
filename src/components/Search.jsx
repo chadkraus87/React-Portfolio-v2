@@ -6,6 +6,19 @@ import { useLocation, useNavigate } from 'react-router';
 // is a combobox over a listbox of results; ↑ ↓ choose, Enter opens, Esc closes.
 export const openSearch = () => window.dispatchEvent(new Event('search:open'));
 
+// The last few searches, kept in this browser only.
+const RECENT_KEY = 'search-recent';
+const readRecent = () => {
+  try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]').filter((s) => typeof s === 'string').slice(0, 5); } catch { return []; }
+};
+const rememberSearch = (q) => {
+  const term = q.trim().slice(0, 40);
+  if (!term) return readRecent();
+  const next = [term, ...readRecent().filter((s) => s.toLowerCase() !== term.toLowerCase())].slice(0, 5);
+  try { localStorage.setItem(RECENT_KEY, JSON.stringify(next)); } catch { /* not remembered */ }
+  return next;
+};
+
 export default function Search() {
   const ref = useRef(null);
   const inputRef = useRef(null);
@@ -14,11 +27,13 @@ export default function Search() {
   const [engine, setEngine] = useState(null);
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(0);
+  const [recent, setRecent] = useState([]);
 
   useEffect(() => {
     const open = () => {
       if (!engine) import('../lib/searchIndex.js').then(setEngine);
       if (!ref.current.open) ref.current.showModal();
+      setRecent(readRecent());
       inputRef.current?.focus();
     };
     const onKeyDown = (e) => {
@@ -39,8 +54,12 @@ export default function Search() {
   }, [engine, pathname]);
 
   const results = engine ? engine.search(query) : [];
+  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const mark = (text) => (engine ? engine.highlight(text, words) : [{ text, hit: false }])
+    .map((part, k) => (part.hit ? <mark key={k}>{part.text}</mark> : <span key={k}>{part.text}</span>));
   const go = (r) => {
     ref.current.close();
+    setRecent(rememberSearch(query));
     setQuery('');
     navigate(r.href);
   };
@@ -88,11 +107,23 @@ export default function Search() {
               onClick={() => go(r)}
             >
               <span className="search-kind">{r.kind}</span>
-              <span className="search-title">{r.title}</span>
-              {r.detail && <span className="search-detail">{r.detail}</span>}
+              <span className="search-title">{mark(r.title)}</span>
+              {(r.snippet || r.detail) && <span className="search-detail">{r.snippet ? mark(r.snippet) : r.detail}</span>}
             </li>
           ))}
         </ul>
+        {!query.trim() && recent.length > 0 && (
+          <div className="search-recent">
+            <p id="search-recent-label">Recent searches</p>
+            <ul aria-labelledby="search-recent-label">
+              {recent.map((term) => (
+                <li key={term}>
+                  <button type="button" onClick={() => { setQuery(term); setActive(0); inputRef.current?.focus(); }}>{term}</button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         <p className="search-count" role="status">
           {query.trim() && engine ? `${results.length} result${results.length === 1 ? '' : 's'}` : ''}
         </p>

@@ -790,6 +790,14 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     later(() => { if (!state.sheetOpen && tourStep === -1) tourEl.hidden = false; }, motion() ? 2400 : 0);
   }
 
+  // Small screens keep the controls behind one button (ServerRoom.css hides the button
+  // on the desktop layout, where everything is open).
+  const controls = q('.sr-controls'); const controlsToggle = q('.sr-controls-toggle');
+  on(controlsToggle, 'click', () => {
+    const open = controls.classList.toggle('is-open');
+    controlsToggle.setAttribute('aria-expanded', String(open));
+  });
+
   // Rack timeline: scrub back through the weeks of public commits. Units with commits
   // that week light up; a live demo that was not answering that week shows an amber
   // power light, replaying its recorded outages. Replay steps through every week. The
@@ -813,6 +821,8 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   const stopReplay = () => { win.clearTimeout(replayTimer); timers.delete(replayTimer); replayBtn.setAttribute('aria-pressed', 'false'); };
   function replayFrom(k) {
     weekRange.value = String(k);
+    const w = weekSnapshot(model.activity, P, k);
+    sound.hum(model.maxWeek ? Math.min(1, w.total / (model.maxWeek * 2)) : 0);
     say(showWeek(k));
     if (k >= lastWeek) { stopReplay(); return; }
     replayTimer = later(() => replayFrom(k + 1), 1400);

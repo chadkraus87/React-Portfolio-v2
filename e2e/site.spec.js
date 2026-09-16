@@ -539,3 +539,65 @@ test('the uptime record is published as JSON, QR codes exist, and the pack has n
   await expect(page.locator('.ip-contact')).not.toContainText('(512)');
   await expect(page.locator('.ip-shot')).toHaveCount(3);
 });
+
+test('search marks the matched words, shows why a result matched, and remembers searches', async ({ page }) => {
+  await page.goto('/now');
+  await page.keyboard.press('/');
+  const dialog = page.getByRole('dialog', { name: 'Search' });
+  const input = dialog.getByRole('combobox');
+  // A word from the field notes' bodies: at least one result explains itself with a
+  // snippet around the match, rather than only its title.
+  await input.fill('header');
+  await expect(dialog.getByRole('option').first()).toBeVisible();
+  await expect(dialog.locator('.search-detail', { hasText: '…' }).first()).toBeVisible();
+  await expect(dialog.locator('.search-detail mark').first()).toBeVisible();
+  await input.fill('greenline');
+  await expect(dialog.getByRole('option').first().locator('.search-title mark')).toBeVisible();
+  await input.press('Enter');
+  await expect(page).toHaveURL(/\/projects\/greenline$/);
+  await page.keyboard.press('/');
+  await expect(dialog.locator('.search-recent button', { hasText: 'greenline' })).toBeVisible();
+  await dialog.locator('.search-recent button', { hasText: 'greenline' }).click();
+  await expect(input).toHaveValue('greenline');
+});
+
+test.describe('phone room controls', () => {
+  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
+  test('fold behind one button that opens them', async ({ page }) => {
+    await page.goto('/');
+    const toggle = page.getByRole('button', { name: 'Room controls' });
+    await expect(toggle).toBeVisible();
+    await expect(page.locator('#sr-week')).toBeHidden();
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#sr-week')).toBeVisible();
+  });
+});
+
+test('the room controls button is only for small screens', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('button', { name: 'Room controls' })).toBeHidden();
+  await expect(page.locator('#sr-week')).toBeVisible();
+});
+
+test('status names the shared services a demo outage would take down together', async ({ page }) => {
+  await page.goto('/status');
+  const blast = page.locator('.st-blast');
+  await expect(page.getByRole('heading', { level: 2, name: 'If a shared service went down' })).toBeVisible();
+  const rows = blast.locator('li');
+  expect(await rows.count()).toBeGreaterThan(0);
+  await expect(rows.first()).toContainText('live demos:');
+  await expect(rows.first().getByRole('link')).toHaveAttribute('href', /\/portfolio\?tool=/);
+});
+
+test('the weekly digest and uptime record are published as JSON', async ({ request }) => {
+  const digest = await (await request.get('/digest.json')).json();
+  expect(digest.weeks).toHaveLength(4);
+  for (const week of digest.weeks) {
+    expect(week.start).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(typeof week.total).toBe('number');
+    expect(week.demos).toBeTruthy();
+  }
+  const status = await (await request.get('/status.json')).json();
+  expect(Object.keys(status.sites).length).toBeGreaterThan(0);
+});

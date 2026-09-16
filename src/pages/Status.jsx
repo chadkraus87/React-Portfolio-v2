@@ -1,13 +1,19 @@
 import { Link, useSearchParams } from 'react-router';
 import UptimeStrip from '../components/UptimeStrip.jsx';
 import { RACK_MODEL } from '../lib/rack.js';
-import { formatDay } from '../lib/projectMeta.js';
+import { formatDay, toolSlug } from '../lib/projectMeta.js';
 import { incidentsFor } from '../lib/rackModel.js';
 import { BUILD_TIME } from '../lib/build.js';
 import { incidents } from '../data/incidents.js';
 import './Status.css';
 
 const LIVE = RACK_MODEL.projects.filter((p) => p.projectLink);
+// Shared services: tools more than one live demo is built on. If one of these had an
+// outage of its own, these are the demos that would feel it.
+const SHARED = RACK_MODEL.tools
+  .map((tool) => [tool, LIVE.filter((p) => p.tools.has(tool))])
+  .filter(([, users]) => users.length > 1)
+  .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
 const UNLINKED = RACK_MODEL.projects.filter((p) => !p.projectLink);
 
 // Every live demo's uptime record in one place, from the daily check
@@ -64,6 +70,19 @@ export default function Status() {
             );
           })}
         </ul>
+
+        <section className="st-blast" aria-labelledby="st-blast-title">
+          <h2 id="st-blast-title">If a shared service went down</h2>
+          <p>Each of these is used by more than one live demo, so an outage at their end would take all of them with it. Read from the stack listed on each case study.</p>
+          <ul>
+            {SHARED.map(([tool, users]) => (
+              <li key={tool}>
+                <Link viewTransition to={`/portfolio?tool=${toolSlug(tool)}`}>{tool}</Link>
+                <span>{users.length} live demos: {users.map((p) => p.title).join(', ')}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
 
         <p className="st-note">No public demo to check: {UNLINKED.map((p) => p.title).join(', ')}.</p>
       </div>

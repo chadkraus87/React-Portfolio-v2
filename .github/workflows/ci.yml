@@ -48,6 +48,8 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - name: Check the deployment gate's own wiring
+        run: node scripts/check-gate.mjs
       - run: npm run build
       - name: Install Chromium for Playwright
         run: npx playwright install --with-deps chromium

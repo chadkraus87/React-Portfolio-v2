@@ -57,6 +57,20 @@ export function createRackSound(win) {
     });
   }
 
+  // The hall's hum for one week of the rack timeline: louder and a touch higher when
+  // that week had more public commits. `level` is 0..1.
+  function hum(level) {
+    const c = audio(); if (!c) return;
+    const t = c.currentTime;
+    const o = c.createOscillator(); o.type = 'sawtooth';
+    o.frequency.setValueAtTime(52 + level * 26, t);
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass';
+    lp.frequency.setValueAtTime(180 + level * 420, t);
+    const g = c.createGain(); envelope(g, t, 0.02 + level * 0.06, 0.12, 0.7);
+    o.connect(lp).connect(g).connect(c.destination);
+    o.start(t); o.stop(t + 0.9);
+  }
+
   return {
     get enabled() { return enabled; },
     set(on) {
@@ -66,6 +80,7 @@ export function createRackSound(win) {
     },
     pull() { if (enabled) pull(); },
     blip() { if (enabled) blip(); },
+    hum(level) { if (enabled) hum(Math.max(0, Math.min(1, Number(level) || 0))); },
     close() { ctx?.close().catch(() => {}); ctx = null; },
   };
 }

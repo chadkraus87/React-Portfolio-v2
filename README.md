@@ -185,7 +185,12 @@ middleware.js            Vercel Routing Middleware: share previews for ?unit= li
   notes, changes and pages.
 - **Rack timeline** — scrub the Week slider or press Replay to watch twelve weeks of commits,
   with any recorded demo outage replayed as an amber power light.
-- **Uptime API** — `/api/status` returns the uptime record as JSON (CORS open).
+- **Uptime API** — `/api/status` and `/api/digest` return the uptime record and the weekly
+  digest as JSON (CORS open).
+- **Shared services** — `/status` lists which live demos share a service, so one outage's
+  blast radius is visible.
+- **Gate guard** — `scripts/check-gate.mjs` fails CI if the deployment checks stop
+  reporting each job's own result.
 - **Night shift** — after 7pm local time the room dims and only units with commits this
   week stay lit.
 - **Cable tracer** — on a case study, hovering or focusing a shared tool draws its cables to

@@ -558,6 +558,7 @@ console.log('wrote sitemap.xml + robots.txt');
   const xml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' }[c]));
   const label = (iso) => new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
   const items = [];
+  const weeksJson = [];
   for (const { k, start, end } of latestFullWeeks(activity, 4)) {
     const commits = Object.entries(activity.repos)
       .map(([slug, r]) => [titles[slug] ?? slug, r.weeks[k] ?? 0])
@@ -572,6 +573,7 @@ console.log('wrote sitemap.xml + robots.txt');
         : down.length ? `Live demos not answering: ${down.map(([t, s]) => `${t} on ${s.down} of ${s.checked} days checked`).join('; ')}. The others answered every check.`
         : `All ${checks.length} live demos answered every daily check.`,
     ];
+    weeksJson.push({ start, end, total, commits: Object.fromEntries(commits), demos: Object.fromEntries(checks.map(([t, s]) => [t, { daysChecked: s.checked, daysDown: s.down }])) });
     items.push([
       '    <item>',
       `      <title>${xml(`Week of ${label(start)}`)}</title>`,
@@ -583,6 +585,7 @@ console.log('wrote sitemap.xml + robots.txt');
     ].join('\n'));
   }
   if (!items.length) throw new Error('digest.xml: activity.json has no full week to report');
+  writeFileSync(join(dist, 'digest.json'), `${JSON.stringify({ source: `${BASE}/changes`, about: 'Public commits and live demo uptime, week by week.', weeks: weeksJson }, null, 2)}\n`, 'utf8');
   writeFileSync(
     join(dist, 'digest.xml'),
     `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n  <channel>\n    <title>${xml(`Weekly digest · ${SITE_NAME}`)}</title>\n    <link>${BASE}/changes</link>\n    <description>Public commits and live demo uptime, week by week.</description>\n${items.join('\n')}\n  </channel>\n</rss>\n`,

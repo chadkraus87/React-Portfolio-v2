@@ -351,3 +351,15 @@
 .sr.is-timeline .unit:not(.wk-on) .bays i::after, .sr.is-timeline .unit:not(.wk-on) .pwr { opacity: .2; box-shadow: none; animation: none; }
 .sr.is-timeline .unit.wk-on .face { box-shadow: 0 0 0 1px var(--accent), 0 0 24px rgba(255, 181, 71, .22); }
 .sr.is-timeline .unit.wk-down .pwr { opacity: 1; background: var(--accent) !important; box-shadow: 0 0 8px var(--accent) !important; }
+
+/* Below the desktop layout the controls fold behind one button, so the racks are
+   the first thing on screen. Above it the button is gone and everything is open. */
+.sr-controls-toggle { display: none; }
+.sr-controls-body { display: grid; justify-items: inherit; gap: 10px; }
+@media (max-width: 999px) {
+  .sr-controls-toggle { display: inline-flex; align-items: center; gap: 8px; min-height: 38px; padding: 10px 13px; border: 1px solid var(--edge); background: rgba(8, 6, 5, .78); color: var(--muted); font: 600 12px/1 var(--f-ui); font-stretch: 85%; letter-spacing: .06em; text-transform: uppercase; }
+  .sr-controls-toggle::after { content: '▾'; }
+  .sr-controls-toggle[aria-expanded="true"] { color: var(--text); }
+  .sr-controls-toggle[aria-expanded="true"]::after { content: '▴'; }
+  .sr-controls:not(.is-open) .sr-controls-body { display: none; }
+}

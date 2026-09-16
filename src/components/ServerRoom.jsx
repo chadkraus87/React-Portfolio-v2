@@ -188,6 +188,8 @@ export default function ServerRoom() {
         </div>
 
         <div className="sr-controls">
+          <button type="button" className="sr-controls-toggle" aria-expanded="false" aria-controls="sr-controls-body">Room controls</button>
+          <div className="sr-controls-body" id="sr-controls-body">
           <div className="sr-row">
             <div className="seg" role="group" aria-label="Lens">
               <button type="button" data-lens-btn="all" aria-pressed="true">Both racks</button>
@@ -212,6 +214,7 @@ export default function ServerRoom() {
               ))}
             </span>
             <span className="nodata-key"><i aria-hidden="true" />No public repo</span>
+          </div>
           </div>
         </div>
 
