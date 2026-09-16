@@ -38,15 +38,66 @@
     }
   ],
   "rewrites": [
-    { "source": "/api/status", "destination": "/status.json" },
-    { "source": "/api/digest", "destination": "/digest.json" }
+    {
+      "source": "/api/status",
+      "destination": "/status.json"
+    },
+    {
+      "source": "/api/digest",
+      "destination": "/digest.json"
+    }
   ],
   "headers": [
     {
-      "source": "/(api/(status|digest)|(status|digest)\\.json)",
+      "source": "/api/status",
       "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=300" }
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, s-maxage=300"
+        }
+      ]
+    },
+    {
+      "source": "/api/digest",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, s-maxage=300"
+        }
+      ]
+    },
+    {
+      "source": "/status.json",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, s-maxage=300"
+        }
+      ]
+    },
+    {
+      "source": "/digest.json",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, s-maxage=300"
+        }
       ]
     },
     {
