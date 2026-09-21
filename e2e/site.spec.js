@@ -495,6 +495,7 @@ test('rack timeline lights the units with commits in the chosen week, and replay
   await page.goto('/');
   const range = page.locator('#sr-week');
   await expect(page.locator('.sr-week-out')).toContainText('(latest)');
+  await expect(range).toHaveAttribute('aria-valuetext', /^Week of .* public commit/);
   await range.fill('6');
   await expect(page.locator('.sr')).toHaveClass(/is-timeline/);
   await expect(page.locator('.unit.wk-on')).toHaveCount(lit);
@@ -555,7 +556,7 @@ test('search marks the matched words, shows why a result matched, and remembers 
   await expect(dialog.getByRole('option').first().locator('.search-title mark')).toBeVisible();
   await input.press('Enter');
   await expect(page).toHaveURL(/\/projects\/greenline$/);
-  await page.keyboard.press('/');
+  await page.getByRole('contentinfo').getByRole('button', { name: 'Search' }).click();
   await expect(dialog.locator('.search-recent button', { hasText: 'greenline' })).toBeVisible();
   await dialog.locator('.search-recent button', { hasText: 'greenline' }).click();
   await expect(input).toHaveValue('greenline');
@@ -615,7 +616,8 @@ test('search groups results by kind, caps each group and jumps between them', as
   expect(await heads.count()).toBeGreaterThan(1);
   // No single kind may crowd the list out.
   for (const group of await dialog.getByRole('group').all()) {
-    expect(await group.getByRole('option').count()).toBeLessThanOrEqual(4);
+    // The group's own "show all" row is an option as well; only results are capped.
+    expect(await group.locator('.search-opt:not(.search-more)').count()).toBeLessThanOrEqual(4);
   }
   // The first option of the first group starts selected; PageDown jumps a group.
   const groups = await dialog.getByRole('group').all();
@@ -675,7 +677,7 @@ test('a capped search group says how many it is hiding', async ({ page }) => {
   // Every heading ends in either a plain count or "shown of total", and the counts agree.
   for (const head of await heads.all()) {
     const label = (await head.locator('span').textContent()).trim();
-    const shown = await head.locator('xpath=following-sibling::*[@role="option"]').count();
+    const shown = await head.locator('xpath=following-sibling::*[contains(@class, "search-opt") and not(contains(@class, "search-more"))]').count();
     const capped = label.match(/^(\d+) of (\d+)$/);
     if (capped) {
       expect(Number(capped[1])).toBe(shown);
@@ -710,5 +712,48 @@ test('clicking a sparkline bar jumps the timeline to that week', async ({ page }
   await expect(bars.nth(4)).toHaveClass(/is-on/);
   await expect(page.locator('.sr')).toHaveClass(/is-timeline/);
   await expect(page.locator('#sr-week')).toHaveValue('4');
-  await expect(page.locator('.sr-week-out')).toContainText('Week of');
+  await expect(page.locator('.sr-week-out')).toContainText('commit');
+  await expect(page.locator('#sr-week')).toHaveAttribute('aria-valuetext', /^Week of /);
+});
+
+test('a capped search group expands from its own row', async ({ page }) => {
+  await page.goto('/now');
+  await page.keyboard.press('/');
+  const dialog = page.getByRole('dialog', { name: 'Search' });
+  await dialog.getByRole('combobox').fill('demo');
+  const showAll = dialog.getByRole('option', { name: /^Show all \d+ / });
+  await expect(showAll.first()).toBeVisible();
+  const label = await showAll.first().textContent();
+  const total = Number(label.match(/\d+/)[0]);
+  expect(total).toBeGreaterThan(4);
+  const optionsBefore = await dialog.locator('.search-opt:not(.search-more)').count();
+  const moreRowsBefore = await showAll.count();
+  await showAll.first().click();
+  // The dialog stays open, that kind now lists everything, and its row is gone.
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole('option', { name: /^Show all \d+ / })).toHaveCount(moreRowsBefore - 1);
+  expect(await dialog.locator('.search-opt:not(.search-more)').count()).toBeGreaterThan(optionsBefore);
+  // Typing again puts the cap back.
+  await dialog.getByRole('combobox').fill('demos');
+  await dialog.getByRole('combobox').fill('demo');
+  await expect(dialog.getByRole('option', { name: /^Show all \d+ / })).toHaveCount(moreRowsBefore);
+});
+
+test('dragging across the sparkline scrubs the weeks', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const spark = page.locator('.sr-week-spark');
+  const box = await spark.boundingBox();
+  const mid = box.y + box.height / 2;
+  await page.mouse.move(box.x + box.width - 2, mid);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * 0.25, mid, { steps: 8 });
+  await page.mouse.up();
+  const value = Number(await page.locator('#sr-week').inputValue());
+  const last = Number(await page.locator('#sr-week').getAttribute('max'));
+  expect(value).toBeGreaterThan(0);
+  expect(value).toBeLessThan(last - 4);
+  await expect(page.locator('.sr')).toHaveClass(/is-timeline/);
+  await expect(spark.locator('i').nth(value)).toHaveClass(/is-on/);
+  await expect(page.locator('.sr-week-out')).toContainText('commit');
 });

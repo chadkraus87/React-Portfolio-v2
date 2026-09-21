@@ -28,6 +28,7 @@ export default function Search() {
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(0);
   const [recent, setRecent] = useState([]);
+  const [expand, setExpand] = useState(null);
 
   // The listeners are bound once for the component's life. Re-binding them whenever the
   // route or the loaded index changed left a gap on every navigation, and a "/" pressed
@@ -62,15 +63,23 @@ export default function Search() {
     };
   }, []);
 
-  const { results: scored, totals } = engine ? engine.search(query) : { results: [], totals: new Map() };
+  const { results: scored, totals } = engine ? engine.search(query, undefined, { expand }) : { results: [], totals: new Map() };
   const groups = engine ? engine.grouped(scored) : [];
-  const results = groups.flatMap(([, items]) => items);
+  // A capped group ends with its own "show all" row: an option, so the arrow keys reach
+  // it and Enter opens it, rather than a button the listbox would have no place for.
+  const rows = groups.map(([kind, items]) => {
+    const total = totals.get(kind) ?? items.length;
+    const label = (engine?.PLURAL[kind] ?? kind).toLowerCase();
+    return { kind, items, total, more: items.length < total ? { kind, expandKind: kind, title: `Show all ${total} ${label}` } : null };
+  });
+  const results = rows.flatMap((g) => (g.more ? [...g.items, g.more] : g.items));
   // Where each group starts in the flat result order, for PageUp / PageDown.
   const starts = groups.reduce((acc, [, items]) => [...acc, acc.at(-1) + items.length], [0]).slice(0, -1);
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
   const mark = (text) => (engine ? engine.highlight(text, words) : [{ text, hit: false }])
     .map((part, k) => (part.hit ? <mark key={k}>{part.text}</mark> : <span key={k}>{part.text}</span>));
   const go = (r) => {
+    if (r.expandKind) { setExpand(r.expandKind); return; }
     ref.current.close();
     setRecent(rememberSearch(query));
     setQuery('');
@@ -111,30 +120,30 @@ export default function Search() {
           aria-autocomplete="list"
           aria-activedescendant={results[active] ? `search-opt-${active}` : undefined}
           value={query}
-          onChange={(e) => { setQuery(e.target.value); setActive(0); }}
+          onChange={(e) => { setQuery(e.target.value); setActive(0); setExpand(null); }}
           onKeyDown={onInputKey}
         />
         <div className="search-results" id="search-results" role="listbox" aria-label="Results">
-          {groups.map(([kind, items]) => (
+          {rows.map(({ kind, items, total, more }) => (
             <div key={kind} className="search-group" role="group" aria-labelledby={`search-g-${kind.replace(/\s+/g, '-')}`}>
               <p className="search-group-head" id={`search-g-${kind.replace(/\s+/g, '-')}`}>
                 {engine.PLURAL[kind] ?? kind}
-                <span>{items.length < (totals.get(kind) ?? 0) ? `${items.length} of ${totals.get(kind)}` : items.length}</span>
+                <span>{items.length < total ? `${items.length} of ${total}` : items.length}</span>
               </p>
-              {items.map((r) => {
+              {[...items, ...(more ? [more] : [])].map((r) => {
                 flat += 1;
                 const k = flat;
                 return (
                   <div
-                    key={`${r.kind}-${r.href}-${r.title}`}
+                    key={`${r.kind}-${r.href ?? 'more'}-${r.title}`}
                     id={`search-opt-${k}`}
-                    className="search-opt"
+                    className={`search-opt${r.expandKind ? ' search-more' : ''}`}
                     role="option"
                     aria-selected={k === active}
                     onMouseEnter={() => setActive(k)}
                     onClick={() => go(r)}
                   >
-                    <span className="search-title">{mark(r.title)}</span>
+                    <span className="search-title">{r.expandKind ? r.title : mark(r.title)}</span>
                     {(r.snippet || r.detail) && <span className="search-detail">{r.snippet ? mark(r.snippet) : r.detail}</span>}
                   </div>
                 );

@@ -169,9 +169,11 @@ Rendered once by `ServerRoom.jsx`; driven by `src/lib/serverRoom.js`.
 - **Timeline sparkline:** twelve 6px bars in `--steel-4` above the slider, scaled to the
   busiest week, with the chosen week in `--accent`. Decoration only: the readout beside it
   carries the numbers, so it is `aria-hidden`. Bars lighten on hover and jump the
-  timeline when clicked; each carries a title with its week and commit count.
+  timeline when clicked or dragged across; each carries a title with its week and commit
+  count. The readout beside them holds a fixed 42ch so nothing shifts while scrubbing.
 - **Search groups:** a mono accent heading per kind over a hairline rule, with the match
-  count in `--muted` on the right ("4 of 12" when the group is capped), options indented
+  count in `--muted` on the right ("4 of 12" when the group is capped) and an accent mono
+  "Show all 12 changes" row closing a capped group, options indented
   to a 12px gutter, the selected one on `--surface-2` with the 3px accent bar.
 - **Search:** matched words are marked in the accent with `--accent-ink` text, and a
   result whose title doesn't show the match gets an elided snippet. Recent searches sit

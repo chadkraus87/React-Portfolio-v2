@@ -89,17 +89,26 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   console), or the footer button. Results are grouped by kind in `KINDS` order and each
   kind is capped (4 of 10), so commit lines can't crowd out projects and pages; PgUp /
   PgDn jump between groups, and a capped heading reads "4 of 12" so nothing is hidden
-  silently (`search()` returns `{ results, totals }`). The flat list the arrow keys and Enter use is built from the
+  silently (`search()` returns `{ results, totals }`). A capped group ends with its own
+  "Show all N" row — an option, so arrows reach it and Enter opens it — which lifts the
+  cap for that kind until the query changes (`search(query, index, { expand })`). The flat list the arrow keys and Enter use is built from the
   rendered groups, so the highlighted result is always the one Enter opens.
 - `src/lib/campaign.js` — `/?from=<slug>` (lowercase, ≤20 chars) remembers where a visit
   came from for that browser session only, strips the parameter from the address, and
   adds one anonymous GoatCounter event per page (`from/<slug>/<path>`). It is read on
   any entry page, not just home, and the page they landed on is recorded once per
-  session as `from/<slug>/landed<path>`, which separates a profile link from a post link. No cookies, no
+  session as `from/<slug>/landed<path>`, which separates a profile link from a post link.
+  `scripts/campaign-summary.mjs` turns those counts into a table in the daily job's run
+  summary through GoatCounter's `/api/v0/stats/hits`. It needs a `GOATCOUNTER_TOKEN`
+  secret; without one it prints a one-line notice and exits 0, and the step is
+  `continue-on-error`, so analytics can never break the data refresh. Test it with
+  `GOATCOUNTER_FIXTURE=<file>`. No cookies, no
   identifiers; invalid values are ignored. Counts are read in GoatCounter, not on the site.
 - Rack timeline: a sparkline of weekly commits sits above the slider; each bar is
-  titled with its week and count and can be clicked to jump there (pointer only — the
-  slider is the keyboard control and the bars stay out of the tab order). The Week
+  titled with its week and count, and can be clicked or dragged across to scrub (pointer
+  only — the slider is the keyboard control and the bars stay out of the tab order; the
+  week is spoken on release, not on every step). `.sr-week-out` has a fixed 42ch width
+  because its changing text used to shift the sparkline sideways mid-drag. The Week
   slider and Replay in the room's controls light units by
   commits that week, and show an amber power light for a demo that was down that week
   (`weekSnapshot()` in `rackModel.js`, self-tested at build).

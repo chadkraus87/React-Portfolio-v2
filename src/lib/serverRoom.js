@@ -816,7 +816,8 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     weekBars.forEach((bar, i) => bar.classList.toggle('is-on', i === k));
     const downNames = P.filter((p) => w.down.has(p.slug)).map((p) => p.title);
     const text = `Week of ${formatDay(w.start)}${k === lastWeek ? ' (latest)' : ''} · ${w.total} public commit${w.total === 1 ? '' : 's'}${downNames.length ? ` · demo down: ${downNames.join(', ')}` : ''}`;
-    weekOut.textContent = text;
+    // The control is narrow and the "Week" label beside it already says what this is.
+    weekOut.textContent = `${formatDay(w.start)}${k === lastWeek ? ' (latest)' : ''} · ${w.total} commit${w.total === 1 ? '' : 's'}${downNames.length ? ' · demo down' : ''}`;
     weekRange.setAttribute('aria-valuetext', text);
     return text;
   }
@@ -830,14 +831,32 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     replayTimer = later(() => replayFrom(k + 1), 1400);
   }
   on(weekRange, 'input', () => { stopReplay(); showWeek(Number(weekRange.value)); });
-  // Clicking a bar jumps to that week. Pointer only: the slider beside it is the
-  // keyboard control, and the bars stay out of the tab order.
-  on(q('.sr-week-spark'), 'click', (e) => {
-    const bar = e.target.closest('i[data-week]');
-    if (!bar) return;
+  // Click or drag across the bars to scrub the weeks, with the racks lighting as you
+  // go. Pointer only: the slider beside it is the keyboard control, and the bars stay
+  // out of the tab order. The week is spoken once, on release, not on every step.
+  const sparkEl = q('.sr-week-spark');
+  let sparkBox = null;
+  const weekAtX = (clientX) => {
+    const box = sparkBox ?? sparkEl.getBoundingClientRect();
+    if (!box.width) return Number(weekRange.value);
+    return clamp(Math.round(((clientX - box.left) / box.width) * lastWeek), 0, lastWeek);
+  };
+  const scrubTo = (k) => {
+    if (Number(weekRange.value) === k) return;
+    weekRange.value = String(k);
+    showWeek(k);
+  };
+  on(sparkEl, 'pointerdown', (e) => {
     stopReplay();
-    weekRange.value = bar.dataset.week;
-    say(showWeek(Number(bar.dataset.week)));
+    sparkBox = sparkEl.getBoundingClientRect();
+    sparkEl.setPointerCapture(e.pointerId);
+    scrubTo(weekAtX(e.clientX));
+  });
+  on(sparkEl, 'pointermove', (e) => { if (sparkEl.hasPointerCapture(e.pointerId)) scrubTo(weekAtX(e.clientX)); });
+  on(sparkEl, 'pointerup', (e) => {
+    if (sparkEl.hasPointerCapture(e.pointerId)) sparkEl.releasePointerCapture(e.pointerId);
+    sparkBox = null;
+    say(showWeek(Number(weekRange.value)));
   });
   on(replayBtn, 'click', () => {
     if (replayBtn.getAttribute('aria-pressed') === 'true') { stopReplay(); return; }

@@ -63,7 +63,7 @@ export function highlight(text = '', words = []) {
 // Every word of the query must appear somewhere in an entry; title hits rank first.
 // Returns the capped results plus how many matched in each kind, so a group can say
 // "4 of 12" rather than silently hiding the rest.
-export function search(query, index = searchIndex, limit = 10, perKind = 4) {
+export function search(query, index = searchIndex, { limit = 10, perKind = 4, expand = null } = {}) {
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
   if (!words.length) return { results: [], totals: new Map() };
   const seen = new Map();
@@ -79,12 +79,14 @@ export function search(query, index = searchIndex, limit = 10, perKind = 4) {
   for (const e of matched) totals.set(e.kind, (totals.get(e.kind) ?? 0) + 1);
   const results = matched
     .filter((e) => {
+      // The one expanded kind shows everything it matched; the rest stay capped.
+      if (e.kind === expand) return true;
       const used = seen.get(e.kind) ?? 0;
       if (used >= perKind) return false;
       seen.set(e.kind, used + 1);
       return true;
     })
-    .slice(0, limit);
+    .slice(0, expand ? 60 : limit);
   return { results, totals };
 }
 

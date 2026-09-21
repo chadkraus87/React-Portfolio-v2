@@ -196,6 +196,7 @@ main:focus { outline: none; }
 .search-group-head span { color: var(--muted); }
 .search-opt { display: grid; gap: 2px; padding: 8px 8px 8px 12px; cursor: pointer; }
 .search-opt[aria-selected="true"] { background: var(--surface-2); box-shadow: inset 3px 0 0 var(--accent); }
+.search-more .search-title { font: 500 12.5px/1.5 var(--f-mono); color: var(--accent); }
 .search-title { font-weight: 600; color: var(--text); }
 .search-detail { font-size: 13.5px; color: var(--prose); }
 .search-count { min-height: 1.5em; margin-top: 8px; font: 500 11.5px/1.5 var(--f-mono); color: var(--muted); }

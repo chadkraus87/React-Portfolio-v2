@@ -110,7 +110,8 @@ project stories now live on the PetCenza and CoachRhythm case studies.
 - Each case study draws its architecture as ordered layers. Every item comes
   from the project's own write-up; the diagram never adds a claim.
 - A `?from=` link (for example from LinkedIn), on any page, records which pages that visit
-  opened and which one it started on, as anonymous counts only. The value is kept for the session in the browser, never in a
+  opened and which one it started on, as anonymous counts only. The daily job can print
+  those counts in its own run summary, so Chad never has to open an analytics dashboard. The value is kept for the session in the browser, never in a
   cookie, and the parameter is removed from the address so shared links stay clean.
 - Analytics are GoatCounter pageviews plus anonymous interaction counts (unit
   pulls, port signals, `hire`, copied links, printing, sound, tour). No cookies,
