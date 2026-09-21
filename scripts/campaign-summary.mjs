@@ -65,7 +65,12 @@ const events = (data.hits ?? [])
 
 const writeLeads = async (leads) => {
   if (!writeTo) return;
-  const { writeFile } = await import('node:fs/promises');
+  const { readFile, writeFile } = await import('node:fs/promises');
+  // Only rewrite when the ranking itself changed. Stamping the date every run would
+  // commit a new file daily, and each commit redeploys the site for nothing.
+  let current = null;
+  try { current = JSON.parse(await readFile(writeTo, 'utf8')); } catch { /* first run */ }
+  if (current && JSON.stringify(current.leads ?? []) === JSON.stringify(leads) && current.days === days) return;
   // Ranking only, never counts: the site says what to lead with, not how much traffic it gets.
   await writeFile(writeTo, `${JSON.stringify({ updated: new Date().toISOString().slice(0, 10), days, leads }, null, 2)}\n`);
 };
