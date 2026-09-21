@@ -515,7 +515,7 @@ test('site search finds projects, tools and pages, and opens the chosen result',
   await expect(dialog).toBeVisible();
   const input = dialog.getByRole('combobox');
   await input.fill('supabase');
-  await expect(dialog.getByRole('option', { name: /Tool\s*Supabase/ })).toBeVisible();
+  await expect(dialog.getByRole('group', { name: 'Tools' }).getByRole('option', { name: 'Supabase' })).toBeVisible();
   const { violations } = await new AxeBuilder({ page }).include('.search').withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
   expect(violations).toEqual([]);
   await input.fill('greenline');
@@ -603,4 +603,64 @@ test('the weekly digest and uptime record are published as JSON', async ({ reque
   }
   const status = await (await request.get('/status.json')).json();
   expect(Object.keys(status.sites).length).toBeGreaterThan(0);
+});
+
+test('search groups results by kind, caps each group and jumps between them', async ({ page }) => {
+  await page.goto('/now');
+  await page.keyboard.press('/');
+  const dialog = page.getByRole('dialog', { name: 'Search' });
+  const input = dialog.getByRole('combobox');
+  await input.fill('demo');
+  const heads = dialog.locator('.search-group-head');
+  expect(await heads.count()).toBeGreaterThan(1);
+  // No single kind may crowd the list out.
+  for (const group of await dialog.getByRole('group').all()) {
+    expect(await group.getByRole('option').count()).toBeLessThanOrEqual(4);
+  }
+  // The first option of the first group starts selected; PageDown jumps a group.
+  const groups = await dialog.getByRole('group').all();
+  await expect(groups[0].getByRole('option').first()).toHaveAttribute('aria-selected', 'true');
+  await input.press('PageDown');
+  await expect(groups[1].getByRole('option').first()).toHaveAttribute('aria-selected', 'true');
+  await input.press('PageUp');
+  await expect(groups[0].getByRole('option').first()).toHaveAttribute('aria-selected', 'true');
+  await input.press('End');
+  await expect(dialog.getByRole('option').last()).toHaveAttribute('aria-selected', 'true');
+});
+
+test('a ?from= link is recorded anonymously per page and stripped from the address', async ({ page }) => {
+  await page.route(/gc\.zgo\.at/, (route) => route.abort());
+  await page.addInitScript(() => { window.__events = []; window.goatcounter = { count: (e) => window.__events.push(e) }; });
+  await page.goto('/?from=linkedin');
+  await expect(page).not.toHaveURL(/from=/);
+  await page.goto('/projects/petcenza');
+  const events = await page.evaluate(() => window.__events.filter((e) => e.event).map((e) => e.path));
+  expect(events).toContain('from/linkedin/projects/petcenza');
+  expect(events.join(' ')).not.toContain('petcenza.com');
+  // A junk value is neither kept nor recorded.
+  await page.goto('/?from=%3Cscript%3E');
+  await expect(page).not.toHaveURL(/from=/);
+  await page.goto('/now');
+  const after = await page.evaluate(() => window.__events.filter((e) => e.event).map((e) => e.path));
+  expect(after.some((p) => p.startsWith('from/') && !p.startsWith('from/linkedin/'))).toBe(false);
+});
+
+test('the rack timeline has a sparkline and scrubs with the arrow keys', async ({ page }) => {
+  const activity = JSON.parse(readFileSync('src/data/activity.json', 'utf8'));
+  const weeks = Math.max(...Object.values(activity.repos).map((r) => r.weeks.length));
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const bars = page.locator('.sr-week-spark i');
+  await expect(bars).toHaveCount(weeks);
+  await expect(page.locator('.sr-week-spark i.is-on')).toHaveCount(1);
+  await expect(bars.nth(weeks - 1)).toHaveClass(/is-on/);
+  const range = page.locator('#sr-week');
+  await range.focus();
+  await page.keyboard.press('ArrowLeft');
+  await expect(bars.nth(weeks - 2)).toHaveClass(/is-on/);
+  await expect(page.locator('.sr')).toHaveClass(/is-timeline/);
+  await expect(range).toHaveAttribute('aria-valuetext', /^Week of /);
+  await page.keyboard.press('ArrowRight');
+  await expect(bars.nth(weeks - 1)).toHaveClass(/is-on/);
+  await expect(page.locator('.sr')).not.toHaveClass(/is-timeline/);
 });

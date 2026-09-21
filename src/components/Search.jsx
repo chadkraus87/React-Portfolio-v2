@@ -53,7 +53,11 @@ export default function Search() {
     };
   }, [engine, pathname]);
 
-  const results = engine ? engine.search(query) : [];
+  const scored = engine ? engine.search(query) : [];
+  const groups = engine ? engine.grouped(scored) : [];
+  const results = groups.flatMap(([, items]) => items);
+  // Where each group starts in the flat result order, for PageUp / PageDown.
+  const starts = groups.reduce((acc, [, items]) => [...acc, acc.at(-1) + items.length], [0]).slice(0, -1);
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
   const mark = (text) => (engine ? engine.highlight(text, words) : [{ text, hit: false }])
     .map((part, k) => (part.hit ? <mark key={k}>{part.text}</mark> : <span key={k}>{part.text}</span>));
@@ -66,8 +70,13 @@ export default function Search() {
   const onInputKey = (e) => {
     if (e.key === 'ArrowDown') { e.preventDefault(); setActive((k) => Math.min(k + 1, results.length - 1)); }
     else if (e.key === 'ArrowUp') { e.preventDefault(); setActive((k) => Math.max(k - 1, 0)); }
+    else if (e.key === 'PageDown') { e.preventDefault(); setActive((k) => starts.find((s) => s > k) ?? starts.at(-1) ?? 0); }
+    else if (e.key === 'PageUp') { e.preventDefault(); setActive((k) => [...starts].reverse().find((s) => s < k) ?? 0); }
+    else if (e.key === 'Home') { e.preventDefault(); setActive(0); }
+    else if (e.key === 'End') { e.preventDefault(); setActive(Math.max(0, results.length - 1)); }
     else if (e.key === 'Enter' && results[active]) { e.preventDefault(); go(results[active]); }
   };
+  let flat = -1;
 
   return (
     <dialog ref={ref} className="keys search" aria-labelledby="search-title" onClick={(e) => { if (e.target === ref.current) ref.current.close(); }}>
@@ -96,22 +105,31 @@ export default function Search() {
           onChange={(e) => { setQuery(e.target.value); setActive(0); }}
           onKeyDown={onInputKey}
         />
-        <ul className="search-results" id="search-results" role="listbox" aria-label="Results">
-          {results.map((r, k) => (
-            <li
-              key={`${r.kind}-${r.href}-${r.title}`}
-              id={`search-opt-${k}`}
-              role="option"
-              aria-selected={k === active}
-              onMouseEnter={() => setActive(k)}
-              onClick={() => go(r)}
-            >
-              <span className="search-kind">{r.kind}</span>
-              <span className="search-title">{mark(r.title)}</span>
-              {(r.snippet || r.detail) && <span className="search-detail">{r.snippet ? mark(r.snippet) : r.detail}</span>}
-            </li>
+        <div className="search-results" id="search-results" role="listbox" aria-label="Results">
+          {groups.map(([kind, items]) => (
+            <div key={kind} className="search-group" role="group" aria-labelledby={`search-g-${kind.replace(/\s+/g, '-')}`}>
+              <p className="search-group-head" id={`search-g-${kind.replace(/\s+/g, '-')}`}>{engine.PLURAL[kind] ?? kind}</p>
+              {items.map((r) => {
+                flat += 1;
+                const k = flat;
+                return (
+                  <div
+                    key={`${r.kind}-${r.href}-${r.title}`}
+                    id={`search-opt-${k}`}
+                    className="search-opt"
+                    role="option"
+                    aria-selected={k === active}
+                    onMouseEnter={() => setActive(k)}
+                    onClick={() => go(r)}
+                  >
+                    <span className="search-title">{mark(r.title)}</span>
+                    {(r.snippet || r.detail) && <span className="search-detail">{r.snippet ? mark(r.snippet) : r.detail}</span>}
+                  </div>
+                );
+              })}
+            </div>
           ))}
-        </ul>
+        </div>
         {!query.trim() && recent.length > 0 && (
           <div className="search-recent">
             <p id="search-recent-label">Recent searches</p>

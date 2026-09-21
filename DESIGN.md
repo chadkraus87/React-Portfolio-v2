@@ -166,6 +166,11 @@ Rendered once by `ServerRoom.jsx`; driven by `src/lib/serverRoom.js`.
   mono readout on the translucent control ground, and Replay styled like Commit heat.
   Off-week units lose their lights; on-week units get the night-shift accent edge; a
   down week turns the power light amber.
+- **Timeline sparkline:** twelve 5px bars in `--steel-4` above the slider, scaled to the
+  busiest week, with the chosen week in `--accent`. Decoration only: the readout beside it
+  carries the numbers, so it is `aria-hidden`.
+- **Search groups:** a mono accent heading per kind over a hairline rule, options indented
+  to a 12px gutter, the selected one on `--surface-2` with the 3px accent bar.
 - **Search:** matched words are marked in the accent with `--accent-ink` text, and a
   result whose title doesn't show the match gets an elided snippet. Recent searches sit
   under the field as bordered mono chips. The shortcuts dialog with a 48px field; results in rows with a mono kind

@@ -803,6 +803,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   // power light, replaying its recorded outages. Replay steps through every week. The
   // latest week puts the room back to normal.
   const weekRange = q('.sr-week-range'); const weekOut = q('.sr-week-out'); const replayBtn = q('.sr-replay');
+  const weekBars = [...root.querySelectorAll('.sr-week-spark i')];
   const lastWeek = Number(weekRange.max);
   let replayTimer = 0;
   function showWeek(k) {
@@ -812,6 +813,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
       units[p.i].classList.toggle('wk-down', w.down.has(p.slug));
     });
     root.classList.toggle('is-timeline', k !== lastWeek);
+    weekBars.forEach((bar, i) => bar.classList.toggle('is-on', i === k));
     const downNames = P.filter((p) => w.down.has(p.slug)).map((p) => p.title);
     const text = `Week of ${formatDay(w.start)}${k === lastWeek ? ' (latest)' : ''} · ${w.total} public commit${w.total === 1 ? '' : 's'}${downNames.length ? ` · demo down: ${downNames.join(', ')}` : ''}`;
     weekOut.textContent = text;

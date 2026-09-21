@@ -86,7 +86,14 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   notes; `vercel.json` rewrites `/api/status` to it with open CORS and a 5-minute cache.
 - Site search (`src/components/Search.jsx`, index in `src/lib/searchIndex.js`, loaded on
   first open): `/` anywhere, ⌘K / Ctrl K on pages other than home (where ⌘K is the
-  console), or the footer button.
+  console), or the footer button. Results are grouped by kind in `KINDS` order and each
+  kind is capped (4 of 10), so commit lines can't crowd out projects and pages; PgUp /
+  PgDn jump between groups. The flat list the arrow keys and Enter use is built from the
+  rendered groups, so the highlighted result is always the one Enter opens.
+- `src/lib/campaign.js` — `/?from=<slug>` (lowercase, ≤20 chars) remembers where a visit
+  came from for that browser session only, strips the parameter from the address, and
+  adds one anonymous GoatCounter event per page (`from/<slug>/<path>`). No cookies, no
+  identifiers; invalid values are ignored. Counts are read in GoatCounter, not on the site.
 - Rack timeline: the Week slider and Replay in the room's controls light units by
   commits that week, and show an amber power light for a demo that was down that week
   (`weekSnapshot()` in `rackModel.js`, self-tested at build).

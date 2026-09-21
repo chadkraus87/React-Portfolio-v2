@@ -32,6 +32,10 @@ const HALLS = [['far', makeHall(13, 1337)], ['near', makeHall(9, 42)]];
 const RAIL = Array.from({ length: RACK_U }, (_, k) => RACK_U - k);
 const RANGE = activityRange(RACK_MODEL.activity);
 const WEEK_COUNT = Math.max(1, ...Object.values(RACK_MODEL.activity.repos).map((r) => r.weeks.length));
+// Public commits per week across every tracked repo, for the timeline's sparkline.
+const WEEK_TOTALS = Array.from({ length: WEEK_COUNT }, (_, k) =>
+  Object.values(RACK_MODEL.activity.repos).reduce((sum, r) => sum + (r.weeks[k] ?? 0), 0));
+const WEEK_PEAK = Math.max(1, ...WEEK_TOTALS);
 
 function Rail() {
   return (
@@ -202,7 +206,14 @@ export default function ServerRoom() {
           </div>
           <div className="sr-row sr-timeline">
             <label className="sr-week" htmlFor="sr-week">Week</label>
-            <input id="sr-week" className="sr-week-range" type="range" min="0" max={WEEK_COUNT - 1} step="1" defaultValue={WEEK_COUNT - 1} />
+            <span className="sr-week-scrub">
+              <span className="sr-week-spark" aria-hidden="true">
+                {WEEK_TOTALS.map((n, k) => (
+                  <i key={k} style={{ '--h': `${Math.round((n / WEEK_PEAK) * 100)}%` }} data-week={k} />
+                ))}
+              </span>
+              <input id="sr-week" className="sr-week-range" type="range" min="0" max={WEEK_COUNT - 1} step="1" defaultValue={WEEK_COUNT - 1} />
+            </span>
             <output className="sr-week-out" htmlFor="sr-week">Latest week</output>
             <button type="button" className="sr-replay" aria-pressed="false">Replay</button>
           </div>

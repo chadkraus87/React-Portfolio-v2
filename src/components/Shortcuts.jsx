@@ -8,6 +8,7 @@ const MAC = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator
 const KEYS = [
   ['?', 'Show this list'],
   ['/', 'Search the site'],
+  ['PgUp · PgDn', 'In search, jump between result groups'],
   [MAC ? '⌘ K' : 'Ctrl K', 'Open or close the rack console (search, on other pages)'],
   ['Esc', 'Close the console, a unit panel or this list'],
   ['← → ↑ ↓', 'Move between units, or along a patch panel'],

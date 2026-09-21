@@ -28,6 +28,10 @@ export const searchIndex = [
 ];
 
 const WEIGHT = { Project: 4, Tool: 3, Page: 3, 'Field note': 2, Change: 1 };
+// Groups are shown in this order, and each is capped, so a common word in dozens of
+// commit lines can't push the projects and pages off the list.
+export const KINDS = ['Project', 'Tool', 'Page', 'Field note', 'Change'];
+export const PLURAL = { Project: 'Projects', Tool: 'Tools', Page: 'Pages', 'Field note': 'Field notes', Change: 'Changes' };
 
 // A few words either side of the first match, for results whose title doesn't show why
 // they matched. Returns '' when the word isn't in the body.
@@ -57,9 +61,10 @@ export function highlight(text = '', words = []) {
 }
 
 // Every word of the query must appear somewhere in an entry; title hits rank first.
-export function search(query, index = searchIndex, limit = 8) {
+export function search(query, index = searchIndex, limit = 10, perKind = 4) {
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
   if (!words.length) return [];
+  const seen = new Map();
   return index
     .filter((e) => words.every((w) => e.text.includes(w)))
     .map((e) => {
@@ -68,5 +73,16 @@ export function search(query, index = searchIndex, limit = 8) {
       return { ...e, score, snippet: title.includes(words[0]) ? '' : snippet(e.body, words[0]) };
     })
     .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title))
+    .filter((e) => {
+      const used = seen.get(e.kind) ?? 0;
+      if (used >= perKind) return false;
+      seen.set(e.kind, used + 1);
+      return true;
+    })
     .slice(0, limit);
+}
+
+// The same results, split into the groups the dialog renders, in KINDS order.
+export function grouped(results) {
+  return KINDS.map((kind) => [kind, results.filter((r) => r.kind === kind)]).filter(([, items]) => items.length);
 }
