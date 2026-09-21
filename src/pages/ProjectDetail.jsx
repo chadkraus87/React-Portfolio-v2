@@ -5,7 +5,6 @@ import ToolTrace from '../components/ToolTrace.jsx';
 import Spark from '../components/Spark.jsx';
 import UptimeStrip from '../components/UptimeStrip.jsx';
 import { projectStories } from '../data/stories.js';
-import lighthouse from '../data/lighthouse.json';
 import { RACK_MODEL } from '../lib/rack.js';
 import { activityRange } from '../lib/rackModel.js';
 import { DETAIL_SIZES } from '../lib/cardImages.js';
@@ -87,13 +86,6 @@ export default function ProjectDetail() {
                 </div>
               ) : (
                 <p className="cs-note">{p.linkNote || 'This project isn’t publicly linked — it runs on private infrastructure.'}</p>
-              )}
-              {lighthouse.sites?.[p.slug] && (
-                <p className="cs-lh">
-                  Lighthouse on {lighthouse.sites[p.slug].formFactor === 'mobile' ? 'mobile' : 'desktop'}, measured {formatDay(lighthouse.sites[p.slug].measured)}:{' '}
-                  {lighthouse.sites[p.slug].performance} performance · {lighthouse.sites[p.slug].accessibility} accessibility ·{' '}
-                  {lighthouse.sites[p.slug].bestPractices} best practices · {lighthouse.sites[p.slug].seo} SEO
-                </p>
               )}
               <Spark act={p.act} maxWeek={RACK_MODEL.maxWeek} range={RANGE} />
               {p.projectLink && <UptimeStrip site={p.uptime} />}

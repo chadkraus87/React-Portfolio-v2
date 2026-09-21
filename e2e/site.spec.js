@@ -830,22 +830,22 @@ test('the console answers "from <source>" from the ranked visit data', async ({ 
   await expect(log).toContainText('from <source>');
 });
 
-test('case studies quote measured Lighthouse scores with the date they were taken', async ({ page }) => {
+test('measured demo scores are recorded with dates, and kept off the pages', async ({ page }) => {
   const lh = JSON.parse(readFileSync('src/data/lighthouse.json', 'utf8'));
   const slugs = Object.keys(lh.sites ?? {});
   expect(slugs.length).toBeGreaterThan(0);
+  for (const slug of slugs) {
+    expect(lh.sites[slug].measured).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    for (const key of ['performance', 'accessibility', 'bestPractices', 'seo']) {
+      expect(lh.sites[slug][key]).toBeGreaterThanOrEqual(0);
+      expect(lh.sites[slug][key]).toBeLessThanOrEqual(100);
+    }
+  }
+  // Publishing only the strong ones would be cherry-picking, so none are shown.
   for (const slug of slugs.slice(0, 3)) {
     await page.goto(`/projects/${slug}`);
-    const line = page.locator('.cs-lh');
-    await expect(line).toBeVisible();
-    await expect(line).toContainText(`${lh.sites[slug].performance} performance`);
-    await expect(line).toContainText('measured');
-  }
-  // A project with no measurement says nothing rather than implying one.
-  const unmeasured = SLUGS.find((s) => !slugs.includes(s));
-  if (unmeasured) {
-    await page.goto(`/projects/${unmeasured}`);
     await expect(page.locator('.cs-lh')).toHaveCount(0);
+    await expect(page.locator('main')).not.toContainText('Lighthouse on mobile');
   }
 });
 

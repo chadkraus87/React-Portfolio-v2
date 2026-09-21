@@ -124,8 +124,9 @@ middleware.js            Vercel Routing Middleware: share previews for ?unit= li
   and a "What's on screen" list beneath it (`src/lib/demoCaptions.js`).
 - **Evidence dates** — every screenshot and demo shows when it was captured, how many
   public commits have landed since, and a flag when it predates the project's last update.
-- **Measured scores** — a monthly job runs Lighthouse against every live demo, and each
-  case study quotes its scores with the date they were measured.
+- **Measured scores** — a monthly job runs Lighthouse against every live demo and records
+  the scores with their date. Kept out of the pages on purpose: showing only the strong
+  ones would be cherry-picking.
 - **Verdicts** — a project can carry one honest paragraph on what would be done differently.
 - **Light theme** — opt-in from the nav, saved per browser, applied before first
   paint by `public/theme.js`. The server room and other hardware stay dark.

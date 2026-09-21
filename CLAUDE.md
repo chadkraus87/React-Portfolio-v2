@@ -79,9 +79,12 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   `qrcode` devDependency). The pack shows email and LinkedIn but no phone number.
 - `src/data/lighthouse.json` — generated. `.github/workflows/lighthouse-demos.yml` runs
   `scripts/measure-demos.mjs` monthly, measuring every live demo with Lighthouse on
-  mobile, and commits only when a score actually moves. Each case study prints its
-  scores with the date they were measured, so no number is quoted without one. A site
-  that fails to measure keeps its previous entry.
+  mobile, and commits only when a score actually moves. The scores are deliberately NOT
+  shown on the site: publishing only the good ones would be cherry-picking, and three
+  demos currently score poorly on mobile. They live in the data file and the job's run
+  summary so the trend is visible and actionable. To publish them again, render
+  `lighthouse.json` on the case study — but publish every project or none. A site that
+  fails to measure keeps its previous entry.
 - Case studies also say how many public commits landed since the screenshot was taken
   (`commitsSinceImage()` in `rackModel.js`, self-tested at build). It counts only from
   the month after `imageDate`, so a month-granular date can never inflate the number.

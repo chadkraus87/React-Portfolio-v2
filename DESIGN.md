@@ -145,8 +145,6 @@ Rendered once by `ServerRoom.jsx`; driven by `src/lib/serverRoom.js`.
   after the link text.
 - **Verdict:** a `--surface` block with a 3px accent rule down its left edge, display-caps
   heading, and one paragraph capped at 62ch.
-- **Measured scores:** one mono line in `--prose` above the sparkline, naming the form
-  factor and the date, so the number is never free-floating.
 - **Uptime strip:** 30 cells, one per day to the build date: `--live` for no
   outage recorded, `--danger` for not answering, a hatch before the first check.
   The caption states the counts, so colour is never the only signal.
