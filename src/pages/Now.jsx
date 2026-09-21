@@ -101,7 +101,7 @@ export default function Now() {
                   {lead.project
                     ? <Link viewTransition to={lead.path}>{lead.project.title}</Link>
                     : <Link viewTransition to={lead.path}>{lead.path}</Link>}
-                  <span>Most opened from {lead.source}</span>
+                  <span>Most opened from {lead.source} in the last {audience.days} days</span>
                 </li>
               ))}
             </ul>

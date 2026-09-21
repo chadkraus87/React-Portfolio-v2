@@ -113,7 +113,9 @@ project stories now live on the PetCenza and CoachRhythm case studies.
   opened and which one it started on, as anonymous counts only. The daily job can print
   those counts in its own run summary, so Chad never has to open an analytics dashboard,
   and `/now` can name the page each referrer opens most — a ranking only, never traffic
-  numbers, and only once a page clears a floor of five visits. The value is kept for the session in the browser, never in a
+  numbers, and only once a page clears a floor of five visits. The console answers
+  `from linkedin` with that unit, and a summary that keeps failing opens an issue instead
+  of going quiet. The value is kept for the session in the browser, never in a
   cookie, and the parameter is removed from the address so shared links stay clean.
 - Analytics are GoatCounter pageviews plus anonymous interaction counts (unit
   pulls, port signals, `hire`, copied links, printing, sound, tour). No cookies,

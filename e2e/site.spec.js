@@ -809,3 +809,23 @@ test('shift-dragging the sparkline compares two weeks', async ({ page }) => {
   await expect(page.locator('.sr')).not.toHaveClass(/is-compare/);
   await expect(page.locator('.sr-week-out')).not.toContainText(' vs ');
 });
+
+test('the console answers "from <source>" from the ranked visit data', async ({ page }) => {
+  const audience = JSON.parse(readFileSync('src/data/audience.json', 'utf8'));
+  await page.goto('/');
+  await page.getByRole('button', { name: /Console/ }).click();
+  const input = page.locator('#sr-kvm-q');
+  await input.fill('from linkedin');
+  await input.press('Enter');
+  const log = page.locator('.sr-kvm-log');
+  const lead = (audience.leads ?? []).find((l) => l.source === 'linkedin');
+  if (lead) {
+    await expect(log).toContainText('most opened from linkedin');
+  } else {
+    // Nothing ranked yet, and the console says so rather than inventing a unit.
+    await expect(log).toContainText('no visits recorded from linkedin yet');
+  }
+  await input.fill('help');
+  await input.press('Enter');
+  await expect(log).toContainText('from <source>');
+});

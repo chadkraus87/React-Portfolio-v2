@@ -36,10 +36,25 @@ jobs:
       - name: Check that each live demo answers
         run: node scripts/check-uptime.mjs
       - name: Summarise where visits came from
+        id: visits
         continue-on-error: true
         env:
           GOATCOUNTER_TOKEN: ${{ secrets.GOATCOUNTER_TOKEN }}
-        run: node scripts/campaign-summary.mjs 30 --write src/data/audience.json | tee -a "$GITHUB_STEP_SUMMARY"
+        run: |
+          node scripts/campaign-summary.mjs 30 --write src/data/audience.json | tee visit-summary.md
+          cat visit-summary.md >> "$GITHUB_STEP_SUMMARY"
+          if grep -q "Could not read GoatCounter" visit-summary.md; then
+            echo "status=failed" >> "$GITHUB_OUTPUT"
+          else
+            echo "status=ok" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Open an issue if the visit summary keeps failing
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VISIT_STATUS: ${{ steps.visits.outputs.status }}
+        run: sh scripts/campaign-health.sh
       - name: Fetch public commit activity
         continue-on-error: true
         run: node scripts/fetch-activity.mjs

@@ -189,7 +189,8 @@ middleware.js            Vercel Routing Middleware: share previews for ?unit= li
   plus one recording the page they landed on, so the counts separate a profile link from a
   post link. The parameter is stripped from the URL, and the daily job can summarise the
   counts in its run summary when a GoatCounter API token is configured, and writes the
-  most-opened page per source to `/now` as a ranking (no visit numbers).
+  most-opened page per source to `/now` as a ranking (no visit numbers), opens an issue if
+  it fails three days running, and answers `from <source>` in the room console.
 - **Rack timeline** — a sparkline of commits per week sits above the slider, with the
   chosen week lit; drag across it (hold Shift to compare two weeks) or scrub with the
   arrow keys, or press Replay to watch twelve weeks of commits,

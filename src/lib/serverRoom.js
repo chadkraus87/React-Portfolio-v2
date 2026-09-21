@@ -20,7 +20,7 @@ const lerp = (a, b, t) => a + (b - a) * t;
 const DEFAULT_NOTE = 'This project isn’t publicly linked — it runs on private infrastructure.';
 const STATUS_COLOR = { Live: 'var(--live)', 'In progress': 'var(--accent)', Private: 'var(--private)' };
 
-export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, formatUpdated, snapshot, onEvent = () => {} }) {
+export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, formatUpdated, snapshot, audience = { leads: [], days: 30 }, onEvent = () => {} }) {
   const doc = root.ownerDocument;
   const win = doc.defaultView;
   const reduced = win.matchMedia('(prefers-reduced-motion: reduce)');
@@ -532,6 +532,14 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
       return lens ? { cmd: 'lens', lens } : { cmd: 'unknown', text: raw };
     }
     if (verb === 'open') { const p = arg && projectBy(arg); return p ? { cmd: 'open', p } : { cmd: 'unknown', text: arg || raw }; }
+    // "from linkedin": the unit that audience opens most, from the anonymous counts the
+    // daily job ranks (src/data/audience.json). Nothing recorded yet says so plainly.
+    if (verb === 'from') {
+      if (!arg) return { cmd: 'unknown', text: raw };
+      const lead = (audience.leads ?? []).find((l) => l.source === arg);
+      const p = lead && P.find((x) => `/projects/${x.slug}` === lead.path);
+      return { cmd: 'from', source: arg, p };
+    }
     if (verb === 'signal' || verb === 'ping') { const t = arg && toolBy(arg); return t ? { cmd: 'signal', t } : { cmd: 'unknown', text: arg || raw }; }
     const t = toolBy(raw); if (t) return { cmd: 'signal', t };
     const p = projectBy(raw); if (p) return { cmd: 'open', p };
@@ -544,10 +552,12 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     const [verb, ...rest] = raw.split(' '); const arg = rest.join(' ');
     const tools = TOOLS.map((t) => t.toLowerCase()); const names = P.map((p) => p.title.toLowerCase());
     const out = [];
-    if (verb === 'signal' || verb === 'ping') tools.filter((t) => t.includes(arg)).forEach((t) => out.push(`signal ${t}`));
+    if (verb === 'from') (audience.leads ?? []).map((l) => l.source).filter((s) => s.includes(arg)).forEach((s) => out.push(`from ${s}`));
+    else if (verb === 'signal' || verb === 'ping') tools.filter((t) => t.includes(arg)).forEach((t) => out.push(`signal ${t}`));
     else if (verb === 'open') names.filter((n) => n.includes(arg)).forEach((n) => out.push(`open ${n}`));
     else {
       ['help', 'hire', 'heat', 'sound', 'clear', 'rack a', 'rack b', 'rack all', 'exit'].filter((c) => c.startsWith(raw)).forEach((c) => out.push(c));
+      (audience.leads ?? []).map((l) => `from ${l.source}`).filter((c) => c.startsWith(raw)).forEach((c) => out.push(c));
       tools.filter((t) => t.includes(raw)).forEach((t) => out.push(`signal ${t}`));
       names.filter((n) => n.includes(raw)).forEach((n) => out.push(`open ${n}`));
     }
@@ -589,7 +599,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     logLine(`$ ${text}`, 'cmd');
     state.preview = null;
     if (!r) return;
-    if (r.cmd === 'help') logLine('hire · signal <tool> · open <project> · rack a | b | all · heat · sound · clear · exit');
+    if (r.cmd === 'help') logLine('hire · signal <tool> · open <project> · from <source> · rack a | b | all · heat · sound · clear · exit');
     else if (r.cmd === 'clear') logEl.textContent = '';
     else if (r.cmd === 'reset') { overview(); closeKvm(); }
     else if (r.cmd === 'hire') { showHire(); logLine('↳ operator snapshot on screen: print it or grab the PDF', 'ok'); }
@@ -598,6 +608,10 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     else if (r.cmd === 'lens') { setLens(r.lens); logLine(r.lens === 'all' ? 'both racks lit' : `${lenses[r.lens].name} lens: ${lenses[r.lens].slugs.length} units lit`, 'ok'); }
     else if (r.cmd === 'open') { selectUnit(r.p.i); logLine(`↳ ${r.p.title} pulled from rack ${rackOf(r.p.rack).code} · ${r.p.u}`, 'ok'); }
     else if (r.cmd === 'signal') { const ms = P.filter((p) => p.tools.has(r.t)); selectTool(r.t); logLine(`↳ ${ms.length} units lit: ${ms.map((m) => m.title).join(', ')}`, 'ok'); }
+    else if (r.cmd === 'from') {
+      if (!r.p) logLine(`no visits recorded from ${r.source} yet`, 'warn');
+      else { selectUnit(r.p.i); logLine(`↳ most opened from ${r.source} in the last ${audience.days} days: ${r.p.title}`, 'ok'); }
+    }
     else { logLine(`ping: ${r.text}: No route to host`, 'err'); logLine('try: signal supabase · open greenline · help'); }
     sync(); drawSoon();
   }

@@ -8,6 +8,7 @@ import { STATUS_VFD, formatUpdated, formatDay } from '../lib/projectMeta.js';
 import { cardSrcSet } from '../lib/cardImages.js';
 import { mountServerRoom } from '../lib/serverRoom.js';
 import { BUILD_STAMP } from '../lib/build.js';
+import audience from '../data/audience.json';
 import resumePdf from '../assets/files/Chadwick_Kraus_Resume_2026.pdf';
 import './ServerRoom.css';
 
@@ -141,6 +142,7 @@ export default function ServerRoom() {
     navigate: (to) => navigateRef.current(to, { viewTransition: true }),
     srcSetFor: cardSrcSet,
     formatUpdated,
+    audience,
     snapshot: {
       name: profile.fullName,
       title: profile.title,

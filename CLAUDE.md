@@ -107,8 +107,12 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   trimmed body and exits 0 — never a failed job, and never a silent one.
 - `src/data/audience.json` is written by that same daily step (`--write`): the page each
   referrer opened most, rankings only, no visit numbers, and only above a floor of 5
-  visits. `/now` renders it as "What people open"; the build fails if a lead names a page
-  that doesn't exist. No cookies, no
+  visits. `/now` renders it as "What people open", naming the window it covers; the build
+  fails if a lead names a page that doesn't exist. The room console answers
+  `from <source>` by pulling that unit, and says plainly when nothing is ranked yet.
+  `scripts/campaign-health.sh` opens a "Visit summary is failing" issue once the
+  GoatCounter read has failed three runs in a row (counted from the previous runs' logs,
+  so no state is committed) and closes it on the first clean run. No cookies, no
   identifiers; invalid values are ignored. Counts are read in GoatCounter, not on the site.
 - Rack timeline: a sparkline of weekly commits sits above the slider; each bar is
   titled with its week and count, and can be clicked or dragged across to scrub (pointer
