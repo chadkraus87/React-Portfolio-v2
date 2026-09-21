@@ -806,20 +806,28 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   const weekBars = [...root.querySelectorAll('.sr-week-spark i')];
   const lastWeek = Number(weekRange.max);
   let replayTimer = 0;
+  // While comparing, the week the drag started from stays outlined behind the current one.
+  let compareWeek = null;
   function showWeek(k) {
     const w = weekSnapshot(model.activity, P, k);
+    const ref = compareWeek === null || compareWeek === k ? null : weekSnapshot(model.activity, P, compareWeek);
     P.forEach((p) => {
       units[p.i].classList.toggle('wk-on', w.commits.has(p.slug));
       units[p.i].classList.toggle('wk-down', w.down.has(p.slug));
+      units[p.i].classList.toggle('wk-ref', Boolean(ref?.commits.has(p.slug)) && !w.commits.has(p.slug));
     });
     root.classList.toggle('is-timeline', k !== lastWeek);
     weekBars.forEach((bar, i) => bar.classList.toggle('is-on', i === k));
     const downNames = P.filter((p) => w.down.has(p.slug)).map((p) => p.title);
     const text = `Week of ${formatDay(w.start)}${k === lastWeek ? ' (latest)' : ''} · ${w.total} public commit${w.total === 1 ? '' : 's'}${downNames.length ? ` · demo down: ${downNames.join(', ')}` : ''}`;
     // The control is narrow and the "Week" label beside it already says what this is.
-    weekOut.textContent = `${formatDay(w.start)}${k === lastWeek ? ' (latest)' : ''} · ${w.total} commit${w.total === 1 ? '' : 's'}${downNames.length ? ' · demo down' : ''}`;
-    weekRange.setAttribute('aria-valuetext', text);
-    return text;
+    weekOut.textContent = ref
+      ? `${formatDay(w.start)} · ${w.total} vs ${formatDay(ref.start)} · ${ref.total}`
+      : `${formatDay(w.start)}${k === lastWeek ? ' (latest)' : ''} · ${w.total} commit${w.total === 1 ? '' : 's'}${downNames.length ? ' · demo down' : ''}`;
+    weekRange.setAttribute('aria-valuetext', ref
+      ? `${text}, compared with the week of ${formatDay(ref.start)}: ${ref.total} public commit${ref.total === 1 ? '' : 's'}`
+      : text);
+    return weekRange.getAttribute('aria-valuetext');
   }
   const stopReplay = () => { win.clearTimeout(replayTimer); timers.delete(replayTimer); replayBtn.setAttribute('aria-pressed', 'false'); };
   function replayFrom(k) {
@@ -830,7 +838,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     if (k >= lastWeek) { stopReplay(); return; }
     replayTimer = later(() => replayFrom(k + 1), 1400);
   }
-  on(weekRange, 'input', () => { stopReplay(); showWeek(Number(weekRange.value)); });
+  on(weekRange, 'input', () => { stopReplay(); compareWeek = null; root.classList.remove('is-compare'); showWeek(Number(weekRange.value)); });
   // Click or drag across the bars to scrub the weeks, with the racks lighting as you
   // go. Pointer only: the slider beside it is the keyboard control, and the bars stay
   // out of the tab order. The week is spoken once, on release, not on every step.
@@ -850,12 +858,18 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     stopReplay();
     sparkBox = sparkEl.getBoundingClientRect();
     sparkEl.setPointerCapture(e.pointerId);
+    // Holding Shift keeps the week you started on lit behind the one you drag to.
+    compareWeek = e.shiftKey ? Number(weekRange.value) : null;
+    root.classList.toggle('is-compare', compareWeek !== null);
     scrubTo(weekAtX(e.clientX));
+    showWeek(Number(weekRange.value));
   });
   on(sparkEl, 'pointermove', (e) => { if (sparkEl.hasPointerCapture(e.pointerId)) scrubTo(weekAtX(e.clientX)); });
   on(sparkEl, 'pointerup', (e) => {
     if (sparkEl.hasPointerCapture(e.pointerId)) sparkEl.releasePointerCapture(e.pointerId);
     sparkBox = null;
+    compareWeek = null;
+    root.classList.remove('is-compare');
     say(showWeek(Number(weekRange.value)));
   });
   on(replayBtn, 'click', () => {

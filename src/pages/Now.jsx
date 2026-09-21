@@ -3,6 +3,7 @@ import { RACK_MODEL } from '../lib/rack.js';
 import { latestFullWeeks } from '../lib/rackModel.js';
 import { formatUpdated, formatDay } from '../lib/projectMeta.js';
 import { now } from '../data/now.js';
+import audience from '../data/audience.json';
 import './Now.css';
 
 const P = RACK_MODEL.projects;
@@ -13,6 +14,12 @@ const WEEK_COMMITS = WEEK
 const IN_PROGRESS = P.filter((p) => p.status === 'In progress');
 const RECENT = [...P].sort((a, b) => b.updated.localeCompare(a.updated) || a.i - b.i).slice(0, 3);
 const LIVE = P.filter((p) => p.projectLink);
+// What to lead with: the page each referrer opened most, written by the daily job from
+// the anonymous ?from= counts (scripts/campaign-summary.mjs). A ranking only — no visit
+// numbers are published — and nothing shows until a page clears the job's floor.
+const LEADS = (audience.leads ?? [])
+  .map((lead) => ({ ...lead, project: P.find((p) => `/projects/${p.slug}` === lead.path) }))
+  .filter((lead) => lead.project || lead.path === '/' || lead.path.startsWith('/'));
 const DOWN = LIVE.filter((p) => p.demoDown);
 
 // What's moving now, from the same data as the rest of the site, plus an optional
@@ -84,6 +91,23 @@ export default function Now() {
             ))}
           </ul>
         </section>
+
+        {LEADS.length > 0 && (
+          <section aria-labelledby="now-leads">
+            <h2 id="now-leads">What people open</h2>
+            <ul className="now-list">
+              {LEADS.map((lead) => (
+                <li key={`${lead.source}-${lead.path}`}>
+                  {lead.project
+                    ? <Link viewTransition to={lead.path}>{lead.project.title}</Link>
+                    : <Link viewTransition to={lead.path}>{lead.path}</Link>}
+                  <span>Most opened from {lead.source}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="now-more">From the anonymous counts on links that say where they came from. Rankings only, no visit numbers.</p>
+          </section>
+        )}
 
         <section aria-labelledby="now-demos">
           <h2 id="now-demos">Live demos</h2>

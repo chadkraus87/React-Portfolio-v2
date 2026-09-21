@@ -183,13 +183,16 @@ middleware.js            Vercel Routing Middleware: share previews for ?unit= li
   optional note from Chad.
 - **Search** — press `/` (or ⌘K away from the home page) to find projects, tools, field
   notes, changes and pages, grouped by kind with PgUp / PgDn to jump between groups, and
-  a capped group says how many more it matched and can be expanded from its own row.
+  a capped group says how many more it matched and can be expanded from its own row, which
+  stays expanded for the rest of the session.
 - **Where a visit came from** — `?from=linkedin` on any page adds anonymous per-page events,
   plus one recording the page they landed on, so the counts separate a profile link from a
   post link. The parameter is stripped from the URL, and the daily job can summarise the
-  counts in its run summary when a GoatCounter API token is configured.
+  counts in its run summary when a GoatCounter API token is configured, and writes the
+  most-opened page per source to `/now` as a ranking (no visit numbers).
 - **Rack timeline** — a sparkline of commits per week sits above the slider, with the
-  chosen week lit; drag across it or scrub with the arrow keys, or press Replay to watch twelve weeks of commits,
+  chosen week lit; drag across it (hold Shift to compare two weeks) or scrub with the
+  arrow keys, or press Replay to watch twelve weeks of commits,
   with any recorded demo outage replayed as an amber power light.
 - **Uptime API** — `/api/status` and `/api/digest` return the uptime record and the weekly
   digest as JSON (CORS open).

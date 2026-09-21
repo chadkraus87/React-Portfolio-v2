@@ -39,19 +39,19 @@ jobs:
         continue-on-error: true
         env:
           GOATCOUNTER_TOKEN: ${{ secrets.GOATCOUNTER_TOKEN }}
-        run: node scripts/campaign-summary.mjs 30 >> "$GITHUB_STEP_SUMMARY"
+        run: node scripts/campaign-summary.mjs 30 --write src/data/audience.json >> "$GITHUB_STEP_SUMMARY"
       - name: Fetch public commit activity
         continue-on-error: true
         run: node scripts/fetch-activity.mjs
       - name: Commit if changed
         run: |
-          if git diff --quiet -- src/data/activity.json src/data/uptime.json; then
+          if git diff --quiet -- src/data/activity.json src/data/uptime.json src/data/audience.json; then
             echo "Nothing changed."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/data/activity.json src/data/uptime.json
+          git add src/data/activity.json src/data/uptime.json src/data/audience.json
           git commit -m "chore: refresh public activity and demo uptime"
           git push origin HEAD:main
       - name: Sync the stale-evidence issue

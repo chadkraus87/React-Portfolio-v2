@@ -733,10 +733,11 @@ test('a capped search group expands from its own row', async ({ page }) => {
   await expect(dialog).toBeVisible();
   await expect(dialog.getByRole('option', { name: /^Show all \d+ / })).toHaveCount(moreRowsBefore - 1);
   expect(await dialog.locator('.search-opt:not(.search-more)').count()).toBeGreaterThan(optionsBefore);
-  // Typing again puts the cap back.
+  // Typing again leaves that kind expanded (remembered for the session), so its row
+  // stays gone; any other capped kind keeps its own.
   await dialog.getByRole('combobox').fill('demos');
   await dialog.getByRole('combobox').fill('demo');
-  await expect(dialog.getByRole('option', { name: /^Show all \d+ / })).toHaveCount(moreRowsBefore);
+  await expect(dialog.getByRole('option', { name: /^Show all \d+ / })).toHaveCount(moreRowsBefore - 1);
 });
 
 test('dragging across the sparkline scrubs the weeks', async ({ page }) => {
@@ -756,4 +757,55 @@ test('dragging across the sparkline scrubs the weeks', async ({ page }) => {
   await expect(page.locator('.sr')).toHaveClass(/is-timeline/);
   await expect(spark.locator('i').nth(value)).toHaveClass(/is-on/);
   await expect(page.locator('.sr-week-out')).toContainText('commit');
+});
+
+test('an expanded search group stays expanded for the rest of the session', async ({ page }) => {
+  await page.goto('/now');
+  await page.keyboard.press('/');
+  const dialog = page.getByRole('dialog', { name: 'Search' });
+  const input = dialog.getByRole('combobox');
+  await input.fill('demo');
+  const showAll = dialog.getByRole('option', { name: /^Show all \d+ / });
+  const label = await showAll.first().textContent();
+  const kind = label.replace(/^Show all \d+ /, '').trim();
+  await showAll.first().click();
+  // Typing again keeps that kind open, rather than re-capping it every search.
+  await input.fill('demos');
+  await input.fill('demo');
+  await expect(dialog.getByRole('option', { name: new RegExp(`^Show all \\d+ ${kind}$`) })).toHaveCount(0);
+  // And it survives a reload, because it is remembered for the session.
+  await page.reload();
+  await page.keyboard.press('/');
+  await input.fill('demo');
+  await expect(dialog.getByRole('option', { name: new RegExp(`^Show all \\d+ ${kind}$`) })).toHaveCount(0);
+});
+
+test('/now shows nothing about audiences until the daily job has ranked a page', async ({ page }) => {
+  const audience = JSON.parse(readFileSync('src/data/audience.json', 'utf8'));
+  await page.goto('/now');
+  if (audience.leads?.length) {
+    await expect(page.getByRole('heading', { level: 2, name: 'What people open' })).toBeVisible();
+  } else {
+    await expect(page.getByRole('heading', { level: 2, name: 'What people open' })).toHaveCount(0);
+  }
+});
+
+test('shift-dragging the sparkline compares two weeks', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const spark = page.locator('.sr-week-spark');
+  const box = await spark.boundingBox();
+  const mid = box.y + box.height / 2;
+  await page.mouse.move(box.x + box.width - 2, mid);
+  await page.keyboard.down('Shift');
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * 0.2, mid, { steps: 6 });
+  await expect(page.locator('.sr')).toHaveClass(/is-compare/);
+  await expect(page.locator('.sr-week-out')).toContainText(' vs ');
+  expect(await page.locator('.unit.wk-ref').count()).toBeGreaterThan(0);
+  await page.mouse.up();
+  await page.keyboard.up('Shift');
+  // Releasing ends the comparison and leaves the week you dragged to.
+  await expect(page.locator('.sr')).not.toHaveClass(/is-compare/);
+  await expect(page.locator('.sr-week-out')).not.toContainText(' vs ');
 });

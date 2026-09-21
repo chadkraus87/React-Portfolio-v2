@@ -205,6 +205,20 @@ const projectRoutes = parseEntries(projectsSrc).map(({ slug, title }) => ({
   if (unknown.length) throw new Error(`services.js names tools no project uses: ${unknown.join(', ')}`);
 }
 
+// Audience leads name a page on this site, or the build stops: /now must never link
+// somewhere that doesn't exist because an analytics path changed.
+{
+  const audience = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', 'src', 'data', 'audience.json'), 'utf8'));
+  const slugs = new Set(parseEntries(projectsSrc).map((e) => e.slug));
+  const problems = (audience.leads ?? []).flatMap((lead) => {
+    if (!/^[a-z0-9-]{1,20}$/.test(lead.source ?? '')) return [`lead source "${lead.source}" is not a plain slug`];
+    const project = (lead.path ?? '').match(/^\/projects\/([^/]+)$/);
+    if (project) return slugs.has(project[1]) ? [] : [`lead path ${lead.path} is not a project on this site`];
+    return ROUTE_TITLES[lead.path] ? [] : [`lead path ${lead.path} is not a route on this site`];
+  });
+  if (problems.length) throw new Error(`audience.json:\n  ${problems.join('\n  ')}`);
+}
+
 // Incident notes must describe an outage that was actually recorded.
 {
   const sites = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', 'src', 'data', 'uptime.json'), 'utf8')).sites;

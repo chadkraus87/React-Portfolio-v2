@@ -170,7 +170,9 @@ Rendered once by `ServerRoom.jsx`; driven by `src/lib/serverRoom.js`.
   busiest week, with the chosen week in `--accent`. Decoration only: the readout beside it
   carries the numbers, so it is `aria-hidden`. Bars lighten on hover and jump the
   timeline when clicked or dragged across; each carries a title with its week and commit
-  count. The readout beside them holds a fixed 42ch so nothing shifts while scrubbing.
+  count. The readout beside them holds a fixed width so nothing shifts while scrubbing.
+  Shift-drag outlines the starting week's units in `--edge` behind the current week's lit
+  ones, and the readout switches to "date · n vs date · n".
 - **Search groups:** a mono accent heading per kind over a hairline rule, with the match
   count in `--muted` on the right ("4 of 12" when the group is capped) and an accent mono
   "Show all 12 changes" row closing a capped group, options indented

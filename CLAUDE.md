@@ -91,7 +91,8 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   PgDn jump between groups, and a capped heading reads "4 of 12" so nothing is hidden
   silently (`search()` returns `{ results, totals }`). A capped group ends with its own
   "Show all N" row — an option, so arrows reach it and Enter opens it — which lifts the
-  cap for that kind until the query changes (`search(query, index, { expand })`). The flat list the arrow keys and Enter use is built from the
+  cap for that kind (`search(query, index, { expand })`). The expanded kind is remembered
+  in session storage, so it stays open for the rest of the visit. The flat list the arrow keys and Enter use is built from the
   rendered groups, so the highlighted result is always the one Enter opens.
 - `src/lib/campaign.js` — `/?from=<slug>` (lowercase, ≤20 chars) remembers where a visit
   came from for that browser session only, strips the parameter from the address, and
@@ -102,12 +103,19 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   summary through GoatCounter's `/api/v0/stats/hits`. It needs a `GOATCOUNTER_TOKEN`
   secret; without one it prints a one-line notice and exits 0, and the step is
   `continue-on-error`, so analytics can never break the data refresh. Test it with
-  `GOATCOUNTER_FIXTURE=<file>`. No cookies, no
+  `GOATCOUNTER_FIXTURE=<file>`. An API failure prints a notice with the status and a
+  trimmed body and exits 0 — never a failed job, and never a silent one.
+- `src/data/audience.json` is written by that same daily step (`--write`): the page each
+  referrer opened most, rankings only, no visit numbers, and only above a floor of 5
+  visits. `/now` renders it as "What people open"; the build fails if a lead names a page
+  that doesn't exist. No cookies, no
   identifiers; invalid values are ignored. Counts are read in GoatCounter, not on the site.
 - Rack timeline: a sparkline of weekly commits sits above the slider; each bar is
   titled with its week and count, and can be clicked or dragged across to scrub (pointer
   only — the slider is the keyboard control and the bars stay out of the tab order; the
-  week is spoken on release, not on every step). `.sr-week-out` has a fixed 42ch width
+  week is spoken on release, not on every step). Holding Shift while dragging keeps the
+  week you started on outlined (`wk-ref`) behind the week you drag to, and the readout
+  reads "Jul 12 · 0 vs Sep 13 · 3"; releasing ends the comparison. `.sr-week-out` has a fixed width
   because its changing text used to shift the sparkline sideways mid-drag. The Week
   slider and Replay in the room's controls light units by
   commits that week, and show an amber power light for a demo that was down that week

@@ -6,6 +6,12 @@ import { useLocation, useNavigate } from 'react-router';
 // is a combobox over a listbox of results; ↑ ↓ choose, Enter opens, Esc closes.
 export const openSearch = () => window.dispatchEvent(new Event('search:open'));
 
+// A kind expanded once stays expanded for the session: someone who keeps opening the
+// changes doesn't have to lift the cap on every search.
+const EXPAND_KEY = 'search-expand';
+const readExpand = () => { try { return sessionStorage.getItem(EXPAND_KEY) || null; } catch { return null; } };
+const writeExpand = (kind) => { try { sessionStorage.setItem(EXPAND_KEY, kind); } catch { /* not remembered */ } };
+
 // The last few searches, kept in this browser only.
 const RECENT_KEY = 'search-recent';
 const readRecent = () => {
@@ -44,6 +50,7 @@ export default function Search() {
       }
       if (!ref.current.open) ref.current.showModal();
       setRecent(readRecent());
+      setExpand(readExpand());
       inputRef.current?.focus();
     };
     const onKeyDown = (e) => {
@@ -79,7 +86,7 @@ export default function Search() {
   const mark = (text) => (engine ? engine.highlight(text, words) : [{ text, hit: false }])
     .map((part, k) => (part.hit ? <mark key={k}>{part.text}</mark> : <span key={k}>{part.text}</span>));
   const go = (r) => {
-    if (r.expandKind) { setExpand(r.expandKind); return; }
+    if (r.expandKind) { setExpand(r.expandKind); writeExpand(r.expandKind); return; }
     ref.current.close();
     setRecent(rememberSearch(query));
     setQuery('');
@@ -120,7 +127,7 @@ export default function Search() {
           aria-autocomplete="list"
           aria-activedescendant={results[active] ? `search-opt-${active}` : undefined}
           value={query}
-          onChange={(e) => { setQuery(e.target.value); setActive(0); setExpand(null); }}
+          onChange={(e) => { setQuery(e.target.value); setActive(0); }}
           onKeyDown={onInputKey}
         />
         <div className="search-results" id="search-results" role="listbox" aria-label="Results">

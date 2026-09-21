@@ -372,3 +372,7 @@
 .sr-week-spark i { width: 6px; min-height: 2px; height: var(--h, 2%); background: var(--steel-4); cursor: pointer; }
 .sr-week-spark i:hover { background: var(--edge); }
 .sr-week-spark i.is-on { background: var(--accent); }
+
+/* Shift-drag on the sparkline: units that had commits in the week the drag started from
+   keep a dim outline behind the week being dragged to. */
+.sr.is-timeline .unit.wk-ref .face { box-shadow: inset 0 0 0 2px var(--edge); }

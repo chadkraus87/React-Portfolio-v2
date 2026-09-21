@@ -1,6 +1,6 @@
 // Summarises where visits came from, for the daily job's run summary:
 //
-//   node scripts/campaign-summary.mjs [days]
+//   node scripts/campaign-summary.mjs [days] [--write <file>]
 //
 // Reads the anonymous `from/...` events Analytics.jsx records (src/lib/campaign.js)
 // through GoatCounter's API, so Chad can see which links people followed without
@@ -13,6 +13,9 @@ const SITE = process.env.GOATCOUNTER_SITE || 'chadkraus';
 const TOKEN = process.env.GOATCOUNTER_TOKEN || '';
 const FIXTURE = process.env.GOATCOUNTER_FIXTURE || '';
 const days = Math.min(365, Math.max(1, Number(process.argv[2]) || 30));
+const writeTo = process.argv.includes('--write') ? process.argv[process.argv.indexOf('--write') + 1] : '';
+// Only rank a page once it has enough visits to mean anything.
+const LEAD_FLOOR = 5;
 
 if (!/^[a-z0-9-]{1,40}$/.test(SITE)) throw new Error(`unexpected GoatCounter site: "${SITE}"`);
 if (!TOKEN && !FIXTURE) {
@@ -29,17 +32,39 @@ async function load() {
     headers: { authorization: `Bearer ${TOKEN}`, 'content-type': 'application/json' },
     signal: AbortSignal.timeout(20000),
   });
-  // Never echo the body on failure: it is someone else's data, and the token is in play.
-  if (!res.ok) throw new Error(`GoatCounter answered ${res.status}`);
+  // On failure the body is an error message, not statistics: showing a trimmed copy is
+  // what turns "the step went red somewhere" into a diagnosis. The token is never in it.
+  if (!res.ok) {
+    const detail = (await res.text()).replace(/\s+/g, ' ').trim().slice(0, 160);
+    const error = new Error(`GoatCounter answered ${res.status}: ${detail}`);
+    error.soft = true;
+    throw error;
+  }
   return res.json();
 }
 
-const data = await load();
+// A failure here is a notice in the summary, never a failed job: this is analytics
+// sitting next to the data refresh the site actually depends on.
+let data;
+try {
+  data = await load();
+} catch (error) {
+  console.log(`_Could not read GoatCounter: ${error.message}_`);
+  process.exit(0);
+}
 const events = (data.hits ?? [])
   .filter((h) => h.event && String(h.path).replace(/^\//, '').startsWith('from/'))
   .map((h) => ({ path: String(h.path).replace(/^\//, ''), count: Number(h.count) || 0 }));
 
+const writeLeads = async (leads) => {
+  if (!writeTo) return;
+  const { writeFile } = await import('node:fs/promises');
+  // Ranking only, never counts: the site says what to lead with, not how much traffic it gets.
+  await writeFile(writeTo, `${JSON.stringify({ updated: new Date().toISOString().slice(0, 10), days, leads }, null, 2)}\n`);
+};
+
 if (!events.length) {
+  await writeLeads([]);
   console.log(`_No \`?from=\` visits recorded in the last ${days} days._`);
   process.exit(0);
 }
@@ -65,6 +90,15 @@ const table = (title, rows, headers) => {
     '',
   ];
 };
+
+// What to lead with: the most-opened page per source, above the floor.
+const best = new Map();
+for (const [key, count] of opened) {
+  const [source, path] = key.split('|');
+  if (count < LEAD_FLOOR) continue;
+  if ((best.get(source)?.count ?? 0) < count) best.set(source, { path, count });
+}
+await writeLeads([...best].map(([source, { path }]) => ({ source, path })));
 
 console.log([
   `### Where visits came from (last ${days} days)`,
