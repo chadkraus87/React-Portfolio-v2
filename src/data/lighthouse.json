@@ -1,0 +1,69 @@
+{
+  "updated": "2026-09-21",
+  "sites": {
+    "petcenza": {
+      "measured": "2026-09-21",
+      "formFactor": "mobile",
+      "performance": 91,
+      "accessibility": 95,
+      "bestPractices": 100,
+      "seo": 100
+    },
+    "techops-command-center": {
+      "measured": "2026-09-21",
+      "formFactor": "mobile",
+      "performance": 77,
+      "accessibility": 92,
+      "bestPractices": 100,
+      "seo": 100
+    },
+    "coachrhythm": {
+      "measured": "2026-09-21",
+      "formFactor": "mobile",
+      "performance": 95,
+      "accessibility": 95,
+      "bestPractices": 96,
+      "seo": 91
+    },
+    "greenline": {
+      "measured": "2026-09-21",
+      "formFactor": "mobile",
+      "performance": 95,
+      "accessibility": 100,
+      "bestPractices": 100,
+      "seo": 60
+    },
+    "homelab-commander": {
+      "measured": "2026-09-21",
+      "formFactor": "mobile",
+      "performance": 88,
+      "accessibility": 90,
+      "bestPractices": 93,
+      "seo": 100
+    },
+    "deskdaemon": {
+      "measured": "2026-09-21",
+      "formFactor": "mobile",
+      "performance": 99,
+      "accessibility": 100,
+      "bestPractices": 100,
+      "seo": 100
+    },
+    "stack-city": {
+      "measured": "2026-09-21",
+      "formFactor": "mobile",
+      "performance": 99,
+      "accessibility": 90,
+      "bestPractices": 93,
+      "seo": 100
+    },
+    "packet-and-pine": {
+      "measured": "2026-09-21",
+      "formFactor": "mobile",
+      "performance": 52,
+      "accessibility": 100,
+      "bestPractices": 93,
+      "seo": 100
+    }
+  }
+}

@@ -125,6 +125,10 @@ project stories now live on the PetCenza and CoachRhythm case studies.
   rack and case study, and in a GitHub issue, until it answers again.
 - `/changes` lists what changed each month, generated from public commits only.
   Commit subjects appear as written in the public repositories.
+- Every live demo is measured with Lighthouse monthly, and the case study quotes the
+  score with its date — including the ones that aren't flattering, because a number
+  without a date is a claim rather than evidence.
+- A project can carry a verdict: what would be done differently, in Chad's words.
 - Case studies print cleanly for interview packets; `?` shows keyboard shortcuts.
 - `/status` shows every live demo's recorded uptime; private projects are named as
   not checked rather than shown as up.

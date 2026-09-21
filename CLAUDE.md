@@ -77,6 +77,14 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   tour removes both parameters. The interview pack prints one page per project with its
   screenshot and a QR code (`dist/qr/<slug>.svg`, generated at prerender by the pinned
   `qrcode` devDependency). The pack shows email and LinkedIn but no phone number.
+- `src/data/lighthouse.json` — generated. `.github/workflows/lighthouse-demos.yml` runs
+  `scripts/measure-demos.mjs` monthly, measuring every live demo with Lighthouse on
+  mobile, and commits only when a score actually moves. Each case study prints its
+  scores with the date they were measured, so no number is quoted without one. A site
+  that fails to measure keeps its previous entry.
+- Case studies also say how many public commits landed since the screenshot was taken
+  (`commitsSinceImage()` in `rackModel.js`, self-tested at build). It counts only from
+  the month after `imageDate`, so a month-granular date can never inflate the number.
 - `src/data/services.js` lists the hosted services a live demo calls at runtime
   (Supabase, Vercel, Claude API). Only these appear in "If a shared service went down"
   on `/status`; build and test tools never do. The build fails if a name there isn't a
@@ -263,7 +271,8 @@ updated comment each).
   `projectLink` / `projectLinkLabel` / `repoLink`, `status`
   ('Live' | 'In progress' | 'Private'), `updated` ('YYYY-MM') and `imageDate`
   ('YYYY-MM' the screenshot was captured). A demo adds `demo`, `demoDate`,
-  `demoChapters` and optionally `demoNote`.
+  `demoChapters` and optionally `demoNote`. Optional `verdict` is one honest paragraph
+  of what you'd do differently, shown on the case study — write it yourself or leave it out.
 - **Change bio / title / tagline / experience / skills / certifications / contact** →
   `src/data/profile.js`. Certifications are `{ name, meta }` objects.
 - **Swap the resume** → replace the PDF in `src/assets/files/` and update the import

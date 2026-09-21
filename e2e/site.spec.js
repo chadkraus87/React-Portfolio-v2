@@ -829,3 +829,45 @@ test('the console answers "from <source>" from the ranked visit data', async ({ 
   await input.press('Enter');
   await expect(log).toContainText('from <source>');
 });
+
+test('case studies quote measured Lighthouse scores with the date they were taken', async ({ page }) => {
+  const lh = JSON.parse(readFileSync('src/data/lighthouse.json', 'utf8'));
+  const slugs = Object.keys(lh.sites ?? {});
+  expect(slugs.length).toBeGreaterThan(0);
+  for (const slug of slugs.slice(0, 3)) {
+    await page.goto(`/projects/${slug}`);
+    const line = page.locator('.cs-lh');
+    await expect(line).toBeVisible();
+    await expect(line).toContainText(`${lh.sites[slug].performance} performance`);
+    await expect(line).toContainText('measured');
+  }
+  // A project with no measurement says nothing rather than implying one.
+  const unmeasured = SLUGS.find((s) => !slugs.includes(s));
+  if (unmeasured) {
+    await page.goto(`/projects/${unmeasured}`);
+    await expect(page.locator('.cs-lh')).toHaveCount(0);
+  }
+});
+
+test('a screenshot shows how much has shipped since it was taken', async ({ page }) => {
+  await page.goto('/projects/petcenza');
+  const note = page.locator('.monitor-note');
+  await expect(note).toBeVisible();
+  const text = await note.textContent();
+  // Either it names a count, or it says nothing — never an unexplained number.
+  if (/commits? since/.test(text)) expect(text).toMatch(/\d+ public commits? since/);
+  // DeskDaemon's screenshot is from the current month, so nothing can have shipped "since".
+  await page.goto('/projects/deskdaemon');
+  await expect(page.locator('.monitor-note')).not.toContainText('commits since');
+});
+
+test('a project shows a verdict only when one has been written', async ({ page }) => {
+  const src = readFileSync('src/data/projects.js', 'utf8');
+  const withVerdict = [...src.matchAll(/slug: '([^']+)'[\s\S]*?verdict:/g)].map((m) => m[1]);
+  await page.goto('/projects/petcenza');
+  if (withVerdict.includes('petcenza')) {
+    await expect(page.getByRole('heading', { name: 'What I’d do differently' })).toBeVisible();
+  } else {
+    await expect(page.locator('.cs-verdict')).toHaveCount(0);
+  }
+});

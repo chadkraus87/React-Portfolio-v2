@@ -51,6 +51,7 @@ export function buildRackModel({ projects, racks, lenses, activity, uptime = { s
     p.demoDown = uptime.sites?.[p.slug]?.ok === false ? uptime.sites[p.slug].since : null;
     p.uptime = uptime.sites?.[p.slug] ?? null;
     p.lensNames = Object.values(lenses).filter((l) => l.slugs.includes(p.slug)).map((l) => l.name);
+    p.sinceEvidence = { image: commitsSinceImage(p, activity), demo: p.demoDate ? commitsSinceImage(p, activity, p.demoDate) : 0 };
   });
 
   const counts = new Map();
@@ -157,4 +158,16 @@ export function weekSnapshot(activity, projects, k) {
     if (p.uptime && uptimeStrip(p.uptime, end, 7).down) down.add(p.slug);
   }
   return { start, end, total: [...commits.values()].reduce((a, b) => a + b, 0), commits, down };
+}
+
+// Public commits counted only from the month AFTER a screenshot was taken, so the
+// number is never inflated by commits that came before the capture. imageDate is
+// month-granular, which is why this is deliberately conservative.
+export function commitsSinceImage(project, activity, when = project.imageDate) {
+  if (!project.act?.weeks?.length || !when) return 0;
+  const DAY = 86_400_000;
+  const fromMs = Date.parse(`${activity.from}T00:00:00Z`);
+  const [year, month] = when.split('-').map(Number);
+  const afterMs = Date.UTC(month === 12 ? year + 1 : year, month === 12 ? 0 : month, 1);
+  return project.act.weeks.reduce((sum, n, k) => (fromMs + k * 7 * DAY >= afterMs ? sum + n : sum), 0);
 }

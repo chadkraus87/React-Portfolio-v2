@@ -1,0 +1,48 @@
+# Measures every live demo with Lighthouse once a month, so each case study can quote a
+# score with the date it was measured instead of a number that quietly goes stale.
+# Scores are committed to src/data/lighthouse.json only when one actually moves, which
+# keeps a quiet month from redeploying the site.
+name: Measure live demos
+
+on:
+  schedule:
+    - cron: '23 6 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-refresh
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      - name: Measure every live demo
+        run: |
+          {
+            echo "### Lighthouse on the live demos"
+            echo
+            echo '```'
+            node scripts/measure-demos.mjs --write src/data/lighthouse.json
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Commit if a score moved
+        run: |
+          if git diff --quiet -- src/data/lighthouse.json; then
+            echo "No score changed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/lighthouse.json
+          git commit -m "chore: refresh live demo Lighthouse scores"
+          git push origin HEAD:main

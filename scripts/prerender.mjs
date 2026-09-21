@@ -23,7 +23,7 @@ import { SITE_NAME,
 // racks.js and rackModel.js import nothing either, so the build can check that
 // every project stands in a rack and self-test the model the server room uses.
 import { racks, lenses } from '../src/data/racks.js';
-import { toolsOf, buildRackModel, uptimeStrip, incidentsFor, latestFullWeeks, weekSnapshot } from '../src/lib/rackModel.js';
+import { toolsOf, buildRackModel, uptimeStrip, incidentsFor, latestFullWeeks, weekSnapshot, commitsSinceImage } from '../src/lib/rackModel.js';
 import { incidents } from '../src/data/incidents.js';
 import { hostedServices } from '../src/data/services.js';
 import QRCode from 'qrcode';
@@ -217,6 +217,33 @@ const projectRoutes = parseEntries(projectsSrc).map(({ slug, title }) => ({
     return ROUTE_TITLES[lead.path] ? [] : [`lead path ${lead.path} is not a route on this site`];
   });
   if (problems.length) throw new Error(`audience.json:\n  ${problems.join('\n  ')}`);
+}
+
+// Measured Lighthouse scores must name a real project and look like scores, so a case
+// study can never quote a number for a project that isn't there.
+{
+  const here = dirname(fileURLToPath(import.meta.url));
+  const lh = JSON.parse(readFileSync(join(here, '..', 'src', 'data', 'lighthouse.json'), 'utf8'));
+  const slugs = new Set(parseEntries(projectsSrc).map((e) => e.slug));
+  const problems = Object.entries(lh.sites ?? {}).flatMap(([slug, s]) => {
+    if (!slugs.has(slug)) return [`${slug} is not a project on this site`];
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(s.measured ?? '')) return [`${slug} has no measurement date`];
+    return ['performance', 'accessibility', 'bestPractices', 'seo']
+      .filter((k) => !Number.isInteger(s[k]) || s[k] < 0 || s[k] > 100)
+      .map((k) => `${slug}.${k} is not a score between 0 and 100`);
+  });
+  if (problems.length) throw new Error(`lighthouse.json:\n  ${problems.join('\n  ')}`);
+}
+
+// Commits counted since a screenshot ignore everything up to the end of that month.
+{
+  const activity = { from: '2026-06-22', to: '2026-09-20', repos: {} };
+  const project = { imageDate: '2026-07', act: { weeks: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5] } };
+  const got = commitsSinceImage(project, activity);
+  if (commitsSinceImage(project, activity, '2026-08') !== 5) throw new Error('commitsSinceImage: an explicit date must override imageDate');
+  // Weeks starting on or after 1 August: 2026-08-03 is week 6, so six weeks of five.
+  if (got !== 30) throw new Error(`commitsSinceImage: got ${got}, expected 30`);
+  if (commitsSinceImage({ imageDate: '2026-07' }, activity) !== 0) throw new Error('commitsSinceImage: a project with no activity must be 0');
 }
 
 // Incident notes must describe an outage that was actually recorded.

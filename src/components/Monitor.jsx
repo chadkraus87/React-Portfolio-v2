@@ -11,12 +11,14 @@ import { savesData } from '../lib/dataSaver.js';
 // and every capture says when it was made. Visitors saving data see the
 // screenshot until they ask for the video.
 export default function Monitor({ project, sizes }) {
-  const { title, image, demo, demoNote, demoChapters, updated } = project;
+  const { title, image, demo, demoNote, demoChapters, updated, sinceEvidence } = project;
   const [saving] = useState(savesData);
   const [videoAsked, setVideoAsked] = useState(false);
   const showVideo = Boolean(demo) && (!saving || videoAsked);
   const chapters = showVideo && demoChapters?.length ? demoChapters : null;
   const evidence = evidenceOf(showVideo ? project : { ...project, demo: null });
+  // Count from the same capture the label names, not from the other one.
+  const since = (showVideo ? sinceEvidence?.demo : sinceEvidence?.image) ?? 0;
   const videoRef = useRef(null);
   const ccRef = useRef(null);
   const wantedRef = useRef(true);
@@ -110,6 +112,7 @@ export default function Monitor({ project, sizes }) {
         <figcaption className="monitor-note">
           {evidence && <span>{evidence.label}</span>}
           {evidence?.stale && <span className="monitor-stale">Older than the {formatUpdated(updated)} update</span>}
+          {since > 0 && <span>{since} public commit{since === 1 ? '' : 's'} since</span>}
           {showVideo && demoNote && <span>{demoNote}</span>}
           {demo && !showVideo && <span>Demo video not loaded, to save data</span>}
         </figcaption>

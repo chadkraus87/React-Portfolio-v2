@@ -100,3 +100,10 @@
   @keyframes trace-draw { to { stroke-dashoffset: 0; } }
 }
 @media print { .trace { display: none !important; } }
+
+/* An optional verdict, written by hand in projects.js. */
+.cs-verdict { margin-top: 44px; padding: 20px 22px; border-left: 3px solid var(--accent); background: var(--surface); }
+.cs-verdict h2 { margin: 6px 0 10px; font: 800 clamp(24px, 2.2vw, 32px)/1 var(--f-display); text-transform: uppercase; }
+.cs-verdict p { max-width: 62ch; font-size: 16.5px; line-height: 1.7; color: var(--prose); }
+@media print { .cs-verdict { border-left-color: #bbb; } }
+.cs-lh { font: 500 12.5px/1.7 var(--f-mono); color: var(--prose); }
