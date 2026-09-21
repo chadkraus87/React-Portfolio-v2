@@ -28,15 +28,22 @@ const since = new Date(Date.now() - days * 86_400_000).toISOString().slice(0, 13
 async function load() {
   if (FIXTURE) return JSON.parse(await (await import('node:fs/promises')).readFile(FIXTURE, 'utf8'));
   const url = `https://${SITE}.goatcounter.com/api/v0/stats/hits?start=${since}:00:00Z&limit=200`;
-  const res = await fetch(url, {
-    headers: { authorization: `Bearer ${TOKEN}`, 'content-type': 'application/json' },
-    signal: AbortSignal.timeout(20000),
-  });
+  // GoatCounter decides JSON-or-HTML from Content-Type, not Accept (an Accept-only
+  // request gets the HTML login page), so send both.
+  const headers = { authorization: `Bearer ${TOKEN}`, 'content-type': 'application/json', accept: 'application/json' };
+  const res = await fetch(url, { headers, signal: AbortSignal.timeout(20000) });
   // On failure the body is an error message, not statistics: showing a trimmed copy is
   // what turns "the step went red somewhere" into a diagnosis. The token is never in it.
   if (!res.ok) {
     const detail = (await res.text()).replace(/\s+/g, ' ').trim().slice(0, 160);
-    const error = new Error(`GoatCounter answered ${res.status}: ${detail}`);
+    // Ask the token who it is: separates "this token can't read anything" from "only
+    // this endpoint is wrong". Runs where the token lives, and prints only a status.
+    let me = 'not checked';
+    try {
+      const probe = await fetch(`https://${SITE}.goatcounter.com/api/v0/me`, { headers, signal: AbortSignal.timeout(10000) });
+      me = String(probe.status);
+    } catch { me = 'unreachable'; }
+    const error = new Error(`GoatCounter answered ${res.status} for ${url.replace(/^https:\/\//, '')} (/api/v0/me answered ${me}) — ${detail}`);
     error.soft = true;
     throw error;
   }
