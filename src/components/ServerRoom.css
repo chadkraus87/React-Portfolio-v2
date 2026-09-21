@@ -368,5 +368,6 @@
    beside it carries the numbers, so this is decoration (aria-hidden). */
 .sr-week-scrub { display: grid; gap: 3px; }
 .sr-week-spark { display: flex; align-items: flex-end; justify-content: space-between; width: 150px; height: 20px; }
-.sr-week-spark i { width: 6px; min-height: 2px; height: var(--h, 2%); background: var(--steel-4); }
+.sr-week-spark i { width: 6px; min-height: 2px; height: var(--h, 2%); background: var(--steel-4); cursor: pointer; }
+.sr-week-spark i:hover { background: var(--edge); }
 .sr-week-spark i.is-on { background: var(--accent); }

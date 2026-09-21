@@ -109,8 +109,8 @@ project stories now live on the PetCenza and CoachRhythm case studies.
 - A 20-second first-visit tour is offered once per browser and can be skipped.
 - Each case study draws its architecture as ordered layers. Every item comes
   from the project's own write-up; the diagram never adds a claim.
-- A `/?from=` link (for example from LinkedIn) records which pages that visit opened, as
-  anonymous counts only. The value is kept for the session in the browser, never in a
+- A `?from=` link (for example from LinkedIn), on any page, records which pages that visit
+  opened and which one it started on, as anonymous counts only. The value is kept for the session in the browser, never in a
   cookie, and the parameter is removed from the address so shared links stay clean.
 - Analytics are GoatCounter pageviews plus anonymous interaction counts (unit
   pulls, port signals, `hire`, copied links, printing, sound, tour). No cookies,

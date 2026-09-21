@@ -29,9 +29,18 @@ export default function Search() {
   const [active, setActive] = useState(0);
   const [recent, setRecent] = useState([]);
 
+  // The listeners are bound once for the component's life. Re-binding them whenever the
+  // route or the loaded index changed left a gap on every navigation, and a "/" pressed
+  // in that gap did nothing; the current path and index are read through refs instead.
+  const pathRef = useRef(pathname);
+  pathRef.current = pathname;
+  const engineRef = useRef(null);
+
   useEffect(() => {
     const open = () => {
-      if (!engine) import('../lib/searchIndex.js').then(setEngine);
+      if (!engineRef.current) {
+        import('../lib/searchIndex.js').then((loaded) => { engineRef.current = loaded; setEngine(loaded); });
+      }
       if (!ref.current.open) ref.current.showModal();
       setRecent(readRecent());
       inputRef.current?.focus();
@@ -40,7 +49,7 @@ export default function Search() {
       const inField = e.target.closest?.('input, textarea, select, [contenteditable="true"]');
       const slash = e.key === '/' && !e.metaKey && !e.ctrlKey && !e.altKey && !inField;
       // On the home page ⌘K belongs to the rack console.
-      const cmdK = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k' && pathname !== '/';
+      const cmdK = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k' && pathRef.current !== '/';
       if (!slash && !cmdK) return;
       e.preventDefault();
       open();
@@ -51,9 +60,9 @@ export default function Search() {
       window.removeEventListener('search:open', open);
       document.removeEventListener('keydown', onKeyDown);
     };
-  }, [engine, pathname]);
+  }, []);
 
-  const scored = engine ? engine.search(query) : [];
+  const { results: scored, totals } = engine ? engine.search(query) : { results: [], totals: new Map() };
   const groups = engine ? engine.grouped(scored) : [];
   const results = groups.flatMap(([, items]) => items);
   // Where each group starts in the flat result order, for PageUp / PageDown.
@@ -108,7 +117,10 @@ export default function Search() {
         <div className="search-results" id="search-results" role="listbox" aria-label="Results">
           {groups.map(([kind, items]) => (
             <div key={kind} className="search-group" role="group" aria-labelledby={`search-g-${kind.replace(/\s+/g, '-')}`}>
-              <p className="search-group-head" id={`search-g-${kind.replace(/\s+/g, '-')}`}>{engine.PLURAL[kind] ?? kind}</p>
+              <p className="search-group-head" id={`search-g-${kind.replace(/\s+/g, '-')}`}>
+                {engine.PLURAL[kind] ?? kind}
+                <span>{items.length < (totals.get(kind) ?? 0) ? `${items.length} of ${totals.get(kind)}` : items.length}</span>
+              </p>
               {items.map((r) => {
                 flat += 1;
                 const k = flat;

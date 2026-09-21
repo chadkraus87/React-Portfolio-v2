@@ -664,3 +664,51 @@ test('the rack timeline has a sparkline and scrubs with the arrow keys', async (
   await expect(bars.nth(weeks - 1)).toHaveClass(/is-on/);
   await expect(page.locator('.sr')).not.toHaveClass(/is-timeline/);
 });
+
+test('a capped search group says how many it is hiding', async ({ page }) => {
+  await page.goto('/now');
+  await page.keyboard.press('/');
+  const dialog = page.getByRole('dialog', { name: 'Search' });
+  await dialog.getByRole('combobox').fill('demo');
+  const heads = dialog.locator('.search-group-head');
+  expect(await heads.count()).toBeGreaterThan(0);
+  // Every heading ends in either a plain count or "shown of total", and the counts agree.
+  for (const head of await heads.all()) {
+    const label = (await head.locator('span').textContent()).trim();
+    const shown = await head.locator('xpath=following-sibling::*[@role="option"]').count();
+    const capped = label.match(/^(\d+) of (\d+)$/);
+    if (capped) {
+      expect(Number(capped[1])).toBe(shown);
+      expect(Number(capped[2])).toBeGreaterThan(Number(capped[1]));
+    } else {
+      expect(Number(label)).toBe(shown);
+    }
+  }
+});
+
+test('a ?from= link works on any page and records the landing page once', async ({ page }) => {
+  await page.route(/gc\.zgo\.at/, (route) => route.abort());
+  await page.addInitScript(() => { window.__events = []; window.goatcounter = { count: (e) => window.__events.push(e) }; });
+  // Straight to a case study, the way a post link would.
+  await page.goto('/projects/petcenza?from=linkedin');
+  await expect(page).not.toHaveURL(/from=/);
+  const events = () => page.evaluate(() => window.__events.filter((e) => e.event).map((e) => e.path));
+  await expect.poll(events).toContain('from/linkedin/landed/projects/petcenza');
+  expect((await events()).filter((p) => p.includes('/landed/'))).toHaveLength(1);
+  await page.goto('/now');
+  await expect.poll(events).toContain('from/linkedin/now');
+  // Once per session: the second page carries the source but not another landing event.
+  expect((await events()).filter((p) => p.includes('/landed/'))).toHaveLength(0);
+});
+
+test('clicking a sparkline bar jumps the timeline to that week', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const bars = page.locator('.sr-week-spark i');
+  await expect(bars.first()).toHaveAttribute('title', /^Week of .* public commit/);
+  await bars.nth(4).click();
+  await expect(bars.nth(4)).toHaveClass(/is-on/);
+  await expect(page.locator('.sr')).toHaveClass(/is-timeline/);
+  await expect(page.locator('#sr-week')).toHaveValue('4');
+  await expect(page.locator('.sr-week-out')).toContainText('Week of');
+});

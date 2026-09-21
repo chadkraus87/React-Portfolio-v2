@@ -182,9 +182,11 @@ middleware.js            Vercel Routing Middleware: share previews for ?unit= li
 - **Now** — `/now`: this week's public commits, work in progress and demo health, with an
   optional note from Chad.
 - **Search** — press `/` (or ⌘K away from the home page) to find projects, tools, field
-  notes, changes and pages, grouped by kind with PgUp / PgDn to jump between groups.
-- **Where a visit came from** — `/?from=linkedin` adds an anonymous per-page event so the
-  GoatCounter counts show what that audience opened. The parameter is stripped from the URL.
+  notes, changes and pages, grouped by kind with PgUp / PgDn to jump between groups, and
+  a capped group says how many more it matched.
+- **Where a visit came from** — `?from=linkedin` on any page adds anonymous per-page events,
+  plus one recording the page they landed on, so the counts separate a profile link from a
+  post link. The parameter is stripped from the URL.
 - **Rack timeline** — a sparkline of commits per week sits above the slider, with the
   chosen week lit; scrub it with the arrow keys, or press Replay to watch twelve weeks of commits,
   with any recorded demo outage replayed as an amber power light.

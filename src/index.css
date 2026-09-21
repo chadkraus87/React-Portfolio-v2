@@ -192,7 +192,8 @@ main:focus { outline: none; }
 .search-q { width: 100%; min-height: 48px; padding: 10px 14px; border: 1px solid var(--edge); background: var(--field); color: var(--text); font: 500 16px/1.2 var(--f-ui); }
 .search-results { list-style: none; margin-top: 10px; }
 .search-group + .search-group { margin-top: 10px; }
-.search-group-head { padding: 8px 8px 4px; border-top: 1px solid var(--line); font: 500 10.5px/1.6 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.search-group-head { display: flex; justify-content: space-between; gap: 12px; padding: 8px 8px 4px; border-top: 1px solid var(--line); font: 500 10.5px/1.6 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.search-group-head span { color: var(--muted); }
 .search-opt { display: grid; gap: 2px; padding: 8px 8px 8px 12px; cursor: pointer; }
 .search-opt[aria-selected="true"] { background: var(--surface-2); box-shadow: inset 3px 0 0 var(--accent); }
 .search-title { font-weight: 600; color: var(--text); }

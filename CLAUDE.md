@@ -88,13 +88,19 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   first open): `/` anywhere, ⌘K / Ctrl K on pages other than home (where ⌘K is the
   console), or the footer button. Results are grouped by kind in `KINDS` order and each
   kind is capped (4 of 10), so commit lines can't crowd out projects and pages; PgUp /
-  PgDn jump between groups. The flat list the arrow keys and Enter use is built from the
+  PgDn jump between groups, and a capped heading reads "4 of 12" so nothing is hidden
+  silently (`search()` returns `{ results, totals }`). The flat list the arrow keys and Enter use is built from the
   rendered groups, so the highlighted result is always the one Enter opens.
 - `src/lib/campaign.js` — `/?from=<slug>` (lowercase, ≤20 chars) remembers where a visit
   came from for that browser session only, strips the parameter from the address, and
-  adds one anonymous GoatCounter event per page (`from/<slug>/<path>`). No cookies, no
+  adds one anonymous GoatCounter event per page (`from/<slug>/<path>`). It is read on
+  any entry page, not just home, and the page they landed on is recorded once per
+  session as `from/<slug>/landed<path>`, which separates a profile link from a post link. No cookies, no
   identifiers; invalid values are ignored. Counts are read in GoatCounter, not on the site.
-- Rack timeline: the Week slider and Replay in the room's controls light units by
+- Rack timeline: a sparkline of weekly commits sits above the slider; each bar is
+  titled with its week and count and can be clicked to jump there (pointer only — the
+  slider is the keyboard control and the bars stay out of the tab order). The Week
+  slider and Replay in the room's controls light units by
   commits that week, and show an amber power light for a demo that was down that week
   (`weekSnapshot()` in `rackModel.js`, self-tested at build).
 - `src/components/ToolTrace.jsx` draws a case study's shared-tool cables across a small

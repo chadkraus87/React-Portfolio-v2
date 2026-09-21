@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router';
-import { readCampaign } from '../lib/campaign.js';
+import { readCampaign, takeLanding } from '../lib/campaign.js';
 
 // Per-page analytics for a client-side routed site.
 //
@@ -44,11 +44,19 @@ export default function Analytics() {
       });
       // A link that said where it came from (/?from=linkedin) adds one anonymous
       // event per page, so the counts show which projects that audience opened.
-      const from = readCampaign();
-      if (from) {
+      const campaign = readCampaign();
+      if (campaign) {
+        const landing = takeLanding();
+        if (landing) {
+          gc.count({
+            path: `from/${campaign.source}/landed${landing}`,
+            title: `From ${campaign.source}: landed on ${titleFor(landing)}`,
+            event: true,
+          });
+        }
         gc.count({
-          path: `from/${from}${pathname}`,
-          title: `From ${from}: ${titleFor(pathname)}`,
+          path: `from/${campaign.source}${pathname}`,
+          title: `From ${campaign.source}: ${titleFor(pathname)}`,
           event: true,
         });
       }

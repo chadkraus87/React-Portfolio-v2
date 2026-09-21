@@ -4,7 +4,7 @@ import { profile } from '../data/profile.js';
 import { lenses } from '../data/racks.js';
 import { RACK_MODEL } from '../lib/rack.js';
 import { RACK_U, HEAT_BANDS, heatBand, blinkOf, activityRange } from '../lib/rackModel.js';
-import { STATUS_VFD, formatUpdated } from '../lib/projectMeta.js';
+import { STATUS_VFD, formatUpdated, formatDay } from '../lib/projectMeta.js';
 import { cardSrcSet } from '../lib/cardImages.js';
 import { mountServerRoom } from '../lib/serverRoom.js';
 import { BUILD_STAMP } from '../lib/build.js';
@@ -36,6 +36,7 @@ const WEEK_COUNT = Math.max(1, ...Object.values(RACK_MODEL.activity.repos).map((
 const WEEK_TOTALS = Array.from({ length: WEEK_COUNT }, (_, k) =>
   Object.values(RACK_MODEL.activity.repos).reduce((sum, r) => sum + (r.weeks[k] ?? 0), 0));
 const WEEK_PEAK = Math.max(1, ...WEEK_TOTALS);
+const WEEK_START = (k) => new Date(Date.parse(`${RACK_MODEL.activity.from}T00:00:00Z`) + k * 7 * 86_400_000).toISOString().slice(0, 10);
 
 function Rail() {
   return (
@@ -209,7 +210,12 @@ export default function ServerRoom() {
             <span className="sr-week-scrub">
               <span className="sr-week-spark" aria-hidden="true">
                 {WEEK_TOTALS.map((n, k) => (
-                  <i key={k} style={{ '--h': `${Math.round((n / WEEK_PEAK) * 100)}%` }} data-week={k} />
+                  <i
+                  key={k}
+                  style={{ '--h': `${Math.round((n / WEEK_PEAK) * 100)}%` }}
+                  data-week={k}
+                  title={`Week of ${formatDay(WEEK_START(k))}: ${n} public commit${n === 1 ? '' : 's'}`}
+                />
                 ))}
               </span>
               <input id="sr-week" className="sr-week-range" type="range" min="0" max={WEEK_COUNT - 1} step="1" defaultValue={WEEK_COUNT - 1} />

@@ -830,6 +830,15 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     replayTimer = later(() => replayFrom(k + 1), 1400);
   }
   on(weekRange, 'input', () => { stopReplay(); showWeek(Number(weekRange.value)); });
+  // Clicking a bar jumps to that week. Pointer only: the slider beside it is the
+  // keyboard control, and the bars stay out of the tab order.
+  on(q('.sr-week-spark'), 'click', (e) => {
+    const bar = e.target.closest('i[data-week]');
+    if (!bar) return;
+    stopReplay();
+    weekRange.value = bar.dataset.week;
+    say(showWeek(Number(bar.dataset.week)));
+  });
   on(replayBtn, 'click', () => {
     if (replayBtn.getAttribute('aria-pressed') === 'true') { stopReplay(); return; }
     replayBtn.setAttribute('aria-pressed', 'true');

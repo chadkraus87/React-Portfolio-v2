@@ -61,18 +61,23 @@ export function highlight(text = '', words = []) {
 }
 
 // Every word of the query must appear somewhere in an entry; title hits rank first.
+// Returns the capped results plus how many matched in each kind, so a group can say
+// "4 of 12" rather than silently hiding the rest.
 export function search(query, index = searchIndex, limit = 10, perKind = 4) {
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
-  if (!words.length) return [];
+  if (!words.length) return { results: [], totals: new Map() };
   const seen = new Map();
-  return index
+  const matched = index
     .filter((e) => words.every((w) => e.text.includes(w)))
     .map((e) => {
       const title = e.title.toLowerCase();
       const score = WEIGHT[e.kind] + (title.startsWith(words[0]) ? 6 : 0) + words.filter((w) => title.includes(w)).length * 3;
       return { ...e, score, snippet: title.includes(words[0]) ? '' : snippet(e.body, words[0]) };
     })
-    .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title))
+    .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title));
+  const totals = new Map();
+  for (const e of matched) totals.set(e.kind, (totals.get(e.kind) ?? 0) + 1);
+  const results = matched
     .filter((e) => {
       const used = seen.get(e.kind) ?? 0;
       if (used >= perKind) return false;
@@ -80,6 +85,7 @@ export function search(query, index = searchIndex, limit = 10, perKind = 4) {
       return true;
     })
     .slice(0, limit);
+  return { results, totals };
 }
 
 // The same results, split into the groups the dialog renders, in KINDS order.
