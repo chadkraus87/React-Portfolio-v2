@@ -2,28 +2,28 @@
   "months": [
     {
       "month": "2026-09",
-      "through": "2026-09-14",
+      "through": null,
       "projects": [
         {
           "slug": null,
           "title": "This portfolio",
-          "commits": 48,
+          "commits": 69,
           "highlights": [
             {
               "type": "feat",
-              "text": "Demo uptime, change log, shortcuts, print and unit share cards"
+              "text": "Session-sticky search groups, audience leads on /now, shift compare"
             },
             {
               "type": "feat",
-              "text": "Visual checks, share previews, tour and architecture"
+              "text": "Expandable search groups, visit summary, drag-scrub sparkline"
             },
             {
               "type": "feat",
-              "text": "CI quality gate, demo captions, shareable units and light theme"
+              "text": "Capped-group counts, landing-page source, clickable sparkline"
             },
             {
               "type": "feat",
-              "text": "Rack polish, new demos and social cards"
+              "text": "Grouped search, visit source tracking, timeline sparkline"
             }
           ]
         },
@@ -43,6 +43,32 @@
             {
               "type": null,
               "text": "Add operations scenarios and harden game saves"
+            }
+          ]
+        },
+        {
+          "slug": "petcenza",
+          "title": "PetCenza",
+          "commits": 2,
+          "highlights": [
+            {
+              "type": null,
+              "text": "Redesign, critique fixes, and launch readiness"
+            },
+            {
+              "type": null,
+              "text": "Make the legal pages true, reachable, and enforceable for public use"
+            }
+          ]
+        },
+        {
+          "slug": "greenline",
+          "title": "Greenline",
+          "commits": 1,
+          "highlights": [
+            {
+              "type": null,
+              "text": "Redesign around the green line; add read-only bank sync, audit trail, year-end close"
             }
           ]
         },
