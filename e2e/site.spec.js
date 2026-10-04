@@ -720,7 +720,10 @@ test('a capped search group expands from its own row', async ({ page }) => {
   await page.goto('/now');
   await page.keyboard.press('/');
   const dialog = page.getByRole('dialog', { name: 'Search' });
-  await dialog.getByRole('combobox').fill('demo');
+  // Every Tool entry reads "Used by N projects" (searchIndex.js), so that kind is
+  // always over the per-kind cap. 'demo' only cleared it while enough commit lines
+  // happened to mention demos, so a changelog refresh alone could turn this red.
+  await dialog.getByRole('combobox').fill('used');
   const showAll = dialog.getByRole('option', { name: /^Show all \d+ / });
   await expect(showAll.first()).toBeVisible();
   const label = await showAll.first().textContent();
@@ -735,8 +738,8 @@ test('a capped search group expands from its own row', async ({ page }) => {
   expect(await dialog.locator('.search-opt:not(.search-more)').count()).toBeGreaterThan(optionsBefore);
   // Typing again leaves that kind expanded (remembered for the session), so its row
   // stays gone; any other capped kind keeps its own.
-  await dialog.getByRole('combobox').fill('demos');
-  await dialog.getByRole('combobox').fill('demo');
+  await dialog.getByRole('combobox').fill('use');
+  await dialog.getByRole('combobox').fill('used');
   await expect(dialog.getByRole('option', { name: /^Show all \d+ / })).toHaveCount(moreRowsBefore - 1);
 });
 
@@ -764,19 +767,22 @@ test('an expanded search group stays expanded for the rest of the session', asyn
   await page.keyboard.press('/');
   const dialog = page.getByRole('dialog', { name: 'Search' });
   const input = dialog.getByRole('combobox');
-  await input.fill('demo');
+  // Every Tool entry reads "Used by N projects" (searchIndex.js), so that kind is
+  // always over the per-kind cap. 'demo' only cleared it while enough commit lines
+  // happened to mention demos, so a changelog refresh alone could turn this red.
+  await input.fill('used');
   const showAll = dialog.getByRole('option', { name: /^Show all \d+ / });
   const label = await showAll.first().textContent();
   const kind = label.replace(/^Show all \d+ /, '').trim();
   await showAll.first().click();
   // Typing again keeps that kind open, rather than re-capping it every search.
-  await input.fill('demos');
-  await input.fill('demo');
+  await input.fill('use');
+  await input.fill('used');
   await expect(dialog.getByRole('option', { name: new RegExp(`^Show all \\d+ ${kind}$`) })).toHaveCount(0);
   // And it survives a reload, because it is remembered for the session.
   await page.reload();
   await page.keyboard.press('/');
-  await input.fill('demo');
+  await input.fill('used');
   await expect(dialog.getByRole('option', { name: new RegExp(`^Show all \\d+ ${kind}$`) })).toHaveCount(0);
 });
 
@@ -796,10 +802,30 @@ test('shift-dragging the sparkline compares two weeks', async ({ page }) => {
   const spark = page.locator('.sr-week-spark');
   const box = await spark.boundingBox();
   const mid = box.y + box.height / 2;
-  await page.mouse.move(box.x + box.width - 2, mid);
+  // Drive the drag from the real bars rather than assuming the latest week has
+  // commits: a quiet fortnight left nothing lit in the reference week and turned CI
+  // red on a data refresh alone. The busiest week always has commits, and when the
+  // quietest has none every project lit in the reference week goes out, so wk-ref
+  // is guaranteed.
+  const weeks = await spark.locator('i').evaluateAll((bars) => bars.map((b) => ({
+    week: Number(b.dataset.week),
+    count: Number(b.title.match(/:\s*(\d+)\s*public/)[1]),
+  })));
+  const busiest = weeks.reduce((a, b) => (b.count > a.count ? b : a));
+  const quietest = weeks.reduce((a, b) => (b.count < a.count ? b : a));
+  test.skip(busiest.count === 0 || busiest.week === quietest.week, 'no busy and quiet week to compare');
+  const lastWeek = Number(await page.locator('#sr-week').getAttribute('max'));
+  const xOf = (w) => Math.min(Math.max(box.x + (w / lastWeek) * box.width, box.x + 1), box.x + box.width - 1);
+  // compareWeek is whichever week the slider is already on at pointerdown
+  // (serverRoom.js), not the one under the cursor, and a fresh load sits on the
+  // latest week. So select the busy week first, then shift-drag away from it -
+  // which is what comparing two weeks actually means.
+  await page.mouse.click(xOf(busiest.week), mid);
+  await expect(page.locator('#sr-week')).toHaveValue(String(busiest.week));
+  await page.mouse.move(xOf(busiest.week), mid);
   await page.keyboard.down('Shift');
   await page.mouse.down();
-  await page.mouse.move(box.x + box.width * 0.2, mid, { steps: 6 });
+  await page.mouse.move(xOf(quietest.week), mid, { steps: 6 });
   await expect(page.locator('.sr')).toHaveClass(/is-compare/);
   await expect(page.locator('.sr-week-out')).toContainText(' vs ');
   expect(await page.locator('.unit.wk-ref').count()).toBeGreaterThan(0);

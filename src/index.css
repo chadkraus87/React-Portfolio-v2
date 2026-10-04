@@ -76,6 +76,19 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .page { padding: calc(var(--nav-h) + 56px) 0 104px; }
 .page-head { display: grid; gap: 16px; }
 
+/* Cable-tray rail closing every page head. Same strip as the overhead tray that
+   carries trunk cables between the racks (.sr-tray, ServerRoom.css), so the text
+   pages read as part of the same room. Steel is deliberately not re-declared for
+   the light theme (DESIGN.md: hardware never changes), so the rail is identical
+   in both. Decorative: a pseudo-element keeps it out of the accessibility tree.
+   .rs-head is flex, so flex-basis forces the rail onto its own row there; grid
+   heads ignore it. The case study head is excluded on purpose - it is already
+   dense and sits directly above the monitor bezel. */
+.page-head::after, .ct-head::after, .pf-head::after, .rs-head::after {
+  content: ''; flex: 0 0 100%; height: 10px;
+  background: repeating-linear-gradient(90deg, var(--steel-4) 0 3px, transparent 3px 24px);
+  border-block: 2px solid var(--steel-5); }
+
 .visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 .skip-link { position: fixed; left: 12px; top: -100%; z-index: 100; background: var(--accent); color: var(--accent-ink); font-weight: 600; padding: 12px 16px; text-decoration: none; }
 .skip-link:focus { top: 12px; }
@@ -185,6 +198,7 @@ main:focus { outline: none; }
 .monitor-print { display: none; }
 @media print {
   .nav-wrap, .footer, .skip-link, .route-trace, .keys { display: none !important; }
+  .page-head::after, .ct-head::after, .pf-head::after, .rs-head::after { display: none !important; }
   html, body { background: #fff !important; }
 }
 
