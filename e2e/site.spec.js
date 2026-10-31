@@ -460,6 +460,24 @@ test('night shift: after 7pm only units with commits this week stay lit, and axe
   await expect(page.locator('.sr-shift')).toBeHidden();
 });
 
+test('commit heat: unit names follow the readout on their faceplates, and axe still passes', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('sr-tour', 'done'));
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  // Compared with each unit's own data attributes, not with today's commit counts.
+  const names = () => page.locator('button.unit').evaluateAll((els) => els.map((e) => [e.getAttribute('aria-label'), e.dataset.label, e.dataset.heatLabel]));
+  await page.locator('.sr-heat').click();
+  await expect(page.locator('.sr')).toHaveClass(/heat-on/);
+  // The faceplate swaps its status for a commit count, so each name has to lead with
+  // those words too (WCAG 2.5.3), or voice control can't match what is on screen.
+  for (const [name, , heat] of await names()) expect(name).toBe(heat);
+  const { violations } = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+  expect(violations.map((v) => v.id)).toEqual([]);
+  await page.locator('.sr-heat').click();
+  await expect(page.locator('.sr')).not.toHaveClass(/heat-on/);
+  for (const [name, plain] of await names()) expect(name).toBe(plain);
+});
+
 test('case study tools trace their cables to every project that shares them', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/projects/petcenza');

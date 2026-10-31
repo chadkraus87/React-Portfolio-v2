@@ -468,6 +468,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     q('.sr-heat').setAttribute('aria-pressed', String(state.heat));
     soundBtn.setAttribute('aria-pressed', String(sound.enabled));
     root.classList.toggle('heat-on', state.heat);
+    units.forEach((u) => u.setAttribute('aria-label', state.heat ? u.dataset.heatLabel : u.dataset.label));
     q('.sr-legend').hidden = !state.heat;
   }
   function selectUnit(i, keyboard = false, quiet = false) {

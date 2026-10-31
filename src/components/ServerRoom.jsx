@@ -54,6 +54,15 @@ function Unit({ p, first, rack }) {
   const style = { '--n': p.i };
   if (blink) style['--blink'] = blink;
   if (band !== null) style['--heat'] = `var(--heat-${band})`;
+  const rest = `${p.status}, updated ${formatUpdated(p.updated)}, rack ${rack.code} ${p.u}${p.demoDown ? ', live demo not answering' : ''}`;
+  const heat = p.act ? `${p.act.total} · ${WEEK_COUNT}W` : 'NO REPO';
+  const label = `${p.title}, ${rest}`;
+  // Commit heat swaps the status readout for `heat`, so serverRoom.js swaps the name to
+  // match: it must lead with the words on the faceplate (WCAG 2.5.3, label in name). The
+  // parenthesis says the count in full, and label-in-name matching ignores parentheticals.
+  const heatLabel = p.act
+    ? `${p.title}, ${heat} (${p.act.total} public commit${p.act.total === 1 ? '' : 's'} in ${WEEK_COUNT} weeks), ${rest}`
+    : `${p.title}, no repo, ${rest}`;
   return (
     <button
       type="button"
@@ -62,7 +71,9 @@ function Unit({ p, first, rack }) {
       aria-pressed="false"
       tabIndex={first ? 0 : -1}
       style={style}
-      aria-label={`${p.title}, ${p.status}, updated ${formatUpdated(p.updated)}, rack ${rack.code} ${p.u}${p.demoDown ? ', live demo not answering' : ''}`}
+      aria-label={label}
+      data-label={label}
+      data-heat-label={heatLabel}
     >
       <span className="lid" aria-hidden="true" />
       <span className="face" aria-hidden="true">
@@ -75,7 +86,7 @@ function Unit({ p, first, rack }) {
         {' '}
         <span className="vfd">
           <span className="v-status">{STATUS_VFD[p.status] ?? p.status}</span>
-          <span className="v-heat">{p.act ? `${p.act.total} · 12W` : 'NO REPO'}</span>
+          <span className="v-heat">{heat}</span>
         </span>
         <span className="row2">
           <span className="bays"><i /><i /><i /><i /></span>
