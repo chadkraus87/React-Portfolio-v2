@@ -11,6 +11,10 @@ const LH = process.env.LH || '1.28';
 
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+// A click from a PDF carries no referrer, so the portfolio link names its source
+// (?from=resume, read by src/lib/campaign.js). The visible text stays the bare domain.
+const SITE = 'chad-kraus-portfolio.vercel.app';
+const linkSite = (html) => html.replace(SITE, `<a href="https://${SITE}/?from=resume">${SITE}</a>`);
 
 const html = `<!doctype html>
 <html><head><meta charset="utf-8">
@@ -58,11 +62,12 @@ const html = `<!doctype html>
   .edutitle { font-weight: 700; }
   .eduorg { color: #2e5940; }
   .edudetail { font-size: 8.6pt; color: #555; }
+  a { color: inherit; text-decoration: none; }
 </style></head><body>
 
 <h1>${esc(r.name)}</h1>
 <div class="title">${esc(r.title)}</div>
-<div class="contact">${r.contact.map((c) => `<span>${esc(c)}</span>`).join('')}</div>
+<div class="contact">${r.contact.map((c) => `<span>${linkSite(esc(c))}</span>`).join('')}</div>
 
 <h2>Professional Summary</h2>
 <p class="summary">${esc(r.summary)}</p>
@@ -84,7 +89,7 @@ ${r.experience
   .join('')}
 
 <h2>Selected Projects</h2>
-<p class="projintro">${esc(r.projectsIntro)}</p>
+<p class="projintro">${linkSite(esc(r.projectsIntro))}</p>
 ${r.projects
   .map(
     (p) => `<div class="proj">
