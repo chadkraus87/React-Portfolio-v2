@@ -16,7 +16,7 @@ export function statusModifier(status) {
 }
 
 // Front-panel readout text and status colour, shared by the rack and the pages.
-export const STATUS_VFD = { Live: 'LIVE', 'In progress': 'IN PROG', Private: 'PRIVATE' };
+export const STATUS_VFD = { Live: 'LIVE', 'In progress': 'IN PROGRESS', Private: 'PRIVATE' };
 export const STATUS_COLOR = { Live: 'var(--live)', 'In progress': 'var(--accent)', Private: 'var(--private)' };
 
 // What a case study shows as evidence and when it was captured. `stale` means the

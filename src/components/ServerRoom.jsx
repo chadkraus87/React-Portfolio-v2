@@ -69,6 +69,10 @@ function Unit({ p, first, rack }) {
         <span className="ear" />
         <span className="vent"><span className="heat" /></span>
         <span className="tape">{p.title}</span>
+        {/* The face is a grid, so this space never renders; it keeps the title and the
+            readout as separate words ("Jarvis Private", not "JarvisPrivate") for find,
+            copy and WCAG 2.5.3 label-in-name checks. */}
+        {' '}
         <span className="vfd">
           <span className="v-status">{STATUS_VFD[p.status] ?? p.status}</span>
           <span className="v-heat">{p.act ? `${p.act.total} · 12W` : 'NO REPO'}</span>

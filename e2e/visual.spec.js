@@ -9,7 +9,7 @@ test.skip(process.platform !== 'linux', 'Visual baselines are Linux renders from
 // Only the small things that change without a design change: live commit counts,
 // the build stamp, sparkline bars and demo video frames. Under reduced motion the
 // room, its cables and every screenshot render the same way on every run.
-const MASK = ['.cap-build', '.footer-mono', '.v-heat', '.spark', '.uptime', 'video'];
+const MASK = ['.cap-build', '.footer-mono', '.v-heat', '.spark', '.uptime', 'video', '.sr-week-spark', '.sr-week-out'];
 
 const SHOTS = [
   { name: 'home-dark', path: '/', theme: 'dark', viewport: { width: 1440, height: 900 } },
@@ -39,6 +39,17 @@ for (const shot of SHOTS) {
       .filter((img) => img.checkVisibility() && img.getBoundingClientRect().top < window.innerHeight)
       .every((img) => img.complete && img.naturalWidth > 0));
     await page.waitForTimeout(800);
+    // The build stamp is baked in when the site is built, so the pinned clock never
+    // reaches it, and a mask hides its pixels but not its width: "9 OCT" becoming
+    // "10 OCT" made the footer wrap and failed this check every day from the 10th to
+    // the 31st. Pin the text itself so no layout depends on the commit or the date.
+    await page.evaluate(() => {
+      for (const el of document.querySelectorAll('.footer-mono, .cap-build')) {
+        el.textContent = el.textContent
+          .replace(/\b[0-9a-f]{7}\b/gi, '0000000')
+          .replace(/\b\d{1,2} [A-Z]{3} \d{4}\b/, '28 SEP 2026');
+      }
+    });
     await expect(page).toHaveScreenshot(`${shot.name}.png`, {
       mask: MASK.map((selector) => page.locator(selector)),
       // Renders in the pinned image are identical run to run, so the tolerance is tight:

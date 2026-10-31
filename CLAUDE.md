@@ -72,7 +72,10 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   are shared by the pack and the room's tour, so both say the same thing.
 - Night shift: from 7pm to 6am local time the room adds `is-night`; only units with
   public commits in the latest week (`on-shift`) keep their lights. Visual baselines
-  pin the clock to midday.
+  pin the clock to midday, and pin the build stamp's text: it is baked in at build time
+  so the clock never reaches it, and a mask hides pixels but not width — "9 OCT" becoming
+  "10 OCT" wrapped the footer and failed every deploy from the 10th to the 31st of October
+  2026. Mask live data only where its box has a fixed size.
 - Interview mode keeps its place in the address (`?tour=hiring&stop=1..4`); ending the
   tour removes both parameters. The interview pack prints one page per project with its
   screenshot and a QR code (`dist/qr/<slug>.svg`, generated at prerender by the pinned
