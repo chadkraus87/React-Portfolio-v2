@@ -117,8 +117,11 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   summary through GoatCounter's `/api/v0/stats/hits`. It needs a `GOATCOUNTER_TOKEN`
   secret; without one it prints a one-line notice and exits 0, and the step is
   `continue-on-error`, so analytics can never break the data refresh. Test it with
-  `GOATCOUNTER_FIXTURE=<file>`. An API failure prints a notice with the status and a
-  trimmed body and exits 0 — never a failed job, and never a silent one.
+  `GOATCOUNTER_FIXTURE=<file>`. An API failure prints a notice with the status, the
+  attempt count and a trimmed body and exits 0 — never a failed job, and never a silent
+  one. A 404, 429, 5xx or network error is retried with 2s/4s/8s backoff first: GoatCounter's
+  hosted API answered this exact request 404 on 23 of 40 days in Sep–Oct 2026 (same token,
+  `/api/v0/me` fine), which reopened the health issue 15 times. 400/401/403 fail at once.
 - `src/data/audience.json` is written by that same daily step (`--write`): the page each
   referrer opened most, rankings only, no visit numbers, and only above a floor of 5
   visits. `/now` renders it as "What people open", naming the window it covers; the build

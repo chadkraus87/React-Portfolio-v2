@@ -31,7 +31,25 @@ async function load() {
   // GoatCounter decides JSON-or-HTML from Content-Type, not Accept (an Accept-only
   // request gets the HTML login page), so send both.
   const headers = { authorization: `Bearer ${TOKEN}`, 'content-type': 'application/json', accept: 'application/json' };
-  const res = await fetch(url, { headers, signal: AbortSignal.timeout(20000) });
+  // GoatCounter's hosted API answered this same request 404 "not found" on 23 of 40 days
+  // (Sep 22 – Oct 31 2026) and 200 on the rest, with the same token and a 30-day window
+  // that barely moves day to day, and /api/v0/me answering 200 straight after each 404.
+  // So a 404, 429, 5xx or network error is retried with backoff before it counts as a
+  // failure; 400, 401 and 403 mean real misconfiguration and fail at once.
+  const transient = (status) => status === 404 || status === 429 || status >= 500;
+  const backoff = [2000, 4000, 8000];
+  let res;
+  let attempts = 0;
+  for (;;) {
+    attempts += 1;
+    try {
+      res = await fetch(url, { headers, signal: AbortSignal.timeout(20000) });
+      if (res.ok || !transient(res.status) || attempts > backoff.length) break;
+    } catch (error) {
+      if (attempts > backoff.length) throw error;
+    }
+    await new Promise((resolve) => setTimeout(resolve, backoff[attempts - 1]));
+  }
   // On failure the body is an error message, not statistics: showing a trimmed copy is
   // what turns "the step went red somewhere" into a diagnosis. The token is never in it.
   if (!res.ok) {
@@ -43,7 +61,7 @@ async function load() {
       const probe = await fetch(`https://${SITE}.goatcounter.com/api/v0/me`, { headers, signal: AbortSignal.timeout(10000) });
       me = String(probe.status);
     } catch { me = 'unreachable'; }
-    const error = new Error(`GoatCounter answered ${res.status} for ${url.replace(/^https:\/\//, '')} (/api/v0/me answered ${me}) — ${detail}`);
+    const error = new Error(`GoatCounter answered ${res.status} for ${url.replace(/^https:\/\//, '')} after ${attempts} attempt${attempts === 1 ? '' : 's'} (/api/v0/me answered ${me}) — ${detail}`);
     error.soft = true;
     throw error;
   }
