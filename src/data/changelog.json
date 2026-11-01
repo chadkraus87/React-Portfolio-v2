@@ -1,6 +1,80 @@
 {
   "months": [
     {
+      "month": "2026-10",
+      "through": null,
+      "projects": [
+        {
+          "slug": "coachrhythm",
+          "title": "CoachRhythm",
+          "commits": 8,
+          "highlights": [
+            {
+              "type": null,
+              "text": "Nutrition clinical hardening: medication and pregnancy screening, adequacy QA, full nutrient import"
+            },
+            {
+              "type": null,
+              "text": "Verify meal generation end to end, and fix what it found"
+            },
+            {
+              "type": null,
+              "text": "Export every tenant table, and fail closed on an unknown age"
+            },
+            {
+              "type": null,
+              "text": "Make meal-plan QA a nutritional-adequacy pass"
+            }
+          ]
+        },
+        {
+          "slug": null,
+          "title": "This portfolio",
+          "commits": 6,
+          "highlights": [
+            {
+              "type": "fix",
+              "text": "Retry GoatCounter's intermittent 404 before calling the read failed"
+            },
+            {
+              "type": "content",
+              "text": "Link the résumé's portfolio mentions with ?from=resume"
+            },
+            {
+              "type": "a11y",
+              "text": "Name each rack unit after its heat readout in Commit heat"
+            },
+            {
+              "type": "design",
+              "text": "Close page heads with the cable-tray rail"
+            }
+          ]
+        },
+        {
+          "slug": "greenline",
+          "title": "Greenline",
+          "commits": 1,
+          "highlights": [
+            {
+              "type": null,
+              "text": "Add jarvis edge function"
+            }
+          ]
+        },
+        {
+          "slug": "homelab-commander",
+          "title": "HomeLab Commander",
+          "commits": 1,
+          "highlights": [
+            {
+              "type": null,
+              "text": "Update dependencies and complete QA/security audit"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "month": "2026-09",
       "through": null,
       "projects": [
