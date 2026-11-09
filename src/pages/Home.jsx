@@ -16,11 +16,22 @@ const PAIRS = [
   { id: '03', fail: 'A permission that was too broad.', fix: 'Deny-by-default connectors, and human confirmation before anything destructive.', attr: 'Jarvis' },
 ];
 
-// Operations evidence. Every value is quoted from the Rockbot paragraph in profile.js.
+// The day job, from the resume. Numbers stay as rounded as the resume has them, and
+// there are no customer names, screenshots or internal detail.
+const STATS = [
+  { num: '~600', text: 'Tier 2/3 tickets and escalations a month, across APIs, SSO/SAML (Okta, Entra ID), customer networks and firewalls, and connected AV hardware.' },
+  { num: '~20%', text: 'Of overflow calls now handled by Forethought’s AI voice agent, which I trained and built the persona for. It saves about $20K a year.' },
+  { num: '5–10 hrs', text: 'Of manual reporting a week, replaced by the Support and Escalation KPI dashboards I built with Claude Code and Zendesk’s MCP server.' },
+  { num: '$750K', text: 'Estimated hardware revenue opportunity in the 2,000+ end-of-life devices I found and sized.' },
+];
 const RAIL = [
-  { label: 'Escalation scope', value: 'Tier 2/3 across networking, AV hardware, APIs, identity systems and SaaS platform behavior.' },
-  { label: 'Triage + enablement', value: 'Chairs weekly bug triage. Wrote the onboarding package new escalation engineers train from.' },
-  { label: 'Shipped', value: 'Ten applications' },
+  { label: 'Nightline', value: 'An after-hours AI support agent prototype with a rules engine for triage and escalation. It led Rockbot to bring in Forethought’s AI voice agent (trial ongoing).' },
+  { label: 'Chrome extension', value: 'Explains smart amp diagnostics in plain English. It started as a tool just for me. Now 10 frontline agents use it.' },
+  { label: 'Pilots', value: 'Technical owner on about 15 pilot and trial deployments.' },
+  { label: 'Knowledge base', value: 'Leading a rebuild of about 200 articles around a single source of truth.' },
+  { label: 'SD-card triage', value: 'A daily check that reaches about 50 devices a month before customers notice.' },
+  { label: 'Triage + onboarding', value: 'Co-chair the weekly Bug Triage. Wrote the escalation onboarding program and trained 5 new team members.' },
+  { label: 'Side projects', value: 'Ten applications: eight live, two in progress or private.' },
 ];
 
 export default function Home() {
@@ -47,7 +58,7 @@ export default function Home() {
                         <span className="vfd">{p.u}</span>
                       </Link>
                       <span className="ix-meta">
-                        {p.status} · Updated {formatUpdated(p.updated)} · {p.act ? `${p.act.total} public commits` : 'No public repo'} · {p.lensNames.join(' + ')}{p.demoDown ? ' · Live demo not answering' : ''}
+                        {p.status} · Updated {formatUpdated(p.updated)} · {p.lensNames.join(' + ')}{p.demoDown ? ' · Live demo not answering' : ''}
                       </span>
                     </li>
                   ))}
@@ -62,13 +73,17 @@ export default function Home() {
       <section className="home-sec ops" id="operations" aria-labelledby="ops-title">
         <div className="container">
           <header className="sec-head">
-            <p className="kicker">The other half</p>
+            <p className="kicker">The day job</p>
             <h2 className="sec-title" id="ops-title">Operations</h2>
           </header>
           <div className="ops-grid">
-            <div className="ops-figure">
-              <span className="ops-num">2,000+</span>
-              <p>End-of-life firmware devices identified in a business case that a customer upgrade program was built around.</p>
+            <div className="ops-stats">
+              {STATS.map(({ num, text }) => (
+                <div className="ops-stat" key={num}>
+                  <span className="ops-num">{num}</span>
+                  <p>{text}</p>
+                </div>
+              ))}
             </div>
             <dl className="ops-rail">
               {RAIL.map(({ label, value }) => (
@@ -77,7 +92,7 @@ export default function Home() {
             </dl>
           </div>
           <div className="log">
-            <p className="log-head"><span>What fails in the field</span><span aria-hidden="true">→</span><span>what I make structurally impossible</span></p>
+            <p className="log-head"><span>What fails in the field</span><span aria-hidden="true">→</span><span>what I build against it</span></p>
             <ol className="log-list">
               {PAIRS.map(({ id, fail, fix, attr }) => (
                 <li key={id}>
@@ -89,7 +104,7 @@ export default function Home() {
               ))}
             </ol>
           </div>
-          <p className="thesis">Decide what must never happen, then make it structurally impossible rather than instructed against.</p>
+          <p className="thesis">Decide what must never happen, then build it so it can’t, instead of writing a rule and hoping.</p>
         </div>
       </section>
 
@@ -110,7 +125,7 @@ export default function Home() {
           <div className="rec-grid">
             <section className="rec" aria-labelledby="exp-title">
               <h3 id="exp-title">Experience</h3>
-              <ul>{profile.experience.map((e) => <li key={e.title}><strong>{e.title}</strong><span>{e.org} · {e.dates}</span></li>)}</ul>
+              <ul>{profile.experience.map((e) => <li key={`${e.title}-${e.dates}`}><strong>{e.title}</strong><span>{e.org} · {e.dates}</span></li>)}</ul>
             </section>
             <section className="rec" aria-labelledby="cert-title">
               <h3 id="cert-title">Credentials</h3>

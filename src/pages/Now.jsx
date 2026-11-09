@@ -31,10 +31,7 @@ export default function Now() {
         <header className="page-head now-head">
           <p className="kicker">Now</p>
           <h1 className="page-title">Now</h1>
-          <p className="lede">
-            What’s moving at the moment, from the same data as the rest of the site: public commits, project status and
-            the daily demo check.
-          </p>
+          <p className="lede">What I’m working on right now, and what the site’s own data says about it.</p>
         </header>
 
         {now.note && (
@@ -45,9 +42,10 @@ export default function Now() {
           </section>
         )}
 
-        <section aria-labelledby="now-week">
-          <h2 id="now-week">{WEEK ? `Week of ${formatDay(WEEK.start)}` : 'This week'}</h2>
-          {WEEK_COMMITS.length ? (
+        {/* Only when there is something to show: an empty week is not news. */}
+        {WEEK_COMMITS.length > 0 && (
+          <section aria-labelledby="now-week">
+            <h2 id="now-week">Week of {formatDay(WEEK.start)}</h2>
             <ul className="now-list">
               {WEEK_COMMITS.map(([p, n]) => (
                 <li key={p.slug}>
@@ -56,13 +54,8 @@ export default function Now() {
                 </li>
               ))}
             </ul>
-          ) : (
-            <p>No public commits that week.</p>
-          )}
-          <p className="now-more">
-            <Link viewTransition to="/changes">What changed, month by month</Link> · <a href="/digest.xml">Weekly digest (RSS)</a>
-          </p>
-        </section>
+          </section>
+        )}
 
         <section aria-labelledby="now-building">
           <h2 id="now-building">In progress</h2>
@@ -116,6 +109,10 @@ export default function Now() {
             <Link viewTransition to="/status">See the uptime record</Link>
           </p>
         </section>
+
+        <p className="now-more">
+          <Link viewTransition to="/changes">What changed, month by month</Link> · <a href="/digest.xml">Weekly digest (RSS)</a>
+        </p>
       </div>
     </section>
   );

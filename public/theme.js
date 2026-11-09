@@ -1,3 +1,6 @@
+// Marks that JavaScript runs, before first paint, so CSS can hide the no-JS page text
+// the prerenderer puts inside #root (see .static-fallback in src/index.css).
+document.documentElement.classList.add('js');
 // Applies a saved light-theme choice before first paint, so the page never flashes
 // dark first. A tiny blocking file rather than an inline script: the CSP forbids
 // inline scripts. The toggle lives in src/components/NavBar.jsx.

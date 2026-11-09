@@ -4,9 +4,8 @@
 export const resume = {
   name: 'Chadwick (Chad) Kraus',
   title:
-    'Network IT Specialist  ·  QA Ops  ·  Technical Support Lead  ·  AI Tooling & Automation',
+    'Technical Support & Escalation Engineer  ·  AI Automation & Support Operations  ·  APIs, Identity & Networking',
   contact: [
-    '(512) 650-7633',
     'chadkraus87@gmail.com',
     'Austin, TX (Remote)',
     'linkedin.com/in/chadwick-kraus',
@@ -24,7 +23,7 @@ export const resume = {
     ['AV & Device Systems',
       'Smart Amp configuration & troubleshooting · Rockbot Players · Sonos · BrightSign · Amazon Signage Stick · Tizen 7.0 · PoE · digital signage · AV signal flow'],
     ['Networking',
-      'TCP/IP · VLANs · firewall configuration · enterprise network environments · connectivity diagnostics'],
+      'TCP/IP · DNS · DHCP · VPN · VLANs · firewall troubleshooting · PoE · Wireshark · connectivity diagnostics'],
     ['QA & Testing',
       'QA Ops · product testing cycles · defect verification · bug triage leadership · regression validation · risk analysis · automated test suites (Vitest, Playwright)'],
     ['Identity & Auth',
@@ -43,22 +42,23 @@ export const resume = {
       dates: 'April 2026 – Present',
       org: 'Rockbot  ·  Austin, TX (Remote)',
       bullets: [
-        'Spearheaded a fleet-wide business case identifying 2,000+ devices running end-of-life firmware or legacy media-player hardware, then built the proactive outreach program offering affected customers a guided upgrade path — converting a latent support liability into incremental hardware revenue while reducing unplanned downtime through white-glove replacement ahead of failure.',
+        'Built a fleet-wide business case identifying 2,000+ devices running end-of-life firmware or legacy media-player hardware, then built the proactive outreach program offering affected customers a guided upgrade path — converting a latent support liability into incremental hardware revenue while reducing unplanned downtime through white-glove replacement ahead of failure.',
         'Trained and deployed an AI voice model to absorb overflow call volume previously routed to an external call center, reducing vendor spend while maintaining coverage during peak periods.',
         'Built a KPI tracking dashboard for the Escalation team surfacing ticket closure time and recurring issue themes, giving the team a shared view of where resolution time is lost and which defects are trending before they become escalations.',
         'Leading the rebuild of the company knowledge base around an intuitive tagging taxonomy, linking every customer-facing article back to internal documentation so answers stay traceable to a single source of truth and customers self-serve faster.',
         'Created the Escalation team onboarding package and actively train new team members on escalation ownership, root cause methodology, and cross-functional handoff; authored the deployment documentation and escalation playbooks adopted across the Support organization.',
         'Developed a Google Chrome extension that translates raw Smart Amp diagnostic data into plain language, allowing non-specialist agents to interpret device state without escalating.',
-        'Own Tier 2/3 escalations across networking, firewall configuration, AV hardware (Smart Amp, Sonos, BrightSign, Tizen), APIs, identity systems (SSO/SAML/Entra), and SaaS platform behavior — full accountability from triage through resolution, including daily Smart Amp support across audio signal flow, speaker detection, firmware behavior, and network connectivity.',
+        'Own Tier 2/3 escalations across networking, firewall troubleshooting, AV hardware (Smart Amp, Sonos, BrightSign, Tizen), APIs, identity systems (SSO/SAML/Entra), and SaaS platform behavior — full accountability from triage through resolution, including daily Smart Amp support across audio signal flow, speaker detection, firmware behavior, and network connectivity.',
         'Serve as one of the primary technical owners for pilot and trial execution across SMB, Enterprise, and SLA customers — leading white-glove deployment readiness, installation calls, and post-launch postmortems to identify root causes and prevent recurrence.',
         'Caught firmware defects mid-deployment on two major rollouts — a large multi-location enterprise account and a multi-location credit union — driving full-fleet Engineering remediation and company-wide fixes before customer impact.',
         'Built a proactive SD card health monitoring workflow after finding that Player SD card errors were logged but unaddressed: daily triage detects errors, classifies root cause (failure vs. ejection), determines replacement eligibility, and proactively contacts affected customers — converting a reactive support scenario into a proactive customer touchpoint.',
-        'Active QA Ops team member completing product testing cycles and verifying defects with Engineering; chair the weekly Bug Triage meeting and produce Bug Triage notes, Bug Highlights, and monthly Support-identified bug reports for cross-functional leadership, acting as primary liaison between Engineering/QA and all customer-facing teams.',
+        'Active QA Ops team member completing product testing cycles and verifying defects with Engineering; co-chair the weekly Bug Triage meeting and produce Bug Triage notes, Bug Highlights, and monthly Support-identified bug reports for cross-functional leadership, acting as primary liaison between Engineering/QA and all customer-facing teams.',
         'Build AI agents and applications with Claude Code to automate support workflows and improve intelligent triage; currently developing Zendesk AI Co-Pilot capabilities across agent assist, self-service, and support data hygiene.',
       ],
     },
     {
-      role: 'Senior Technical Support & Escalation Specialist',
+      // Two roles, grouped under one set of bullets as on the current resume.
+      role: 'Technical Support Specialist (March 2025 – April 2026) · Customer Support Specialist',
       dates: 'September 2022 – April 2026',
       org: 'Rockbot  ·  Austin, TX (Remote)',
       bullets: [

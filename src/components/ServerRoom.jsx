@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { profile } from '../data/profile.js';
 import { lenses } from '../data/racks.js';
 import { RACK_MODEL } from '../lib/rack.js';
@@ -9,11 +9,9 @@ import { cardSrcSet } from '../lib/cardImages.js';
 import { mountServerRoom } from '../lib/serverRoom.js';
 import { BUILD_STAMP } from '../lib/build.js';
 import audience from '../data/audience.json';
-import resumePdf from '../assets/files/Chadwick_Kraus_Resume_2026.pdf';
+import resumePdf from '../assets/files/Chad_Kraus_Resume.pdf';
 import './ServerRoom.css';
 
-// "Network IT Specialist at Rockbot" — the part of profile.title before the dash.
-const EYEBROW = profile.title.split('—')[0].trim();
 
 // The decorative data hall behind the two racks. Seeded, so the room is the same
 // on every load. No labels and no data: it is atmosphere, not evidence.
@@ -164,7 +162,6 @@ export default function ServerRoom() {
       tagline: profile.tagline,
       location: profile.location,
       email: profile.email,
-      phone: profile.phone,
       linkedin: profile.linkedin,
       github: profile.github,
       experience: profile.experience,
@@ -180,13 +177,19 @@ export default function ServerRoom() {
     <div className="sr" ref={rootRef}>
       <section className="sr-hero" aria-labelledby="sr-name">
         <div className="sr-intro">
-          <p className="kicker">{EYEBROW}</p>
-          <h1 id="sr-name" className="sr-name">
-            <span aria-hidden="true">Chad Kraus</span>
-            <span className="visually-hidden">{profile.fullName}</span>
-          </h1>
-          <p className="sr-headline">Networks. Software. The body.</p>
-          <p className="sr-lede">{profile.tagline}</p>
+          <p className="kicker">{profile.role}</p>
+          {/* One name, so it is read once. The full "Chadwick (Chad) Kraus" is in the title. */}
+          <h1 id="sr-name" className="sr-name">Chad Kraus</h1>
+          <p className="sr-headline">{profile.tagline}</p>
+          <ul className="sr-proof">
+            {profile.proof.map((item) => <li key={item}>{item}</li>)}
+          </ul>
+          {/* A plain link, not a router Link: the room reads ?tour=hiring when it loads,
+              so the tour needs a real navigation even from the home page itself. */}
+          <p className="sr-cta">
+            <Link viewTransition to="/resume" className="btn btn-primary">View resume</Link>
+            <a href="/?tour=hiring" className="btn">Walk through three projects</a>
+          </p>
           <p className="sr-shift">Night shift: only units with public commits this week are lit.</p>
         </div>
 

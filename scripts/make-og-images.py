@@ -139,12 +139,11 @@ def site_domain():
 
 
 def eyebrow():
-    """The part of profile.title before the dash, as the home page shows it.
-    Only `title` is read — profile.js also holds contact details that must never
-    reach a social card."""
+    """profile.role, the line the home page shows above the name. Only `role` is
+    read: profile.js also holds contact details that must never reach a social card."""
     src = open(os.path.join(DATA, "profile.js")).read()
-    m = re.search(r"\n  title:\s*\n?\s*'((?:[^'\\]|\\.)*)'", src)
-    return m.group(1).replace("\\'", "'").split("—")[0].strip() if m else None
+    m = re.search(r"\n  role:\s*'((?:[^'\\]|\\.)*)'", src)
+    return m.group(1).replace("\\'", "'").strip() if m else None
 
 
 # ---------------------------------------------------------------- drawing

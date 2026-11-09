@@ -39,6 +39,8 @@
 //   projectLinkLabel optional button text — defaults to 'View project'. Use
 //               'Watch demo' when the link goes to a walkthrough video rather
 //               than a running deployment.
+//   signIn      true when the live app opens on a sign-in screen. Its link is then
+//               labelled as such and the recorded demo becomes the primary action.
 //   repoLink    GitHub URL, or null (button hides itself)
 //   linkNote    optional one-line explanation shown on the project page when
 //               BOTH links are null. Defaults to the private-infrastructure
@@ -75,7 +77,7 @@ export const projects = [
     updated: '2026-08',
     tagline: 'Local-first · permission-gated · on-device voice',
     summary:
-      'A local-first, permission-gated personal AI assistant running entirely on home infrastructure — voice interaction, natural-language memory, full calendar and email management, and a searchable knowledge base via RAG.',
+      'A local-first, permission-gated personal AI assistant running entirely on home infrastructure, with voice interaction, natural-language memory, full calendar and email management, and a searchable knowledge base via RAG.',
     details:
       'Wake-phrase detection runs on the Mac Mini itself, so audio never leaves the machine, and dictation drops straight into the vault inbox. The console is reached over a private Tailscale link rather than an exposed port. Every connector is deny-by-default and requires an explicit permission grant; anything destructive requires human confirmation before it executes, and the audit log and permission state are first-class panels in the interface rather than buried in config. Built end-to-end with Claude Code across a full day-long session, including a real security audit that caught and fixed an OAuth CSRF gap and a container timezone bug.',
     stack: ['FastAPI', 'Docker Compose', 'Chroma (Vector DB)', 'Claude API', 'Google OAuth2', 'Tailscale'],
@@ -101,7 +103,7 @@ export const projects = [
     summary:
       'A local-first AI workforce that runs on your own machine. A Chief of Staff reads the request, decides whether it needs specialists, assigns the work with acceptance criteria, and comes back with one answer and a readiness verdict.',
     details:
-      'Nineteen specialists each hold their own identity, expertise and memory, and they are allowed to disagree: if Security finds a critical flaw or QA finds a failing test, the Chief of Staff reports NOT READY rather than smoothing it over. Anything that reaches outside the machine, spends money, or cannot be undone stops in an Approval Inbox with the exact payload shown before it runs. Memory carries provenance — where a fact came from, when, and how confident it is — so speculation is never stored as fact. The audit trail is append-only and hash-chained, which means a modified or deleted record breaks the chain and is detectable rather than silent. Everything except model inference stays on the machine, running in Docker across an API, a worker, an MCP server and a web console.',
+      'Nineteen specialists each hold their own identity, expertise and memory, and they are allowed to disagree: if Security finds a critical flaw or QA finds a failing test, the Chief of Staff reports NOT READY rather than smoothing it over. Anything that reaches outside the machine, spends money, or cannot be undone stops in an Approval Inbox with the exact payload shown before it runs. Memory carries provenance (where a fact came from, when, and how confident it is), so speculation is never stored as fact. The audit trail is append-only and hash-chained, which means a modified or deleted record breaks the chain and is detectable rather than silent. Everything except model inference stays on the machine, running in Docker across an API, a worker, an MCP server and a web console.',
     stack: ['Next.js 16', 'TypeScript', 'Docker Compose', 'MCP', 'pnpm monorepo', 'Playwright'],
     architecture: [
       { layer: "Web console", items: ["Next.js 16 console on your own machine", "Approval Inbox shows the exact payload before anything runs"] },
@@ -122,7 +124,7 @@ export const projects = [
     projectLink: null, // local-first — runs on your own machine, no hosted instance
     repoLink: null, // repo is private
     linkNote:
-      'There is no hosted instance to link. Meridian is built to run on your own machine, behind your own sign-in — a public demo would defeat the point.',
+      'There is no hosted instance to link. Meridian is built to run on your own machine, behind your own sign-in, so a public demo would defeat the point.',
   },
   {
     id: 2,
@@ -133,9 +135,9 @@ export const projects = [
     updated: '2026-08',
     tagline: 'Offline-first · sharing enforced in Postgres',
     summary:
-      'A household pet health record built to answer one question the moment it opens: does anything need attention today? Tracks boosters, medication refills, vet visits, and weight history across every pet in the home, then rolls the day into a single medication round — what to give, to whom, right now.',
+      'A household pet health record built to answer one question the moment it opens: does anything need attention today? Tracks boosters, medication refills, vet visits, and weight history across every pet in the home, then rolls the day into a single medication round: what to give, to whom, right now.',
     details:
-      'Dosing is derived from the frequency text transcribed off a prescription label, so it reads plain English, the Latin abbreviations vets still write (BID, TID, QID) and interval notation like q12h; anything it cannot place gets its own section instead of disappearing, because a missed dose matters more than a tidy list. Sharing is enforced in the database rather than the client — row-level security on all 26 tables, per-pet viewer/editor/co-owner roles, TOTP multi-factor auth, and magic-byte upload validation that quarantines mismatched uploads. Vets get a separate read-only link that expires and needs no account. Security review ran as part of the build rather than a pass at the end, and it drove concrete hardening. The rate limiter moved onto a spoof-resistant header after live testing proved the obvious one rotated per request and defeated the limit entirely. SECURITY DEFINER helper functions broke recursive RLS policy evaluation. It is offline-first by design — a persisted query cache serves reads with no connection, and an IndexedDB outbox replays mutations once the device reconnects. Backed by 101 unit tests, 6 Playwright E2E specs, and a SQL-level RLS isolation suite.',
+      'Dosing is derived from the frequency text transcribed off a prescription label, so it reads plain English, the Latin abbreviations vets still write (BID, TID, QID) and interval notation like q12h; anything it cannot place gets its own section instead of disappearing, because a missed dose matters more than a tidy list. Sharing is enforced in the database rather than the client, with row-level security on all 26 tables, per-pet viewer/editor/co-owner roles, TOTP multi-factor auth, and magic-byte upload validation that quarantines mismatched uploads. Vets get a separate read-only link that expires and needs no account. Security review ran as part of the build rather than a pass at the end, and it drove concrete hardening. The rate limiter moved onto a spoof-resistant header after live testing proved the obvious one rotated per request and defeated the limit entirely. SECURITY DEFINER helper functions broke recursive RLS policy evaluation. It is offline-first by design. A persisted query cache serves reads with no connection, and an IndexedDB outbox replays mutations once the device reconnects. Backed by 101 unit tests, 6 Playwright E2E specs, and a SQL-level RLS isolation suite.',
     stack: [
       'React 18 + TypeScript',
       'Supabase (Postgres RLS)',
@@ -163,6 +165,8 @@ export const projects = [
       [13, "Calendar, with reminders that can be marked done or snoozed."],
     ],
     projectLink: 'https://pawchart-zeta.vercel.app/',
+    projectLinkLabel: 'Live app (sign-in required)',
+    signIn: true,
     repoLink: 'https://github.com/chadkraus87/petcenza',
   },
   {
@@ -176,7 +180,7 @@ export const projects = [
     summary:
       'An interactive incident-response simulator. Trigger a realistic outage across a simulated fifteen-service infrastructure, then investigate the logs, metrics and dependency map to find the root cause and restore service.',
     details:
-      'Everything on screen comes from one underlying model, so the story always holds together — the charts, the logs, the dependency map and the customer complaints agree with each other because they are all computed from the same source rather than written separately. Failures spread the way they do in real systems: losing a cache makes things slow, losing a database makes them stop. One rule produces both, with no script per scenario. Nothing is random either, so an incident unfolds identically every time — which is also what lets an investigation survive a page refresh while storing almost nothing. Eight scenarios each teach a different shape of problem, and a wrong answer explains which evidence rules it out instead of just marking you incorrect. An optional guided mode walks newcomers through it, and any finished incident can be replayed second by second to watch the failure spread. Backed by 187 automated tests that run on every push.',
+      'Everything on screen comes from one underlying model, so the story always holds together. The charts, the logs, the dependency map and the customer complaints agree with each other because they are all computed from the same source rather than written separately. Failures spread the way they do in real systems: losing a cache makes things slow, losing a database makes them stop. One rule produces both, with no script per scenario. Nothing is random either, so an incident unfolds identically every time. That’s also what lets an investigation survive a page refresh while storing almost nothing. Eight scenarios each teach a different shape of problem, and a wrong answer explains which evidence rules it out instead of just marking you incorrect. An optional guided mode walks newcomers through it, and any finished incident can be replayed second by second to watch the failure spread. Backed by 187 automated tests that run on every push.',
     stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS v4', 'Recharts', 'Vitest', 'Playwright'],
     architecture: [
       { layer: "One model", items: ["A single deterministic model of fifteen services", "Charts, logs, dependency map and complaints all computed from it"] },
@@ -205,9 +209,9 @@ export const projects = [
     updated: '2026-08',
     tagline: 'Safety filter runs before the model',
     summary:
-      'A programming assistant for personal trainers that turns a client intake — injuries, available equipment, and goals — into a complete training plan.',
+      'A programming assistant for personal trainers that turns a client intake (injuries, available equipment, and goals) into a complete training plan.',
     details:
-      'Exercises are screened against each client\'s logged injuries by a deterministic filter that runs before the model is prompted, so the AI only ever programs from an already-filtered pool — safety never depends on the model following instructions. Its output then clears a second deterministic pass that re-checks movement balance, pull-to-push volume, recovery spacing, rep ranges and progression, with no LLM anywhere in the verification path; a failed check feeds one automatic retry, and plans that still fail are stored as flagged drafts rather than presented as finished. Trainers work from a 543-exercise library tagged by movement pattern, equipment and contraindication, extensible with their own movements. Multi-tenant isolation is enforced in Postgres row-level security and proven by a two-tenant test suite rather than assumed.',
+      'Exercises are screened against each client\'s logged injuries by a deterministic filter that runs before the model is prompted, so the AI only ever programs from an already-filtered pool. Safety never depends on the model following instructions. Its output then clears a second deterministic pass that re-checks movement balance, pull-to-push volume, recovery spacing, rep ranges and progression, with no LLM anywhere in the verification path; a failed check feeds one automatic retry, and plans that still fail are stored as flagged drafts rather than presented as finished. Trainers work from a 543-exercise library tagged by movement pattern, equipment and contraindication, extensible with their own movements. Multi-tenant isolation is enforced in Postgres row-level security and proven by a two-tenant test suite rather than assumed.',
     stack: ['Next.js 15', 'TypeScript', 'Supabase (Postgres RLS)', 'Claude API', 'Playwright'],
     architecture: [
       { layer: "Trainer app", items: ["Next.js 15 + TypeScript", "Logged injuries per client", "543-exercise library tagged by movement pattern, equipment and contraindication"] },
@@ -227,6 +231,8 @@ export const projects = [
       [13, "Build a plan: choose a client and workout type. Unsafe and unavailable exercises are removed before generation."],
     ],
     projectLink: 'https://coachrhythm.vercel.app/',
+    projectLinkLabel: 'Live app (sign-in required)',
+    signIn: true,
     repoLink: 'https://github.com/chadkraus87/traincraft',
   },
   {
@@ -240,7 +246,7 @@ export const projects = [
     summary:
       'A private monthly budget built around the question that actually matters mid-month: what is genuinely left to spend? Projects a daily cash runway from scheduled bills and income, then scores the month as you spend against it.',
     details:
-      'Bills, income, expenses, budgets, goals, reserves and debt each keep their own ledger, and the calendar puts every scheduled flow on a date so a shortfall shows up weeks before it lands — receipts scan straight into an expense. Data is scoped per account by row-level security across 12 tables, and the deployment ships its own CSP with HSTS and frame-deny, not the framework defaults. Installable and offline-capable as a PWA.',
+      'Bills, income, expenses, budgets, goals, reserves and debt each keep their own ledger, and the calendar puts every scheduled flow on a date so a shortfall shows up weeks before it lands, and receipts scan straight into an expense. Data is scoped per account by row-level security across 12 tables, and the deployment ships its own CSP with HSTS and frame-deny, not the framework defaults. Installable and offline-capable as a PWA.',
     stack: ['React + TypeScript', 'Supabase (Postgres RLS)', 'Vite', 'Recharts', 'PWA / Offline', 'Vitest + Playwright'],
     architecture: [
       { layer: "Installed app", items: ["React + TypeScript PWA, installable and offline-capable", "Calendar puts every scheduled flow on a date"] },
@@ -264,6 +270,8 @@ export const projects = [
       [22, "Back to the monthly overview."],
     ],
     projectLink: 'https://greenline-chadwick-kraus-projects.vercel.app/',
+    projectLinkLabel: 'Live app (sign-in required)',
+    signIn: true,
     repoLink: 'https://github.com/chadkraus87/greenline',
   },
 
@@ -277,9 +285,9 @@ export const projects = [
     updated: '2026-08',
     tagline: 'Hosted demo · local-first ops console',
     summary:
-      'A local-first operations console for a homelab — discover devices, watch services, map the network, and work an incident from first alert to root cause without leaving one screen.',
+      'A local-first operations console for a homelab: discover devices, watch services, map the network, and work an incident from first alert to root cause without leaving one screen.',
     details:
-      'The hosted demo is deliberately not the real thing, and says so: Vercel cannot reach a visitor\'s private network, so the public build runs a complete simulated lab on deterministic telemetry, keeps every edit inside that browser tab, and never writes to a shared database. Run it locally and it gains the parts that must touch your own network — discovery across approved ranges only, read-only Docker inventory, provider health, TLS expiry and Wake-on-LAN — each behind an explicit boundary rather than enabled by default. A guided outage scenario walks an incident across the command center and device views and can be replayed through to recovery, which makes it demonstrable without an audience needing a homelab of their own. Accessibility is checked in CI with axe rather than by eye.',
+      'The hosted demo is deliberately not the real thing, and says so: Vercel cannot reach a visitor\'s private network, so the public build runs a complete simulated lab on deterministic telemetry, keeps every edit inside that browser tab, and never writes to a shared database. Run it locally and it gains the parts that must touch your own network: discovery across approved ranges only, read-only Docker inventory, provider health, TLS expiry and Wake-on-LAN, each behind an explicit boundary rather than enabled by default. A guided outage scenario walks an incident across the command center and device views and can be replayed through to recovery, which makes it demonstrable without an audience needing a homelab of their own. Accessibility is checked in CI with axe rather than by eye.',
     stack: ['Next.js', 'TypeScript', 'React Flow', 'Recharts', 'Playwright + axe', 'Docker'],
     architecture: [
       { layer: "Hosted demo", items: ["Complete simulated lab on deterministic telemetry", "Edits stay in the browser tab; no shared database"] },
@@ -309,9 +317,9 @@ export const projects = [
     updated: '2026-09',
     tagline: 'Strict CSP · every effect has a no-JS fallback',
     summary:
-      'The link-in-bio, gear list and builds site for @deskdaemon — the workstation, the home lab, and the tools behind the videos. Every gear item carries what it cost and a verdict, including the ones not worth buying again, and every build has a write-up.',
+      'The link-in-bio, gear list and builds site for @deskdaemon: the workstation, the home lab, and the tools behind the videos. Every gear item carries what it cost and a verdict, including the ones not worth buying again, and every build has a write-up.',
     details:
-      'The page an Instagram or TikTok profile lands on, so mobile Lighthouse was the bar. Astro with plain CSS, one accent colour, and contrast measured against WCAG 2.1 AA rather than assumed. Every outbound link goes through a /go/<slug> redirect that can only reach destinations listed in one file, and clicks are counted server-side with no cookies. The Content-Security-Policy allows scripts and styles from the site\'s own origin only — no inline scripts, no CDN, no unsafe-*, which is why GSAP is vendored rather than loaded. Motion is CSS and native view transitions, with GSAP only for the home scroll sequence and the gear filter; every effect falls back cleanly with JavaScript off, reduced motion on, or GSAP blocked. Email signup sits behind a provider-agnostic function with a honeypot and a rate limit, and photos have their GPS metadata stripped at build. 124 Vitest unit tests and 188 Playwright tests, including axe accessibility scans, run in CI on every push.',
+      'The page an Instagram or TikTok profile lands on, so mobile Lighthouse was the bar. Astro with plain CSS, one accent colour, and contrast measured against WCAG 2.1 AA rather than assumed. Every outbound link goes through a /go/<slug> redirect that can only reach destinations listed in one file, and clicks are counted server-side with no cookies. The Content-Security-Policy allows scripts and styles from the site\'s own origin only (no inline scripts, no CDN, no unsafe-*), which is why GSAP is vendored rather than loaded. Motion is CSS and native view transitions, with GSAP only for the home scroll sequence and the gear filter; every effect falls back cleanly with JavaScript off, reduced motion on, or GSAP blocked. Email signup sits behind a provider-agnostic function with a honeypot and a rate limit, and photos have their GPS metadata stripped at build. 124 Vitest unit tests and 188 Playwright tests, including axe accessibility scans, run in CI on every push.',
     stack: ['Astro', 'TypeScript', 'Plain CSS', 'GSAP', 'Vitest', 'Playwright + axe', 'Vercel'],
     architecture: [
       { layer: "Build", items: ["Astro with plain CSS and one accent colour", "Contrast measured against WCAG 2.1 AA, not assumed", "GSAP vendored, because the CSP allows no CDN"] },
@@ -340,7 +348,7 @@ export const projects = [
     summary:
       'Software architecture as a city-building game. Every building is a real infrastructure concept, every glowing packet is a user request, and each placement moves capacity, latency, availability, operating cost and user satisfaction.',
     details:
-      'Traffic arrives in waves and the city either holds or it does not — add a cache and latency and database pressure visibly fall, skip a load balancer and the queue backs up in front of you. Missions set concrete targets, like sustaining a request rate under an error budget. An optional six-step guided first run explains telemetry, construction, routing and bottlenecks before the opening wave. There are no accounts, API keys, ads or paid services: state is local-first, so the game opens and plays immediately. Built with Codex.',
+      'Traffic arrives in waves and the city either holds or it does not. Add a cache and latency and database pressure visibly fall, skip a load balancer and the queue backs up in front of you. Missions set concrete targets, like sustaining a request rate under an error budget. An optional six-step guided first run explains telemetry, construction, routing and bottlenecks before the opening wave. There are no accounts, API keys, ads or paid services: state is local-first, so the game opens and plays immediately. Built with Codex.',
     stack: ['Next.js', 'React 19', 'TypeScript', 'Drizzle', 'Tailwind CSS'],
     architecture: [
       { layer: "Simulation", items: ["Traffic arrives in waves", "Caches, load balancers and databases change latency, pressure and queues"] },
@@ -360,19 +368,18 @@ export const projects = [
     title: 'Packet & Pine',
     category: 'Games & Simulation',
     status: 'Live',
-    updated: '2026-09',
-    tagline: 'Fully 3D · networking taught through play',
+    updated: '2026-11',
+    tagline: '62 missions · networking taught through play',
+    // From Chad's current description (November 2026); the older write-up with its
+    // mission counts was retired with it.
     summary:
-      'A fully 3D cozy networking adventure for the browser. Play a Network Keeper across twenty explorable areas, troubleshoot friendly outages, run a cabin homelab, and connect communities without flattening their security boundaries.',
-    details:
-      'Thirty multi-step story missions, four wireless-planning missions and forty-six evidence-based chapter decisions sit on top of a real systems model — a cable, power, thermal and incident homelab, plus a visual topology and capacity lab. Educators get visual challenge authoring, signed challenge packs, deterministic classroom replay and aggregate-only exports, so a class can be graded without collecting anything personal. Progress is local-first and anonymous play is the default; optional cloud snapshots are encrypted in the browser before they leave it, and passkeys are an opt-in authorization layer rather than a login wall. Renders with streamed distance-based LOD, GPU-instanced foliage, dynamic lighting and spatial audio. Keyboard, mouse, gamepad and touch all work. Built with Codex.',
-    stack: ['Three.js', 'TypeScript', 'Vite', 'WebAuthn / Passkeys', 'Vercel Blob', 'Vitest'],
+      'Browser game that turns real networking and infrastructure concepts into a 62-mission campaign, with illustrated and 3D gameplay and guided lessons. Missions follow the same loop as real troubleshooting: observe, form a hypothesis, make a safe change, verify, and roll back. Built with Codex, with local-first saves, responsive accessibility, security hardening, and comprehensive automated testing.',
+    stack: ['TypeScript', 'Three.js', 'Vite', 'Playwright', 'Vercel'],
     architecture: [
-      { layer: "Systems model", items: ["Cable, power, thermal and incident homelab", "Visual topology and capacity lab"] },
-      { layer: "Story", items: ["Thirty story missions and four wireless-planning missions", "Forty-six evidence-based chapter decisions"] },
-      { layer: "Classroom", items: ["Visual challenge authoring and signed challenge packs", "Deterministic replay and aggregate-only exports"] },
-      { layer: "Privacy", items: ["Local-first progress, anonymous by default", "Optional cloud snapshots encrypted in the browser (Vercel Blob)", "Passkeys as opt-in authorization"] },
-      { layer: "Rendering", items: ["Three.js with streamed distance-based LOD", "GPU-instanced foliage, dynamic lighting, spatial audio", "Keyboard, mouse, gamepad and touch"] },
+      { layer: "Campaign", items: ["62 missions built on real networking and infrastructure concepts", "Illustrated and 3D gameplay with guided lessons"] },
+      { layer: "Troubleshooting loop", items: ["Observe, form a hypothesis, make a safe change", "Verify, and roll back"] },
+      { layer: "Engineering", items: ["Local-first saves", "Responsive accessibility and security hardening", "Comprehensive automated testing (Playwright)"] },
+      { layer: "Platform", items: ["TypeScript, Three.js and Vite", "Deployed on Vercel"] },
     ],
     image: PacketAndPine,
     imageDate: '2026-09',

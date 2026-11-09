@@ -30,7 +30,7 @@ function UnitRow({ p }) {
         <p className="urow-tag">{p.tagline}</p>
         <p className="urow-sum">{p.summary}</p>
         <p className="urow-meta">
-          {p.status} · Updated {formatUpdated(p.updated)} · {p.act ? `${p.act.total} public commits` : 'No public repo'} · {p.lensNames.join(' + ')}{p.demoDown ? ' · Live demo not answering' : ''}
+          {p.status} · Updated {formatUpdated(p.updated)} · {p.lensNames.join(' + ')}{p.demoDown ? ' · Live demo not answering' : ''}
         </p>
         <ul className="urow-stack">{p.stack.map((tech) => <li key={tech}>{tech}</li>)}</ul>
         <div className="urow-actions">
@@ -65,8 +65,8 @@ export default function Portfolio() {
           <p className="kicker">Two racks · ten units</p>
           <h1 className="page-title">Projects</h1>
           <p className="lede">
-            Software and AI in rack A01, networks and support in rack B01. Every unit opens a case study. Status is current, and
-            activity is public GitHub commits over the last twelve weeks.
+            Ten applications: eight live, two in progress or private. Software and AI are in rack A01, networks and support
+            in rack B01, and every one opens a case study.
           </p>
           <div className="pf-filters">
             <div className="seg" role="group" aria-label="Filter projects by lens">

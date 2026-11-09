@@ -8,7 +8,8 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
 
 ## Architecture (edit data, not components)
 - `src/data/profile.js` — name, title, tagline, bio, experience, skills, certifications
-  (objects: `{ name, meta }`; NASM is site-only and shows "Current"), contact.
+  (objects: `{ name, meta }`, matching the resume), contact. There is no phone number
+  anywhere on the site, by choice, and the e2e suite guards the interview pack against one.
 - `src/data/racks.js` — which rack each project stands in (A01 Software & AI,
   B01 Networks & support; max 5 units each) and the Builder/Operations lenses.
   Every project must be in exactly one rack or the build fails.

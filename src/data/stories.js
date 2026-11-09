@@ -6,7 +6,7 @@
 // a developer directing Claude Code, without playing down his own calls on
 // security and verification. Ground rules:
 //   - "I" for decisions and judgement the published notes already credited to
-//     Chad, plus facts from his profile (he is a certified trainer).
+//     Chad, plus facts from his profile (he has coached personal-training clients).
 //   - "we" for anything found or built together; the session transcripts do not
 //     always show who spotted a problem first.
 //   - No new technical claims. Every one was already in the published notes.
@@ -28,7 +28,7 @@ export const projectStories = {
   coachrhythm: {
     title: 'Safety that doesn’t depend on the model',
     body: [
-      'CoachRhythm turns a client intake (injuries, available equipment, goals) into a training plan. I’m a certified personal trainer, so the failure I cared about most was the obvious one: programming something that hurts a person, like loaded overhead pressing for an impinged shoulder.',
+      'CoachRhythm turns a client intake (injuries, available equipment, goals) into a training plan. I’ve coached personal-training clients, so the failure I cared about most was the obvious one: programming something that hurts a person, like loaded overhead pressing for an impinged shoulder.',
       'The quick way to build it is to list the injuries in the prompt and ask the model to avoid them. I didn’t want safety to depend on the model following instructions. When that fails it fails silently, because a plan that breaks a constraint looks the same as one that respects it.',
       'So the filter runs before the model does. Claude Code built a deterministic screen that checks every exercise against the client’s logged contraindications, and the model only ever sees what survives. It can’t program a movement it was never offered.',
       'The plan then goes through a second check with no model in it: movement balance, pull-to-push volume, recovery spacing, rep ranges and progression. A failed check gets one retry with the failure attached. If it still fails, the plan is saved as a flagged draft instead of being presented as finished.',

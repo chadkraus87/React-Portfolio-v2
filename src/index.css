@@ -147,7 +147,7 @@ main:focus { outline: none; }
 .spark { margin-top: 18px; }
 .spark svg { display: block; width: 100%; max-width: 420px; height: 52px; }
 .spark .bar { fill: var(--accent); } .spark .zero { fill: var(--line-2); }
-.spark figcaption, .spark-note { margin-top: 8px; font: 500 11.5px/1.5 var(--f-mono); color: var(--muted); }
+.spark figcaption { margin-top: 8px; font: 500 11.5px/1.5 var(--f-mono); color: var(--muted); }
 
 /* ---- 404 ---- */
 .nf-term { margin: 28px 0; padding: 18px 20px; overflow-x: auto; background: #0B0704; border: 1px solid var(--steel-4); font: 500 14px/1.7 var(--f-mono); color: #F2D9B8; }
@@ -220,3 +220,13 @@ main:focus { outline: none; }
 .search-recent ul { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; list-style: none; }
 .search-recent button { min-height: 32px; padding: 6px 10px; border: 1px solid var(--edge); background: none; color: var(--prose); font: 500 12.5px/1 var(--f-mono); }
 .search-recent button:hover { color: var(--text); border-color: var(--accent); }
+
+/* No-JavaScript page text, written into #root by scripts/prerender.mjs. Hidden as soon
+   as public/theme.js marks <html class="js">, which is before first paint. */
+.js .static-fallback { display: none; }
+.static-fallback { max-width: 72ch; margin: 0 auto; padding: 40px 16px; line-height: 1.6; }
+.static-fallback h1 { margin: 12px 0; font-size: 2rem; line-height: 1.15; }
+.static-fallback h2 { margin: 28px 0 8px; font-size: 1.25rem; }
+.static-fallback p, .static-fallback ul { margin: 10px 0; }
+.static-fallback ul { padding-left: 1.2em; }
+.static-fallback li { margin: 6px 0; }

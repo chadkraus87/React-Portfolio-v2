@@ -23,6 +23,7 @@ import { SITE_NAME,
 // racks.js and rackModel.js import nothing either, so the build can check that
 // every project stands in a rack and self-test the model the server room uses.
 import { racks, lenses } from '../src/data/racks.js';
+import { profile } from '../src/data/profile.js';
 import { toolsOf, buildRackModel, uptimeStrip, incidentsFor, latestFullWeeks, weekSnapshot, commitsSinceImage } from '../src/lib/rackModel.js';
 import { incidents } from '../src/data/incidents.js';
 import { hostedServices } from '../src/data/services.js';
@@ -183,7 +184,9 @@ const projectRoutes = parseEntries(projectsSrc).map(({ slug, title }) => ({
   const picks = interviewPicks(fake).map((p) => p.slug).join();
   if (picks !== 'b,a,d') throw new Error(`interviewPicks: got ${picks}`);
   const proof = proofOf(fake[0]).join(' · ');
-  if (!proof.startsWith('Live · recorded demo · live demo answering') || !proof.endsWith('tested with Vitest + Playwright · 5 public commits in twelve weeks')) throw new Error(`proofOf: got ${proof}`);
+  // Commit counts were taken out of the proof (Nov 2026): a small number reads as weak
+  // evidence in front of a hiring manager. Activity still ranks the picks above.
+  if (!proof.startsWith('Live · recorded demo · live demo answering') || !proof.endsWith('tested with Vitest + Playwright') || /commit/.test(proof)) throw new Error(`proofOf: got ${proof}`);
   const fakeActivity = { from: '2026-06-22', to: '2026-09-14', repos: {} };
   const fakeProjects = [{ slug: 'x', act: { weeks: [0, 2] }, uptime: { firstChecked: '2026-06-22', outages: [{ from: '2026-07-01', to: '2026-07-02' }] } }, { slug: 'y', act: null, uptime: null }];
   const w1 = weekSnapshot(fakeActivity, fakeProjects, 1);
@@ -266,18 +269,18 @@ const routes = [
     path: 'portfolio',
     title: ROUTE_TITLES['/portfolio'],
     description:
-      'AI tooling, infrastructure consoles, and systems games built with Claude Code and Codex — Jarvis, Meridian, PetCenza, HomeLab Commander, Stack City and more.',
+      'Ten applications built with Claude Code and Codex: AI tools, infrastructure consoles and games that teach networking. Jarvis, PetCenza, TechOps, Packet & Pine and more.',
   },
   {
     path: 'resume',
     title: ROUTE_TITLES['/resume'],
     description:
-      'Resume for Chadwick (Chad) Kraus — Network IT Specialist covering Tier 2/3 escalations, QA operations, and AI-assisted tooling.',
+      'Resume for Chadwick (Chad) Kraus, Network IT Specialist at Rockbot: Tier 2/3 escalations across APIs, identity, networks and connected devices, and AI tools for support teams.',
   },
   {
     path: 'contact',
     title: ROUTE_TITLES['/contact'],
-    description: 'Get in touch with Chadwick (Chad) Kraus — email, LinkedIn, GitHub.',
+    description: 'Get in touch with Chadwick (Chad) Kraus by email, LinkedIn or GitHub.',
   },
   {
     path: 'changes',
@@ -297,7 +300,7 @@ const routes = [
   {
     path: 'now',
     title: ROUTE_TITLES['/now'],
-    description: 'What Chad Kraus is working on now: this week’s public commits, projects in progress and live demo health.',
+    description: 'What Chad Kraus is working on right now, with projects in progress, recent updates and live demo health.',
   },
   {
     path: 'interview-pack',
@@ -374,6 +377,35 @@ const esc = (s) =>
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 
+// Without JavaScript the app never mounts, so every page also carries its own text:
+// name and role, the page's heading and description, the project list and contact
+// links. public/theme.js marks <html class="js"> before first paint and CSS hides
+// this block, so visitors never see it flash; React replaces it on mount anyway.
+const PROJECT_LIST = projectRoutes.map((r) => ({ href: `/${r.path}`, title: r.title.replace(` · ${SITE_NAME}`, ''), line: r.description }));
+const fallbackHtml = (route) => {
+  const isHome = !route.path;
+  const heading = isHome ? SITE_NAME : route.title.replace(` · ${SITE_NAME}`, '');
+  const home = isHome
+    ? `<p>${esc(profile.tagline)}</p><ul>${profile.proof.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>${profile.about.map((x) => `<p>${esc(x)}</p>`).join('')}`
+    : '';
+  return `<div class="static-fallback"><p><a href="/">${esc(SITE_NAME)}</a>, ${esc(profile.role)}</p>` +
+    `<h1>${esc(heading)}</h1><p>${esc(route.description)}</p>${home}` +
+    `<h2>Projects</h2><ul>${PROJECT_LIST.map((x) => `<li><a href="${esc(x.href)}">${esc(x.title)}</a>. ${esc(x.line)}</li>`).join('')}</ul>` +
+    `<p><a href="/resume">Resume</a> · <a href="mailto:${esc(profile.email)}">${esc(profile.email)}</a> · ` +
+    `<a href="${esc(profile.linkedin)}">LinkedIn</a> · <a href="${esc(profile.github)}">GitHub</a></p></div>`;
+};
+
+// Person structured data, from profile.js so it can't drift from the site. No phone.
+const JSON_LD = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE_NAME,
+  jobTitle: 'Network IT Specialist',
+  worksFor: { '@type': 'Organization', name: 'Rockbot' },
+  url: `${BASE}/`,
+  sameAs: [profile.linkedin, profile.github],
+}).replace(/</g, '\\u003c');
+
 const swap = (html, route) => {
   const title = esc(route.title);
   const description = esc(route.description);
@@ -386,6 +418,8 @@ const swap = (html, route) => {
           .replace(/(<meta\s+name="twitter:image"\s+content=")[^"]*(")/, `$1${image}$2`)
       : h;
   return withImage(html)
+    .replace('<div id="root"></div>', `<div id="root">${fallbackHtml(route)}</div>`)
+    .replace('</head>', `<script type="application/ld+json">${JSON_LD}</script>\n  </head>`)
     .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`)
     .replace(
       /(<meta\s+name="description"\s+content=")[^"]*(")/,

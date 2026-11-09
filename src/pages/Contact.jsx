@@ -166,7 +166,7 @@ export default function Contact() {
             {/* aria-live so screen readers announce the result of submitting */}
             <p className="form-note" role="status" aria-live="polite">
               {state.status === 'sent'
-                ? 'Thanks — your message is on its way.'
+                ? 'Thanks. Your message is on its way.'
                 : state.status === 'error'
                   ? `Could not send (${state.error}). Email ${profile.email} directly.`
                   : FORM_ENDPOINT
@@ -175,7 +175,7 @@ export default function Contact() {
             </p>
           </form>
 
-          {/* Was four bordered tiles. Same four channels, same labels and same
+          {/* Was four bordered tiles. Three channels now (no phone, by choice), same labels and
               values, re-expressed as the term/definition list they always were:
               hairlines instead of boxes, and the label is now a real <dt>. */}
           <aside className="contact-direct">
@@ -183,10 +183,6 @@ export default function Contact() {
               <div className="direct__row">
                 <dt className="contact-label">email</dt>
                 <dd><a href={`mailto:${profile.email}`}>{profile.email}</a></dd>
-              </div>
-              <div className="direct__row">
-                <dt className="contact-label">phone</dt>
-                <dd><a href={`tel:${profile.phone.replace(/[^0-9]/g, '')}`}>{profile.phone}</a></dd>
               </div>
               <div className="direct__row">
                 <dt className="contact-label">linkedin</dt>

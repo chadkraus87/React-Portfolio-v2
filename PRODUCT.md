@@ -199,18 +199,23 @@ Real, in the repository:
   signs off on the wording.
 - Demo recordings in `public/demos/` for Meridian, PetCenza, HomeLab
   Commander, and TechOps Command Center. Jarvis keeps its screenshot only.
-- The 2026 resume PDF (`src/assets/files/`), generated from
-  `resume-src/resume.data.mjs`.
+- The resume PDF (`src/assets/files/Chad_Kraus_Resume.pdf`), supplied by Chad
+  (November 2026). `resume-src/` generated the earlier version and is no longer
+  its source.
 - A headshot (`src/assets/images/headshot.jpg`) and an OG card in `public/`.
 - Certifications: Google IT Support Professional Certificate; Full-Stack Web
-  Development, The University of Texas at Austin; NASM CPT + Certified
-  Nutrition Coach. NASM is shown on the site only, as "Current" with no date,
-  and deliberately left off the resume — the one sanctioned parity exception.
-  Training and nutrition are an identifier, never a section or rack of their own.
-- Named Rockbot work: a business case covering 2,000+ devices on end-of-life
-  firmware and the customer upgrade program built around it; an AI voice model
-  for call-center overflow; the escalation team's KPI dashboard; chairing weekly
-  bug triage; the onboarding package new escalation engineers train from.
+  Development, The University of Texas at Austin. Both match the resume.
+- Named Rockbot work, as Chad supplied it (November 2026): about 600 Tier 2/3
+  tickets and escalations a month; Nightline, an after-hours AI support agent
+  prototype that led to Forethought's AI voice agent, which Chad trained and
+  which handles about 20% of overflow calls (about $20K a year); KPI dashboards
+  that replaced 5 to 10 hours of manual reporting a week; a Chrome extension used
+  by 10 frontline agents; 2,000+ end-of-life devices sized as an estimated $750K
+  hardware revenue opportunity; technical owner on about 15 pilots; a rebuild of
+  about 200 knowledge base articles; daily SD-card triage reaching about 50
+  devices a month; co-chairing the weekly Bug Triage; an escalation onboarding
+  program that trained 5 new team members. Never name customers. These figures
+  are Chad's own, from his resume, so they are not "invented revenue" below.
 
 Absent, and not to be invented: testimonials, client logos, press coverage,
 traffic or usage numbers, awards, revenue, and team size. Every project now

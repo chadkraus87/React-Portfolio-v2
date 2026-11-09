@@ -51,6 +51,5 @@ export function proofOf(p) {
   if (p.uptime?.ok) bits.push(`live demo answering the daily check since ${formatDay(p.uptime.firstChecked ?? p.uptime.since)}`);
   const tests = (p.stack ?? []).filter((s) => TEST_TOOLS.test(s));
   if (tests.length) bits.push(`tested with ${tests.join(', ')}`);
-  if (p.act?.total) bits.push(`${p.act.total} public commits in twelve weeks`);
   return bits;
 }

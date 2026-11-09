@@ -17,7 +17,7 @@ import { savesData } from './dataSaver.js';
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const lerp = (a, b, t) => a + (b - a) * t;
-const DEFAULT_NOTE = 'This project isn’t publicly linked — it runs on private infrastructure.';
+const DEFAULT_NOTE = 'This project isn’t publicly linked. It runs on private infrastructure.';
 const STATUS_COLOR = { Live: 'var(--live)', 'In progress': 'var(--accent)', Private: 'var(--private)' };
 
 export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, formatUpdated, snapshot, audience = { leads: [], days: 30 }, onEvent = () => {} }) {
@@ -310,7 +310,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
 
   // ---- Sheet ----
   function spark(p) {
-    if (!p.act) return '<p class="s-note">No public repository, so no public activity is shown.</p>';
+    if (!p.act) return '';
     const bars = p.act.weeks.map((w, k) => {
       const h = w ? Math.max(3, (w / model.maxWeek) * 46) : 1.5;
       return `<rect class="${w ? 'bar' : 'zero'}" x="${k * 20}" y="${50 - h}" width="15" height="${h}"><title>Week ${k + 1}: ${w} commit${w === 1 ? '' : 's'}</title></rect>`;
@@ -347,7 +347,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
         <p class="kicker">${esc(r.name)} · ${esc(p.lensNames.join(' + '))}</p>
         <h2 id="sr-sheet-title" tabindex="-1">${esc(p.title)}</h2>
         <p class="s-tag">${esc(p.tagline)}</p>
-        <ul class="s-chips"><li class="chip"><span class="dot" style="color:${STATUS_COLOR[p.status]}"></span>${esc(p.status)}</li><li class="chip">Updated ${esc(formatUpdated(p.updated))}</li><li class="chip">${p.act ? `${p.act.total} public commits` : 'No public repo'}</li>${p.demoDown ? `<li class="chip chip-warn">Live demo not answering since ${esc(formatDay(p.demoDown))}</li>` : ''}</ul>
+        <ul class="s-chips"><li class="chip"><span class="dot" style="color:${STATUS_COLOR[p.status]}"></span>${esc(p.status)}</li><li class="chip">Updated ${esc(formatUpdated(p.updated))}</li>${p.demoDown ? `<li class="chip chip-warn">Live demo not answering since ${esc(formatDay(p.demoDown))}</li>` : ''}</ul>
         <div class="s-open-row"><a class="btn btn-primary s-open" href="/projects/${esc(p.slug)}" data-nav>Open the case study →</a><button type="button" class="btn s-copy" data-copy-link>Copy link to this unit</button></div>
         <div class="s-monitor"><div class="s-glass">${media}${cc}</div>${toggle}</div>${notes.length ? `<p class="s-note s-demo-note">${notes.join(' · ')}</p>` : ''}${transcript}
         <ol class="s-path">
@@ -384,14 +384,13 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
         <p class="s-hire-lede">${esc(s.tagline)}</p>
         <ul class="s-hire-contact">
           <li><a href="mailto:${esc(s.email)}">${esc(s.email)}</a></li>
-          <li><a href="tel:${esc(s.phone.replace(/[^0-9+]/g, ''))}">${esc(s.phone)}</a></li>
           <li>${esc(s.location)}</li>
           <li><a href="${esc(s.linkedin)}" target="_blank" rel="noopener noreferrer">${esc(bare(s.linkedin))}</a></li>
           <li><a href="${esc(s.github)}" target="_blank" rel="noopener noreferrer">${esc(bare(s.github))}</a></li>
         </ul>
         <div class="s-actions s-print-hide">
           <button type="button" class="btn btn-primary" data-print>Print this snapshot</button>
-          <a class="btn" href="${esc(s.resumeUrl)}" download="Chadwick_Kraus_Resume.pdf">Download the resume (PDF)</a>
+          <a class="btn" href="${esc(s.resumeUrl)}" download="Chad_Kraus_Resume.pdf">Download the resume (PDF)</a>
         </div>
         <p class="s-sub">Experience</p>
         <ul class="s-hire-list">${rows(s.experience.map((e) => [e.title, `${e.org} · ${e.dates}`]))}</ul>
@@ -748,7 +747,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   const proofLinks = (p) => [
     `<a href="/projects/${esc(p.slug)}" data-nav>Case study</a>`,
     p.uptime ? '<a href="/status" data-nav>Uptime record</a>' : '',
-    `<a href="${esc(p.projectLink)}" target="_blank" rel="noopener noreferrer">Live demo ↗</a>`,
+    `<a href="${esc(p.projectLink)}" target="_blank" rel="noopener noreferrer">${p.signIn ? 'Live app (sign-in required)' : 'Live demo'} ↗</a>`,
   ].filter(Boolean);
   const HIRING = [
     ...picks.map((p) => ({ text: `${p.title}: ${proofOf(p).join(' · ')}.`, links: proofLinks(p), run: () => selectUnit(p.i, false, true) })),
@@ -836,9 +835,14 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     const downNames = P.filter((p) => w.down.has(p.slug)).map((p) => p.title);
     const text = `Week of ${formatDay(w.start)}${k === lastWeek ? ' (latest)' : ''} · ${w.total} public commit${w.total === 1 ? '' : 's'}${downNames.length ? ` · demo down: ${downNames.join(', ')}` : ''}`;
     // The control is narrow and the "Week" label beside it already says what this is.
+    // At rest (the latest week, nothing compared) it reads "Latest week" rather than a
+    // count, so a quiet week never greets a visitor as "0 commits". Scrubbing back shows
+    // each week's count, and aria-valuetext below always carries the full detail.
     weekOut.textContent = ref
       ? `${formatDay(w.start)} · ${w.total} vs ${formatDay(ref.start)} · ${ref.total}`
-      : `${formatDay(w.start)}${k === lastWeek ? ' (latest)' : ''} · ${w.total} commit${w.total === 1 ? '' : 's'}${downNames.length ? ' · demo down' : ''}`;
+      : k === lastWeek
+        ? `Latest week${downNames.length ? ' · demo down' : ''}`
+        : `${formatDay(w.start)} · ${w.total} commit${w.total === 1 ? '' : 's'}${downNames.length ? ' · demo down' : ''}`;
     weekRange.setAttribute('aria-valuetext', ref
       ? `${text}, compared with the week of ${formatDay(ref.start)}: ${ref.total} public commit${ref.total === 1 ? '' : 's'}`
       : text);

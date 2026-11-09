@@ -512,10 +512,13 @@ test('rack timeline lights the units with commits in the chosen week, and replay
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
   const range = page.locator('#sr-week');
-  await expect(page.locator('.sr-week-out')).toContainText('(latest)');
+  // At rest the readout names the position, never a count, so a quiet week can't
+  // greet a visitor as "0 commits"; the slider's spoken value keeps the full detail.
+  await expect(page.locator('.sr-week-out')).toHaveText('Latest week');
   await expect(range).toHaveAttribute('aria-valuetext', /^Week of .* public commit/);
   await range.fill('6');
   await expect(page.locator('.sr')).toHaveClass(/is-timeline/);
+  await expect(page.locator('.sr-week-out')).toContainText('commit');
   await expect(page.locator('.unit.wk-on')).toHaveCount(lit);
   await expect(range).toHaveAttribute('aria-valuetext', /^Week of .* public commit/);
   await range.fill('11');
@@ -913,5 +916,41 @@ test('a project shows a verdict only when one has been written', async ({ page }
     await expect(page.getByRole('heading', { name: 'What I’d do differently' })).toBeVisible();
   } else {
     await expect(page.locator('.cs-verdict')).toHaveCount(0);
+  }
+});
+
+test('pages read without JavaScript: their own text, the projects, structured data, and no phone number', async ({ browser }) => {
+  const ctx = await browser.newContext({ javaScriptEnabled: false });
+  const page = await ctx.newPage();
+  // Trailing slashes: vite preview only serves a folder's prerendered index.html for
+  // /path/, and falls back to the home page for /path. Vercel serves it either way.
+  for (const [path, heading] of [['/', 'Chadwick (Chad) Kraus'], ['/projects/petcenza/', 'PetCenza'], ['/resume/', 'Resume']]) {
+    await page.goto(path);
+    const fallback = page.locator('.static-fallback');
+    await expect(fallback).toBeVisible();
+    await expect(fallback.getByRole('heading', { level: 1 })).toHaveText(heading);
+    await expect(fallback.getByRole('link', { name: 'Jarvis' })).toHaveAttribute('href', '/projects/jarvis');
+    expect(await fallback.locator('a[href^="/projects/"]').count()).toBe(10);
+    const ld = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent());
+    expect(ld).toMatchObject({ '@type': 'Person', jobTitle: 'Network IT Specialist', worksFor: { name: 'Rockbot' } });
+    expect(ld.telephone).toBeUndefined();
+    expect(await page.content()).not.toMatch(/650[-. )]*7633|\(512\)/);
+  }
+  await ctx.close();
+});
+
+test('the hero names Chad once and shows both buttons on the first screen, on a phone too', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('sr-tour', 'done'));
+  for (const viewport of [{ width: 375, height: 812 }, { width: 1440, height: 900 }]) {
+    await page.setViewportSize(viewport);
+    await page.goto('/');
+    // One name, read once: the full name lives in the title.
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Chad Kraus');
+    // No JS-hidden page text left behind once the app mounts.
+    await expect(page.locator('.static-fallback')).toHaveCount(0);
+    for (const name of ['View resume', 'Walk through three projects']) {
+      const box = await page.locator('.sr-cta').getByRole('link', { name }).boundingBox();
+      expect(box.y + box.height, `${name} at ${viewport.width}px`).toBeLessThanOrEqual(viewport.height);
+    }
   }
 });

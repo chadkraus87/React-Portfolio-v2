@@ -1,79 +1,78 @@
 // ---------------------------------------------------------------------------
-// PROFILE DATA — edit this file to update your name, tagline, links, and bio.
-// No component changes needed; everything reads from here.
+// PROFILE DATA: edit this file to update your name, role, links, and bio.
+// No component changes needed; everything reads from here. The facts here mirror
+// the resume in src/assets/files/Chad_Kraus_Resume.pdf; change both together.
+// No phone number anywhere on the site, by choice.
 // ---------------------------------------------------------------------------
 
 export const profile = {
   name: 'Chadwick (Chad) Kraus',
   fullName: 'Chadwick (Chad) Kraus',
-  title:
-    'Network IT Specialist at Rockbot — Tier 2/3 escalations, QA operations, and AI tooling built to prevent the next ticket.',
-  tagline:
-    'I build systems, and I keep them running. Ten shipped applications on this site — AI tooling, infrastructure consoles, and games that teach the systems they simulate — plus a day job owning the escalations that teach me what to build next.',
+  // The hero's eyebrow, and jobTitle in the structured data.
+  role: 'Network IT Specialist at Rockbot',
+  title: 'Network IT Specialist at Rockbot. I own Tier 2/3 support escalations and build AI tools for support teams.',
+  // The hero's headline.
+  tagline: 'I own the hard support escalations, and I build the AI tools that make them faster.',
+  // Three proof points in a row under the headline.
+  proof: [
+    'About 600 Tier 2/3 tickets and escalations a month',
+    'AI voice agent now handles about 20% of overflow calls',
+    'Dashboards that replaced 5 to 10 hours of manual reporting a week',
+  ],
   location: 'Austin, TX (Remote)',
   email: 'chadkraus87@gmail.com',
-  phone: '(512) 650-7633',
   github: 'https://github.com/chadkraus87',
   linkedin: 'https://linkedin.com/in/chadwick-kraus',
 
-  // Shown in the hero as mono "status" tags
-  heroTags: [
-    'Tier 2/3 Escalations',
-    'Root Cause Analysis',
-    'Technical Operations',
-    'AI Automation',
-    'Next.js + Supabase',
-  ],
-
-  // Home page Background paragraphs — add/remove strings to change the bio.
+  // Home page Background paragraphs. Add or remove strings to change the bio.
   about: [
-    'The projects span more ground than a single stack: a permission-gated AI assistant running entirely on my own hardware, a pet health record whose sharing rules live in Postgres rather than in the interface, an incident-response simulator built on a single deterministic model, an operations console for a homelab, and two games that teach networking and systems architecture by making you operate them.',
-    'I came to building through operations, and that is the part that shapes how I build. Years of Tier 2/3 escalations teach you exactly how software fails in the field: the permission that was too broad, the check that lived in the client instead of the database, the retry that made an outage worse. So my projects tend to enforce access in Postgres row-level security rather than the UI, keep audit trails that detect tampering, run destructive actions behind explicit confirmation, and carry real test suites — because I have been the person paged when none of that was true.',
-    "By day I'm a Network IT Specialist at Rockbot, owning Tier 2/3 escalations across networking, AV hardware, APIs, identity systems and SaaS platform behavior. The work I'm proudest of there is the proactive kind: a business case identifying 2,000+ devices running end-of-life firmware and the customer upgrade program built around it, an AI voice model trained to absorb overflow call-center volume, and the KPI dashboard the escalation team now runs on. I chair weekly bug triage and wrote the onboarding package new escalation engineers train from.",
-    'The two halves reinforce each other. Support work tells me which failure modes are worth engineering against; building the software tells me what Engineering is actually weighing when I escalate. Claude Code is how I close the distance between the two quickly — but the judgment about what to build, what to verify, and what to refuse to ship is the part I bring.',
-    "Outside of work you'll usually find me hiking with my three rescue dogs, coaching fitness clients, or building the next side project that teaches me something new.",
+    "By day I'm a Network IT Specialist at Rockbot. I own the Tier 2/3 queue, about 600 tickets and escalations a month, across APIs, SSO and SAML (Okta and Entra ID), customer networks and firewalls, and connected AV hardware. I'm the main link between Support and Engineering, and I co-chair the weekly Bug Triage.",
+    "A lot of what I build starts as a fix for my own queue. Nightline, an after-hours AI support agent I prototyped, led Rockbot to bring in Forethought's AI voice agent. I trained that agent and built its persona, and it now handles about 20% of our overflow calls. The KPI dashboards I built with Claude Code and Zendesk's MCP server replaced 5 to 10 hours of manual reporting a week.",
+    "Outside work I build full-stack and AI projects with Claude Code and Codex. The ten on this site run from a permission-gated AI assistant on my own hardware to a 62-mission networking game. Escalation work shapes how I build them. I put access rules in the database instead of the UI, put a confirmation in front of anything destructive, and write real tests, because I've been the one answering the ticket when those were missing.",
+    "When I'm not working, I'm usually out hiking with my three rescue dogs.",
   ],
 
-  // Experience, mirrored from resume-src/resume.data.mjs. Change both together.
+  // Experience, matching LinkedIn and the resume.
   experience: [
     { title: 'Network IT Specialist', org: 'Rockbot', dates: 'April 2026 – Present' },
-    { title: 'Senior Technical Support & Escalation Specialist', org: 'Rockbot', dates: 'September 2022 – April 2026' },
+    { title: 'Technical Support Specialist', org: 'Rockbot', dates: 'March 2025 – April 2026' },
+    { title: 'Customer Support Specialist', org: 'Rockbot', dates: 'September 2022 – March 2025' },
     { title: 'Technical Support Specialist', org: '8am (formerly AffiniPay)', dates: 'April 2021 – January 2022' },
   ],
 
-  // Certifications, with the line shown under each. Google and UT Austin match
-  // the resume. NASM is on the site only, by choice, and carries no date.
+  // Certifications, with the line shown under each. Both match the resume.
   certifications: [
     { name: 'Google IT Support Professional Certificate', meta: 'Google · October 2023' },
     { name: 'Full-Stack Web Development Certificate', meta: 'The University of Texas at Austin · August 2023' },
-    { name: 'NASM Certified Personal Trainer + Certified Nutrition Coach', meta: 'Current' },
   ],
 
-  // Skills shown in the Background section of the home page, grouped like the resume.
+  // The Toolbox on the home page: the resume's skills, item for item. The resume's
+  // "Networking & Identity" is split in two here so it reads plainly that DNS, DHCP,
+  // VPN and the firewall work are troubleshooting, not administration.
   skillGroups: [
     {
-      label: 'AI Tooling & Ops',
-      items: ['Claude Code', 'AI Automation', 'Agentic Workflows', 'Support Automation', 'Prompt Engineering', 'Zendesk AI'],
+      label: 'Escalation & Troubleshooting',
+      items: ['Tier 2/3 escalation ownership', 'Root cause analysis', 'Log analysis', 'REST API & SaaS diagnostics', 'Postman', 'Bug lifecycle management', 'Postmortems', 'Escalation playbooks'],
     },
     {
-      label: 'Networking & Support',
-      items: ['TCP/IP', 'VLANs', 'Firewall config', 'Tier 2/3 Escalations', 'Root cause analysis', 'DNS', 'DHCP', 'VPN', 'API Troubleshooting', 'Postman'],
+      label: 'Network troubleshooting',
+      items: ['TCP/IP', 'DNS', 'DHCP', 'VPN', 'VLANs', 'Firewall troubleshooting', 'PoE', 'Wireshark', 'Connectivity diagnostics'],
     },
     {
-      label: 'QA & Testing',
-      items: ['Bug Triage', 'QA Operations', 'Regression Testing', 'Defect Validation', 'Release Verification'],
+      label: 'Identity & access',
+      items: ['SSO', 'SAML', 'OAuth 2.0', 'MFA', 'Okta', 'Microsoft Entra ID'],
     },
     {
-      label: 'Identity & Auth',
-      items: ['SSO/SAML', 'OAuth 2.0', 'Okta', 'Microsoft Entra'],
+      label: 'AI & Automation',
+      items: ['Claude Code', 'Codex', 'MCP servers', 'n8n', 'AI voice agent training (Forethought)', 'Zendesk AI co-pilot', 'Prompt engineering', 'Human-in-the-loop review'],
+    },
+    {
+      label: 'Support Operations',
+      items: ['Zendesk (admin)', 'KPI dashboards', 'Knowledge base architecture', 'SOPs & onboarding', 'Pilots & deployments', 'Jira', 'Salesforce', 'Tableau'],
     },
     {
       label: 'Development',
-      items: ['JavaScript', 'React', 'Node.js', 'Next.js', 'Supabase', 'MySQL', 'MongoDB', 'Git', 'REST APIs', 'HTML/CSS', 'Postman', 'GitHub'],
-    },
-    {
-      label: 'Customer Success & Operations',
-      items: ['Enterprise Deployments', 'Technical Operations', 'Customer Enablement', 'Pilot Programs', 'Cross-functional Leadership', 'Process Improvement', 'Documentation'],
+      items: ['JavaScript/TypeScript', 'Node.js/Express', 'React/Next.js', 'Python (FastAPI)', 'PostgreSQL/Supabase', 'SQL', 'REST APIs', 'Webhooks', 'Docker', 'Git', 'Playwright', 'Vitest'],
     },
   ],
 };

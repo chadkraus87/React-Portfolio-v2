@@ -6,22 +6,25 @@ console. Everything below the room is the same hardware vocabulary at rest:
 label tape, VFD readouts, patch-panel rows, monitors in bezels.
 
 Adopted September 2026. It replaces C2 — Editorial Spatial. PRODUCT.md still
-governs content: no fabricated claims, resume/site parity (NASM is the one
-site-only exception), and no project links Chad has not supplied.
+governs content: no fabricated claims, resume/site parity, and no project links
+Chad has not supplied.
 
 ## Design thesis
 
-- **The hero is the proof.** A recruiter's first viewport shows the name, the
-  role, the headline ("Networks. Software. The body.") and all ten projects as
-  labelled, status-lit units. Nothing needs a click to be understood.
+- **The hero is the proof.** A recruiter's first viewport shows the role, the
+  name, one sentence on what Chad does, three proof points from the resume,
+  "View resume" and "Walk through three projects" (both on the first screen at
+  375px too), and all ten projects as labelled, status-lit units.
 - **Networks and software are one room.** Rack A01 is Software & AI (Builder
   lens), rack B01 is Networks & support (Operations lens). Shared tools are
   patch ports; a tool used in both racks gets a trunk cable through the
   overhead tray. TechOps sits in B01 and belongs to both lenses.
-- **Training and nutrition are an identifier**, carried by "The body." and the
-  bio. They never get a rack, region, or lens.
+- **No fitness framing** (dropped November 2026). The site is about support,
+  escalations and AI tooling; CoachRhythm stays as a project.
 - **Real data or nothing.** Heat and sparklines are public GitHub commits over
-  twelve weeks. A project with no public repo is hatched and says so.
+  twelve weeks. A project with no public repo is hatched in heat mode. Commit
+  counts stay off cards, case-study headers and the tour, and empty states are
+  hidden rather than shown (November 2026): a small number reads as weak evidence.
 
 ## Palette: Thermal
 

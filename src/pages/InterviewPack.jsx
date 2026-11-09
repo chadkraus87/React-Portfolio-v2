@@ -56,7 +56,7 @@ export default function InterviewPack() {
               <div className="ip-foot">
                 <p className="ip-links">
                   <a href={`${BASE}/projects/${p.slug}`}>Case study</a>
-                  <a href={p.projectLink} target="_blank" rel="noopener noreferrer">Live demo</a>
+                  <a href={p.projectLink} target="_blank" rel="noopener noreferrer">{p.signIn ? 'Live app (sign-in required)' : 'Live demo'}</a>
                 </p>
                 <figure className="ip-qr">
                   <img src={`/qr/${p.slug}.svg`} alt={`QR code for the ${p.title} case study`} width="96" height="96" loading="lazy" />

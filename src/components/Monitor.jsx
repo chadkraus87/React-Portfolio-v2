@@ -66,7 +66,7 @@ export default function Monitor({ project, sizes }) {
   };
 
   return (
-    <figure className="monitor">
+    <figure className="monitor" id="demo">
       <div className="monitor-glass">
         {chapters && <a className="skip-demo" href={`#${transcriptId}`} onClick={skipDemo}>Skip the demo: read what’s on screen</a>}
         {showVideo ? (

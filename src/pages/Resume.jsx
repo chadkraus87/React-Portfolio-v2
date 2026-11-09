@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
-import resumePdf from '../assets/files/Chadwick_Kraus_Resume_2026.pdf';
+import resumePdf from '../assets/files/Chad_Kraus_Resume.pdf';
 import { profile } from '../data/profile.js';
 import './Resume.css';
 
-// To update the resume: regenerate it from resume-src/, copy the PDF into
-// src/assets/files/, and update the import above if the filename changed.
+// To update the resume: copy the new PDF into src/assets/files/ as
+// Chad_Kraus_Resume.pdf, or update the import above if the filename changes.
 export default function Resume() {
   // Once focus moves into the PDF viewer, the page can't style the iframe with
   // :focus or :focus-within in every browser, so the ring follows the page's own focus.
@@ -32,7 +32,7 @@ export default function Resume() {
           </div>
           <div className="rs-actions">
             <Link viewTransition to="/?tour=hiring" className="btn">Walk through three projects</Link>
-            <a href={resumePdf} download="Chadwick_Kraus_Resume.pdf" className="btn btn-primary">Download PDF</a>
+            <a href={resumePdf} download="Chad_Kraus_Resume.pdf" className="btn btn-primary">Download PDF</a>
           </div>
         </header>
 
@@ -49,7 +49,7 @@ export default function Resume() {
           <p>Résumés read poorly squeezed into a phone screen, so here it is as a file.</p>
           <div className="resume-mobile-actions">
             <a href={resumePdf} target="_blank" rel="noopener noreferrer" className="btn btn-primary">Open PDF</a>
-            <a href={resumePdf} download="Chadwick_Kraus_Resume.pdf" className="btn">Download</a>
+            <a href={resumePdf} download="Chad_Kraus_Resume.pdf" className="btn">Download</a>
           </div>
         </div>
       </div>

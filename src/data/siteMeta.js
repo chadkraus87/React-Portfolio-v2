@@ -13,7 +13,7 @@ export const SITE_NAME = 'Chadwick (Chad) Kraus';
 // '/' is also authored in index.html, which is the shell every prerendered
 // page is stamped from; keep the two identical.
 export const ROUTE_TITLES = {
-  '/': `${SITE_NAME} · Network IT · QA Ops · AI Tooling`,
+  '/': `${SITE_NAME} · Technical Support, Escalations & AI Automation`,
   '/portfolio': `Projects · ${SITE_NAME}`,
   '/resume': `Resume · ${SITE_NAME}`,
   '/contact': `Contact · ${SITE_NAME}`,
@@ -31,8 +31,8 @@ export const ROUTE_TITLES = {
 // three tags cannot diverge again. Every other route's description lives in
 // the routes array in scripts/prerender.mjs.
 export const HOME_DESCRIPTION =
-  'Network IT Specialist focused on Tier 2/3 escalations, QA operations, ' +
-  'networking, and AI tooling, building AI agents and full-stack applications.';
+  'Network IT Specialist at Rockbot owning Tier 2/3 escalations across APIs, identity, ' +
+  'networks and connected devices, and building AI tools for support teams with Claude Code.';
 
 export const NOT_FOUND_TITLE = `Page not found · ${SITE_NAME}`;
 

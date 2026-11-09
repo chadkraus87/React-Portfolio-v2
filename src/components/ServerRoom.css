@@ -18,8 +18,15 @@
   background: linear-gradient(180deg, #FFF8EE 0%, #F5EDE6 52%, #B8977C 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .sr-intro .kicker { margin-bottom: 14px; }
 @media (forced-colors: active) { .sr-name { background: none; color: CanvasText; } }
-.sr-headline { margin: 0 0 14px; font: 700 clamp(22px, 1.9vw, 32px)/1 var(--f-display); letter-spacing: .02em; text-transform: uppercase; }
-.sr-lede { max-width: 40ch; font-size: clamp(15px, 1.05vw, 17px); line-height: 1.6; color: var(--muted); }
+/* The headline is a sentence, so it is set in sentence case, not as a display slogan. */
+.sr-headline { max-width: 30ch; margin: 0 0 16px; font: 700 clamp(21px, 1.7vw, 28px)/1.15 var(--f-display); letter-spacing: .01em; }
+.sr-proof { display: grid; gap: 7px; margin: 0 0 20px; padding: 0; list-style: none; }
+.sr-proof li { padding-left: 11px; border-left: 2px solid var(--accent); font: 500 12px/1.45 var(--f-mono); letter-spacing: .02em; color: var(--prose); }
+/* The intro ignores the pointer so the room behind it stays draggable; the buttons
+   take it back. While a sheet covers the intro (--intro is 0) they are hidden
+   properly, so nothing invisible can be clicked or tabbed to. */
+.sr-cta { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; pointer-events: auto; }
+.sr.sheet-open .sr-cta { visibility: hidden; }
 
 /* ---- Room + ambient depth ---- */
 .sr-motes { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; pointer-events: none; }

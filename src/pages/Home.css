@@ -15,9 +15,11 @@
 .home-more { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 40px; }
 
 /* Operations */
-.ops-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); align-items: end; margin-bottom: 72px; }
-.ops-num { display: block; font: 900 clamp(96px, 14vw, 220px)/.8 var(--f-display); letter-spacing: -.01em; }
-.ops-figure p { max-width: 44ch; margin-top: 18px; font-size: 17px; line-height: 1.6; color: var(--muted); }
+.ops-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); align-items: start; margin-bottom: 72px; }
+.ops-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 28px; }
+.ops-stat { display: grid; align-content: start; gap: 12px; padding-top: 14px; border-top: 2px solid var(--text); }
+.ops-num { display: block; font: 900 clamp(48px, 5.4vw, 88px)/.85 var(--f-display); letter-spacing: -.01em; }
+.ops-stat p { max-width: 36ch; font-size: 15px; line-height: 1.55; color: var(--muted); }
 .ops-rail div { display: grid; gap: 6px; padding: 16px 0; border-top: 1px solid var(--line); }
 .ops-rail dt { font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
 .ops-rail dd { font-size: 16px; line-height: 1.55; color: var(--prose); }

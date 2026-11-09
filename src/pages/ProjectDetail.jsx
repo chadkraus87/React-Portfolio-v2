@@ -50,7 +50,6 @@ export default function ProjectDetail() {
           <ul className="cs-chips">
             <li className="chip"><span className="dot" style={{ color: STATUS_COLOR[p.status] }} />{p.status}</li>
             <li className="chip">Updated {formatUpdated(p.updated)}</li>
-            <li className="chip">{p.act ? `${p.act.total} public commits · 12 wk` : 'No public repo'}</li>
             <li className="chip">{p.lensNames.join(' + ')} lens</li>
             {p.demoDown && <li className="chip chip-warn">Live demo not answering since {formatDay(p.demoDown)}</li>}
           </ul>
@@ -81,13 +80,16 @@ export default function ProjectDetail() {
               <h2>Proof</h2>
               {p.projectLink || p.repoLink ? (
                 <div className="cs-actions">
-                  {p.projectLink && <a href={p.projectLink} target="_blank" rel="noopener noreferrer" className="btn btn-primary">{p.projectLinkLabel || 'View project'} ↗</a>}
+                  {p.signIn && p.demo && <a href="#demo" className="btn btn-primary">Watch the demo</a>}
+                  {p.projectLink && <a href={p.projectLink} target="_blank" rel="noopener noreferrer" className={p.signIn && p.demo ? 'btn' : 'btn btn-primary'}>{p.projectLinkLabel || 'View project'} ↗</a>}
                   {p.repoLink && <a href={p.repoLink} target="_blank" rel="noopener noreferrer" className="btn">GitHub repo ↗</a>}
                 </div>
               ) : (
-                <p className="cs-note">{p.linkNote || 'This project isn’t publicly linked — it runs on private infrastructure.'}</p>
+                <p className="cs-note">{p.linkNote || 'This project isn’t publicly linked. It runs on private infrastructure.'}</p>
               )}
-              <Spark act={p.act} maxWeek={RACK_MODEL.maxWeek} range={RANGE} />
+              {/* Only projects with a public repo have activity to show; the rest show nothing
+                  rather than a "no public repository" note. */}
+              {p.act && <Spark act={p.act} maxWeek={RACK_MODEL.maxWeek} range={RANGE} />}
               {p.projectLink && <UptimeStrip site={p.uptime} />}
             </li>
           </ol>
