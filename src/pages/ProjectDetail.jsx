@@ -67,7 +67,7 @@ export default function ProjectDetail() {
             <li>
               <span className="cs-step">01 · Input</span>
               <h2>What it answers</h2>
-              <p>{p.summary}</p>
+              <p>{p.answers ?? p.summary}</p>
             </li>
             <li>
               <span className="cs-step">02 · Process</span>

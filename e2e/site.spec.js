@@ -908,7 +908,7 @@ test('a screenshot shows how much has shipped since it was taken', async ({ page
   const text = await note.textContent();
   // Either it names a count, or it says nothing — never an unexplained number.
   if (/commits? since/.test(text)) expect(text).toMatch(/\d+ public commits? since/);
-  // DeskDaemon's screenshot is from the current month, so nothing can have shipped "since".
+  // Desk Daemon's screenshot is from the current month, so nothing can have shipped "since".
   await page.goto('/projects/deskdaemon');
   await expect(page.locator('.monitor-note')).not.toContainText('commits since');
 });
@@ -977,4 +977,12 @@ test('PetCenza and Greenline are gone: no links on any page, not in the sitemap 
     await dialog.getByRole('combobox').fill(word);
     await expect(dialog.getByRole('status')).toHaveText('0 results');
   }
+});
+
+test('a case study says what it answers in its own words, and falls back to the summary', async ({ page }) => {
+  await page.goto('/projects/deskdaemon/');
+  await expect(page.locator('h1')).toHaveText('Desk Daemon');
+  await expect(page.getByText('Most AI advice skips the question an IT person asks first')).toBeVisible();
+  await page.goto('/projects/coachrhythm/');
+  await expect(page.getByText('A programming assistant for personal trainers').first()).toBeVisible();
 });

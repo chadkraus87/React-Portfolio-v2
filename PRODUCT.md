@@ -193,7 +193,7 @@ may replace it subject to the parity constraint above.
 Real, in the repository:
 
 - Eight projects with screenshots in `src/assets/images/`: Jarvis, Meridian,
-  TechOps Command Center, CoachRhythm, HomeLab Commander, DeskDaemon, Stack
+  TechOps Command Center, CoachRhythm, HomeLab Commander, Desk Daemon, Stack
   City, Packet & Pine. Most are publicly reachable;
   status and last-updated month are recorded per project.
 - Three first-person stories in `src/data/stories.js`, rewritten from the old

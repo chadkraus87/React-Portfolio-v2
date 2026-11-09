@@ -105,9 +105,11 @@ const firstSentence = (text, slug) => {
   // Decoding happens before the sentence cut and the length cap so both count
   // real characters rather than escape sequences.
   const block = text.split(`slug: '${slug}'`)[1] ?? '';
-  const raw = block.match(/summary:\s*\n?\s*'((?:[^'\\]|\\.)*)'/)?.[1] ?? '';
-  const clean = decodeJsStringEscapes(raw);
-  const cut = clean.match(/^.*?[.?!](\s|$)/)?.[0] ?? clean;
+  const m = block.match(/summary:\s*\n?\s*(['"])((?:(?!\1)[^\\]|\\.)*)\1/);
+  const clean = decodeJsStringEscapes(m?.[2] ?? '');
+  // A short first sentence ("The IT guy for your AI.") says too little on its
+  // own in a search result, so it takes the next sentence with it.
+  const cut = clean.match(/^.{0,39}?[.?!]\s.*?[.?!](\s|$)|^.*?[.?!](\s|$)/)?.[0] ?? clean;
   return cut.trim().slice(0, 300);
 };
 

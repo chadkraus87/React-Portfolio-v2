@@ -18,24 +18,24 @@ export const racks = [
     code: 'A01',
     name: 'Software & AI',
     lens: 'builder',
-    slugs: ['jarvis', 'coachrhythm', 'meridian'],
+    slugs: ['jarvis', 'deskdaemon', 'coachrhythm', 'meridian'],
   },
   {
     id: 'B',
     code: 'B01',
     name: 'Networks & support',
     lens: 'operations',
-    slugs: ['techops-command-center', 'homelab-commander', 'deskdaemon', 'stack-city', 'packet-and-pine'],
+    slugs: ['techops-command-center', 'homelab-commander', 'stack-city', 'packet-and-pine'],
   },
 ];
 
 export const lenses = {
   builder: {
     name: 'Builder',
-    slugs: ['jarvis', 'meridian', 'techops-command-center', 'coachrhythm'],
+    slugs: ['jarvis', 'deskdaemon', 'meridian', 'techops-command-center', 'coachrhythm'],
   },
   operations: {
     name: 'Operations',
-    slugs: ['techops-command-center', 'homelab-commander', 'deskdaemon', 'stack-city', 'packet-and-pine'],
+    slugs: ['techops-command-center', 'homelab-commander', 'stack-city', 'packet-and-pine'],
   },
 };

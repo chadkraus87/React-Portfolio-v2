@@ -82,8 +82,8 @@ def font(file, size, weight, width=None):
 # ---------------------------------------------------------------- data
 
 def js_string(block, key):
-    m = re.search(rf"{key}:\s*\n?\s*'((?:[^'\\]|\\.)*)'", block)
-    return m.group(1).replace("\\'", "'") if m else None
+    m = re.search(rf"""{key}:\s*\n?\s*(['"])((?:(?!\1)[^\\]|\\.)*)\1""", block)
+    return re.sub(r"\\(['\"])", r"\1", m.group(2)) if m else None
 
 
 def parse_projects():
@@ -117,7 +117,7 @@ def first_sentence(text):
     """One sentence, the same trim scripts/prerender.mjs applies to meta descriptions."""
     if not text:
         return None
-    m = re.match(r"^.*?[.?!](\s|$)", text)
+    m = re.match(r"^.{0,39}?[.?!]\s.*?[.?!](\s|$)|^.*?[.?!](\s|$)", text)
     return (m.group(0) if m else text).strip()
 
 

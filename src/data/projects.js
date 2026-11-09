@@ -17,6 +17,8 @@
 //               not what it is. Keep it short or it wraps.
 //   summary     the hook — 1–2 sentences, ALWAYS visible on the card. Keep it
 //               short; this is what sets every card's height in the grid.
+//   answers     optional "What it answers" paragraph on the case study. Defaults
+//               to the summary; set it when the case study should say more.
 //   details     optional deeper writeup, shown on the project's own page and
 //               linked from the card as "Full write-up". Omit it for small
 //               projects. Do not repeat the summary — details continues from
@@ -227,28 +229,30 @@ export const projects = [
   {
     id: 16,
     slug: 'deskdaemon',
-    title: 'DeskDaemon',
-    category: 'Infrastructure & Ops',
+    title: 'Desk Daemon',
+    category: 'AI & Claude Code',
     status: 'Live',
-    updated: '2026-09',
-    tagline: 'Strict CSP · every effect has a no-JS fallback',
+    updated: '2026-11',
+    tagline: 'The IT guy for your AI · checked before trusted',
     summary:
-      'The link-in-bio, gear list and builds site for @deskdaemon: the workstation, the home lab, and the tools behind the videos. Every gear item carries what it cost and a verdict, including the ones not worth buying again, and every build has a write-up.',
+      "The IT guy for your AI. I make real builds with Claude and Claude Code and check what they can touch before I trust them. I test tools, skills and repos before I recommend them, and I build things for your own home, family and money, like who's on your Wi-Fi or whether your stuff is really backed up.",
+    answers:
+      "Most AI advice skips the question an IT person asks first: what can this touch, and should I trust it? Desk Daemon is where I answer that. I'm a network IT specialist, and I make real builds with Claude and Claude Code, checking what each tool can reach before I trust it. That means testing tools, skills and repos before I recommend them, and building things for your own home, family and money, like who's on your Wi-Fi or whether your stuff is really backed up. The site holds beginner tutorials, free guides, honest tool reviews and the builds behind the videos.",
     details:
-      'The page an Instagram or TikTok profile lands on, so mobile Lighthouse was the bar. Astro with plain CSS, one accent colour, and contrast measured against WCAG 2.1 AA rather than assumed. Every outbound link goes through a /go/<slug> redirect that can only reach destinations listed in one file, and clicks are counted server-side with no cookies. The Content-Security-Policy allows scripts and styles from the site\'s own origin only (no inline scripts, no CDN, no unsafe-*), which is why GSAP is vendored rather than loaded. Motion is CSS and native view transitions, with GSAP only for the home scroll sequence and the gear filter; every effect falls back cleanly with JavaScript off, reduced motion on, or GSAP blocked. Email signup sits behind a provider-agnostic function with a honeypot and a rate limit, and photos have their GPS metadata stripped at build. 124 Vitest unit tests and 188 Playwright tests, including axe accessibility scans, run in CI on every push.',
+      "Astro with plain CSS, one accent colour, and contrast measured against WCAG 2.1 AA rather than assumed. Every outbound link goes through a /go/<slug> redirect that can only reach destinations listed in one file, and clicks are counted server-side with no cookies. The Content-Security-Policy allows scripts and styles from the site's own origin only (no inline scripts, no CDN, no unsafe-*), which is why GSAP is vendored rather than loaded. Motion is CSS and native view transitions, with GSAP only on the home page and the gear filter, and every effect falls back cleanly with JavaScript off, reduced motion on, or GSAP blocked. Email signup sits behind a provider-agnostic function with a honeypot and a rate limit, and photos have their GPS metadata stripped at build. 190 Vitest unit tests and 385 Playwright tests, including axe accessibility scans, run in CI on every push to main and every pull request.",
     stack: ['Astro', 'TypeScript', 'Plain CSS', 'GSAP', 'Vitest', 'Playwright + axe', 'Vercel'],
     architecture: [
       { layer: "Build", items: ["Astro with plain CSS and one accent colour", "Contrast measured against WCAG 2.1 AA, not assumed", "GSAP vendored, because the CSP allows no CDN"] },
       { layer: "Outbound links", items: ["/go/<slug> redirects, limited to destinations listed in one file", "Clicks counted server-side, with no cookies"] },
       { layer: "Content-Security-Policy", items: ["Scripts and styles from the site's own origin only", "No inline scripts, no CDN, no unsafe-*"] },
-      { layer: "Motion", items: ["CSS and native view transitions", "GSAP only for the home scroll sequence and the gear filter", "Every effect falls back with JavaScript off, reduced motion on, or GSAP blocked"] },
+      { layer: "Motion", items: ["CSS and native view transitions", "GSAP only on the home page and the gear filter", "Every effect falls back with JavaScript off, reduced motion on, or GSAP blocked"] },
       { layer: "Signup and photos", items: ["Provider-agnostic function with a honeypot and a rate limit", "GPS metadata stripped from photos at build"] },
-      { layer: "Tests", items: ["124 Vitest unit tests", "188 Playwright tests, including axe accessibility scans", "Both run in CI on every push"] },
+      { layer: "Tests", items: ["190 Vitest unit tests", "385 Playwright tests, including axe accessibility scans", "Both run in CI on every push to main and every pull request"] },
       { layer: "Hosting", items: ["Vercel"] },
     ],
     image: DeskDaemon,
-    imageDate: '2026-09',
-    projectLink: 'https://deskdaemon.com',
+    imageDate: '2026-11',
+    projectLink: 'https://deskdaemon.com/',
     repoLink: null, // repo is private
   },
 
