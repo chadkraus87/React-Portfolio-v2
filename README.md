@@ -1,6 +1,6 @@
 # Chad Kraus — Portfolio
 
-Personal portfolio: ten shipped projects, racked as units in an interactive
+Personal portfolio: shipped projects, racked as units in an interactive
 server room — software and AI in one rack, networks and support in the other.
 
 **Live: https://chad-kraus-portfolio.vercel.app**
@@ -157,7 +157,7 @@ middleware.js            Vercel Routing Middleware: share previews for ?unit= li
 - **Ask about this project** — links to `/contact?project=<slug>`, which starts the
   message about that project (only real slugs count).
 - **Demo status** — `/status` shows every live demo's uptime strip in one place.
-- **Shareable filters** — `/portfolio?lens=builder&tool=supabase` keeps the lens and
+- **Shareable filters** — `/portfolio?lens=builder&tool=playwright` keeps the lens and
   tool filters in the address; case study tools link to their filtered list, and a
   shared `?tool=` link unfurls as "Projects using …" (`middleware.js`).
 - **90-day uptime** — `/status?days=90` shows three months of each demo's record; the
@@ -177,7 +177,7 @@ middleware.js            Vercel Routing Middleware: share previews for ?unit= li
   tool in both racks.
 - **Incident notes** — `src/data/incidents.js` explains an outage under its strip on
   `/status`.
-- **Room links** — `/?tool=supabase` fires that tool's signal in the room; the filtered
+- **Room links** — `/?tool=playwright` fires that tool's signal in the room; the filtered
   project list links to it as "Show in the rack".
 - **Interview mode** — `/?tour=hiring` walks three live projects with their proof
   (demo, uptime, tests, commits), all taken from the project data.

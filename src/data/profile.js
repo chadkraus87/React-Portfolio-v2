@@ -28,7 +28,7 @@ export const profile = {
   about: [
     "By day I'm a Network IT Specialist at Rockbot. I own the Tier 2/3 queue, about 600 tickets and escalations a month, across APIs, SSO and SAML (Okta and Entra ID), customer networks and firewalls, and connected AV hardware. I'm the main link between Support and Engineering, and I co-chair the weekly Bug Triage.",
     "A lot of what I build starts as a fix for my own queue. Nightline, an after-hours AI support agent I prototyped, led Rockbot to bring in Forethought's AI voice agent. I trained that agent and built its persona, and it now handles about 20% of our overflow calls. The KPI dashboards I built with Claude Code and Zendesk's MCP server replaced 5 to 10 hours of manual reporting a week.",
-    "Outside work I build full-stack and AI projects with Claude Code and Codex. The ten on this site run from a permission-gated AI assistant on my own hardware to a 62-mission networking game. Escalation work shapes how I build them. I put access rules in the database instead of the UI, put a confirmation in front of anything destructive, and write real tests, because I've been the one answering the ticket when those were missing.",
+    "Outside work I build full-stack and AI projects with Claude Code and Codex. The projects on this site run from a permission-gated AI assistant on my own hardware to a 62-mission networking game. Escalation work shapes how I build them. I put access rules in the database instead of the UI, put a confirmation in front of anything destructive, and write real tests, because I've been the one answering the ticket when those were missing.",
     "When I'm not working, I'm usually out hiking with my three rescue dogs.",
   ],
 

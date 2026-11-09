@@ -18,7 +18,7 @@ Two role families matter equally, and the site must serve both without
 subordinating either:
 
 - **Builder roles** — AI/software engineering, AI tooling, applied product work.
-  These visitors weigh the ten shipped projects and the writing.
+  These visitors weigh the shipped projects and the writing.
 - **Operations roles** — Tier 2/3 escalation engineering, QA operations,
   technical operations, technical support leadership. These visitors weigh the
   Rockbot record and the resume.
@@ -70,9 +70,12 @@ Current surfaces: Home (`/`) — the interactive server room (two 3D racks),
 then a projects index, Operations, Background, and a colophon; Projects
 (`/portfolio`) with lens filters; per-project case studies
 (`/projects/<slug>`); Resume (`/resume`); Contact (`/contact`); and a 404.
-Ten projects are published. The Notes section was removed in September 2026;
-every old `/notes` URL permanently redirects (see `vercel.json`), and the two
-project stories now live on the PetCenza and CoachRhythm case studies.
+Eight projects are published. PetCenza and Greenline were taken offline in
+November 2026: their case studies redirect permanently to `/portfolio`, past
+`/changes` entries keep their names as plain text, and search leaves them out.
+The Notes section was removed in September 2026; every old `/notes` URL
+permanently redirects (see `vercel.json`), and the remaining project story lives
+on the CoachRhythm case study.
 
 - **Content is data, not markup.** Projects, racks, stories, and profile facts live in
   `src/data/*.js`. Content work edits data files; components change only for
@@ -134,7 +137,7 @@ project stories now live on the PetCenza and CoachRhythm case studies.
 - `/status` shows every live demo's recorded uptime; private projects are named as
   not checked rather than shown as up.
 - Project filters live in the address, so a recruiter can share "everything Chad
-  built with Supabase", and the shared link previews as exactly that.
+  built with Playwright", and the shared link previews as exactly that.
 - `/accessibility` claims only checks that actually run, and lists what they miss.
 - An outage on `/status` can carry a short, true note about what happened.
 - `/status` also names the hosted services (not build tools) behind more than one live
@@ -189,15 +192,15 @@ may replace it subject to the parity constraint above.
 
 Real, in the repository:
 
-- Ten shipped projects with screenshots in `src/assets/images/`: Jarvis,
-  Meridian, PetCenza, TechOps Command Center, CoachRhythm, Greenline, HomeLab
-  Commander, DeskDaemon, Stack City, Packet & Pine. Most are publicly reachable;
+- Eight projects with screenshots in `src/assets/images/`: Jarvis, Meridian,
+  TechOps Command Center, CoachRhythm, HomeLab Commander, DeskDaemon, Stack
+  City, Packet & Pine. Most are publicly reachable;
   status and last-updated month are recorded per project.
-- Four first-person stories in `src/data/stories.js`, rewritten from the old
+- Three first-person stories in `src/data/stories.js`, rewritten from the old
   notes in Chad's voice (directing Claude Code, owning the judgement calls):
-  two on case studies, two in the home page colophon. Marked draft until Chad
+  one on the CoachRhythm case study, two in the home page colophon. Marked draft until Chad
   signs off on the wording.
-- Demo recordings in `public/demos/` for Meridian, PetCenza, HomeLab
+- Demo recordings in `public/demos/` for Meridian, CoachRhythm, HomeLab
   Commander, and TechOps Command Center. Jarvis keeps its screenshot only.
 - The resume PDF (`src/assets/files/Chad_Kraus_Resume.pdf`), supplied by Chad
   (November 2026). `resume-src/` generated the earlier version and is no longer

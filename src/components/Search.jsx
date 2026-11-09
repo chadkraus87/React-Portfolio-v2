@@ -120,7 +120,7 @@ export default function Search() {
           type="search"
           autoComplete="off"
           spellCheck="false"
-          placeholder="Try supabase, uptime or greenline"
+          placeholder="Try playwright, uptime or jarvis"
           role="combobox"
           aria-expanded={results.length > 0}
           aria-controls="search-results"

@@ -49,7 +49,7 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   unit link unfurls with that project's card (`public/og/units/<slug>.jpg`, the
   unit pulled out of its rack). Only known slugs are rewritten. It also serves
   `/portfolio?tool=<slug>` the prerendered `dist/portfolio/tools/<slug>/index.html`
-  ("Projects using Supabase"). The known tool slugs live in the generated
+  ("Projects using Playwright"). The known tool slugs live in the generated
   `src/data/toolSlugs.js` (names, slugs and projects): a local `npm run build`
   rewrites it when the shared tools change (commit it, then rerun
   `/usr/bin/python3 scripts/make-og-images.py` for `public/og/tools/<slug>.jpg`);
@@ -184,6 +184,11 @@ section was removed; old `/notes` URLs redirect permanently in `vercel.json`.
   the live site instead of a 404. Do not publish a build to it; there is no
   longer a `deploy` script or `gh-pages` dependency, and adding one back would
   overwrite the stub with a root-based build that 404s on every asset.
+- PetCenza and Greenline were taken offline in November 2026. `/projects/petcenza`
+  and `/projects/greenline` redirect permanently to `/portfolio` in `vercel.json`
+  (checked by `scripts/smoke.mjs`); past `/changes` entries keep their names as plain
+  text, and search leaves them out. To retire another project, remove it from
+  `projects.js` and `racks.js` and add the same redirect.
 - Absolute URLs (og:url, og:image, sitemap, robots) live in `index.html` and
   `scripts/prerender.mjs` — both must be updated together if the domain changes.
 

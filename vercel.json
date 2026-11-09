@@ -7,8 +7,18 @@
   },
   "redirects": [
     {
+      "source": "/projects/petcenza",
+      "destination": "/portfolio",
+      "permanent": true
+    },
+    {
+      "source": "/projects/greenline",
+      "destination": "/portfolio",
+      "permanent": true
+    },
+    {
       "source": "/notes/a-rate-limiter-that-limited-nothing",
-      "destination": "/projects/petcenza",
+      "destination": "/portfolio",
       "permanent": true
     },
     {

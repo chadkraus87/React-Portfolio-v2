@@ -5,8 +5,8 @@
 // ---------------------------------------------------------------------------
 
 // Stack entries are free text ("Vitest + Playwright", "Next.js 16"), so shared
-// tools are matched by name. TypeScript is dropped: nine of the ten projects use
-// it, and it would connect everything to everything.
+// tools are matched by name. TypeScript is dropped: nearly every project uses it,
+// and it would connect everything to everything.
 const RULES = [
   [/next\.js/i, 'Next.js'], [/docker/i, 'Docker'], [/playwright/i, 'Playwright'], [/vitest/i, 'Vitest'],
   [/supabase/i, 'Supabase'], [/claude api/i, 'Claude API'], [/recharts/i, 'Recharts'], [/^vite$/i, 'Vite'],
@@ -29,7 +29,7 @@ export function toolsOf(stack = []) {
 
 // 14U: a 2U patch panel, a 1U blank, five 2U servers and a 1U blank.
 export const RACK_U = 14;
-const MAX_UNITS = 5;
+export const MAX_UNITS = 5;
 
 export function buildRackModel({ projects, racks, lenses, activity, uptime = { sites: {} } }) {
   const seen = new Set();

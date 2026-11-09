@@ -4,7 +4,7 @@ import { TOOL_SLUGS } from './src/data/toolSlugs.js';
 
 // Vercel Routing Middleware. A shared link is served a prerendered copy of the page
 // that carries its own share preview (scripts/prerender.mjs writes them):
-//   /?unit=petcenza           -> dist/units/petcenza/index.html
+//   /?unit=jarvis             -> dist/units/jarvis/index.html
 //   /portfolio?tool=supabase  -> dist/portfolio/tools/supabase/index.html
 //   /?tool=supabase           -> the same tool preview (the room fires that tool)
 // The address stays the same, so the app still opens the unit or applies the filter.

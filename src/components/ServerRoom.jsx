@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router';
 import { profile } from '../data/profile.js';
 import { lenses } from '../data/racks.js';
 import { RACK_MODEL } from '../lib/rack.js';
-import { RACK_U, HEAT_BANDS, heatBand, blinkOf, activityRange } from '../lib/rackModel.js';
+import { RACK_U, MAX_UNITS, HEAT_BANDS, heatBand, blinkOf, activityRange } from '../lib/rackModel.js';
 import { STATUS_VFD, formatUpdated, formatDay } from '../lib/projectMeta.js';
 import { cardSrcSet } from '../lib/cardImages.js';
 import { mountServerRoom } from '../lib/serverRoom.js';
@@ -127,6 +127,9 @@ function Rack({ rack }) {
           </div>
           <div className="blank" aria-hidden="true" />
           {rack.units.map((p, k) => <Unit key={p.slug} p={p} first={k === 0} rack={rack} />)}
+          {/* A rack with fewer than five projects keeps its full 14U: each empty 2U slot
+              below the last unit gets two 1U blank panels, as a real rack would. */}
+          {Array.from({ length: (MAX_UNITS - rack.units.length) * 2 }, (_, k) => <div className="blank" key={`fill-${k}`} aria-hidden="true" />)}
           <div className="blank" aria-hidden="true" />
         </div>
         <Rail />

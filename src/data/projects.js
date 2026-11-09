@@ -54,10 +54,8 @@
 // ---------------------------------------------------------------------------
 
 import Jarvis from '../assets/images/JarvisDashboard.jpg';
-import PetCenza from '../assets/images/PetCenzaDashboard.jpg';
 import TechOps from '../assets/images/TechOpsDashboard.jpg';
 import CoachRhythm from '../assets/images/CoachRhythmDashboard.jpg';
-import Greenline from '../assets/images/GreenlineDashboard.jpg';
 import HomeLabCommander from '../assets/images/HomeLabCommander.jpg';
 import DeskDaemon from '../assets/images/DeskDaemon.jpg';
 import StackCity from '../assets/images/StackCity.jpg';
@@ -127,49 +125,6 @@ export const projects = [
       'There is no hosted instance to link. Meridian is built to run on your own machine, behind your own sign-in, so a public demo would defeat the point.',
   },
   {
-    id: 2,
-    slug: 'petcenza',
-    title: 'PetCenza',
-    category: 'AI & Claude Code',
-    status: 'Live',
-    updated: '2026-08',
-    tagline: 'Offline-first · sharing enforced in Postgres',
-    summary:
-      'A household pet health record built to answer one question the moment it opens: does anything need attention today? Tracks boosters, medication refills, vet visits, and weight history across every pet in the home, then rolls the day into a single medication round: what to give, to whom, right now.',
-    details:
-      'Dosing is derived from the frequency text transcribed off a prescription label, so it reads plain English, the Latin abbreviations vets still write (BID, TID, QID) and interval notation like q12h; anything it cannot place gets its own section instead of disappearing, because a missed dose matters more than a tidy list. Sharing is enforced in the database rather than the client, with row-level security on all 26 tables, per-pet viewer/editor/co-owner roles, TOTP multi-factor auth, and magic-byte upload validation that quarantines mismatched uploads. Vets get a separate read-only link that expires and needs no account. Security review ran as part of the build rather than a pass at the end, and it drove concrete hardening. The rate limiter moved onto a spoof-resistant header after live testing proved the obvious one rotated per request and defeated the limit entirely. SECURITY DEFINER helper functions broke recursive RLS policy evaluation. It is offline-first by design. A persisted query cache serves reads with no connection, and an IndexedDB outbox replays mutations once the device reconnects. Backed by 101 unit tests, 6 Playwright E2E specs, and a SQL-level RLS isolation suite.',
-    stack: [
-      'React 18 + TypeScript',
-      'Supabase (Postgres RLS)',
-      'TanStack Query',
-      'Deno Edge Functions',
-      'Zod + React Hook Form',
-      'PWA / Offline-first',
-      'Vitest + Playwright',
-    ],
-    architecture: [
-      { layer: "Installed app", items: ["React 18 + TypeScript PWA", "Persisted query cache serves reads offline (TanStack Query)", "IndexedDB outbox replays changes on reconnect"] },
-      { layer: "Forms and dosing", items: ["Zod + React Hook Form validation", "Dosing read from prescription text: plain English, BID/TID/QID, q12h"] },
-      { layer: "Supabase", items: ["Postgres with row-level security on all 26 tables", "Per-pet viewer, editor and co-owner roles", "TOTP multi-factor auth", "Deno Edge Functions"] },
-      { layer: "Uploads and sharing", items: ["Magic-byte validation quarantines mismatched uploads", "Expiring read-only vet links that need no account"] },
-      { layer: "Verification", items: ["101 unit tests", "6 Playwright end-to-end specs", "SQL-level RLS isolation suite"] },
-    ],
-    image: PetCenza,
-    imageDate: '2026-09',
-    demo: '/demos/petcenza.mp4',
-    demoDate: '2026-09',
-    demoChapters: [
-      [0, "Dashboard: what needs attention today, active medications and upcoming vet visits for three pets."],
-      [5, "Pets: every pet in the household, with breed and age."],
-      [9, "Medication rounds, grouped into morning and evening doses."],
-      [13, "Calendar, with reminders that can be marked done or snoozed."],
-    ],
-    projectLink: 'https://pawchart-zeta.vercel.app/',
-    projectLinkLabel: 'Live app (sign-in required)',
-    signIn: true,
-    repoLink: 'https://github.com/chadkraus87/petcenza',
-  },
-  {
     id: 13,
     slug: 'techops-command-center',
     title: 'TechOps Command Center',
@@ -234,45 +189,6 @@ export const projects = [
     projectLinkLabel: 'Live app (sign-in required)',
     signIn: true,
     repoLink: 'https://github.com/chadkraus87/traincraft',
-  },
-  {
-    id: 3,
-    slug: 'greenline',
-    title: 'Greenline',
-    category: 'AI & Claude Code',
-    status: 'Live',
-    updated: '2026-08',
-    tagline: 'Daily cash runway · offline PWA',
-    summary:
-      'A private monthly budget built around the question that actually matters mid-month: what is genuinely left to spend? Projects a daily cash runway from scheduled bills and income, then scores the month as you spend against it.',
-    details:
-      'Bills, income, expenses, budgets, goals, reserves and debt each keep their own ledger, and the calendar puts every scheduled flow on a date so a shortfall shows up weeks before it lands, and receipts scan straight into an expense. Data is scoped per account by row-level security across 12 tables, and the deployment ships its own CSP with HSTS and frame-deny, not the framework defaults. Installable and offline-capable as a PWA.',
-    stack: ['React + TypeScript', 'Supabase (Postgres RLS)', 'Vite', 'Recharts', 'PWA / Offline', 'Vitest + Playwright'],
-    architecture: [
-      { layer: "Installed app", items: ["React + TypeScript PWA, installable and offline-capable", "Calendar puts every scheduled flow on a date"] },
-      { layer: "Ledgers", items: ["Bills, income, expenses, budgets, goals, reserves and debt each keep their own ledger", "Receipts scan straight into an expense"] },
-      { layer: "Forecast", items: ["Shortfalls show up weeks before they land", "Recharts views"] },
-      { layer: "Supabase", items: ["Postgres with row-level security across 12 tables, scoped per account"] },
-      { layer: "Delivery", items: ["Its own CSP with HSTS and frame-deny", "Vitest + Playwright"] },
-    ],
-    image: Greenline,
-    imageDate: '2026-08',
-    demo: '/demos/greenline.mp4',
-    demoNote: "Simulated budget data. No real account data is shown.",
-    demoDate: '2026-09',
-    demoChapters: [
-      [0, "Monthly overview with simulated data: cash runway, income, spending and a calendar of bills."],
-      [9, "Bills for the month, ticked off as they are paid."],
-      [11.5, "Category budgets, with a warning when spending runs ahead of the month."],
-      [14, "Savings goals and their monthly contributions."],
-      [16.6, "Debts, with a payoff plan comparing avalanche and snowball."],
-      [19.2, "Reports: net worth, savings rate, emergency fund and projected balance."],
-      [22, "Back to the monthly overview."],
-    ],
-    projectLink: 'https://greenline-chadwick-kraus-projects.vercel.app/',
-    projectLinkLabel: 'Live app (sign-in required)',
-    signIn: true,
-    repoLink: 'https://github.com/chadkraus87/greenline',
   },
 
   // ---- Infrastructure & Ops ---------------------------------------------

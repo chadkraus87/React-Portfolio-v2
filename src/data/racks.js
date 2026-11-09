@@ -1,12 +1,13 @@
 // ---------------------------------------------------------------------------
-// RACKS — how the ten projects stand in the server room on the home page.
+// RACKS: how the projects stand in the server room on the home page.
 //
 //   A01  Software & AI       (Builder lens)
 //   B01  Networks & support  (Operations lens)
 //
 // Every slug in projects.js must appear in exactly one rack, in top-to-bottom
-// order. A 14U rack holds five projects. scripts/prerender.mjs checks both and
-// fails the build if they drift.
+// order, strongest at the top. A 14U rack holds five projects; a rack with fewer
+// fills the space below its last unit with blank panels. scripts/prerender.mjs
+// checks both and fails the build if they drift.
 //
 // `lenses` are the groupings Chad confirmed. A project can belong to both
 // lenses (TechOps) while physically sitting in one rack.
@@ -17,7 +18,7 @@ export const racks = [
     code: 'A01',
     name: 'Software & AI',
     lens: 'builder',
-    slugs: ['jarvis', 'meridian', 'petcenza', 'coachrhythm', 'greenline'],
+    slugs: ['jarvis', 'coachrhythm', 'meridian'],
   },
   {
     id: 'B',
@@ -31,7 +32,7 @@ export const racks = [
 export const lenses = {
   builder: {
     name: 'Builder',
-    slugs: ['jarvis', 'meridian', 'petcenza', 'techops-command-center', 'coachrhythm', 'greenline'],
+    slugs: ['jarvis', 'meridian', 'techops-command-center', 'coachrhythm'],
   },
   operations: {
     name: 'Operations',

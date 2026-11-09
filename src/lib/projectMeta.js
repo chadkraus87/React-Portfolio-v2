@@ -40,6 +40,16 @@ export function formatDay(iso) {
 // 'React Flow' -> 'react-flow', for shareable filter addresses (/portfolio?tool=react-flow).
 export const toolSlug = (tool) => tool.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
+// Project counts in words, from the data, so copy reads "eight applications" and never
+// goes stale when a project is added or removed.
+const WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
+export const inWords = (n) => WORDS[n] ?? String(n);
+export function portfolioCount(projects) {
+  const live = projects.filter((p) => p.status === 'Live').length;
+  const line = `${inWords(projects.length)} applications: ${inWords(live)} live, ${inWords(projects.length - live)} in progress or private`;
+  return line[0].toUpperCase() + line.slice(1);
+}
+
 // Interview mode and the interview pack: the three most active live projects with a
 // recorded demo, and what the project data says about each. Nothing is written by hand.
 const TEST_TOOLS = /playwright|vitest|jest|axe/i;

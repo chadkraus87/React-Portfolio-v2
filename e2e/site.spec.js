@@ -71,8 +71,8 @@ test.describe('server room', () => {
   });
 
   test('a shared unit link opens that unit; an unknown one is dropped', async ({ page }) => {
-    await page.goto('/?unit=greenline');
-    await expect(page.locator('#sr-sheet-title')).toHaveText('Greenline');
+    await page.goto('/?unit=coachrhythm');
+    await expect(page.locator('#sr-sheet-title')).toHaveText('CoachRhythm');
     await page.goto('/?unit=nope');
     await expect(page).not.toHaveURL(/unit=/);
     await expect(page.locator('.sr-sheet')).not.toHaveClass(/open/);
@@ -83,9 +83,9 @@ test.describe('server room', () => {
     await page.keyboard.press('ControlOrMeta+k');
     const q = page.locator('#sr-kvm-q');
     await expect(q).toBeFocused();
-    await q.fill('signal react');
+    await q.fill('signal playwright');
     await q.press('Enter');
-    await expect(page.locator('.sr-live')).toHaveText(/Signal fired through React/);
+    await expect(page.locator('.sr-live')).toHaveText(/Signal fired through Playwright/);
     await q.fill('ping nowhere');
     await q.press('Enter');
     await expect(page.locator('.sr-kvm-log')).toContainText('No route to host');
@@ -104,19 +104,19 @@ test.describe('server room', () => {
 
 test.describe('case studies', () => {
   test('demo captions follow the video and the transcript lists every chapter', async ({ page }) => {
-    await page.goto('/projects/greenline');
+    await page.goto('/projects/coachrhythm');
     await page.locator('.monitor video').evaluate(async (v) => {
       if (v.readyState < 1) await new Promise((r) => v.addEventListener('loadedmetadata', r, { once: true }));
       v.pause();
-      v.currentTime = 17.5;
+      v.currentTime = 14;
     });
-    await expect(page.locator('.monitor-cc')).toHaveText(/Debts/);
+    await expect(page.locator('.monitor-cc')).toHaveText(/Build a plan/);
     await page.getByRole('button', { name: 'Captions' }).click();
     await expect(page.locator('.monitor-cc')).toBeHidden();
     await page.locator('.monitor-transcript summary').click();
-    await expect(page.locator('.monitor-transcript li')).toHaveCount(7);
+    await expect(page.locator('.monitor-transcript li')).toHaveCount(3);
     await expect(page.locator('.monitor-note')).toContainText('Recorded Sep 2026');
-    await expect(page.locator('.monitor-note')).toContainText(/simulated budget data/i);
+    await expect(page.locator('.monitor-note')).toContainText(/names other than Chad.s are masked/i);
   });
 
   test('screenshots say when they were captured and link back into the rack', async ({ page }) => {
@@ -127,7 +127,7 @@ test.describe('case studies', () => {
 
   test('reduced motion: demos wait for Play and route changes skip the trace', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/projects/petcenza');
+    await page.goto('/projects/coachrhythm');
     await page.waitForTimeout(800);
     expect(await page.locator('.monitor video').evaluate((v) => v.paused)).toBe(true);
     await page.getByRole('link', { name: 'All projects' }).click();
@@ -155,7 +155,7 @@ test('first visit: the tour offers itself, walks each step and stays dismissed',
   const { violations } = await new AxeBuilder({ page }).include('.sr-tour').withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
   expect(violations).toEqual([]);
   await tour.getByRole('button', { name: 'Take the tour' }).click();
-  await expect(page.locator('#sr-sheet-title')).toHaveText('PetCenza');
+  await expect(page.locator('#sr-sheet-title')).toHaveText('TechOps Command Center');
   await tour.getByRole('button', { name: 'Next' }).click();
   await expect(page.locator('.sr-live')).toHaveText(/Signal fired through/);
   await tour.getByRole('button', { name: 'Next' }).click();
@@ -181,21 +181,21 @@ test('room interactions send one anonymous analytics event each', async ({ page 
 });
 
 test('case studies show the architecture layers from the project data', async ({ page }) => {
-  await page.goto('/projects/petcenza');
+  await page.goto('/projects/coachrhythm');
   await expect(page.getByRole('heading', { name: 'How it fits together' })).toBeVisible();
   await expect(page.locator('.arch-layer')).toHaveCount(5);
-  await expect(page.locator('.arch-layer').first()).toContainText('IndexedDB outbox');
+  await expect(page.locator('.arch-layer').first()).toContainText('Logged injuries per client');
 });
 
 test('shared unit links unfurl with that project', async ({ request }) => {
   const { default: middleware } = await import('../middleware.js');
   const rewriteOf = (url) => middleware(new Request(url)).headers.get('x-middleware-rewrite');
-  expect(rewriteOf('https://site.test/?unit=petcenza')).toBe('https://site.test/units/petcenza/index.html');
+  expect(rewriteOf('https://site.test/?unit=techops-command-center')).toBe('https://site.test/units/techops-command-center/index.html');
   expect(rewriteOf('https://site.test/?unit=../../secrets')).toBeNull();
   expect(rewriteOf('https://site.test/')).toBeNull();
-  const html = await (await request.get('/units/petcenza/index.html')).text();
-  expect(html).toContain('og/units/petcenza.jpg');
-  expect((await request.get('/og/units/petcenza.jpg')).status()).toBe(200);
+  const html = await (await request.get('/units/techops-command-center/index.html')).text();
+  expect(html).toContain('og/units/techops-command-center.jpg');
+  expect((await request.get('/og/units/techops-command-center.jpg')).status()).toBe(200);
   expect(html).toContain('<link rel="canonical" href="https://chad-kraus-portfolio.vercel.app/"');
 });
 
@@ -216,7 +216,7 @@ test('? opens the keyboard shortcuts; Escape closes them and focus comes back', 
 });
 
 test('case studies print as one clean column with the demo as a still', async ({ page }) => {
-  await page.goto('/projects/greenline');
+  await page.goto('/projects/coachrhythm');
   await page.emulateMedia({ media: 'print' });
   await expect(page.locator('.nav-wrap')).toBeHidden();
   await expect(page.locator('.cs-pager')).toBeHidden();
@@ -229,7 +229,10 @@ test('the change log lists real months and links back to projects', async ({ pag
   await page.goto('/changes');
   await expect(page.getByRole('heading', { level: 1, name: 'What changed' })).toBeVisible();
   await expect(page.locator('.ch-month').first()).toBeVisible();
-  await expect(page.getByRole('link', { name: 'PetCenza' }).first()).toHaveAttribute('href', '/projects/petcenza');
+  await expect(page.getByRole('link', { name: 'CoachRhythm' }).first()).toHaveAttribute('href', '/projects/coachrhythm');
+  // Past entries for projects taken off the site stay, as plain text, never as links.
+  await expect(page.locator('main')).toContainText('PetCenza');
+  await expect(page.locator('a[href*="petcenza"], a[href*="greenline"]')).toHaveCount(0);
 });
 
 test('the change log honours curation and has an RSS feed', async ({ page, request }) => {
@@ -245,7 +248,7 @@ test('the change log honours curation and has an RSS feed', async ({ page, reque
 });
 
 test('live demos show their uptime strip; private projects do not', async ({ page }) => {
-  await page.goto('/projects/petcenza');
+  await page.goto('/projects/coachrhythm');
   await expect(page.locator('.uptime figcaption')).toContainText(/Live demo/);
   await expect(page.locator('.uptime-cells i')).toHaveCount(30);
   await page.goto('/projects/jarvis');
@@ -253,11 +256,11 @@ test('live demos show their uptime strip; private projects do not', async ({ pag
 });
 
 test('Ask about this project starts a message about it; a made-up slug does nothing', async ({ page }) => {
-  await page.goto('/projects/petcenza');
+  await page.goto('/projects/coachrhythm');
   await page.getByRole('link', { name: 'Ask about this project' }).click();
-  await expect(page).toHaveURL(/\/contact\?project=petcenza$/);
-  await expect(page.locator('#message')).toHaveValue(/PetCenza/);
-  await expect(page.locator('.ct-about')).toContainText('PetCenza');
+  await expect(page).toHaveURL(/\/contact\?project=coachrhythm$/);
+  await expect(page.locator('#message')).toHaveValue(/CoachRhythm/);
+  await expect(page.locator('.ct-about')).toContainText('CoachRhythm');
   await page.goto('/contact?project=%3Cscript%3Ealert(1)%3C%2Fscript%3E');
   await expect(page.locator('#message')).toHaveValue('');
   await expect(page.locator('.ct-about')).toHaveCount(0);
@@ -265,7 +268,7 @@ test('Ask about this project starts a message about it; a made-up slug does noth
 
 test('saving data: demos show the screenshot until the video is asked for', async ({ page }) => {
   await page.addInitScript(() => Object.defineProperty(Navigator.prototype, 'connection', { get: () => ({ saveData: true }) }));
-  await page.goto('/projects/greenline');
+  await page.goto('/projects/coachrhythm');
   await expect(page.locator('.monitor video')).toHaveCount(0);
   await expect(page.locator('.monitor-glass img')).toBeVisible();
   await expect(page.locator('.monitor-note')).toContainText('Screenshot from');
@@ -277,27 +280,27 @@ test('saving data: demos show the screenshot until the video is asked for', asyn
 test('the status page lists every live demo with its uptime record', async ({ page }) => {
   await page.goto('/status');
   await expect(page.getByRole('heading', { level: 1, name: 'Demo status' })).toBeVisible();
-  await expect(page.locator('.st-row')).toHaveCount(8);
-  await expect(page.locator('.st-row .uptime')).toHaveCount(8);
+  await expect(page.locator('.st-row')).toHaveCount(6);
+  await expect(page.locator('.st-row .uptime')).toHaveCount(6);
   await expect(page.locator('.st-note')).toContainText('Jarvis');
 });
 
 test('project filters live in the address, ignore unknown values and can be cleared', async ({ page }) => {
-  await page.goto('/portfolio?tool=supabase');
-  await expect(page.locator('.urow')).toHaveCount(3);
-  await expect(page.locator('#pf-tool')).toHaveValue('supabase');
+  await page.goto('/portfolio?tool=claude-api');
+  await expect(page.locator('.urow')).toHaveCount(2);
+  await expect(page.locator('#pf-tool')).toHaveValue('claude-api');
   await page.getByRole('group', { name: 'Filter projects by lens' }).getByRole('button', { name: 'Operations' }).click();
   await expect(page).toHaveURL(/lens=operations/);
   await expect(page.locator('.pf-empty')).toBeVisible();
   await page.locator('.pf-empty').getByRole('button', { name: 'Clear filters' }).click();
   await expect(page).toHaveURL(/\/portfolio$/);
-  await expect(page.locator('.urow')).toHaveCount(10);
+  await expect(page.locator('.urow')).toHaveCount(8);
   for (const junk of ['tool=%3Cscript%3E&lens=__proto__', 'tool=__proto__', 'tool=constructor&lens=toString']) {
     await page.goto(`/portfolio?${junk}`);
-    await expect(page.locator('.urow')).toHaveCount(10);
+    await expect(page.locator('.urow')).toHaveCount(8);
   }
-  await page.goto('/projects/petcenza');
-  await expect(page.locator('.cs-tools').getByRole('link', { name: 'Supabase' })).toHaveAttribute('href', '/portfolio?tool=supabase');
+  await page.goto('/projects/coachrhythm');
+  await expect(page.locator('.cs-tools').getByRole('link', { name: 'Claude API' })).toHaveAttribute('href', '/portfolio?tool=claude-api');
 });
 
 test('the accessibility statement names the standard and the known limitations', async ({ page }) => {
@@ -310,17 +313,17 @@ test('the accessibility statement names the standard and the known limitations',
 test('a filtered project list unfurls as projects using that tool', async ({ request }) => {
   const { default: middleware } = await import('../middleware.js');
   const rewriteOf = (url) => middleware(new Request(url)).headers.get('x-middleware-rewrite');
-  expect(rewriteOf('https://site.test/portfolio?tool=supabase')).toBe('https://site.test/portfolio/tools/supabase/index.html');
-  expect(rewriteOf('https://site.test/?tool=supabase')).toBe('https://site.test/portfolio/tools/supabase/index.html');
+  expect(rewriteOf('https://site.test/portfolio?tool=claude-api')).toBe('https://site.test/portfolio/tools/claude-api/index.html');
+  expect(rewriteOf('https://site.test/?tool=claude-api')).toBe('https://site.test/portfolio/tools/claude-api/index.html');
   expect(rewriteOf('https://site.test/?tool=constructor')).toBeNull();
-  expect(rewriteOf('https://site.test/portfolio/?tool=supabase')).toBe('https://site.test/portfolio/tools/supabase/index.html');
-  for (const junk of ['constructor', '__proto__', '../../units/petcenza', '']) {
+  expect(rewriteOf('https://site.test/portfolio/?tool=claude-api')).toBe('https://site.test/portfolio/tools/claude-api/index.html');
+  for (const junk of ['constructor', '__proto__', '../../units/jarvis', '']) {
     expect(rewriteOf(`https://site.test/portfolio?tool=${junk}`)).toBeNull();
   }
   expect(rewriteOf('https://site.test/portfolio')).toBeNull();
-  const html = await (await request.get('/portfolio/tools/supabase/index.html')).text();
-  expect(html).toContain('<title>Projects using Supabase');
-  expect(html).toContain('PetCenza');
+  const html = await (await request.get('/portfolio/tools/claude-api/index.html')).text();
+  expect(html).toContain('<title>Projects using Claude API');
+  expect(html).toContain('CoachRhythm');
   expect(html).toContain('<link rel="canonical" href="https://chad-kraus-portfolio.vercel.app/portfolio"');
 });
 
@@ -335,7 +338,7 @@ test('the status page switches to 90 days and keeps it in the address', async ({
 });
 
 test.describe('keyboard only', () => {
-  for (const path of ['/', '/portfolio', '/status', '/accessibility', '/now', '/interview-pack', '/changes', '/contact', '/resume', '/projects/petcenza']) {
+  for (const path of ['/', '/portfolio', '/status', '/accessibility', '/now', '/interview-pack', '/changes', '/contact', '/resume', '/projects/coachrhythm']) {
     test(`Tab walks ${path} to the footer with a visible focus ring on every stop`, async ({ page }) => {
       await page.goto(path);
       await page.waitForLoadState('load');
@@ -374,7 +377,7 @@ test.describe('keyboard only', () => {
 });
 
 test('keyboard users can skip a demo recording to its written version', async ({ page }) => {
-  await page.goto('/projects/greenline');
+  await page.goto('/projects/coachrhythm');
   const skip = page.getByRole('link', { name: 'Skip the demo: read what’s on screen' });
   await skip.focus();
   await expect(skip).toBeInViewport();
@@ -386,10 +389,10 @@ test('keyboard users can skip a demo recording to its written version', async ({
 
 test('a shared tool link fires that tool in the room, and the filtered list links to it', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/portfolio?tool=supabase');
-  await expect(page.getByRole('link', { name: 'Show in the rack' })).toHaveAttribute('href', '/?tool=supabase');
-  await page.goto('/?tool=supabase');
-  await expect(page.locator('#sr-sheet-title')).toHaveText('Supabase');
+  await page.goto('/portfolio?tool=claude-api');
+  await expect(page.getByRole('link', { name: 'Show in the rack' })).toHaveAttribute('href', '/?tool=claude-api');
+  await page.goto('/?tool=claude-api');
+  await expect(page.locator('#sr-sheet-title')).toHaveText('Claude API');
   await page.goto('/?tool=constructor');
   await expect(page.locator('.sr-sheet')).not.toHaveClass(/is-open/);
 });
@@ -480,16 +483,16 @@ test('commit heat: unit names follow the readout on their faceplates, and axe st
 
 test('case study tools trace their cables to every project that shares them', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/projects/petcenza');
+  await page.goto('/projects/coachrhythm');
   const trace = page.locator('.trace');
   await expect(trace.locator('.trace-cable')).toHaveCount(0);
-  await page.locator('.cs-tools').getByRole('link', { name: 'Supabase' }).hover();
-  await expect(trace.locator('.trace-cable')).toHaveCount(2);
-  await expect(trace.locator('figcaption')).toHaveText('Supabase runs from PetCenza to CoachRhythm, Greenline.');
+  await page.locator('.cs-tools').getByRole('link', { name: 'Claude API' }).hover();
+  await expect(trace.locator('.trace-cable')).toHaveCount(1);
+  await expect(trace.locator('figcaption')).toHaveText('Claude API runs from CoachRhythm to Jarvis.');
   await page.mouse.move(0, 0);
   await expect(trace.locator('.trace-cable')).toHaveCount(0);
-  await page.locator('.cs-tools').getByRole('link', { name: 'Supabase' }).focus();
-  await expect(trace.locator('.trace-cable')).toHaveCount(2);
+  await page.locator('.cs-tools').getByRole('link', { name: 'Claude API' }).focus();
+  await expect(trace.locator('.trace-cable')).toHaveCount(1);
 });
 
 test('interview tour resumes from the stop in the address, and ending it clears the address', async ({ page }) => {
@@ -536,14 +539,14 @@ test('site search finds projects, tools and pages, and opens the chosen result',
   const dialog = page.getByRole('dialog', { name: 'Search' });
   await expect(dialog).toBeVisible();
   const input = dialog.getByRole('combobox');
-  await input.fill('supabase');
-  await expect(dialog.getByRole('group', { name: 'Tools' }).getByRole('option', { name: 'Supabase' })).toBeVisible();
+  await input.fill('playwright');
+  await expect(dialog.getByRole('group', { name: 'Tools' }).getByRole('option', { name: 'Playwright' })).toBeVisible();
   const { violations } = await new AxeBuilder({ page }).include('.search').withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
   expect(violations).toEqual([]);
-  await input.fill('greenline');
-  await expect(dialog.getByRole('option').first()).toContainText('Greenline');
+  await input.fill('homelab');
+  await expect(dialog.getByRole('option').first()).toContainText('HomeLab Commander');
   await input.press('Enter');
-  await expect(page).toHaveURL(/\/projects\/greenline$/);
+  await expect(page).toHaveURL(/\/projects\/homelab-commander$/);
   await page.keyboard.press('Control+k');
   await expect(dialog).toBeVisible();
   await input.fill('zzzz-no-such-thing');
@@ -553,8 +556,8 @@ test('site search finds projects, tools and pages, and opens the chosen result',
 test('the uptime record is published as JSON, QR codes exist, and the pack has no phone number', async ({ page, request }) => {
   const status = await (await request.get('/status.json')).json();
   expect(Object.keys(status.sites).length).toBeGreaterThan(0);
-  expect(status.sites.petcenza).toMatchObject({ title: 'PetCenza', ok: expect.any(Boolean) });
-  const qr = await request.get('/qr/petcenza.svg');
+  expect(status.sites.coachrhythm).toMatchObject({ title: 'CoachRhythm', ok: expect.any(Boolean) });
+  const qr = await request.get('/qr/techops-command-center.svg');
   expect(qr.status()).toBe(200);
   expect(await qr.text()).toMatch(/^<svg/);
   await page.goto('/interview-pack');
@@ -569,18 +572,18 @@ test('search marks the matched words, shows why a result matched, and remembers 
   const input = dialog.getByRole('combobox');
   // A word from the field notes' bodies: at least one result explains itself with a
   // snippet around the match, rather than only its title.
-  await input.fill('header');
+  await input.fill('shoulder');
   await expect(dialog.getByRole('option').first()).toBeVisible();
   await expect(dialog.locator('.search-detail', { hasText: '…' }).first()).toBeVisible();
   await expect(dialog.locator('.search-detail mark').first()).toBeVisible();
-  await input.fill('greenline');
+  await input.fill('homelab');
   await expect(dialog.getByRole('option').first().locator('.search-title mark')).toBeVisible();
   await input.press('Enter');
-  await expect(page).toHaveURL(/\/projects\/greenline$/);
+  await expect(page).toHaveURL(/\/projects\/homelab-commander$/);
   await page.getByRole('contentinfo').getByRole('button', { name: 'Search' }).click();
-  await expect(dialog.locator('.search-recent button', { hasText: 'greenline' })).toBeVisible();
-  await dialog.locator('.search-recent button', { hasText: 'greenline' }).click();
-  await expect(input).toHaveValue('greenline');
+  await expect(dialog.locator('.search-recent button', { hasText: 'homelab' })).toBeVisible();
+  await dialog.locator('.search-recent button', { hasText: 'homelab' }).click();
+  await expect(input).toHaveValue('homelab');
 });
 
 test.describe('phone room controls', () => {
@@ -611,7 +614,9 @@ test('status names the shared services a demo outage would take down together', 
   await expect(rows.first()).toContainText('live demos:');
   await expect(rows.first().getByRole('link')).toHaveAttribute('href', /\/portfolio\?tool=/);
   // Hosted services only: a build or test tool going offline doesn't stop a live demo.
-  await expect(blast).toContainText('Supabase');
+  await expect(blast).toContainText('Vercel');
+  // Supabase is on one live demo now, so an outage there takes nothing else down with it.
+  await expect(blast).not.toContainText('Supabase');
   for (const tool of ['Playwright', 'Vitest', 'Vite', 'Recharts']) await expect(blast).not.toContainText(tool);
 });
 
@@ -656,10 +661,10 @@ test('a ?from= link is recorded anonymously per page and stripped from the addre
   await page.addInitScript(() => { window.__events = []; window.goatcounter = { count: (e) => window.__events.push(e) }; });
   await page.goto('/?from=linkedin');
   await expect(page).not.toHaveURL(/from=/);
-  await page.goto('/projects/petcenza');
+  await page.goto('/projects/coachrhythm');
   const events = await page.evaluate(() => window.__events.filter((e) => e.event).map((e) => e.path));
-  expect(events).toContain('from/linkedin/projects/petcenza');
-  expect(events.join(' ')).not.toContain('petcenza.com');
+  expect(events).toContain('from/linkedin/projects/coachrhythm');
+  expect(events.join(' ')).not.toContain('coachrhythm.com');
   // A junk value is neither kept nor recorded.
   await page.goto('/?from=%3Cscript%3E');
   await expect(page).not.toHaveURL(/from=/);
@@ -713,10 +718,10 @@ test('a ?from= link works on any page and records the landing page once', async 
   await page.route(/gc\.zgo\.at/, (route) => route.abort());
   await page.addInitScript(() => { window.__events = []; window.goatcounter = { count: (e) => window.__events.push(e) }; });
   // Straight to a case study, the way a post link would.
-  await page.goto('/projects/petcenza?from=linkedin');
+  await page.goto('/projects/coachrhythm?from=linkedin');
   await expect(page).not.toHaveURL(/from=/);
   const events = () => page.evaluate(() => window.__events.filter((e) => e.event).map((e) => e.path));
-  await expect.poll(events).toContain('from/linkedin/landed/projects/petcenza');
+  await expect.poll(events).toContain('from/linkedin/landed/projects/coachrhythm');
   expect((await events()).filter((p) => p.includes('/landed/'))).toHaveLength(1);
   await page.goto('/now');
   await expect.poll(events).toContain('from/linkedin/now');
@@ -897,7 +902,7 @@ test('measured demo scores are recorded with dates, and kept off the pages', asy
 });
 
 test('a screenshot shows how much has shipped since it was taken', async ({ page }) => {
-  await page.goto('/projects/petcenza');
+  await page.goto('/projects/coachrhythm');
   const note = page.locator('.monitor-note');
   await expect(note).toBeVisible();
   const text = await note.textContent();
@@ -911,8 +916,8 @@ test('a screenshot shows how much has shipped since it was taken', async ({ page
 test('a project shows a verdict only when one has been written', async ({ page }) => {
   const src = readFileSync('src/data/projects.js', 'utf8');
   const withVerdict = [...src.matchAll(/slug: '([^']+)'[\s\S]*?verdict:/g)].map((m) => m[1]);
-  await page.goto('/projects/petcenza');
-  if (withVerdict.includes('petcenza')) {
+  await page.goto('/projects/coachrhythm');
+  if (withVerdict.includes('coachrhythm')) {
     await expect(page.getByRole('heading', { name: 'What I’d do differently' })).toBeVisible();
   } else {
     await expect(page.locator('.cs-verdict')).toHaveCount(0);
@@ -924,13 +929,13 @@ test('pages read without JavaScript: their own text, the projects, structured da
   const page = await ctx.newPage();
   // Trailing slashes: vite preview only serves a folder's prerendered index.html for
   // /path/, and falls back to the home page for /path. Vercel serves it either way.
-  for (const [path, heading] of [['/', 'Chadwick (Chad) Kraus'], ['/projects/petcenza/', 'PetCenza'], ['/resume/', 'Resume']]) {
+  for (const [path, heading] of [['/', 'Chadwick (Chad) Kraus'], ['/projects/coachrhythm/', 'CoachRhythm'], ['/resume/', 'Resume']]) {
     await page.goto(path);
     const fallback = page.locator('.static-fallback');
     await expect(fallback).toBeVisible();
     await expect(fallback.getByRole('heading', { level: 1 })).toHaveText(heading);
     await expect(fallback.getByRole('link', { name: 'Jarvis' })).toHaveAttribute('href', '/projects/jarvis');
-    expect(await fallback.locator('a[href^="/projects/"]').count()).toBe(10);
+    expect(await fallback.locator('a[href^="/projects/"]').count()).toBe(8);
     const ld = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent());
     expect(ld).toMatchObject({ '@type': 'Person', jobTitle: 'Network IT Specialist', worksFor: { name: 'Rockbot' } });
     expect(ld.telephone).toBeUndefined();
@@ -952,5 +957,24 @@ test('the hero names Chad once and shows both buttons on the first screen, on a 
       const box = await page.locator('.sr-cta').getByRole('link', { name }).boundingBox();
       expect(box.y + box.height, `${name} at ${viewport.width}px`).toBeLessThanOrEqual(viewport.height);
     }
+  }
+});
+
+test('PetCenza and Greenline are gone: no links on any page, not in the sitemap or search', async ({ page, request }) => {
+  // Taken offline in November 2026. Past /changes entries keep their names as text.
+  const GONE = /petcenza|greenline|pawchart-zeta\.vercel\.app|greenline-chadwick-kraus-projects\.vercel\.app/i;
+  await page.addInitScript(() => localStorage.setItem('sr-tour', 'done'));
+  for (const path of ROUTES) {
+    await page.goto(path);
+    const hrefs = await page.locator('a[href]').evaluateAll((as) => as.map((a) => a.getAttribute('href')));
+    expect(hrefs.filter((h) => GONE.test(h)), `links on ${path}`).toEqual([]);
+  }
+  expect(await (await request.get('/sitemap.xml')).text()).not.toMatch(GONE);
+  await page.goto('/status');
+  await page.keyboard.press('/');
+  const dialog = page.getByRole('dialog', { name: 'Search' });
+  for (const word of ['petcenza', 'greenline']) {
+    await dialog.getByRole('combobox').fill(word);
+    await expect(dialog.getByRole('status')).toHaveText('0 results');
   }
 });

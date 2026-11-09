@@ -545,7 +545,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     const p = projectBy(raw); if (p) return { cmd: 'open', p };
     return { cmd: 'unknown', text: raw };
   }
-  const STARTERS = ['hire', 'signal playwright', 'open petcenza', 'heat', 'help'];
+  const STARTERS = ['hire', 'signal playwright', 'open jarvis', 'heat', 'help'];
   function suggestions(input) {
     const raw = norm(input);
     if (!raw) return STARTERS;
@@ -612,7 +612,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
       if (!r.p) logLine(`no visits recorded from ${r.source} yet`, 'warn');
       else { selectUnit(r.p.i); logLine(`↳ most opened from ${r.source} in the last ${audience.days} days: ${r.p.title}`, 'ok'); }
     }
-    else { logLine(`ping: ${r.text}: No route to host`, 'err'); logLine('try: signal supabase · open greenline · help'); }
+    else { logLine(`ping: ${r.text}: No route to host`, 'err'); logLine('try: signal playwright · open jarvis · help'); }
     sync(); drawSoon();
   }
   on(kq, 'input', () => { sActive = kq.value ? 0 : -1; renderSugs(); previewFrom(kq.value); });
@@ -731,7 +731,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     e.preventDefault(); e.stopPropagation(); navigate(a.getAttribute('href'));
   });
   const tourNext = q('[data-tour="next"]'); const tourEnd = q('[data-tour="end"]');
-  const tourUnit = Math.max(0, P.findIndex((p) => p.slug === 'petcenza'));
+  const tourUnit = Math.max(0, P.findIndex((p) => p.slug === 'techops-command-center'));
   const tourTool = TOOLS.includes('React') ? 'React' : TOOLS[0];
   const FIRST_VISIT = [
     { text: `Each unit is a project. Pulling one out opens its details: this is ${P[tourUnit].title}.`, run: () => selectUnit(tourUnit, false, true) },

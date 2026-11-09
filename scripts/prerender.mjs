@@ -269,7 +269,7 @@ const routes = [
     path: 'portfolio',
     title: ROUTE_TITLES['/portfolio'],
     description:
-      'Ten applications built with Claude Code and Codex: AI tools, infrastructure consoles and games that teach networking. Jarvis, PetCenza, TechOps, Packet & Pine and more.',
+      'Applications built with Claude Code and Codex: AI tools, infrastructure consoles and games that teach networking, including Jarvis, TechOps Command Center and Packet & Pine.',
   },
   {
     path: 'resume',

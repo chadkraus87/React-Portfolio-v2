@@ -21,7 +21,7 @@ const COMMANDS = [
   ['hire', 'A printable one-page snapshot'],
   ['signal react', 'Light every project that uses a tool'],
   ['from linkedin', 'Pull the unit that audience opens most'],
-  ['open greenline', 'Pull a project out of its rack'],
+  ['open jarvis', 'Pull a project out of its rack'],
   ['rack a · rack b · rack all', 'Switch lens'],
   ['heat', 'Commit heat on or off'],
   ['sound', 'Rack sound on or off'],

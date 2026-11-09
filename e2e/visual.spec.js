@@ -16,7 +16,7 @@ const SHOTS = [
   { name: 'home-phone-dark', path: '/', theme: 'dark', viewport: { width: 390, height: 844 } },
   { name: 'projects-light', path: '/portfolio', theme: 'light', viewport: { width: 1440, height: 900 } },
   { name: 'case-study-dark', path: '/projects/jarvis', theme: 'dark', viewport: { width: 1440, height: 900 } },
-  { name: 'architecture-light', path: '/projects/petcenza', theme: 'light', viewport: { width: 1440, height: 900 }, scrollTo: '.arch' },
+  { name: 'architecture-light', path: '/projects/coachrhythm', theme: 'light', viewport: { width: 1440, height: 900 }, scrollTo: '.arch' },
   { name: 'not-found-light', path: '/no-such-page', theme: 'light', viewport: { width: 1440, height: 900 } },
 ];
 

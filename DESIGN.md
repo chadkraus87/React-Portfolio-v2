@@ -1,6 +1,6 @@
 # Design System: Server Room
 
-The portfolio is a lit server room. Chad's ten projects are units in two 3D
+The portfolio is a lit server room. Chad's projects are units in two 3D
 racks; a visitor pulls a unit out, patches into a tool, or types into the KVM
 console. Everything below the room is the same hardware vocabulary at rest:
 label tape, VFD readouts, patch-panel rows, monitors in bezels.
@@ -14,7 +14,8 @@ Chad has not supplied.
 - **The hero is the proof.** A recruiter's first viewport shows the role, the
   name, one sentence on what Chad does, three proof points from the resume,
   "View resume" and "Walk through three projects" (both on the first screen at
-  375px too), and all ten projects as labelled, status-lit units.
+  375px too), and every project as a labelled, status-lit unit. A rack with fewer
+  than five projects keeps its full 14U, with blank panels below its last unit.
 - **Networks and software are one room.** Rack A01 is Software & AI (Builder
   lens), rack B01 is Networks & support (Operations lens). Shared tools are
   patch ports; a tool used in both racks gets a trunk cable through the

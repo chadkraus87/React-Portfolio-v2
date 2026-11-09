@@ -1,6 +1,11 @@
 import { Link } from 'react-router';
+import { RACK_MODEL } from '../lib/rack.js';
 import changelog from '../data/changelog.json';
 import './Changes.css';
+
+// Past months stay as they were, but only projects still on the site link to a case
+// study; a removed project's name stays as plain text.
+const ON_SITE = new Set(RACK_MODEL.projects.map((p) => p.slug));
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const monthName = (ym) => {
@@ -39,7 +44,7 @@ export default function Changes() {
               {projects.map((p) => (
                 <li key={p.title} className="ch-row">
                   <div className="ch-row-head">
-                    <h3>{p.slug ? <Link viewTransition to={`/projects/${p.slug}`}>{p.title}</Link> : p.title}</h3>
+                    <h3>{p.slug && ON_SITE.has(p.slug) ? <Link viewTransition to={`/projects/${p.slug}`}>{p.title}</Link> : p.title}</h3>
                     <span className="vfd">{p.commits} {p.commits === 1 ? 'COMMIT' : 'COMMITS'}</span>
                   </div>
                   {p.highlights.length > 0 && (

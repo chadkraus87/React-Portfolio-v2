@@ -15,16 +15,6 @@
 // site was built" on the home page.
 // ---------------------------------------------------------------------------
 export const projectStories = {
-  petcenza: {
-    title: 'A rate limiter that limited nothing',
-    body: [
-      'PetCenza stores household records and lets people invite others into them, so I had Claude Code rate-limit the endpoints someone would abuse first: sign-in, invitations and uploads. The limiter read an identifier off the request, counted requests per identifier inside a window, and rejected anything over the threshold. The code read correctly and the unit tests passed.',
-      'Before calling it done, we sent the live endpoint far more requests than a person would. Every one of them went through.',
-      'The counting logic was fine. The key was the problem. The header it counted against changed from one request to the next, so every request looked like a new client with a fresh allowance. A unit test can’t catch that, because the test supplies the key itself. It proves the counting works and says nothing about whether you’re counting the right thing.',
-      'The fix moved the key to a value a client can’t rotate on each request. The counting code never changed.',
-      'Now, when something is supposed to say no, I check that it actually says no against the real deployment before I trust it. From the outside, a limiter that never fires looks exactly like one that’s broken.',
-    ],
-  },
   coachrhythm: {
     title: 'Safety that doesn’t depend on the model',
     body: [

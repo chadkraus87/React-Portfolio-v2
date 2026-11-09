@@ -35,12 +35,12 @@ const pages = [
   ['/digest.xml', 200, '<rss version="2.0">'],
   ['/api/status', 200, '"sites"'],
   ['/api/digest', 200, '"weeks"'],
-  ['/qr/petcenza.svg', 200, '<svg'],
+  ['/qr/techops-command-center.svg', 200, '<svg'],
   ['/sitemap.xml', 200, '<urlset'],
   ['/robots.txt', 200, 'Sitemap:'],
   ['/no-such-page', 404, null],
-  ['/?unit=petcenza', 200, 'og/units/petcenza.jpg'],
-  ['/portfolio?tool=supabase', 200, '<title>Projects using Supabase'],
+  ['/?unit=techops-command-center', 200, 'og/units/techops-command-center.jpg'],
+  ['/portfolio?tool=playwright', 200, '<title>Projects using Playwright'],
   ...slugs.map((slug) => [`/projects/${slug}`, 200, '<title>']),
 ];
 
@@ -62,6 +62,12 @@ for (const [path, status, needle] of pages) {
 try {
   const notes = await get('/notes', 'manual');
   if (![301, 308].includes(notes.status)) failures.push(`\`/notes\` answered ${notes.status}, expected a permanent redirect`);
+  // Taken offline in November 2026: their case studies redirect to the project list.
+  for (const gone of ['/projects/petcenza', '/projects/greenline']) {
+    const res = await get(gone, 'manual');
+    const to = new URL(res.headers.get('location') ?? '/', BASE).pathname;
+    if (![301, 308].includes(res.status) || to !== '/portfolio') failures.push(`\`${gone}\` answered ${res.status} to ${to}, expected a permanent redirect to /portfolio`);
+  }
   const home = await get('/');
   await home.body?.cancel();
   for (const header of ['content-security-policy', 'strict-transport-security', 'x-content-type-options']) {
@@ -75,5 +81,5 @@ if (failures.length) {
   console.log(failures.map((f) => `- ${f}`).join('\n'));
   process.exitCode = 1;
 } else {
-  console.error(`smoke check passed: ${pages.length + 4} checks against ${BASE}`);
+  console.error(`smoke check passed: ${pages.length + 6} checks against ${BASE}`);
 }

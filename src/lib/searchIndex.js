@@ -23,7 +23,11 @@ export const searchIndex = [
   ...RACK_MODEL.projects.map((p) => entry('Project', p.title, p.tagline || p.category || '', `/projects/${p.slug}`, `${p.summary} ${p.stack.join(' ')} ${p.status}`)),
   ...RACK_MODEL.tools.map((t) => entry('Tool', t, `Used by ${RACK_MODEL.counts.get(t)} projects`, `/portfolio?tool=${toolSlug(t)}`)),
   ...Object.entries(projectStories).map(([slug, s]) => entry('Field note', s.title, RACK_MODEL.projects.find((p) => p.slug === slug)?.title ?? '', `/projects/${slug}`, s.body.join(' '))),
-  ...changelog.months.flatMap((m) => m.projects.flatMap((p) => p.highlights.map((h) => entry('Change', h.text, `${p.title} · ${m.month}`, '/changes')))),
+  // Past months stay on /changes as written, but search only offers lines for this
+  // site and the projects still on it, so a removed project can't be found here.
+  ...changelog.months.flatMap((m) => m.projects
+    .filter((p) => !p.slug || RACK_MODEL.projects.some((q) => q.slug === p.slug))
+    .flatMap((p) => p.highlights.map((h) => entry('Change', h.text, `${p.title} · ${m.month}`, '/changes')))),
   ...PAGES.map(([title, href, words]) => entry('Page', title, '', href, words)),
 ];
 

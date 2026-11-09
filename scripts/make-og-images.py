@@ -46,7 +46,7 @@ TAPE     = (0xEC, 0xE4, 0xD3)
 TAPE_INK = (0x16, 0x12, 0x0E)
 VFD_BG   = (0x0A, 0x06, 0x03)
 
-STATUS_VFD = {"Live": "LIVE", "In progress": "IN PROG", "Private": "PRIVATE"}
+STATUS_VFD = {"Live": "LIVE", "In progress": "IN PROGRESS", "Private": "PRIVATE"}
 STATUS_LED = {"Live": LIVE, "In progress": ACCENT, "Private": PRIVATE}
 MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
 
@@ -136,6 +136,14 @@ def site_domain():
     src = open(os.path.join(ROOT, "scripts", "prerender.mjs")).read()
     m = re.search(r"const BASE = '(?:https?://)?([^\']+)'", src)
     return m.group(1).rstrip("/") if m else "chad-kraus-portfolio.vercel.app"
+
+
+def headline():
+    """profile.tagline, the home page's one-sentence headline. Only `tagline` is read,
+    for the same reason as eyebrow(): profile.js holds contact details too."""
+    src = open(os.path.join(DATA, "profile.js")).read()
+    m = re.search(r"\n  tagline:\s*'((?:[^'\\]|\\.)*)'", src)
+    return m.group(1).replace("\\'", "'").strip() if m else None
 
 
 def eyebrow():
@@ -355,7 +363,8 @@ def draw_rack(img, x, y, w, rack, by_slug, pulled=None):
     d = ImageDraw.Draw(img)
     cap, patch, unit, blank, foot = 44, 72, 138, 22, 30
     rail = 22
-    h = cap + patch + blank + unit * len(rack["slugs"]) + blank + foot
+    slots = 5  # five 2U servers per 14U rack (MAX_UNITS in src/lib/rackModel.js)
+    h = cap + patch + blank + unit * slots + blank + foot
     shadow(img, (x, y + 30, x + w, y + h + 20), 40, 200)
     d = ImageDraw.Draw(img)
 
@@ -430,6 +439,12 @@ def draw_rack(img, x, y, w, rack, by_slug, pulled=None):
         if pulled and not shift:
             img.alpha_composite(Image.new("RGBA", (fx1 - fx0 + 1, fy1 - fy0 + 1), (0, 0, 0, 120)), (fx0, fy0))
         uy += unit
+    for _ in range(slots - len(rack["slugs"])):
+        bx0, bx1, by0 = x + rail + 4, x + w - rail - 4, uy + 5
+        for half in (0, unit // 2):
+            img.paste(vgrad(bx1 - bx0, unit // 2 - 6, STEEL[3], STEEL[1]), (bx0, by0 + half))
+            ImageDraw.Draw(img).rectangle([bx0, by0 + half, bx1, by0 + half + unit // 2 - 6], outline=STEEL[0], width=2)
+        uy += unit
 
     fy = y + h - foot
     img.paste(vgrad(w, foot, STEEL[2], STEEL[0]), (x, fy))
@@ -459,7 +474,12 @@ def build_cover(projects, racks):
         y += round(150 * 0.8) * S
     d = ImageDraw.Draw(img)
     y += 30 * S
-    tracked(d, (pad, y), "NETWORKS. SOFTWARE. THE BODY.", font(DISPLAY, 34, 700), TEXT, 0.02)
+    line = headline()
+    if line:
+        f_head = font(DISPLAY, 28, 700)
+        for text in wrap(d, line, f_head, 560 * S)[:3]:
+            d.text((pad, y), text, font=f_head, fill=TEXT)
+            y += 34 * S
 
     dom = site_domain().upper()
     tracked(d, (pad, H - pad - 16 * S), dom, font(MONO, 13, 500), MUTED, 0.1)

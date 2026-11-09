@@ -2,7 +2,7 @@ import { Link, useSearchParams } from 'react-router';
 import { lenses } from '../data/racks.js';
 import { RACK_MODEL } from '../lib/rack.js';
 import { cardSrcSet, ROW_SIZES } from '../lib/cardImages.js';
-import { formatUpdated, STATUS_VFD, toolSlug } from '../lib/projectMeta.js';
+import { formatUpdated, STATUS_VFD, toolSlug, inWords, portfolioCount } from '../lib/projectMeta.js';
 import './Portfolio.css';
 
 const FILTERS = [['all', 'All'], ...Object.entries(lenses).map(([key, lens]) => [key, lens.name])];
@@ -62,11 +62,11 @@ export default function Portfolio() {
     <section className="page">
       <div className="container">
         <header className="pf-head">
-          <p className="kicker">Two racks · ten units</p>
+          <p className="kicker">Two racks · {inWords(RACK_MODEL.projects.length)} units</p>
           <h1 className="page-title">Projects</h1>
           <p className="lede">
-            Ten applications: eight live, two in progress or private. Software and AI are in rack A01, networks and support
-            in rack B01, and every one opens a case study.
+            {portfolioCount(RACK_MODEL.projects)}. Software and AI are in rack A01, networks and support in rack B01, and
+            every one opens a case study.
           </p>
           <div className="pf-filters">
             <div className="seg" role="group" aria-label="Filter projects by lens">

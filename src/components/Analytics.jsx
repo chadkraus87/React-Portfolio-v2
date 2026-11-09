@@ -19,7 +19,7 @@ const TITLES = {
   '/interview-pack': 'Interview pack',
 };
 
-// /projects/petcenza -> "Project: petcenza" so per-project traffic groups
+// /projects/jarvis -> "Project: jarvis" so per-project traffic groups
 // readably instead of appearing as a bare path.
 const titleFor = (pathname) => {
   if (TITLES[pathname]) return TITLES[pathname];

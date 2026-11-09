@@ -4,14 +4,14 @@ import { profile } from '../data/profile.js';
 import { lenses } from '../data/racks.js';
 import { siteStories } from '../data/stories.js';
 import { RACK_MODEL } from '../lib/rack.js';
-import { formatUpdated } from '../lib/projectMeta.js';
+import { formatUpdated, inWords, portfolioCount } from '../lib/projectMeta.js';
 import headshot from '../assets/images/headshot.jpg';
 import './Home.css';
 
 // Failure patterns from the field, each paired with the mechanism built against
-// it. Copy carried over unchanged from the previous home page.
+// it. Every fix is worded from that project's own case study.
 const PAIRS = [
-  { id: '01', fail: 'A check that lived in the client instead of the database.', fix: 'Row-level security in the database instead of checks in the client.', attr: 'PetCenza' },
+  { id: '01', fail: 'An action that couldn’t be undone, run before anyone saw it.', fix: 'Anything that spends money or can’t be undone stops in an Approval Inbox with the exact payload shown, and the audit trail is append-only and hash-chained.', attr: 'Meridian' },
   { id: '02', fail: 'Safety left as a property of instruction-following.', fix: 'The filter runs before the model. The unsafe option is absent rather than discouraged.', attr: 'CoachRhythm' },
   { id: '03', fail: 'A permission that was too broad.', fix: 'Deny-by-default connectors, and human confirmation before anything destructive.', attr: 'Jarvis' },
 ];
@@ -31,7 +31,7 @@ const RAIL = [
   { label: 'Knowledge base', value: 'Leading a rebuild of about 200 articles around a single source of truth.' },
   { label: 'SD-card triage', value: 'A daily check that reaches about 50 devices a month before customers notice.' },
   { label: 'Triage + onboarding', value: 'Co-chair the weekly Bug Triage. Wrote the escalation onboarding program and trained 5 new team members.' },
-  { label: 'Side projects', value: 'Ten applications: eight live, two in progress or private.' },
+  { label: 'Side projects', value: `${portfolioCount(RACK_MODEL.projects)}.` },
 ];
 
 export default function Home() {
@@ -44,7 +44,7 @@ export default function Home() {
           <header className="sec-head">
             <p className="kicker">Index</p>
             <h2 className="sec-title" id="projects-title">Projects</h2>
-            <p className="lede">The ten units in the two racks above, in rack order. Each one opens its own case study.</p>
+            <p className="lede">The {inWords(RACK_MODEL.projects.length)} units in the two racks above, in rack order. Each one opens its own case study.</p>
           </header>
           <div className="ix-grid">
             {RACK_MODEL.racks.map((rack) => (
