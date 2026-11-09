@@ -241,10 +241,10 @@ to `scripts/smoke.mjs` as well as to `routes` in `scripts/prerender.mjs`.
 
 `deployment-checks.yml` also has a `smoke` job that runs the same script against
 the deployment's own URL before promotion. Deployment URLs are behind Vercel
-Authentication, so it stays a no-op notice until the project's Protection Bypass
-for Automation secret is saved as the GitHub secret
-`VERCEL_AUTOMATION_BYPASS_SECRET`; then it reports "Vercel - chad-kraus-portfolio:
-smoke", which can be added as a third required Deployment Check. `smoke.mjs` only
+Authentication, so it uses the project's Protection Bypass for Automation secret
+("Smoke Check" in Vercel), saved as the GitHub secret `VERCEL_AUTOMATION_BYPASS_SECRET`
+since 2026-09-14; it reports "Vercel - chad-kraus-portfolio: smoke". Without that
+secret the job would only print a notice. `smoke.mjs` only
 sends the secret to `*.vercel.app` addresses. On a preview deployment the job
 also posts its result on the commit's pull request, and the `quality` job posts the
 Lighthouse trend on same-repo pull requests (`scripts/pr-comment.sh` keeps one
