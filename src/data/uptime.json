@@ -1,5 +1,12 @@
 {
   "sites": {
+    "leonida-loft": {
+      "ok": true,
+      "since": "2026-11-09",
+      "status": 200,
+      "firstChecked": "2026-11-09",
+      "outages": []
+    },
     "techops-command-center": {
       "ok": true,
       "since": "2026-09-13",

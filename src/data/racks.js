@@ -18,7 +18,7 @@ export const racks = [
     code: 'A01',
     name: 'Software & AI',
     lens: 'builder',
-    slugs: ['jarvis', 'deskdaemon', 'coachrhythm', 'meridian'],
+    slugs: ['jarvis', 'deskdaemon', 'coachrhythm', 'leonida-loft', 'meridian'],
   },
   {
     id: 'B',
@@ -32,7 +32,7 @@ export const racks = [
 export const lenses = {
   builder: {
     name: 'Builder',
-    slugs: ['jarvis', 'deskdaemon', 'meridian', 'techops-command-center', 'coachrhythm'],
+    slugs: ['jarvis', 'deskdaemon', 'leonida-loft', 'meridian', 'techops-command-center', 'coachrhythm'],
   },
   operations: {
     name: 'Operations',

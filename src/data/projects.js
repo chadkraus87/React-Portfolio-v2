@@ -65,6 +65,7 @@ import PacketAndPine from '../assets/images/PacketAndPine.jpg';
 // Real capture of Meridian's Lodge view — the spatial map where each cabin is a
 // department and the agents move between them.
 import Meridian from '../assets/images/MeridianLodge.jpg';
+import LeonidaLoft from '../assets/images/LeonidaLoft.jpg';
 
 export const projects = [
   // ---- AI & Claude Code -------------------------------------------------
@@ -125,6 +126,34 @@ export const projects = [
     repoLink: null, // repo is private
     linkNote:
       'There is no hosted instance to link. Meridian is built to run on your own machine, behind your own sign-in, so a public demo would defeat the point.',
+  },
+  {
+    id: 19,
+    slug: 'leonida-loft',
+    title: 'Leonida Loft',
+    category: 'AI & Claude Code',
+    status: 'Live',
+    updated: '2026-11',
+    tagline: 'AI-run video desk · nothing publishes without a human',
+    summary:
+      "An AI-operated editorial studio for Leonida Loft, an independent, unofficial GTA VI fan channel. It researches, writes, fact-checks, narrates and renders videos on one Mac, and nothing is published until a human approves it.",
+    details:
+      "One local Node 24 process serves the dashboard, runs a durable job worker and a scheduler, and keeps everything in a single SQLite file. The desk tracks official sources, keeps a knowledge base where every fact carries its category, confidence, source and status, scores story opportunities, writes scripts, checks every claim, narrates, renders with Remotion and FFmpeg, runs QC and hands over a finished video to approve. The editorial core is deterministic: claims, rights, spoilers and scoring never depend on a model. AI proposes and writes, code decides what passes, and Claude Code is the default AI provider, so writing costs no API charges. Approval is enforced in the database, where the approvals table only accepts a human actor, and every post must pass a preflight check for its slot before it goes out to YouTube, Instagram, TikTok or Facebook. The dashboard binds to loopback, every change carries a per-page form token, and secrets live in the macOS Keychain, never in the database or the logs. leonidaloft.com is built from the published videos and their sources and served from Cloudflare Pages. Leonida Loft is not affiliated with Rockstar Games or Take-Two Interactive.",
+    stack: ['TypeScript', 'Node.js', 'Hono', 'SQLite', 'Remotion', 'FFmpeg', 'Claude Code', 'Cloudflare Pages'],
+    architecture: [
+      { layer: "Runtime", items: ["One local Node 24 process: dashboard, durable job worker and scheduler", "Everything in a single SQLite file"] },
+      { layer: "Research", items: ["Tracks official sources", "Knowledge base where every fact carries its category, confidence, source and status"] },
+      { layer: "Production", items: ["Scores story opportunities, writes scripts and checks every claim", "Narrates, renders with Remotion and FFmpeg, and runs QC"] },
+      { layer: "Editorial core", items: ["Claims, rights, spoilers and scoring never depend on a model", "Claude Code is the default AI provider"] },
+      { layer: "Approval", items: ["The approvals table only accepts a human actor", "Every post passes a preflight check for its slot"] },
+      { layer: "Security", items: ["Dashboard bound to loopback, with a per-page form token on every change", "Secrets in the macOS Keychain, never in the database or the logs"] },
+      { layer: "Publishing", items: ["YouTube, Instagram, TikTok and Facebook", "leonidaloft.com on Cloudflare Pages"] },
+    ],
+    image: LeonidaLoft,
+    imageDate: '2026-11',
+    projectLink: 'https://leonidaloft.com/',
+    projectLinkLabel: 'Visit leonidaloft.com',
+    repoLink: null, // repo is private
   },
   {
     id: 13,

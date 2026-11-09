@@ -39,7 +39,10 @@ export default function Resume() {
         {/* Inline PDF viewers are unreliable on phones (iOS Safari draws a dead
             panel), so below 700px the file is offered directly instead. */}
         <div className="rs-frame">
-          <iframe ref={frame} src={resumePdf} title={`${profile.fullName} resume`} className={`resume-frame${framed ? ' is-focused' : ''}`} />
+          {/* No viewer toolbar: Chrome's draws in after the PDF and pushes it down, which
+              Lighthouse counted as a 0.15 layout shift. Download and "open in a new tab"
+              are on the page already. */}
+          <iframe ref={frame} src={`${resumePdf}#toolbar=0&view=FitH`} title={`${profile.fullName} resume`} className={`resume-frame${framed ? ' is-focused' : ''}`} />
         </div>
         <p className="resume-fallback">
           Viewer not loading? <a href={resumePdf} target="_blank" rel="noopener noreferrer">Open the PDF in a new tab</a>.

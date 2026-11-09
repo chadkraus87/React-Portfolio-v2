@@ -70,7 +70,7 @@ Current surfaces: Home (`/`) — the interactive server room (two 3D racks),
 then a projects index, Operations, Background, and a colophon; Projects
 (`/portfolio`) with lens filters; per-project case studies
 (`/projects/<slug>`); Resume (`/resume`); Contact (`/contact`); and a 404.
-Eight projects are published. PetCenza and Greenline were taken offline in
+Nine projects are published. PetCenza and Greenline were taken offline in
 November 2026: their case studies redirect permanently to `/portfolio`, past
 `/changes` entries keep their names as plain text, and search leaves them out.
 The Notes section was removed in September 2026; every old `/notes` URL
@@ -192,9 +192,9 @@ may replace it subject to the parity constraint above.
 
 Real, in the repository:
 
-- Eight projects with screenshots in `src/assets/images/`: Jarvis, Meridian,
-  TechOps Command Center, CoachRhythm, HomeLab Commander, Desk Daemon, Stack
-  City, Packet & Pine. Most are publicly reachable;
+- Nine projects with screenshots in `src/assets/images/`: Jarvis, Meridian,
+  Leonida Loft, TechOps Command Center, CoachRhythm, HomeLab Commander, Desk
+  Daemon, Stack City, Packet & Pine. Most are publicly reachable;
   status and last-updated month are recorded per project.
 - Three first-person stories in `src/data/stories.js`, rewritten from the old
   notes in Chad's voice (directing Claude Code, owning the judgement calls):

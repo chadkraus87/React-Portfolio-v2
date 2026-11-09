@@ -280,8 +280,9 @@ test('saving data: demos show the screenshot until the video is asked for', asyn
 test('the status page lists every live demo with its uptime record', async ({ page }) => {
   await page.goto('/status');
   await expect(page.getByRole('heading', { level: 1, name: 'Demo status' })).toBeVisible();
-  await expect(page.locator('.st-row')).toHaveCount(6);
-  await expect(page.locator('.st-row .uptime')).toHaveCount(6);
+  const live = Object.keys(JSON.parse(readFileSync('src/data/uptime.json', 'utf8')).sites).length;
+  await expect(page.locator('.st-row')).toHaveCount(live);
+  await expect(page.locator('.st-row .uptime')).toHaveCount(live);
   await expect(page.locator('.st-note')).toContainText('Jarvis');
 });
 
@@ -294,10 +295,10 @@ test('project filters live in the address, ignore unknown values and can be clea
   await expect(page.locator('.pf-empty')).toBeVisible();
   await page.locator('.pf-empty').getByRole('button', { name: 'Clear filters' }).click();
   await expect(page).toHaveURL(/\/portfolio$/);
-  await expect(page.locator('.urow')).toHaveCount(8);
+  await expect(page.locator('.urow')).toHaveCount(SLUGS.length);
   for (const junk of ['tool=%3Cscript%3E&lens=__proto__', 'tool=__proto__', 'tool=constructor&lens=toString']) {
     await page.goto(`/portfolio?${junk}`);
-    await expect(page.locator('.urow')).toHaveCount(8);
+    await expect(page.locator('.urow')).toHaveCount(SLUGS.length);
   }
   await page.goto('/projects/coachrhythm');
   await expect(page.locator('.cs-tools').getByRole('link', { name: 'Claude API' })).toHaveAttribute('href', '/portfolio?tool=claude-api');
@@ -935,7 +936,7 @@ test('pages read without JavaScript: their own text, the projects, structured da
     await expect(fallback).toBeVisible();
     await expect(fallback.getByRole('heading', { level: 1 })).toHaveText(heading);
     await expect(fallback.getByRole('link', { name: 'Jarvis' })).toHaveAttribute('href', '/projects/jarvis');
-    expect(await fallback.locator('a[href^="/projects/"]').count()).toBe(8);
+    expect(await fallback.locator('a[href^="/projects/"]').count()).toBe(SLUGS.length);
     const ld = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent());
     expect(ld).toMatchObject({ '@type': 'Person', jobTitle: 'Network IT Specialist', worksFor: { name: 'Rockbot' } });
     expect(ld.telephone).toBeUndefined();
