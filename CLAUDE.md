@@ -89,9 +89,10 @@ A personal developer portfolio. Vite + React 19, deployed on Vercel.
   summary so the trend is visible and actionable. To publish them again, render
   `lighthouse.json` on the case study — but publish every project or none. A site that
   fails to measure keeps its previous entry.
-- Case studies also say how many public commits landed since the screenshot was taken
-  (`commitsSinceImage()` in `rackModel.js`, self-tested at build). It counts only from
-  the month after `imageDate`, so a month-granular date can never inflate the number.
+- Cards, case studies and the room's unit sheets show no public commit counts (Chad's
+  November 2026 brief: counts and zero states hurt more than they help); e2e guards it.
+  The room's week timeline and commit heat still use the activity data.
+  `commitsSinceImage()` in `rackModel.js` is kept and self-tested at build but not shown.
 - `src/data/services.js` lists the hosted services a live demo calls at runtime
   (Supabase, Vercel, Claude API). Only these appear in "If a shared service went down"
   on `/status`; build and test tools never do. The build fails if a name there isn't a

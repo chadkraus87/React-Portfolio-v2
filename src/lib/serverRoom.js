@@ -1,4 +1,4 @@
-import { activityRange, weekSnapshot } from './rackModel.js';
+import { weekSnapshot } from './rackModel.js';
 import { createRackSound } from './rackSound.js';
 import { followCaptions, clock } from './demoCaptions.js';
 import { evidenceOf, formatDay, toolSlug, interviewPicks, proofOf } from './projectMeta.js';
@@ -51,7 +51,6 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   const toolIdx = Object.fromEntries(TOOLS.map((t, k) => [t, k]));
   const trunkIdx = Object.fromEntries(TRUNKS.map((t, j) => [t, j]));
   const rackOf = (id) => model.racks.find((r) => r.id === id);
-  const RANGE = activityRange(model.activity);
 
   const hero = q('.sr-hero');
   const aisle = q('.sr-aisle');
@@ -309,14 +308,6 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   const snap = () => { Object.assign(cam, goal); applyCam(); drawSoon(); };
 
   // ---- Sheet ----
-  function spark(p) {
-    if (!p.act) return '';
-    const bars = p.act.weeks.map((w, k) => {
-      const h = w ? Math.max(3, (w / model.maxWeek) * 46) : 1.5;
-      return `<rect class="${w ? 'bar' : 'zero'}" x="${k * 20}" y="${50 - h}" width="15" height="${h}"><title>Week ${k + 1}: ${w} commit${w === 1 ? '' : 's'}</title></rect>`;
-    }).join('');
-    return `<svg class="s-spark" viewBox="0 0 235 50" preserveAspectRatio="none" role="img" aria-label="${p.act.total} public commits, ${esc(RANGE)}">${bars}</svg><p class="s-note">${p.act.total} public commits · ${esc(RANGE)}</p>`;
-  }
   function unitSheet(p) {
     const r = rackOf(p.rack); const links = [];
     if (p.projectLink) links.push(`<a class="btn" href="${esc(p.projectLink)}" target="_blank" rel="noopener noreferrer">${esc(p.projectLinkLabel || 'View project')} ↗</a>`);
@@ -353,7 +344,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
         <ol class="s-path">
           <li><span class="s-step">01 · Input</span><h3>What it answers</h3><p>${esc(p.summary)}</p></li>
           <li><span class="s-step">02 · Process</span><h3>How it’s built</h3>${p.details ? `<p>${esc(p.details)}</p>` : ''}<p class="s-stack">${p.stack.map(esc).join(' · ')}</p></li>
-          <li><span class="s-step">03 · Output</span><h3>Proof</h3>${links.length ? `<div class="s-actions">${links.join('')}</div>` : `<p class="s-note s-italic">${esc(p.linkNote || DEFAULT_NOTE)}</p>`}${spark(p)}</li>
+          <li><span class="s-step">03 · Output</span><h3>Proof</h3>${links.length ? `<div class="s-actions">${links.join('')}</div>` : `<p class="s-note s-italic">${esc(p.linkNote || DEFAULT_NOTE)}</p>`}</li>
         </ol>
         <p class="s-sub">Patched to</p>
         <div class="s-tools">${p.ports.map((t) => `<button type="button" class="s-tool" data-tool="${esc(t)}">${esc(t)}<span class="vfd">${counts.get(t)}</span></button>`).join('')}</div>`,

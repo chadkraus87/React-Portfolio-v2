@@ -902,16 +902,14 @@ test('measured demo scores are recorded with dates, and kept off the pages', asy
   }
 });
 
-test('a screenshot shows how much has shipped since it was taken', async ({ page }) => {
-  await page.goto('/projects/coachrhythm');
-  const note = page.locator('.monitor-note');
-  await expect(note).toBeVisible();
-  const text = await note.textContent();
-  // Either it names a count, or it says nothing — never an unexplained number.
-  if (/commits? since/.test(text)) expect(text).toMatch(/\d+ public commits? since/);
-  // Desk Daemon's screenshot is from the current month, so nothing can have shipped "since".
-  await page.goto('/projects/deskdaemon');
-  await expect(page.locator('.monitor-note')).not.toContainText('commits since');
+test('case studies and unit sheets show no public commit counts', async ({ page }) => {
+  for (const slug of SLUGS) {
+    await page.goto(`/projects/${slug}/`);
+    await expect(page.locator('main')).not.toContainText(/\d+ public commits?\b/);
+  }
+  await page.goto('/?unit=coachrhythm');
+  await expect(page.locator('.sr-sheet')).toHaveClass(/open/);
+  await expect(page.locator('.sr-sheet')).not.toContainText(/public commits?/);
 });
 
 test('a project shows a verdict only when one has been written', async ({ page }) => {

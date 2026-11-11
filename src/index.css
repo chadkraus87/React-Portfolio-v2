@@ -144,10 +144,6 @@ main:focus { outline: none; }
 .monitor-transcript .t { margin-right: 10px; font: 500 11.5px/1 var(--f-mono); color: var(--accent); }
 .monitor-stale { color: var(--danger); }
 .monitor-note { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 10px; font: 500 11.5px/1.5 var(--f-mono); color: var(--muted); }
-.spark { margin-top: 18px; }
-.spark svg { display: block; width: 100%; max-width: 420px; height: 52px; }
-.spark .bar { fill: var(--accent); } .spark .zero { fill: var(--line-2); }
-.spark figcaption { margin-top: 8px; font: 500 11.5px/1.5 var(--f-mono); color: var(--muted); }
 
 /* ---- 404 ---- */
 .nf-term { margin: 28px 0; padding: 18px 20px; overflow-x: auto; background: #0B0704; border: 1px solid var(--steel-4); font: 500 14px/1.7 var(--f-mono); color: #F2D9B8; }
