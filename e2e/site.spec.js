@@ -431,6 +431,8 @@ test('the weekly digest reports the four latest full weeks from real data', asyn
 
 test('the interview pack lists the three interview projects with proof, and the snapshot', async ({ page }) => {
   await page.goto('/interview-pack');
+  // Every featured project opens without a sign-in.
+  await expect(page.locator('main')).not.toContainText(/sign-in required/i);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Chadwick (Chad) Kraus');
   await expect(page.locator('.ip-project')).toHaveCount(3);
   await expect(page.locator('.ip-proof').first()).toContainText('recorded demo');
@@ -447,9 +449,11 @@ test('now shows the latest week, work in progress and demo health from site data
   await expect(page.locator('main')).toContainText('live demos');
 });
 
-test('night shift: after 7pm only units with commits this week stay lit, and axe still passes', async ({ page }) => {
-  const activity = JSON.parse(readFileSync('src/data/activity.json', 'utf8'));
-  const onShift = Object.values(activity.repos).filter((r) => r.weeks.at(-1) > 0).length;
+test('night shift: after 7pm only units from the latest week with commits stay lit, and axe still passes', async ({ page }) => {
+  const repos = Object.values(JSON.parse(readFileSync('src/data/activity.json', 'utf8')).repos);
+  // A quiet latest week falls back to the most recent week anyone committed, so the room never opens dark.
+  const shift = Math.max(0, ...repos.map((r) => r.weeks.findLastIndex((n) => n > 0)));
+  const onShift = repos.filter((r) => r.weeks[shift] > 0).length;
   await page.clock.setFixedTime(new Date('2026-09-14T22:00:00'));
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
@@ -984,4 +988,17 @@ test('a case study says what it answers in its own words, and falls back to the 
   await expect(page.getByText('Most AI advice skips the question an IT person asks first')).toBeVisible();
   await page.goto('/projects/coachrhythm/');
   await expect(page.getByText('A programming assistant for personal trainers').first()).toBeVisible();
+});
+
+test('the week timeline never announces a zero count before anyone uses it', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.sr-week-out')).toHaveText('Latest week');
+  await expect(page.locator('.sr-week-range')).not.toHaveAttribute('aria-valuetext', /\b0 public commits\b/);
+});
+
+test('a results line carries its as-of month, and only where one is written', async ({ page }) => {
+  await page.goto('/projects/leonida-loft/');
+  await expect(page.locator('.cs-results')).toContainText(/^As of [A-Z][a-z]+ \d{4}/);
+  await page.goto('/projects/coachrhythm/');
+  await expect(page.locator('.cs-results')).toHaveCount(0);
 });

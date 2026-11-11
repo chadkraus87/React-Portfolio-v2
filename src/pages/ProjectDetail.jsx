@@ -84,6 +84,7 @@ export default function ProjectDetail() {
               ) : (
                 <p className="cs-note">{p.linkNote || 'This project isn’t publicly linked. It runs on private infrastructure.'}</p>
               )}
+              {p.results && <p className="cs-results"><span className="cs-asof">As of {p.results.asOf}</span>{p.results.text}</p>}
               {p.projectLink && <UptimeStrip site={p.uptime} />}
             </li>
           </ol>

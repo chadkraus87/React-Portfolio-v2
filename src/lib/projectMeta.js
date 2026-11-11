@@ -53,8 +53,10 @@ export function portfolioCount(projects) {
 // Interview mode and the interview pack: the three most active live projects with a
 // recorded demo, and what the project data says about each. Nothing is written by hand.
 const TEST_TOOLS = /playwright|vitest|jest|axe/i;
+// Live, with a recorded demo, and open without a sign-in, so a reviewer can follow every
+// link in the pack and the tour.
 export function interviewPicks(projects) {
-  return projects.filter((p) => p.demo && p.projectLink).sort((a, b) => (b.act?.total ?? 0) - (a.act?.total ?? 0)).slice(0, 3);
+  return projects.filter((p) => p.demo && p.projectLink && !p.signIn).sort((a, b) => (b.act?.total ?? 0) - (a.act?.total ?? 0)).slice(0, 3);
 }
 export function proofOf(p) {
   const bits = [p.status, 'recorded demo'];

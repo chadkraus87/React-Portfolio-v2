@@ -813,6 +813,8 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   let replayTimer = 0;
   // While comparing, the week the drag started from stays outlined behind the current one.
   let compareWeek = null;
+  // Until someone uses the timeline, a quiet latest week is announced without its zero count.
+  let touched = false;
   function showWeek(k) {
     const w = weekSnapshot(model.activity, P, k);
     const ref = compareWeek === null || compareWeek === k ? null : weekSnapshot(model.activity, P, compareWeek);
@@ -824,7 +826,8 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     root.classList.toggle('is-timeline', k !== lastWeek);
     weekBars.forEach((bar, i) => bar.classList.toggle('is-on', i === k));
     const downNames = P.filter((p) => w.down.has(p.slug)).map((p) => p.title);
-    const text = `Week of ${formatDay(w.start)}${k === lastWeek ? ' (latest)' : ''} · ${w.total} public commit${w.total === 1 ? '' : 's'}${downNames.length ? ` · demo down: ${downNames.join(', ')}` : ''}`;
+    const count = !touched && k === lastWeek && !w.total ? '' : ` · ${w.total} public commit${w.total === 1 ? '' : 's'}`;
+    const text = `Week of ${formatDay(w.start)}${k === lastWeek ? ' (latest)' : ''}${count}${downNames.length ? ` · demo down: ${downNames.join(', ')}` : ''}`;
     // The control is narrow and the "Week" label beside it already says what this is.
     // At rest (the latest week, nothing compared) it reads "Latest week" rather than a
     // count, so a quiet week never greets a visitor as "0 commits". Scrubbing back shows
@@ -848,7 +851,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     if (k >= lastWeek) { stopReplay(); return; }
     replayTimer = later(() => replayFrom(k + 1), 1400);
   }
-  on(weekRange, 'input', () => { stopReplay(); compareWeek = null; root.classList.remove('is-compare'); showWeek(Number(weekRange.value)); });
+  on(weekRange, 'input', () => { touched = true; stopReplay(); compareWeek = null; root.classList.remove('is-compare'); showWeek(Number(weekRange.value)); });
   // Click or drag across the bars to scrub the weeks, with the racks lighting as you
   // go. Pointer only: the slider beside it is the keyboard control, and the bars stay
   // out of the tab order. The week is spoken once, on release, not on every step.
@@ -865,6 +868,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
     showWeek(k);
   };
   on(sparkEl, 'pointerdown', (e) => {
+    touched = true;
     stopReplay();
     sparkBox = sparkEl.getBoundingClientRect();
     sparkEl.setPointerCapture(e.pointerId);
@@ -885,6 +889,7 @@ export function mountServerRoom(root, { model, lenses, navigate, srcSetFor, form
   on(replayBtn, 'click', () => {
     if (replayBtn.getAttribute('aria-pressed') === 'true') { stopReplay(); return; }
     replayBtn.setAttribute('aria-pressed', 'true');
+    touched = true;
     track('timeline/replay');
     replayFrom(0);
   });
