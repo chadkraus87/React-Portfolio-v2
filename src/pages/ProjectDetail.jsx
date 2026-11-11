@@ -2,17 +2,14 @@ import { useParams, Link } from 'react-router';
 import Monitor from '../components/Monitor.jsx';
 import Architecture from '../components/Architecture.jsx';
 import ToolTrace from '../components/ToolTrace.jsx';
-import Spark from '../components/Spark.jsx';
 import UptimeStrip from '../components/UptimeStrip.jsx';
 import { projectStories } from '../data/stories.js';
 import { RACK_MODEL } from '../lib/rack.js';
-import { activityRange } from '../lib/rackModel.js';
 import { DETAIL_SIZES } from '../lib/cardImages.js';
 import { formatUpdated, formatDay, STATUS_COLOR } from '../lib/projectMeta.js';
 import NotFound from './NotFound.jsx';
 import './ProjectDetail.css';
 
-const RANGE = activityRange(RACK_MODEL.activity);
 
 // Opens every collapsed section and loads the print copy of a demo's screenshot
 // first, so the printed case study carries everything on the page.
@@ -87,9 +84,6 @@ export default function ProjectDetail() {
               ) : (
                 <p className="cs-note">{p.linkNote || 'This project isn’t publicly linked. It runs on private infrastructure.'}</p>
               )}
-              {/* Only projects with a public repo have activity to show; the rest show nothing
-                  rather than a "no public repository" note. */}
-              {p.act && <Spark act={p.act} maxWeek={RACK_MODEL.maxWeek} range={RANGE} />}
               {p.projectLink && <UptimeStrip site={p.uptime} />}
             </li>
           </ol>

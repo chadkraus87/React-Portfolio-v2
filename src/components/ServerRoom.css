@@ -221,8 +221,6 @@
 .sr-sheet .s-stack, .sr-sheet .s-note { font: 500 11.5px/1.7 var(--f-mono); color: var(--muted); }
 .sr-sheet .s-italic { font: italic 400 14px/1.55 var(--f-ui); }
 .sr-sheet .s-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 2px 0 14px; }
-.sr-sheet .s-spark { display: block; width: 100%; height: 50px; margin-top: 4px; }
-.sr-sheet .s-spark .bar { fill: var(--accent); } .sr-sheet .s-spark .zero { fill: var(--line-2); }
 .sr-sheet .s-sub { margin: 6px 0 10px; font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .sr-sheet .s-tools { display: flex; flex-wrap: wrap; gap: 6px; }
 .sr-sheet .s-tool { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 9px 11px; border: 1px solid var(--edge); background: none; color: var(--text);

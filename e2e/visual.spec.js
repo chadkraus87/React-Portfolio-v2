@@ -9,7 +9,7 @@ test.skip(process.platform !== 'linux', 'Visual baselines are Linux renders from
 // Only the small things that change without a design change: live commit counts,
 // the build stamp, sparkline bars and demo video frames. Under reduced motion the
 // room, its cables and every screenshot render the same way on every run.
-const MASK = ['.cap-build', '.footer-mono', '.v-heat', '.spark', '.uptime', 'video', '.sr-week-spark', '.sr-week-out'];
+const MASK = ['.cap-build', '.footer-mono', '.v-heat', '.uptime', 'video', '.sr-week-spark', '.sr-week-out'];
 
 const SHOTS = [
   { name: 'home-dark', path: '/', theme: 'dark', viewport: { width: 1440, height: 900 } },
