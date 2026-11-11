@@ -30,6 +30,9 @@ function makeHall(count, seed) {
 const HALLS = [['far', makeHall(13, 1337)], ['near', makeHall(9, 42)]];
 const RAIL = Array.from({ length: RACK_U }, (_, k) => RACK_U - k);
 const RANGE = activityRange(RACK_MODEL.activity);
+// The most recent week anyone committed: the night shift lights that week's units, so a
+// quiet week never opens the room dark.
+const SHIFT_WEEK = Math.max(0, ...RACK_MODEL.projects.map((p) => p.act?.weeks.findLastIndex((n) => n > 0) ?? -1));
 const WEEK_COUNT = Math.max(1, ...Object.values(RACK_MODEL.activity.repos).map((r) => r.weeks.length));
 // Public commits per week across every tracked repo, for the timeline's sparkline.
 const WEEK_TOTALS = Array.from({ length: WEEK_COUNT }, (_, k) =>
@@ -64,7 +67,7 @@ function Unit({ p, first, rack }) {
   return (
     <button
       type="button"
-      className={`unit${p.act ? '' : ' nodata'}${blink ? ' active' : ''}${p.demoDown ? ' down' : ''}${p.act?.weeks.at(-1) > 0 ? ' on-shift' : ''}`}
+      className={`unit${p.act ? '' : ' nodata'}${blink ? ' active' : ''}${p.demoDown ? ' down' : ''}${p.act?.weeks[SHIFT_WEEK] > 0 ? ' on-shift' : ''}`}
       data-i={p.i}
       aria-pressed="false"
       tabIndex={first ? 0 : -1}
@@ -193,7 +196,7 @@ export default function ServerRoom() {
             <Link viewTransition to="/resume" className="btn btn-primary">View resume</Link>
             <a href="/?tour=hiring" className="btn">Walk through three projects</a>
           </p>
-          <p className="sr-shift">Night shift: only units with public commits this week are lit.</p>
+          <p className="sr-shift">Night shift: only units with the latest public commits are lit.</p>
         </div>
 
         <canvas className="sr-motes" aria-hidden="true" />

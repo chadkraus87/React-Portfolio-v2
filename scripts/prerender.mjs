@@ -182,6 +182,7 @@ const projectRoutes = parseEntries(projectsSrc).map(({ slug, title }) => ({
     { slug: 'b', demo: 'x', projectLink: 'y', status: 'Live', stack: [], act: { total: 9 } },
     { slug: 'c', demo: null, projectLink: 'y', status: 'Live', stack: [], act: { total: 99 } },
     { slug: 'd', demo: 'x', projectLink: 'y', status: 'Live', stack: [], act: null },
+    { slug: 'e', demo: 'x', projectLink: 'y', status: 'Live', stack: [], act: { total: 50 }, signIn: true },
   ];
   const picks = interviewPicks(fake).map((p) => p.slug).join();
   if (picks !== 'b,a,d') throw new Error(`interviewPicks: got ${picks}`);

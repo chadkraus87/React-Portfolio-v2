@@ -19,6 +19,8 @@
 .cs-stack li { padding: 7px 9px; border: 1px solid var(--line-2); font: 500 11.5px/1 var(--f-mono); color: var(--muted); }
 .cs-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .cs-path .cs-note { font-style: italic; color: var(--muted); }
+.cs-path .cs-results { margin-top: 18px; }
+.cs-asof { display: block; margin-bottom: 4px; font: 500 11px/1.4 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 
 .cs-side { position: sticky; top: calc(var(--nav-h) + 24px); align-self: start; display: grid; gap: 14px; padding: 20px; border: 1px solid var(--line-2); background: var(--surface); }
 .cs-side h2 { font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }

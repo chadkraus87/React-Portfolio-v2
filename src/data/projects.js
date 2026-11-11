@@ -19,6 +19,8 @@
 //               short; this is what sets every card's height in the grid.
 //   answers     optional "What it answers" paragraph on the case study. Defaults
 //               to the summary; set it when the case study should say more.
+//   results     optional { text, asOf } outcome line in the case study's Proof section,
+//               labelled with its asOf month so a fixed number never reads as live data.
 //   details     optional deeper writeup, shown on the project's own page and
 //               linked from the card as "Full write-up". Omit it for small
 //               projects. Do not repeat the summary — details continues from
@@ -136,23 +138,26 @@ export const projects = [
     updated: '2026-11',
     tagline: 'AI-run video desk · nothing publishes without a human',
     summary:
-      "An AI-operated editorial studio for Leonida Loft, an independent, unofficial GTA VI fan channel. It researches, writes, fact-checks, narrates and renders videos on one Mac, and nothing is published until a human approves it.",
+      "An AI-run video desk where nothing publishes without a human. It researches, writes, fact-checks, narrates and renders short videos on one Mac, then schedules them to YouTube, Instagram, TikTok, Facebook and Threads once I approve them. It runs Leonida Loft, an independent, unofficial GTA VI fan channel.",
+    answers:
+      "An AI-run video desk where nothing publishes without a human. It researches, writes, fact-checks, narrates and renders short videos on one Mac, then schedules them to YouTube, Instagram, TikTok, Facebook and Threads once I approve them. It runs Leonida Loft, an independent, unofficial GTA VI fan channel, and has published 260+ videos at about 5 a day since September 2026.",
     details:
-      "One local Node 24 process serves the dashboard, runs a durable job worker and a scheduler, and keeps everything in a single SQLite file. The desk tracks official sources, keeps a knowledge base where every fact carries its category, confidence, source and status, scores story opportunities, writes scripts, checks every claim, narrates, renders with Remotion and FFmpeg, runs QC and hands over a finished video to approve. The editorial core is deterministic: claims, rights, spoilers and scoring never depend on a model. AI proposes and writes, code decides what passes, and Claude Code is the default AI provider, so writing costs no API charges. Approval is enforced in the database, where the approvals table only accepts a human actor, and every post must pass a preflight check for its slot before it goes out to YouTube, Instagram, TikTok or Facebook. The dashboard binds to loopback, every change carries a per-page form token, and secrets live in the macOS Keychain, never in the database or the logs. leonidaloft.com is built from the published videos and their sources and served from Cloudflare Pages. Leonida Loft is not affiliated with Rockstar Games or Take-Two Interactive.",
+      "One local Node 24 process serves the dashboard, runs a durable job worker and a scheduler, and keeps everything in a single SQLite file. n8n runs alongside it only for optional watches (source page changes, backups, disk and render health, posting reminders) that raise dashboard alerts; they can't post, approve or write to the database. The desk tracks official sources, keeps a knowledge base where every fact carries its category, confidence, source and status, scores story opportunities, writes scripts, checks every claim, narrates, renders with Remotion and FFmpeg, runs QC and hands over a finished video to approve. The editorial core is deterministic: claims, rights, spoilers and scoring never depend on a model. AI proposes and writes, code decides what passes, and Claude Code is the default AI provider, so writing costs no API charges. Approval is enforced in the database, where the approvals table only accepts a human actor, and every post must pass a preflight check for its slot before it goes out to YouTube, Instagram, TikTok, Facebook or Threads. The dashboard binds to loopback, every change carries a per-page form token, and secrets live in the macOS Keychain, never in the database or the logs. leonidaloft.com is built from the published videos and their sources and served from Cloudflare Pages. Leonida Loft is not affiliated with Rockstar Games or Take-Two Interactive.",
     stack: ['TypeScript', 'Node.js', 'Hono', 'SQLite', 'Remotion', 'FFmpeg', 'Claude Code', 'Cloudflare Pages'],
     architecture: [
-      { layer: "Runtime", items: ["One local Node 24 process: dashboard, durable job worker and scheduler", "Everything in a single SQLite file"] },
+      { layer: "Runtime", items: ["One local Node 24 process: dashboard, durable job worker and scheduler", "Everything in a single SQLite file", "n8n alongside it only for optional watches that raise dashboard alerts"] },
       { layer: "Research", items: ["Tracks official sources", "Knowledge base where every fact carries its category, confidence, source and status"] },
       { layer: "Production", items: ["Scores story opportunities, writes scripts and checks every claim", "Narrates, renders with Remotion and FFmpeg, and runs QC"] },
       { layer: "Editorial core", items: ["Claims, rights, spoilers and scoring never depend on a model", "Claude Code is the default AI provider"] },
       { layer: "Approval", items: ["The approvals table only accepts a human actor", "Every post passes a preflight check for its slot"] },
       { layer: "Security", items: ["Dashboard bound to loopback, with a per-page form token on every change", "Secrets in the macOS Keychain, never in the database or the logs"] },
-      { layer: "Publishing", items: ["YouTube, Instagram, TikTok and Facebook", "leonidaloft.com on Cloudflare Pages"] },
+      { layer: "Publishing", items: ["YouTube, Instagram, TikTok, Facebook and Threads", "leonidaloft.com on Cloudflare Pages"] },
     ],
     image: LeonidaLoft,
     imageDate: '2026-11',
     projectLink: 'https://leonidaloft.com/',
     projectLinkLabel: 'Visit leonidaloft.com',
+    results: { text: '260+ videos published since September 15, 2026, at about 5 a day, across YouTube, Instagram, TikTok, Facebook and Threads.', asOf: 'November 2026' },
     repoLink: null, // repo is private
   },
   {
