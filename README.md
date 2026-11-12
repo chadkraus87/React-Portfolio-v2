@@ -232,3 +232,10 @@ middleware.js            Vercel Routing Middleware: share previews for ?unit= li
 - **Sept 2026** — moved from GitHub Pages to Vercel; React 19 + react-router 8.
 - **Aug 2026** — real paths and prerendering, replacing hash routing.
 - **July 2026** — rebuilt on Vite + React after Create React App was deprecated.
+
+---
+
+## License
+
+The code is released under the [MIT License](LICENSE). My name, photos, resume
+and written content aren't covered by it, so please don't reuse those.
