@@ -1,9 +1,9 @@
 {
-  "from": "2026-08-20",
-  "to": "2026-11-12",
+  "from": "2026-08-21",
+  "to": "2026-11-13",
   "repos": {
     "techops-command-center": {
-      "total": 0,
+      "total": 6,
       "weeks": [
         0,
         0,
@@ -16,11 +16,11 @@
         0,
         0,
         0,
-        0
+        6
       ]
     },
     "coachrhythm": {
-      "total": 14,
+      "total": 15,
       "weeks": [
         0,
         0,
@@ -33,13 +33,13 @@
         0,
         0,
         0,
-        0
+        1
       ]
     },
     "homelab-commander": {
-      "total": 12,
+      "total": 5,
       "weeks": [
-        7,
+        0,
         3,
         1,
         0,
@@ -54,9 +54,9 @@
       ]
     },
     "stack-city": {
-      "total": 13,
+      "total": 12,
       "weeks": [
-        1,
+        0,
         0,
         3,
         0,
