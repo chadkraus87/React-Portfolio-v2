@@ -68,6 +68,9 @@ import PacketAndPine from '../assets/images/PacketAndPine.jpg';
 // department and the agents move between them.
 import Meridian from '../assets/images/MeridianLodge.jpg';
 import LeonidaLoft from '../assets/images/LeonidaLoft.jpg';
+// Real capture of a held-out ticket: a suspected key compromise with a hidden
+// instruction, escalated by the security rule. Every name on screen is synthetic.
+import Switchboard from '../assets/images/Switchboard.jpg';
 
 export const projects = [
   // ---- AI & Claude Code -------------------------------------------------
@@ -181,15 +184,46 @@ export const projects = [
       { layer: "Verification", items: ["187 automated tests (Vitest, Playwright) on every push"] },
     ],
     image: TechOps,
-    imageDate: '2026-08',
+    imageDate: '2026-11',
     demo: '/demos/techops-command-center.mp4',
-    demoDate: '2026-09',
+    demoDate: '2026-11',
     demoChapters: [
       [0, "Simulation Center: eight incident scenarios, each tagged with severity and difficulty."],
       [5, "Each scenario lists the expected impact, customer impact and affected systems before you start it."],
     ],
     projectLink: 'https://techops-command-center.vercel.app/',
     repoLink: 'https://github.com/chadkraus87/techops-command-center',
+  },
+  {
+    id: 20,
+    slug: 'switchboard',
+    title: 'Switchboard',
+    category: 'AI & Claude Code',
+    status: 'Live',
+    updated: '2026-11',
+    tagline: 'The model proposes · the rules decide',
+    summary:
+      'An AI support-ticket triage agent with an evaluation suite. It classifies each ticket, drafts a reply that cites only the help-center articles it found, and recommends resolve, needs info or escalate. A person approves every reply, and nothing is sent.',
+    answers:
+      "I own Tier 2/3 escalations, so the question I care about most is whether a ticket needs Engineering. Switchboard answers it with a model that proposes and a rules engine that decides. Security issues, data loss and outages that hit more than one customer always escalate, whatever the model says, and every escalation comes with a Jira-ready bug report.",
+    results: { text: 'On 30 held-out tickets, run once: every escalation caught (13 of 13), no false escalations, at $0.027 a ticket.', asOf: 'November 2026' },
+    details:
+      "Each ticket gets deterministic checks first: security, data loss and prompt injection. Text that looks like an injected instruction is removed before the model sees the ticket. BM25 search pulls help-center articles, and Claude Sonnet 5.5 classifies the ticket, rates each article and suggests a decision. The rules engine makes the final call and records which rule decided. A second model call writes the reply, plus a Jira-ready bug report when it escalates. An output guard blocks any reply that promises a refund or an account change, and citations to articles that weren't retrieved are stripped. I tuned it on a dev set only. The held-out set of 30 tickets was frozen by checksum and run once. That's a small sample, and Claude wrote the tickets and labels, the same model family the agent runs on, so the site says both up front. All data is synthetic. Vantimere Cloud is the fictional company from TechOps Command Center, and its outage tickets run through the same agent. Read one at a time, the model would have escalated 8 of 29. The rules escalated all of them, because several accounts were reporting the same outage, a fact about the whole queue that no single ticket shows. The hosted demo replays recorded runs, so it makes no model calls.",
+    stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Claude Sonnet 5.5', 'Vitest', 'Playwright', 'GitHub Actions', 'Vercel'],
+    architecture: [
+      { layer: "Deterministic checks", items: ["Security, data loss and prompt injection checked on every ticket", "Injected instructions removed before the model sees the ticket"] },
+      { layer: "Retrieval", items: ["BM25 search over the help-center articles"] },
+      { layer: "Model", items: ["Claude Sonnet 5.5 classifies the ticket, rates each article and suggests a decision", "A second call writes the reply, plus a Jira-ready bug report when it escalates"] },
+      { layer: "Rules engine", items: ["Makes the final call and records which rule decided", "Security, data loss and multi-customer outages always escalate"] },
+      { layer: "Output guard", items: ["Blocks replies that promise a refund or an account change", "Citations to articles that weren't retrieved are stripped"] },
+      { layer: "Human review", items: ["A person approves every reply; nothing is sent"] },
+      { layer: "Evaluation", items: ["Tuned on a dev set only", "30 held-out tickets, frozen by checksum and run once", "Vitest, Playwright and GitHub Actions"] },
+      { layer: "Hosting", items: ["Next.js on Vercel, replaying recorded runs"] },
+    ],
+    image: Switchboard,
+    imageDate: '2026-11',
+    projectLink: 'https://switchboard-triage.vercel.app',
+    repoLink: 'https://github.com/chadkraus87/switchboard',
   },
   {
     id: 1,

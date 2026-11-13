@@ -10,7 +10,7 @@
 // checks both and fails the build if they drift.
 //
 // `lenses` are the groupings Chad confirmed. A project can belong to both
-// lenses (TechOps) while physically sitting in one rack.
+// lenses (TechOps, Switchboard) while physically sitting in one rack.
 // ---------------------------------------------------------------------------
 export const racks = [
   {
@@ -25,17 +25,17 @@ export const racks = [
     code: 'B01',
     name: 'Networks & support',
     lens: 'operations',
-    slugs: ['techops-command-center', 'homelab-commander', 'stack-city', 'packet-and-pine'],
+    slugs: ['switchboard', 'techops-command-center', 'homelab-commander', 'stack-city', 'packet-and-pine'],
   },
 ];
 
 export const lenses = {
   builder: {
     name: 'Builder',
-    slugs: ['jarvis', 'deskdaemon', 'leonida-loft', 'meridian', 'techops-command-center', 'coachrhythm'],
+    slugs: ['jarvis', 'deskdaemon', 'leonida-loft', 'meridian', 'switchboard', 'techops-command-center', 'coachrhythm'],
   },
   operations: {
     name: 'Operations',
-    slugs: ['techops-command-center', 'homelab-commander', 'stack-city', 'packet-and-pine'],
+    slugs: ['switchboard', 'techops-command-center', 'homelab-commander', 'stack-city', 'packet-and-pine'],
   },
 };

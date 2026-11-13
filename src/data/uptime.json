@@ -1,5 +1,12 @@
 {
   "sites": {
+    "switchboard": {
+      "ok": true,
+      "since": "2026-11-13",
+      "status": 200,
+      "firstChecked": "2026-11-13",
+      "outages": []
+    },
     "leonida-loft": {
       "ok": true,
       "since": "2026-11-09",
