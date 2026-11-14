@@ -174,14 +174,14 @@ export const projects = [
     summary:
       'An interactive incident-response simulator. Trigger a realistic outage across a simulated fifteen-service infrastructure, then investigate the logs, metrics and dependency map to find the root cause and restore service.',
     details:
-      'Everything on screen comes from one underlying model, so the story always holds together. The charts, the logs, the dependency map and the customer complaints agree with each other because they are all computed from the same source rather than written separately. Failures spread the way they do in real systems: losing a cache makes things slow, losing a database makes them stop. One rule produces both, with no script per scenario. Nothing is random either, so an incident unfolds identically every time. That’s also what lets an investigation survive a page refresh while storing almost nothing. Eight scenarios each teach a different shape of problem, and a wrong answer explains which evidence rules it out instead of just marking you incorrect. An optional guided mode walks newcomers through it, and any finished incident can be replayed second by second to watch the failure spread. Backed by 187 automated tests that run on every push.',
+      'Everything on screen comes from one underlying model, so the story always holds together. The charts, the logs, the dependency map and the customer complaints agree with each other because they are all computed from the same source rather than written separately. Failures spread the way they do in real systems: losing a cache makes things slow, losing a database makes them stop. One rule produces both, with no script per scenario. Nothing is random either, so an incident unfolds identically every time. That’s also what lets an investigation survive a page refresh while storing almost nothing. Eight scenarios each teach a different shape of problem, and a wrong answer explains which evidence rules it out instead of just marking you incorrect. An optional guided mode walks newcomers through it, and any finished incident can be replayed second by second to watch the failure spread. Backed by 251 automated tests that run on every push.',
     stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS v4', 'Recharts', 'Vitest', 'Playwright'],
     architecture: [
       { layer: "One model", items: ["A single deterministic model of fifteen services", "Charts, logs, dependency map and complaints all computed from it"] },
       { layer: "Failure rules", items: ["Failures spread by dependency: a lost cache slows, a lost database stops", "One rule for every scenario, no per-scenario scripts"] },
       { layer: "Scenarios", items: ["Eight scenarios, each a different shape of problem", "Wrong answers explain which evidence rules them out"] },
       { layer: "Interface", items: ["Next.js 16, Tailwind CSS v4, Recharts", "Optional guided mode", "Second-by-second replay of finished incidents"] },
-      { layer: "Verification", items: ["187 automated tests (Vitest, Playwright) on every push"] },
+      { layer: "Verification", items: ["251 automated tests (Vitest, Playwright) on every push"] },
     ],
     image: TechOps,
     imageDate: '2026-11',

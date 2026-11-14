@@ -85,7 +85,7 @@ export const resume = {
       name: 'TechOps Command Center',
       blurb: 'Incident-response simulator',
       stack: 'Next.js · TypeScript · Recharts · Vitest · Playwright',
-      text: 'Simulates outages across a fifteen-service infrastructure. Charts, logs, dependency map, and customer complaints all derive from one model, so failures propagate as they do in production rather than being scripted per scenario. Eight scenarios, deterministic replay, 187 automated tests.',
+      text: 'Simulates outages across a fifteen-service infrastructure. Charts, logs, dependency map, and customer complaints all derive from one model, so failures propagate as they do in production rather than being scripted per scenario. Eight scenarios, deterministic replay, 251 automated tests.',
     },
     {
       name: 'HomeLab Commander',
