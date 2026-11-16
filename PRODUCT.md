@@ -201,7 +201,9 @@ Real, in the repository:
   one on the CoachRhythm case study, two in the home page colophon. Marked draft until Chad
   signs off on the wording.
 - Demo recordings in `public/demos/` for Meridian, CoachRhythm, HomeLab
-  Commander, and TechOps Command Center. Jarvis keeps its screenshot only.
+  Commander, Packet & Pine, TechOps Command Center, and Switchboard (a
+  walkthrough of a TechOps outage ticket handed to Switchboard). Jarvis keeps
+  its screenshot only.
 - The resume PDF (`src/assets/files/Chad_Kraus_Resume.pdf`), supplied by Chad
   (November 2026). `resume-src/` generated the earlier version and is no longer
   its source.
